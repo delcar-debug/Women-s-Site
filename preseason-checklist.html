@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Preseason Checklist | Holmen Women’s Wrestling</title>
+  <style>
+    :root{
+      --maroon:#6d1730;
+      --maroon-dark:#3f0b1a;
+      --light:#f5f5f7;
+      --white:#fff;
+      --ink:#19191d;
+      --muted:#676b73;
+      --border:#e1e2e5;
+      --shadow:0 16px 45px rgba(20,12,15,.10);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--ink);
+      background:var(--light);
+    }
+    a{color:inherit}
+    button,input{font:inherit}
+    .header{
+      min-height:74px;
+      background:#fff;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      padding:0 24px;
+      position:sticky;
+      top:0;
+      z-index:20;
+    }
+    .brand{
+      color:var(--maroon);
+      font-weight:900;
+      text-decoration:none;
+    }
+    .button{
+      min-height:44px;
+      padding:0 18px;
+      border:0;
+      border-radius:999px;
+      background:var(--maroon);
+      color:#fff;
+      font-weight:850;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+    }
+    .button:hover{background:var(--maroon-dark)}
+    .button.secondary{
+      background:#fff;
+      color:var(--maroon);
+      border:1px solid #d8bcc5;
+    }
+    .hero{
+      background:linear-gradient(135deg,var(--maroon),var(--maroon-dark));
+      color:#fff;
+      padding:54px 20px;
+    }
+    .container{
+      width:min(980px,calc(100% - 28px));
+      margin:auto;
+    }
+    .eyebrow{
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      font-size:.76rem;
+      font-weight:900;
+      color:#efc8d4;
+    }
+    h1{
+      margin:10px 0 12px;
+      font-size:clamp(2.5rem,6vw,4.5rem);
+      letter-spacing:-.055em;
+    }
+    .hero p{
+      margin:0;
+      color:#f0dde3;
+      line-height:1.6;
+      max-width:720px;
+    }
+    .content{padding:34px 0 70px}
+    .progress-card,.task-card{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+    }
+    .progress-card{
+      padding:20px;
+      margin-bottom:18px;
+    }
+    .progress-row{
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .progress-track{
+      height:12px;
+      background:#ececef;
+      border-radius:999px;
+      overflow:hidden;
+      margin-top:13px;
+    }
+    .progress-fill{
+      height:100%;
+      width:0;
+      background:var(--maroon);
+      transition:width .2s ease;
+    }
+    .task-card{padding:25px}
+    .task-head{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+    }
+    .task-number{
+      width:42px;
+      height:42px;
+      border-radius:13px;
+      background:#f4e8ec;
+      color:var(--maroon);
+      font-weight:950;
+      display:grid;
+      place-items:center;
+      flex:0 0 auto;
+    }
+    .task-card h2{
+      margin:0 0 7px;
+      font-size:1.55rem;
+      letter-spacing:-.03em;
+    }
+    .task-card p{
+      color:var(--muted);
+      line-height:1.6;
+    }
+    .codes{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+      margin:22px 0;
+    }
+    .code-card{
+      border:1px solid #e2d2d7;
+      border-radius:16px;
+      padding:18px;
+      background:#fbf7f8;
+    }
+    .code-card strong{
+      display:block;
+      color:var(--maroon);
+      margin-bottom:8px;
+    }
+    .code{
+      font-size:1.6rem;
+      font-weight:950;
+      letter-spacing:.08em;
+      margin-bottom:12px;
+    }
+    .copy-button{
+      border:1px solid #d8bcc5;
+      background:#fff;
+      color:var(--maroon);
+      border-radius:999px;
+      min-height:38px;
+      padding:0 14px;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .task-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:20px;
+    }
+    .complete-row{
+      margin-top:24px;
+      padding-top:20px;
+      border-top:1px solid var(--border);
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      font-weight:800;
+    }
+    .complete-row input{
+      width:20px;
+      height:20px;
+      margin-top:1px;
+      accent-color:var(--maroon);
+    }
+    .copy-status{
+      color:#1f7a4d;
+      font-size:.88rem;
+      min-height:20px;
+      margin-top:8px;
+      font-weight:750;
+    }
+    @media(max-width:680px){
+      .header{padding:0 14px}
+      .codes{grid-template-columns:1fr}
+      .task-card{padding:20px}
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="team-hub.html">Holmen Women’s Wrestling</a>
+    <a class="button secondary" href="team-hub.html">Back to Team Hub</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="eyebrow">Team Hub</div>
+        <h1>Preseason Checklist</h1>
+        <p>Complete each task before the start of the season. Your progress is saved on this device.</p>
+      </div>
+    </section>
+
+    <section class="content">
+      <div class="container">
+        <div class="progress-card">
+          <div class="progress-row">
+            <strong>Preseason Progress</strong>
+            <span id="progressText">0 of 5 tasks completed</span>
+          </div>
+          <div class="progress-track">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+        </div>
+
+        <article class="task-card">
+          <div class="task-head">
+            <div class="task-number">1</div>
+            <div>
+              <h2>Athlete Information Form</h2>
+              <p>Complete the Athlete Information Form before the season begins. This provides coaches with contact information and roster details.</p>
+            </div>
+          </div>
+
+          <div class="task-actions">
+            <a class="button" href="athlete-information.html">Complete Athlete Information Form</a>
+          </div>
+
+          <label class="complete-row">
+            <input id="athleteInfoComplete" type="checkbox">
+            <span>I have completed the Athlete Information Form.</span>
+          </label>
+        </article>
+
+        <article class="task-card" style="margin-top:20px">
+          <div class="task-head">
+            <div class="task-number">2</div>
+            <div>
+              <h2>Join SportsYou</h2>
+              <p>This app is our way of sending group messages to parents and wrestlers and messaging individual wrestlers. Email is also used. Use the code below to join the correct group.</p>
+            </div>
+          </div>
+
+          <div class="codes">
+            <div class="code-card">
+              <strong>Wrestler Code</strong>
+              <div class="code">P366F585</div>
+              <button class="copy-button" type="button" data-code="P366F585">Copy Wrestler Code</button>
+            </div>
+
+            <div class="code-card">
+              <strong>Parent Code</strong>
+              <div class="code">RQQ665E5</div>
+              <button class="copy-button" type="button" data-code="RQQ665E5">Copy Parent Code</button>
+            </div>
+          </div>
+
+          <div id="copyStatus" class="copy-status" aria-live="polite"></div>
+
+          <div class="task-actions">
+            <a class="button" href="https://video.sportsyou.com/signup/" target="_blank" rel="noopener">Join SportsYou</a>
+          </div>
+
+          <label class="complete-row">
+            <input id="sportsYouComplete" type="checkbox">
+            <span>I have joined the correct SportsYou group.</span>
+          </label>
+        </article>
+
+
+        <article class="task-card" style="margin-top:20px">
+          <div class="task-head">
+            <div class="task-number">3</div>
+            <div>
+              <h2>Create a USA Bracketing Account</h2>
+              <p>Wrestlers need a USA Bracketing account so they can be added to our roster for meets. Anyone can create an account to find brackets and meet results.</p>
+            </div>
+          </div>
+
+          <div class="task-actions">
+            <a class="button" href="https://www.usabracketing.com/login" target="_blank" rel="noopener">Create or Log In to USA Bracketing</a>
+          </div>
+
+          <label class="complete-row">
+            <input id="usaBracketingComplete" type="checkbox">
+            <span>I have created or confirmed my USA Bracketing account.</span>
+          </label>
+        </article>
+
+        <article class="task-card" style="margin-top:20px">
+          <div class="task-head">
+            <div class="task-number">4</div>
+            <div>
+              <h2>Register Through the School District</h2>
+              <p>Complete the required school district athletics registration before the season begins.</p>
+            </div>
+          </div>
+
+          <div class="task-actions">
+            <a class="button" href="https://www.holmen.k12.wi.us/activities-athletics" target="_blank" rel="noopener">Open District Athletics Registration</a>
+          </div>
+
+          <label class="complete-row">
+            <input id="districtRegistrationComplete" type="checkbox">
+            <span>I have completed the school district athletics registration.</span>
+          </label>
+        </article>
+
+
+        <article class="task-card" style="margin-top:20px">
+          <div class="task-head">
+            <div class="task-number">5</div>
+            <div>
+              <h2>Add the Team Calendar to Your Device</h2>
+              <p>Add the Holmen Women’s Wrestling calendar to your phone, tablet, or computer so you can keep up with practices, meets, and team events.</p>
+            </div>
+          </div>
+
+          <div class="task-actions">
+            <a class="button" href="https://calendar.google.com/calendar/u/0/embed?src=bd7296a5f419a1e296fff2454f851b4b2990afb06fc321bf1171051cedfc8c4c@group.calendar.google.com&amp;ctz=America/Chicago" target="_blank" rel="noopener">Open Team Calendar</a>
+            <a class="button secondary" href="webcal://calendar.google.com/calendar/ical/bd7296a5f419a1e296fff2454f851b4b2990afb06fc321bf1171051cedfc8c4c%40group.calendar.google.com/public/basic.ics">Add to Apple Calendar</a>
+          </div>
+          <p style="color:var(--muted);font-size:.85rem;margin-top:8px">Note: After the calendar opens, the "Add to Google Calendar" button is at the bottom of the page.</p>
+
+          <label class="complete-row">
+            <input id="calendarComplete" type="checkbox">
+            <span>I have added or bookmarked the team calendar.</span>
+          </label>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "holmenPreseasonChecklist";
+    const sportsYou = document.getElementById("sportsYouComplete");
+    const athleteInfo = document.getElementById("athleteInfoComplete");
+    const usaBracketing = document.getElementById("usaBracketingComplete");
+    const districtRegistration = document.getElementById("districtRegistrationComplete");
+    const calendarTask = document.getElementById("calendarComplete");
+    const progressText = document.getElementById("progressText");
+    const progressFill = document.getElementById("progressFill");
+    const copyStatus = document.getElementById("copyStatus");
+
+    const taskBoxes = [sportsYou, athleteInfo, usaBracketing, districtRegistration, calendarTask];
+
+    function updateProgress() {
+      const completed = taskBoxes.filter(box => box && box.checked).length;
+      progressText.textContent = `${completed} of ${taskBoxes.length} tasks completed`;
+      progressFill.style.width = `${(completed / taskBoxes.length) * 100}%`;
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        sportsYou: sportsYou.checked,
+        athleteInfo: athleteInfo.checked,
+        usaBracketing: usaBracketing.checked,
+        districtRegistration: districtRegistration.checked,
+        calendar: calendarTask.checked
+      }));
+    }
+
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    sportsYou.checked = Boolean(saved.sportsYou);
+    athleteInfo.checked = Boolean(saved.athleteInfo);
+    usaBracketing.checked = Boolean(saved.usaBracketing);
+    districtRegistration.checked = Boolean(saved.districtRegistration);
+    calendarTask.checked = Boolean(saved.calendar);
+
+    taskBoxes.forEach(box => box.addEventListener("change", updateProgress));
+    updateProgress();
+
+    document.querySelectorAll("[data-code]").forEach(button => {
+      button.addEventListener("click", async () => {
+        const code = button.dataset.code;
+        try {
+          await navigator.clipboard.writeText(code);
+          copyStatus.textContent = `${code} copied to clipboard.`;
+        } catch {
+          copyStatus.textContent = `Code: ${code}`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

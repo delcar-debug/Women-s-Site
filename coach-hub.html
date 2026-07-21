@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Coach Hub | Holmen Women’s Wrestling</title>
+<style>
+:root {
+  --maroon:#6d1730; --dark:#3e0919; --soft:#f4f4f6; --white:#fff;
+  --ink:#19191d; --muted:#666b73; --border:#e1e2e5;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:var(--soft); }
+a { color:var(--maroon); }
+button,input { font:inherit; }
+.header { height:76px; background:#fff; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; position:sticky; top:0; z-index:40; }
+.brand { display:flex; align-items:center; gap:10px; color:var(--maroon); font-weight:900; text-decoration:none; }
+.brand img { width:54px; height:54px; object-fit:contain; }
+.header-actions { display:flex; gap:12px; align-items:center; }
+.link-button,.primary-button { border:0; border-radius:999px; min-height:43px; padding:0 17px; font-weight:850; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+.link-button { background:#fff; color:var(--maroon); border:1px solid #d8bcc5; }
+.primary-button { background:var(--maroon); color:#fff; }
+.login { min-height:calc(100vh - 76px); display:grid; place-items:center; padding:24px; background:linear-gradient(rgba(55,5,20,.91),rgba(55,5,20,.91)),radial-gradient(circle at top right,#a94461,#3d0918 65%); }
+.login-card { width:min(460px,100%); background:#fff; border-radius:25px; padding:34px; text-align:center; box-shadow:0 28px 80px rgba(0,0,0,.3); }
+.login-card img { width:110px; height:110px; object-fit:contain; margin:auto; }
+.login-card h1 { margin:8px 0; font-size:2.5rem; letter-spacing:-.05em; }
+.login-card p { color:var(--muted); line-height:1.55; }
+.login-card input { width:100%; min-height:50px; padding:0 14px; border:1px solid #d4d6da; border-radius:11px; outline:none; margin-top:8px; }
+.login-card input:focus { border-color:var(--maroon); box-shadow:0 0 0 3px rgba(109,23,48,.12); }
+.login-card .primary-button { width:100%; margin-top:14px; }
+.error { display:none; color:#982323; background:#fff0f0; border-radius:10px; margin-top:12px; padding:10px; font-weight:750; }
+.app { display:none; }
+.hero { background:linear-gradient(135deg,var(--maroon),var(--dark)); color:#fff; padding:45px 28px; }
+.hero-inner { width:min(1240px,100%); margin:auto; display:flex; justify-content:space-between; align-items:end; gap:25px; flex-wrap:wrap; }
+.hero h1 { margin:5px 0 8px; font-size:clamp(2.4rem,5vw,4.4rem); letter-spacing:-.055em; }
+.hero p { margin:0; color:#ecd9df; line-height:1.6; max-width:720px; }
+.eyebrow { text-transform:uppercase; letter-spacing:.16em; font-size:.75rem; font-weight:900; color:#efc8d4; }
+.layout { width:min(1240px,calc(100% - 28px)); margin:28px auto 70px; display:grid; grid-template-columns:300px 1fr; gap:24px; align-items:start; }
+.sidebar { position:sticky; top:100px; background:#fff; border:1px solid var(--border); border-radius:20px; overflow:hidden; box-shadow:0 10px 35px rgba(20,15,17,.06); }
+.sidebar-top { padding:20px; border-bottom:1px solid var(--border); }
+.sidebar h2 { margin:0 0 12px; font-size:1.25rem; }
+.search { width:100%; min-height:42px; padding:0 12px; border:1px solid #d8dade; border-radius:10px; outline:none; }
+.toc { padding:9px; display:grid; gap:4px; }
+.toc-link { border:0; border-radius:10px; background:transparent; text-align:left; padding:11px 12px; cursor:pointer; font-weight:720; color:#3b3d43; display:flex; gap:10px; align-items:flex-start; }
+.toc-link span { color:var(--maroon); font-weight:950; }
+.toc-link:hover,.toc-link.active { background:#f5e9ed; color:var(--maroon); }
+.content { min-width:0; }
+.handbook-section { display:none; background:#fff; border:1px solid var(--border); border-radius:24px; padding:clamp(24px,5vw,50px); box-shadow:0 14px 45px rgba(20,15,17,.07); }
+.handbook-section.active { display:block; }
+.section-number { color:var(--maroon); font-size:.82rem; letter-spacing:.15em; font-weight:950; }
+.handbook-section h2 { margin:8px 0 27px; font-size:clamp(2rem,4vw,3.2rem); letter-spacing:-.05em; }
+.section-body h3 { margin:32px 0 10px; color:var(--maroon); font-size:1.3rem; }
+.section-body p,.section-body li { line-height:1.72; }
+.section-body ul,.section-body ol { padding-left:24px; }
+.section-body li { margin:8px 0; }
+.section-body ul ul,.section-body ol ol,.section-body ul ol,.section-body ol ul { margin-top:6px; }
+blockquote { margin:22px 0; padding:22px 25px; border-left:5px solid var(--maroon); background:#f7f2f4; border-radius:0 14px 14px 0; line-height:1.72; font-size:1.04rem; }
+blockquote cite { display:block; margin-top:10px; font-style:normal; font-weight:800; color:var(--maroon); }
+.pagination { display:flex; justify-content:space-between; gap:12px; margin-top:18px; }
+.pagination button { border:1px solid #d8bcc5; background:#fff; color:var(--maroon); border-radius:999px; min-height:44px; padding:0 17px; font-weight:850; cursor:pointer; }
+.pagination button:disabled { opacity:.35; cursor:not-allowed; }
+.search-results { display:none; background:#fff; border:1px solid var(--border); border-radius:18px; padding:18px; margin-bottom:16px; }
+.search-result { display:block; width:100%; text-align:left; border:0; background:#f8f8f9; border-radius:11px; padding:13px; margin:8px 0; cursor:pointer; }
+.search-result strong { color:var(--maroon); }
+.mobile-toc { display:none; width:100%; min-height:46px; border:1px solid #d4d6da; border-radius:11px; padding:0 12px; background:#fff; }
+.note-card { margin-top:18px; padding:14px 15px; border-left:4px solid var(--maroon); border-radius:0 12px 12px 0; background:#f8f1f4; color:#4f4146; line-height:1.55; font-size:.95rem; }
+.resource-library { width:min(1240px,calc(100% - 28px)); margin:28px auto 0; }
+.resource-library h2 { margin:0 0 14px; font-size:1.4rem; letter-spacing:-.03em; }
+.resource-card-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.resource-card { background:#fff; border:1px solid var(--border); border-radius:20px; padding:20px; box-shadow:0 10px 32px rgba(20,15,17,.06); }
+.resource-card h3 { margin:0 0 8px; font-size:1.15rem; }
+.resource-card p { color:var(--muted); line-height:1.5; }
+.resource-card-actions { margin-top:14px; display:flex; flex-wrap:wrap; gap:10px; }
+.resource-card.wide { grid-column:1/-1; }
+.resource-message { margin-top:14px; padding:14px 15px; border-left:4px solid var(--maroon); border-radius:0 12px 12px 0; background:#f8f1f4; color:#4f4146; line-height:1.55; font-size:.95rem; }
+.learning-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:18px; }
+.learning-item { border:1px solid var(--border); border-radius:14px; padding:16px; background:#fafafa; display:flex; flex-direction:column; align-items:flex-start; gap:9px; }
+.learning-item strong { font-size:1.05rem; }
+.learning-item span { color:var(--muted); line-height:1.45; }
+.learning-item .primary-button { margin-top:auto; }
+@media(max-width:900px) { .resource-card-grid { grid-template-columns:1fr; } }
+@media(max-width:760px) { .learning-grid { grid-template-columns:1fr; } }
+@media(max-width:900px) {
+  .layout { grid-template-columns:1fr; }
+  .sidebar { position:static; }
+  .toc { display:none; }
+  .mobile-toc { display:block; }
+}
+@media(max-width:620px) {
+  .header { padding:0 13px; }
+  .brand span { display:none; }
+  .header-actions .link-button { display:none; }
+  .hero { padding:38px 18px; }
+  .layout { width:min(100% - 18px,1240px); margin-top:18px; }
+  .handbook-section { border-radius:18px; padding:22px 18px; }
+}
+</style>
+</head>
+<body>
+<header class="header">
+  <a class="brand" href="index.html"><img src="assets/images/logo.png" alt="Holmen Women's Wrestling logo"><span>Holmen Women’s Wrestling</span></a>
+  <div class="header-actions">
+    <a class="link-button" href="index.html">Back to Home</a>
+    <button id="logout" class="primary-button" style="display:none">Log Out</button>
+  </div>
+</header>
+
+<main>
+<section id="login" class="login">
+  <form id="loginForm" class="login-card">
+    <img src="assets/images/logo.png" alt="Holmen Women's Wrestling logo">
+    <div class="eyebrow" style="color:var(--maroon)">Private coach access</div>
+    <h1>Coach Hub</h1>
+    <p>Enter the coach passcode to access coach-only resources.</p>
+    <label for="passcode" style="display:block;text-align:left;font-weight:850">Coach Passcode</label>
+    <input id="passcode" type="password" required autofocus>
+    <button class="primary-button" type="submit">Enter Coach Hub</button>
+    <div id="error" class="error">That passcode is incorrect.</div>
+  </form>
+</section>
+
+<section id="app" class="app">
+  <div class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow">Coach Resources</div>
+        <h1>Coach Hub</h1>
+        <p>Your one-stop location for the coaching philosophy, quick links, and coach-only resources. #forher</p>
+      </div>
+      <a class="link-button" href="#philosophy-link" onclick="document.querySelector('.layout').scrollIntoView({behavior:'smooth'});return false;">Read Coaching Philosophy</a>
+    </div>
+  </div>
+
+  <section class="resource-library">
+    <h2>Quick Links</h2>
+    <div class="resource-card-grid">
+      <article class="resource-card">
+        <h3>Athletics Website</h3>
+        <p>District athletics site for schedules, forms, and general info.</p>
+        <div class="resource-card-actions">
+          <a class="primary-button" href="https://www.holmen.k12.wi.us/activities-athletics" target="_blank" rel="noopener">Open Athletics Website</a>
+        </div>
+      </article>
+
+      <article class="resource-card">
+        <h3>Coach Dashboard</h3>
+        <p>Shared coach dashboard site.</p>
+        <div class="resource-card-actions">
+          <a class="primary-button" href="https://sites.google.com/holmen.k12.wi.us/coaches-dashboard/home" target="_blank" rel="noopener">Open Coach Dashboard</a>
+        </div>
+      </article>
+
+      <article class="resource-card">
+        <h3>Season Prep</h3>
+        <p>Season prep planning document.</p>
+        <div class="resource-card-actions">
+          <a class="primary-button" href="https://docs.google.com/document/d/1blq-f79xGdk2n1LMo4Jy1564ApIkT4P4V6wAQi8d3kM/edit?tab=t.0#heading=h.1aopbecgjrp" target="_blank" rel="noopener">Open Season Prep</a>
+        </div>
+      </article>
+
+      <article class="resource-card wide">
+        <h3>📝 Preseason Paperwork</h3>
+        <p>Required forms and documents to complete before the season begins.</p>
+        <div class="learning-grid">
+          <div class="learning-item">
+            <strong>Transportation Forms</strong>
+            <span>Alternative vehicle driver information through district transportation services.</span>
+            <a class="primary-button" href="https://www.holmen.k12.wi.us/departments/transportation-services/alternative-vehicle-drivers" target="_blank" rel="noopener">Open Transportation Forms</a>
+          </div>
+
+          <div class="learning-item">
+            <strong>Volunteer Coach Paperwork</strong>
+            <span>Required paperwork for volunteer coaches.</span>
+            <a class="primary-button" href="https://docs.google.com/document/d/1BNcR3T8UUursVAJVOqD9CpXGQ6gPfgMHobUgmk64qjg/edit?tab=t.0#heading=h.shxuvwperfkb" target="_blank" rel="noopener">Open Volunteer Coach Paperwork</a>
+          </div>
+
+          <div class="learning-item">
+            <strong>Contracted Coach Paperwork</strong>
+            <span>Required paperwork for contracted coaches.</span>
+            <a class="primary-button" href="https://docs.google.com/document/d/1sos1r-39WMGOjARNfNfBPsDlxU_6khCyfX1BZ3ifQNc/edit?tab=t.0#heading=h.malhb7xfnypa" target="_blank" rel="noopener">Open Contracted Coach Paperwork</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="resource-card wide">
+        <h3>Weight Management Guide</h3>
+        <p><em>The Female Wrestler’s Guide to Weight Mastery</em> by Katherine Shai and LuchaFit.</p>
+        <div class="resource-message">
+          Like Coach Carl and our Team Handbook emphasize, losing weight is never required.
+          Wrestlers are encouraged to compete at the weight class that is healthiest and best for them.
+          If you choose to manage your weight, this is a strong resource to help you do so safely.
+        </div>
+        <div class="resource-card-actions">
+          <a class="link-button" href="assets/pdfs/weight-management-guide.pdf" download="Female-Wrestlers-Weight-Management-Guide.pdf">Download PDF</a>
+        </div>
+      </article>
+
+      <article class="resource-card wide">
+        <h3>📚 Learning Resources</h3>
+        <p>Helpful resources for wrestlers, parents, and coaches.</p>
+
+        <div class="learning-grid">
+          <div class="learning-item">
+            <strong>⚖️ LuchaFit</strong>
+            <span>Best all-around girls wrestling resource available.</span>
+            <a class="primary-button" href="https://www.luchafit.com/" target="_blank" rel="noopener">Visit LuchaFit</a>
+          </div>
+
+          <div class="learning-item">
+            <strong>👧 Coaching HER</strong>
+            <span>Coaching girls and building positive team culture.</span>
+            <a class="primary-button" href="https://www.coachingher.com/" target="_blank" rel="noopener">Visit Coaching HER</a>
+          </div>
+
+          <div class="learning-item">
+            <strong>🤼 Fanatic Wrestling</strong>
+            <span>Technique instruction from elite wrestlers and coaches.</span>
+            <a class="primary-button" href="https://fanaticwrestling.com/" target="_blank" rel="noopener">Visit Fanatic Wrestling</a>
+          </div>
+
+          <div class="learning-item">
+            <strong>🧑‍🏫 Coaches Insider</strong>
+            <span>Coaching education, clinics, and articles.</span>
+            <a class="primary-button" href="https://coachesinsider.com/" target="_blank" rel="noopener">Visit Coaches Insider</a>
+          </div>
+
+          <div class="learning-item">
+            <strong>🧠 Wrestling Mindset</strong>
+            <span>Mental performance resources for wrestlers.</span>
+            <a class="primary-button" href="https://www.wrestlingmindset.com/" target="_blank" rel="noopener">Visit Wrestling Mindset</a>
+          </div>
+
+          <div class="learning-item">
+            <strong>📓 All In Wrestler's Journal</strong>
+            <span>Goal setting, habits, and self-reflection.</span>
+            <a class="primary-button" href="https://allinwrestlersjournal.com/" target="_blank" rel="noopener">Visit All In Journal</a>
+          </div>
+
+          <div class="learning-item">
+            <strong>🏆 Brian Cain</strong>
+            <span>Mental performance and championship culture.</span>
+            <a class="primary-button" href="https://briancain.com/join" target="_blank" rel="noopener">Visit Brian Cain</a>
+          </div>
+
+          <div class="learning-item">
+            <strong>📺 FloWrestling</strong>
+            <span>Live events, rankings, news, and match videos.<br>Login: delcar@holmen.k12.wi.us / 123456a</span>
+            <a class="primary-button" href="https://www.flowrestling.org/" target="_blank" rel="noopener">Visit FloWrestling</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <h2>Sections</h2>
+        <input id="searchInput" class="search" type="search" placeholder="Search philosophy…">
+        <select id="mobileToc" class="mobile-toc" aria-label="Choose section">
+          <option value="expectations">01 — Head vs Assistant Coach Expectations</option>
+          <option value="shared">02 — Shared Expectations</option>
+          <option value="leadership">03 — Leadership Keys</option>
+          <option value="feedback">04 — Giving Good Feedback</option>
+          <option value="improve">05 — Improve as Coaches</option>
+          <option value="technique">06 — Technique Philosophy</option>
+        </select>
+      </div>
+      <nav class="toc">
+        <button class="toc-link active" data-target="expectations"><span>01</span>Head vs Assistant Coach Expectations</button>
+        <button class="toc-link" data-target="shared"><span>02</span>Shared Expectations</button>
+        <button class="toc-link" data-target="leadership"><span>03</span>Leadership Keys</button>
+        <button class="toc-link" data-target="feedback"><span>04</span>Giving Good Feedback</button>
+        <button class="toc-link" data-target="improve"><span>05</span>Improve as Coaches</button>
+        <button class="toc-link" data-target="technique"><span>06</span>Technique Philosophy</button>
+      </nav>
+    </aside>
+
+    <div class="content">
+      <div id="searchResults" class="search-results"></div>
+
+      <article class="handbook-section active" id="expectations" data-index="0">
+        <div class="section-number">01</div>
+        <h2>Head vs Assistant Coach Expectations</h2>
+        <div class="section-body">
+<p>We are the best women’s wrestling staff in the state and one of the best in the country. Our girls are lucky to have such a good and dedicated staff.</p>
+<h3>Head Coach Expectations</h3>
+<ul>
+<li>Create practice plans</li>
+<li>Take care of or delegate whatever needs to be done — schedule, weights, Track, roster, Matboss, or anything else that needs to be done</li>
+<li>Put assistants in a position to succeed</li>
+<li>Make the final decisions</li>
+</ul>
+<h3>Assistant Coach Expectations</h3>
+<ul>
+<li>Assist in practice and meets and complete any delegated tasks
+  <ul>
+    <li>There is a checklist to go through in the preseason to make roles clear</li>
+    <li>Go to Coach Carl first with questions/concerns regarding anything about the program</li>
+  </ul>
+</li>
+<li>Direct parents, wrestlers, and other coaches to Coach Carl if they have a concern</li>
+</ul>
+        </div>
+      </article>
+
+      <article class="handbook-section" id="shared" data-index="1">
+        <div class="section-number">02</div>
+        <h2>Shared Expectations</h2>
+        <div class="section-body">
+<ul>
+<li>Love and care about the girls, follow For Her, and help create a fun, positive, and relaxed environment.</li>
+<li><strong>Know why — point of emphasis.</strong>
+  <ul>
+    <li>As head coach, Coach Carl needs to explain more of the why behind how we do things. There is now a “why” section to our practice plan, and we will go over a practice goal for each day.</li>
+    <li><strong>Coach Carl expects all assistants to know why if asked by the girls.</strong></li>
+  </ul>
+</li>
+<li>Create and develop leaders on the team through our leadership meetings, and be a good leader yourself.</li>
+<li>Give good feedback.</li>
+<li>Improve as coaches.</li>
+<li>Disagree and commit while supporting each other.
+  <ul>
+    <li>We want open and healthy discussion among the coaches. We won’t agree on everything, and that’s okay. Even when we disagree, we all commit and let Coach Carl make the final decision.</li>
+  </ul>
+</li>
+<li>Participate in a weekly coaches meeting every Monday after practice.</li>
+</ul>
+        </div>
+      </article>
+
+      <article class="handbook-section" id="leadership" data-index="2">
+        <div class="section-number">03</div>
+        <h2>Leadership Keys</h2>
+        <div class="section-body">
+<p>The leadership skill set is based on our ability to execute two fundamental aspects of leadership: 1) building trust, and 2) getting results with our wrestlers and guiding them to their full potential.</p>
+<h3>Building Trust Keys</h3>
+<p><strong>1) Connection</strong></p>
+<ul>
+<li>Listen to the girls and value their feedback — one of the best ways to show them we care, even if we don’t use the feedback. (There is also a limit to how much we take in, so they don’t feel like they can run or overrule things.)</li>
+<li>Connect with wrestlers on a personal level. Be positive. Get to know them. Create lollipop moments for them. Reach out to them when we don’t see them. Ask how they are doing, and talk to every girl every day.</li>
+<li>Use resources to help the girls with things off the mat (Coach Beyond Training).</li>
+</ul>
+<p><strong>2) Character</strong></p>
+<ul>
+<li>Display ethical character and trust. Follow our pillars.</li>
+</ul>
+<p><strong>3) Competence</strong></p>
+<ul>
+<li>Have the competence, knowledge, and skill to help them. Use resources such as email newsletters.</li>
+<li><strong>Know why — point of emphasis this year.</strong> As head coach, Coach Carl needs to explain more of the why behind how we do things. There is now a “why” section to our practice plan, and we will go over a practice goal for each day. <strong>Coach Carl expects all assistants to know why if asked by the girls.</strong></li>
+</ul>
+<h3>Getting Results Keys</h3>
+<p><strong>1) Clarity</strong></p>
+<ul>
+<li>We are all on the same page. Know all information sent out in emails. Turn on SportsYou phone notifications.</li>
+</ul>
+<p><strong>2) Accountability</strong></p>
+<ul>
+<li>Provide accountability for our wrestlers so that they do what they say they will do. We set a good example by being accountable ourselves.</li>
+</ul>
+<p><strong>3) Expect and navigate adversity</strong></p>
+<ul>
+<li>Things will go wrong sometimes. We don’t flinch — we handle it. Have an elite mindset and follow the mindset practical applications.</li>
+</ul>
+<blockquote>Cain, Brian. (2019). <em>Mental Performance Mastery Coaching Certification Course Manual</em> (2nd ed.). Brian Cain Peak Performance.</blockquote>
+        </div>
+      </article>
+
+      <article class="handbook-section" id="feedback" data-index="3">
+        <div class="section-number">04</div>
+        <h2>Giving Good Feedback</h2>
+        <div class="section-body">
+<h3>Constructive and Positive Feedback</h3>
+<ul>
+<li>Consistent positive feedback helps build a culture of psychological safety — an environment where wrestlers feel safe to take risks, be themselves, offer up new ideas, and make mistakes.</li>
+<li>Giving short-term achievable goals improves self-efficacy and gives motivation.</li>
+<li><strong>Clearly point out improvements.</strong> Even if a wrestler isn’t improving in wins and losses, she is probably improving in something else, like her technique.</li>
+</ul>
+<h3>Learning Feedback</h3>
+<ul>
+<li><strong>1) Quiz them.</strong> Ask them how they could improve on something instead of just telling them. Making them think reinforces long-term learning.</li>
+<li><strong>2) Summary feedback.</strong> Feedback provided after a series of no-feedback attempts. Wrestlers retain more with summary feedback — we don’t correct every rep, especially with new wrestlers. When the goal is long-term learning, they need a break in feedback in order to develop their own internal feedback.</li>
+<li><strong>3) Bandwidth.</strong> Give feedback only when the wrestler reaches a certain degree of error. Let them make small mistakes without being overwhelmed with feedback.</li>
+</ul>
+<p><strong>Summary:</strong> During learning practices (most of them), allow some degree of error and let wrestlers make mistakes without providing feedback. Ask questions first before giving feedback.</p>
+<blockquote>
+“Your double leg set up is awesome. I can tell you’ve been practicing it. What do you think about the finish?”<br>
+“I don’t know…”<br>
+“Where should your head be when taking the shot?”<br>
+“Um… up as high as possible.”
+</blockquote>
+<h3>Performance Feedback</h3>
+<ul>
+<li><strong>1) Immediate feedback.</strong> Tell them directly right away, which leads to more improvement in short-term performance.</li>
+</ul>
+<p><strong>Summary:</strong> During a performance practice — the day before regionals, for example — let them know right away with less degree of error. There’s no need to ask questions.</p>
+<blockquote>“The double leg set up and shot was great. Keep your head up on the finish.”</blockquote>
+<h3>Elite Mindset Feedback</h3>
+<ul>
+<li><strong>1) Praise the process and effort</strong> (what they can control).</li>
+</ul>
+<blockquote>“Wow. Your double is explosive. I can tell you’ve drilled it.” — instead of, “Wow. You’re a gifted athlete.”<br>If she is a “gifted” athlete, maybe she’s actually not — maybe she is the athlete she is because she’s been working at becoming an athlete her whole life, and all that time and effort can be praised too.</blockquote>
+<p><strong>Summary:</strong> Providing effort- and process-based feedback consistently can make a big impact.</p>
+        </div>
+      </article>
+
+      <article class="handbook-section" id="improve" data-index="4">
+        <div class="section-number">05</div>
+        <h2>Improve as Coaches</h2>
+        <div class="section-body">
+<p>All of our coaches work to improve, both for ourselves and for the program. Coach Carl wants to know every coach’s coaching goal(s) for each season and beyond.</p>
+<h3>Resources</h3>
+<ul>
+<li>NHSCA (National High School Coaches Association)</li>
+<li>Wrestling Insider</li>
+<li>Wrestle Like a Girl</li>
+<li>Z Wrestling Mindset</li>
+<li>All In Wrestler’s Journal</li>
+<li>Coach Beyond</li>
+<li>Brian Cain Mindset</li>
+<li>LuchaFit</li>
+<li>Coaching Her</li>
+<li>Fanatic Wrestling</li>
+<li>Flo Wrestling</li>
+</ul>
+<h3>Coach Carl Recommends</h3>
+<p class="small-note" style="color:var(--muted);margin-top:-6px">Any training or clinic will be paid by the club or school.</p>
+<ul>
+<li>Attending the Wisconsin Wrestling Association Clinic in November each year</li>
+<li>Attending online WWA meetings / Girl’s Advisory Meetings</li>
+<li>Becoming a USA Wrestling Member and becoming Teal Certified</li>
+</ul>
+<h3>Required by Coach Carl</h3>
+<ul>
+<li><strong>Coach Beyond Training</strong> — this will help us support athletes with mental health and/or other issues they are experiencing.</li>
+</ul>
+<h3>Other Opportunities</h3>
+<p>Coach Carl is a WWA member (Jason Lullof is the president too), a member of the Wisconsin Girl’s Wrestling Advisory Group, a USA Wrestling freestyle/Greco official, and Wisconsin Wrestling Federation Girls National Team Coach. Let him know if you want to get involved in any of those. Subscribe to Flo or use Carl’s login.</p>
+<h3>Weekly Coaches Meeting Check-In</h3>
+<p>We will also improve during the season using a short weekly assessment during our coaches meetings.</p>
+<p><strong>Leadership Strategy: Start, Stop, Continue</strong> — choose one thing to start doing to improve leadership/coaching, one thing to stop doing in order to be an effective leader, and one thing already going well.</p>
+<ul>
+<li><strong>Start:</strong> ______________________________</li>
+<li><strong>Stop:</strong> ______________________________</li>
+<li><strong>Continue:</strong> ______________________________</li>
+</ul>
+<blockquote>Cain, Brian. (2019). <em>Mental Performance Mastery Coaching Certification Course Manual</em> (2nd ed.). Brian Cain Peak Performance.</blockquote>
+        </div>
+      </article>
+
+      <article class="handbook-section" id="technique" data-index="5">
+        <div class="section-number">06</div>
+        <h2>Technique Philosophy</h2>
+        <div class="section-body">
+<p><strong>1) Be great at a few things rather than average (or worse) at a lot of things.</strong></p>
+<blockquote>“Teach a lot of the little.” “Focus on a few things and do it well… develop an identity, and this is what we are going to be good at. If you’re a team that gets that identity, it grows confidence in your team.”</blockquote>
+<p>Our identity will be the priorities in the technique web, based on what works at the highest levels. For example, single legs, snapdowns, and re-attacks/shot defense are by far the most common ways girls score at state, national, and senior-level events.</p>
+<p><strong>80/20 principle:</strong> 80% of our technique success comes from mastering 20% of wrestling skills.</p>
+<p><strong>2) Master the basic skills.</strong></p>
+<p>Fundamentals create highlights — Amit Elor and Carley Ceshker are perfect examples of this.</p>
+<blockquote>“Why do you think I’m the best player in the world? Because I never ever get bored with the basics.” — Kobe Bryant</blockquote>
+<p>We don’t have to “go back to the basics” because we don’t stop doing them. Practices look pretty consistent each week — we work and develop common positions.</p>
+<blockquote>“I fear not the man who has practiced 10,000 kicks once, but I fear the man who has practiced one kick 10,000 times.” — Bruce Lee</blockquote>
+<p><strong>3) Score points and have fun.</strong></p>
+<h3>Neutral Priorities</h3>
+<ol>
+<li>Find your tie and control it</li>
+<li>Attack and score with your primary offense (single or snapdown for most)</li>
+<li>Have elite defense and re-attack — refuse to be taken down</li>
+<li>Be dangerous by having a throw (headlock or honey badger for most)</li>
+<li>If you get underneath her, get out quickly</li>
+</ol>
+<h3>Bottom Priorities</h3>
+<ol>
+<li>Seal or two-on-one and find one point</li>
+<li>Keep wrists clear</li>
+<li>Keep our hips/legs underneath us</li>
+</ol>
+<h3>Top Priorities</h3>
+<ol>
+<li>Be a hammer and run a half or bar</li>
+<li>Secure a wrist and have hip pressure at the same time</li>
+<li>Put her weight on her hands</li>
+</ol>
+<p><strong>Being a hammer means:</strong></p>
+<ol>
+<li>Run everything hard</li>
+<li>Keep breaking her down until she does not want to get up again</li>
+<li>We are not shy about picking top, because we have the mindset that we will pin her</li>
+</ol>
+<h3>Mindset Priorities</h3>
+<ol>
+<li>Have an elite mindset with elite mindset talk and actions</li>
+<li>Focus on the moment and follow a pre-match routine</li>
+<li>Have a strategy/mindset during a match to handle adversity and know what they want their coaches to say from the corner</li>
+<li>Turn nerves into excitement</li>
+<li>Set clear goals, know why we want to achieve them, and post their goals where we will see them</li>
+<li>Respond positively to adversity</li>
+<li>Identify what habits should be stopped or continued in order to be successful</li>
+<li>Have a process-over-outcome mentality and focus on what they can control, rather than what they cannot control</li>
+<li>Understand a habit loop and how to replace a bad habit with a good habit</li>
+<li>Know tips and strategies for good time management and organization</li>
+</ol>
+        </div>
+      </article>
+
+      <div class="pagination">
+        <button id="prevButton">← Previous</button>
+        <button id="nextButton">Next →</button>
+      </div>
+
+      <div class="note-card">More coach resources — practice plans, roster tools, and more — will be added here next. Let Coach Carl know what should go here.</div>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+const PASSCODE = "illhaveanother";
+const SESSION_KEY = "holmenCoachHubAccess";
+const sections = ['expectations', 'shared', 'leadership', 'feedback', 'improve', 'technique'];
+const titles = ['Head vs Assistant Coach Expectations', 'Shared Expectations', 'Leadership Keys', 'Giving Good Feedback', 'Improve as Coaches', 'Technique Philosophy'];
+let currentIndex = 0;
+
+const login = document.getElementById("login");
+const app = document.getElementById("app");
+const logout = document.getElementById("logout");
+const form = document.getElementById("loginForm");
+const input = document.getElementById("passcode");
+const error = document.getElementById("error");
+const tocLinks = [...document.querySelectorAll(".toc-link")];
+const handbookSections = [...document.querySelectorAll(".handbook-section")];
+const prevButton = document.getElementById("prevButton");
+const nextButton = document.getElementById("nextButton");
+const mobileToc = document.getElementById("mobileToc");
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+
+function showApp() {
+  sessionStorage.setItem(SESSION_KEY, "granted");
+  login.style.display = "none";
+  app.style.display = "block";
+  logout.style.display = "inline-flex";
+}
+
+function showLogin() {
+  sessionStorage.removeItem(SESSION_KEY);
+  login.style.display = "grid";
+  app.style.display = "none";
+  logout.style.display = "none";
+  input.value = "";
+  input.focus();
+}
+
+function showSection(index) {
+  currentIndex = Math.max(0, Math.min(index, sections.length - 1));
+  handbookSections.forEach((el, i) => el.classList.toggle("active", i === currentIndex));
+  tocLinks.forEach((el, i) => el.classList.toggle("active", i === currentIndex));
+  mobileToc.value = sections[currentIndex];
+  prevButton.disabled = currentIndex === 0;
+  nextButton.disabled = currentIndex === sections.length - 1;
+  searchResults.style.display = "none";
+  const headerHeight = document.querySelector(".header").offsetHeight;
+  const layoutTop = document.querySelector(".layout").getBoundingClientRect().top + window.scrollY;
+  window.scrollTo({ top: layoutTop - headerHeight - 20, behavior: "smooth" });
+}
+
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  if (input.value.trim() === PASSCODE) {
+    error.style.display = "none";
+    showApp();
+  } else {
+    error.style.display = "block";
+    input.select();
+  }
+});
+
+logout.addEventListener("click", showLogin);
+tocLinks.forEach((link, index) => link.addEventListener("click", () => showSection(index)));
+mobileToc.addEventListener("change", () => showSection(sections.indexOf(mobileToc.value)));
+prevButton.addEventListener("click", () => showSection(currentIndex - 1));
+nextButton.addEventListener("click", () => showSection(currentIndex + 1));
+
+searchInput.addEventListener("input", () => {
+  const q = searchInput.value.trim().toLowerCase();
+  if (q.length < 2) {
+    searchResults.style.display = "none";
+    return;
+  }
+  const matches = handbookSections.map((el, i) => ({
+    index: i,
+    text: el.innerText.toLowerCase()
+  })).filter(item => item.text.includes(q));
+
+  searchResults.innerHTML = matches.length
+    ? `<strong>${matches.length} section${matches.length === 1 ? "" : "s"} found</strong>` +
+      matches.map(m => `<button class="search-result" data-index="${m.index}"><strong>${titles[m.index]}</strong><br>Contains “${searchInput.value}”</button>`).join("")
+    : `<strong>No sections found for “${searchInput.value}”.</strong>`;
+
+  searchResults.style.display = "block";
+  document.querySelectorAll(".search-result").forEach(btn =>
+    btn.addEventListener("click", () => {
+      showSection(Number(btn.dataset.index));
+      searchInput.value = "";
+    })
+  );
+});
+
+if (sessionStorage.getItem(SESSION_KEY) === "granted") showApp();
+showSection(0);
+</script>
+</body>
+</html>

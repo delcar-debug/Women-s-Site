@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Athlete Information Form | Holmen Women’s Wrestling</title>
+  <style>
+    :root{--maroon:#6d1730;--dark:#3f0b1a;--light:#f5f5f7;--ink:#19191d;--muted:#676b73;--border:#e1e2e5}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--light);color:var(--ink)}
+    .header{min-height:74px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+    .header a{font-weight:900;color:var(--maroon);text-decoration:none}
+    .hero{background:linear-gradient(135deg,var(--maroon),var(--dark));color:#fff;padding:50px 20px}
+    .container{width:min(900px,calc(100% - 28px));margin:auto}
+    h1{font-size:clamp(2.5rem,6vw,4.3rem);letter-spacing:-.05em;margin:0 0 12px}
+    .hero p{line-height:1.65;color:#f0dde3;max-width:760px}
+    .content{padding:32px 0 70px}
+    form{display:grid;gap:18px}
+    .section{background:#fff;border:1px solid var(--border);border-radius:18px;padding:20px}
+    .section h2{margin:0 0 15px;color:var(--maroon);font-size:1.2rem}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .field{display:grid;gap:6px}.field.full{grid-column:1/-1}
+    label{font-weight:800;font-size:.92rem}
+    input,select{width:100%;min-height:46px;border:1px solid #d5d7db;border-radius:10px;padding:0 12px;background:#fff}
+    .button{border:0;border-radius:999px;background:var(--maroon);color:#fff;min-height:48px;padding:0 20px;font-weight:900;cursor:pointer}
+    .status{display:none;padding:12px 14px;border-radius:10px;font-weight:800}
+    .status.success{display:block;background:#eaf6ef;color:#1f7a4d;border:1px solid #bde0ca}
+    @media(max-width:680px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.header{padding:0 14px}}
+  </style>
+</head>
+<body>
+<header class="header">
+  <a href="team-hub.html">Holmen Women’s Wrestling</a>
+  <a href="preseason-checklist.html">Back to Preseason Checklist</a>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>Athlete Information Form</h1>
+    <p>Use this form so we have all your contact information and can get you a USA Wrestling Membership. The membership is important for camps and tournaments and can provide supplemental insurance. One of our wrestlers was reimbursed $500 after an injury.</p>
+    <p>All fields are required except Parent/Guardian 2 information and the USA Wrestling membership number.</p>
+  </div>
+</section>
+
+<main class="content">
+<div class="container">
+<form id="athleteForm">
+  <section class="section">
+    <h2>Athlete Information</h2>
+    <div class="grid">
+      <div class="field"><label>First Name *</label><input name="firstName" required></div>
+      <div class="field"><label>Last Name *</label><input name="lastName" required></div>
+      <div class="field"><label>Birthday *</label><input name="birthday" type="date" required></div>
+      <div class="field"><label>T-Shirt Size *</label>
+        <select name="shirtSize" required>
+          <option value="">Select a size</option>
+          <option>Youth XL</option><option>Adult XS</option><option>Adult S</option>
+          <option>Adult M</option><option>Adult L</option><option>Adult XL</option><option>Adult 2XL</option>
+        </select>
+      </div>
+      <div class="field full"><label>Wrestler Cell Phone *</label><input name="wrestlerPhone" type="tel" required></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Home Address</h2>
+    <div class="grid">
+      <div class="field full"><label>Street Address *</label><input name="street" required></div>
+      <div class="field"><label>City *</label><input name="city" required></div>
+      <div class="field"><label>State *</label><input name="state" value="WI" required></div>
+      <div class="field"><label>ZIP Code *</label><input name="zip" pattern="[0-9]{5}(-[0-9]{4})?" required></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Parent / Guardian 1</h2>
+    <div class="grid">
+      <div class="field"><label>Name *</label><input name="parent1Name" required></div>
+      <div class="field"><label>Cell Phone *</label><input name="parent1Phone" type="tel" required></div>
+      <div class="field full"><label>Email *</label><input name="parent1Email" type="email" required></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Parent / Guardian 2 (Optional)</h2>
+    <div class="grid">
+      <div class="field"><label>Name</label><input name="parent2Name"></div>
+      <div class="field"><label>Cell Phone</label><input name="parent2Phone" type="tel"></div>
+      <div class="field full"><label>Email</label><input name="parent2Email" type="email"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Wrestling Information</h2>
+    <div class="field"><label>USA Wrestling Membership Number (Optional)</label><input name="usaCardNumber"></div>
+  </section>
+
+  <button class="button" type="submit">Save Athlete Information</button>
+  <div id="status" class="status"></div>
+</form>
+</div>
+</main>
+
+<script>
+const form=document.getElementById('athleteForm');
+const status=document.getElementById('status');
+form.addEventListener('submit',e=>{
+  e.preventDefault();
+  if(!form.checkValidity()){form.reportValidity();return;}
+  const entry=Object.fromEntries(new FormData(form).entries());
+  entry.submittedAt=new Date().toISOString();
+  const saved=JSON.parse(localStorage.getItem('holmenAthleteInformation')||'[]');
+  saved.push(entry);
+  localStorage.setItem('holmenAthleteInformation',JSON.stringify(saved));
+  form.reset();
+  form.elements.state.value='WI';
+  status.textContent='Athlete information saved on this device.';
+  status.className='status success';
+});
+</script>
+</body>
+</html>
