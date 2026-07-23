@@ -243,6 +243,55 @@
       background: transparent;
       font-size: 1.5rem;
       cursor: pointer;
+      line-height: 1;
+    }
+
+    .mobile-nav-panel {
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+      background: #fff;
+      border-top: 1px solid #eee;
+      padding: 10px 20px 18px;
+    }
+
+    .mobile-nav-panel.open { display: flex; }
+
+    .mobile-nav-panel a {
+      text-decoration: none;
+      color: var(--ink, #19191d);
+      font-weight: 760;
+      font-size: .96rem;
+      padding: 12px 4px;
+      border-bottom: 1px solid #f1eef0;
+    }
+
+    .mobile-nav-panel a:hover { color: var(--maroon); }
+
+    .mobile-nav-panel a.button {
+      border-bottom: none;
+      text-align: center;
+      border-radius: 999px;
+      margin-top: 8px;
+      padding: 12px 4px;
+    }
+
+    .mobile-nav-panel .mobile-nav-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mobile-nav-panel .mobile-nav-heading {
+      padding: 12px 4px 4px;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      font-weight: 800;
+      color: #9a9ea3;
+    }
+
+    .mobile-nav-panel .mobile-nav-group a {
+      padding-left: 14px;
     }
 
     .hero {
@@ -1020,8 +1069,26 @@
         <a class="button secondary" href="coach-hub.html">Coach Hub</a>
       </div>
 
-      <button class="menu-button" aria-label="Open navigation" onclick="alert('Mobile navigation will be connected when we build the remaining pages.')">☰</button>
+      <button class="menu-button" id="mobileMenuBtn" aria-label="Open navigation" aria-expanded="false" aria-controls="mobileNavPanel">☰</button>
     </nav>
+
+    <div class="mobile-nav-panel" id="mobileNavPanel">
+      <a href="#top">Home</a>
+      <a href="#pillars">About</a>
+      <a href="calendar.html">Calendar</a>
+      <div class="mobile-nav-group">
+        <span class="mobile-nav-heading">Herstory</span>
+        <a href="recaps.html">Recaps</a>
+        <a href="timeline.html">Timeline</a>
+        <a href="results.html">Past Season Results</a>
+        <a href="stats-records.html">Stats, Records &amp; Awards</a>
+        <a href="media-gallery.html">Media Gallery</a>
+        <a href="grow-your-team.html">Women's Wrestling Resources</a>
+      </div>
+      <a href="#join">Join</a>
+      <a class="button" href="team-hub.html">Team Hub</a>
+      <a class="button secondary" href="coach-hub.html">Coach Hub</a>
+    </div>
   </header>
 
   <main id="top">
@@ -1392,6 +1459,41 @@
 
   tick();
   var timer = setInterval(tick, 1000);
+})();
+
+(function () {
+  var btn = document.getElementById("mobileMenuBtn");
+  var panel = document.getElementById("mobileNavPanel");
+  if (!btn || !panel) return;
+
+  function closeMenu() {
+    panel.classList.remove("open");
+    btn.setAttribute("aria-expanded", "false");
+    btn.textContent = "☰";
+  }
+
+  function openMenu() {
+    panel.classList.add("open");
+    btn.setAttribute("aria-expanded", "true");
+    btn.textContent = "✕";
+  }
+
+  btn.addEventListener("click", function () {
+    if (panel.classList.contains("open")) closeMenu();
+    else openMenu();
+  });
+
+  panel.querySelectorAll("a").forEach(function (link) {
+    link.addEventListener("click", closeMenu);
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeMenu();
+  });
+
+  window.addEventListener("resize", function () {
+    if (window.innerWidth > 980) closeMenu();
+  });
 })();
 
 (function () {
