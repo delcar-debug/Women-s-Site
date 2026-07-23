@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Manager Hub | Holmen Women’s Wrestling</title>
+<style>
+:root {
+  --maroon:#6d1730; --dark:#3e0919; --soft:#f4f4f6; --white:#fff;
+  --ink:#19191d; --muted:#666b73; --border:#e1e2e5;
+  --shadow:0 16px 45px rgba(20,12,15,.10);
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:var(--soft); }
+a { color:var(--maroon); }
+button,input { font:inherit; }
+.header { height:76px; background:#fff; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; position:sticky; top:0; z-index:40; }
+.brand { display:flex; align-items:center; gap:10px; color:var(--maroon); font-weight:900; text-decoration:none; }
+.brand img { width:54px; height:54px; object-fit:contain; }
+.header-actions { display:flex; gap:12px; align-items:center; }
+.link-button,.primary-button { border:0; border-radius:999px; min-height:43px; padding:0 17px; font-weight:850; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+.link-button { background:#fff; color:var(--maroon); border:1px solid #d8bcc5; }
+.primary-button { background:var(--maroon); color:#fff; }
+.login { min-height:calc(100vh - 76px); display:grid; place-items:center; padding:24px; background:linear-gradient(rgba(55,5,20,.91),rgba(55,5,20,.91)),radial-gradient(circle at top right,#a94461,#3d0918 65%); }
+.login-card { width:min(460px,100%); background:#fff; border-radius:25px; padding:34px; text-align:center; box-shadow:0 28px 80px rgba(0,0,0,.3); }
+.login-card img { width:110px; height:110px; object-fit:contain; margin:auto; }
+.login-card h1 { margin:8px 0; font-size:2.5rem; letter-spacing:-.05em; }
+.login-card p { color:var(--muted); line-height:1.55; }
+.login-card input { width:100%; min-height:50px; padding:0 14px; border:1px solid #d4d6da; border-radius:11px; outline:none; margin-top:8px; }
+.login-card input:focus { border-color:var(--maroon); box-shadow:0 0 0 3px rgba(109,23,48,.12); }
+.login-card .primary-button { width:100%; margin-top:14px; }
+.error { display:none; color:#982323; background:#fff0f0; border-radius:10px; margin-top:12px; padding:10px; font-weight:750; }
+.app { display:none; }
+.hero { position:relative; overflow:hidden; background:linear-gradient(135deg,var(--maroon),var(--dark)); color:#fff; padding:45px 28px; }
+.hero-watermark { position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center; z-index:0; pointer-events:none; overflow:hidden; }
+.hero-watermark img { width:min(700px,70%); opacity:.12; object-fit:contain; transform:translateY(45%);}
+.hero-inner { position:relative; z-index:1; width:min(1240px,100%); margin:auto; }
+.hero h1 { margin:5px 0 8px; font-size:clamp(2.4rem,5vw,4.4rem); letter-spacing:-.055em; }
+.hero p { margin:0; color:#ecd9df; line-height:1.6; max-width:760px; }
+.eyebrow { text-transform:uppercase; letter-spacing:.16em; font-size:.75rem; font-weight:900; color:#efc8d4; }
+.section-block { width:min(1240px,calc(100% - 28px)); margin:28px auto 0; }
+.section-block:last-child { margin-bottom:70px; }
+.section-block h2 { margin:0 0 14px; font-size:1.4rem; letter-spacing:-.03em; }
+.resource-card-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.resource-card { background:#fff; border:1px solid var(--border); border-radius:20px; padding:20px; box-shadow:0 10px 32px rgba(20,15,17,.06); }
+.resource-card h3 { margin:0 0 8px; font-size:1.15rem; }
+.resource-card p { color:var(--muted); line-height:1.5; }
+.resource-card-actions { margin-top:14px; display:flex; flex-wrap:wrap; gap:10px; }
+.resource-card.wide { grid-column:1/-1; }
+.resource-card.wide .section-body h4 { margin:20px 0 8px; color:var(--maroon); font-size:1.05rem; }
+.resource-card.wide .section-body h4:first-child { margin-top:0; }
+.resource-card.wide .section-body ol,.resource-card.wide .section-body ul { padding-left:22px; margin:8px 0; }
+.resource-card.wide .section-body li { line-height:1.65; margin:6px 0; color:#333; }
+.resource-card.wide .section-body li strong { color:var(--ink); }
+.thank-you-line { margin:22px 0; padding:20px 24px; border-left:5px solid var(--maroon); background:#f7f2f4; border-radius:0 14px 14px 0; font-size:1.3rem; font-weight:850; color:var(--maroon); line-height:1.45; }
+.task-card { background:#fff; border:1px solid var(--border); border-radius:20px; box-shadow:var(--shadow); }
+.task-card-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.task-card { padding:20px; }
+.task-card h3 { margin:0 0 4px; font-size:1.1rem; color:var(--maroon); }
+.task-card .task-hint { color:var(--muted); font-size:.85rem; margin:0 0 12px; }
+.complete-row { display:flex; gap:10px; align-items:flex-start; padding:10px 0; border-top:1px solid var(--border); font-weight:750; }
+.complete-row:first-of-type { border-top:0; padding-top:0; }
+.complete-row input { width:19px; height:19px; margin-top:2px; flex:0 0 auto; accent-color:var(--maroon); }
+.complete-row span { line-height:1.4; }
+.complete-row .detail { display:block; color:var(--muted); font-weight:500; font-size:.85rem; margin-top:2px; }
+@media(max-width:900px) { .resource-card-grid,.task-card-grid { grid-template-columns:1fr; } }
+@media(max-width:620px) {
+  .header { padding:0 13px; }
+  .brand span { display:none; }
+  .header-actions .link-button { display:none; }
+  .hero { padding:38px 18px; }
+}
+</style>
+</head>
+<body>
+<header class="header">
+  <a class="brand" href="index.html"><img src="assets/images/logo.png" alt="Holmen Women's Wrestling logo"><span>Holmen Women’s Wrestling</span></a>
+  <div class="header-actions">
+    <a class="link-button" href="index.html">Back to Home</a>
+  </div>
+</header>
+
+<main>
+<section id="app" class="app">
+  <div class="hero">
+    <div class="hero-watermark"><img src="assets/images/logo.png" alt=""></div>
+    <div class="hero-inner">
+      <div class="eyebrow">Manager Resources</div>
+      <h1>Manager Hub</h1>
+      <p>Thank you for being part of our program! We appreciate everything you do for us. Everything you need — expectations, task checklists, and equipment/roster access — is right here.</p>
+    </div>
+  </div>
+
+  <section class="section-block">
+    <h2>Quick Links</h2>
+    <div class="resource-card-grid">
+      <article class="resource-card">
+        <h3>🗒️ Manager's List Spreadsheet</h3>
+        <p>Daily and weekly tasks rotate between managers — check it to see what's yours to complete.</p>
+        <div class="resource-card-actions">
+          <a class="primary-button" href="https://docs.google.com/spreadsheets/d/1np7oFKGHQgSn4WcG5szirpk0H0oT0NBYnRpd6PUh6b0/edit?usp=sharing" target="_blank" rel="noopener">Open Spreadsheet</a>
+        </div>
+      </article>
+
+      <article class="resource-card">
+        <h3>🎒 Equipment Tracker</h3>
+        <p>View and update per-wrestler singlet, shorts, 1/4 zip, and bag checkout info.</p>
+        <div class="resource-card-actions">
+          <a class="primary-button" href="equipment-tracker.html">Open Equipment Tracker</a>
+        </div>
+      </article>
+
+      <article class="resource-card">
+        <h3>📋 Team Roster</h3>
+        <p>See the list of wrestlers on the team. Contact info and other personal details aren't shown here.</p>
+        <div class="resource-card-actions">
+          <a class="primary-button" href="roster-names.html">Open Team Roster</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <h2>Expectations</h2>
+    <div class="resource-card-grid">
+      <article class="resource-card wide">
+        <div class="section-body">
+          <h4>General Expectations</h4>
+          <ol>
+            <li><strong>Complete all the tasks on the Manager's List Spreadsheet.</strong></li>
+            <li>Although a lot of the expectations in the team handbook apply only to wrestlers, managers still need to follow the expectations on culture, mindset, letting Coach Carl know when they will be gone, being on time, and any other expectation that is not wrestling specific.</li>
+            <li>There is no requirement to attend practices. Just be around enough to complete the list.
+              <ul>
+                <li>There are daily and weekly tasks that can be rotated between managers.</li>
+              </ul>
+            </li>
+            <li>Attend every meet or arrange things with Carl in advance of missing a meet.</li>
+            <li>Take Matboss video during meets.</li>
+          </ol>
+
+          <p class="thank-you-line">Thank you for being a part of our program! We appreciate everything you do for us!</p>
+
+          <h4>Task Details — Pre Meet</h4>
+          <ol>
+            <li>Bring iPads</li>
+            <li>Restock/Organize Medkit
+              <ul>
+                <li>Ask other managers or compare contents to the boys kit. Also, make sure there are tampons, pads (various sizes of both), hair ties, hair rubber bands, tape, re-wrap, and band aids.</li>
+                <li>Make sure finals singlets are in the bag</li>
+              </ul>
+            </li>
+            <li>Bring Medkit</li>
+          </ol>
+
+          <h4>Task Details — Post Meet</h4>
+          <ol>
+            <li>Upload Matboss videos
+              <ul>
+                <li>Plug in the iPads prior to leaving for home after the meet and go to "Upload"</li>
+              </ul>
+            </li>
+            <li>Matboss Verify
+              <ul>
+                <li>Compare to USA Bracketing and see what matches are missing. Correct scores on Matboss if needed also.</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <h2>Task Checklist</h2>
+    <div class="task-card-grid">
+      <article class="task-card">
+        <h3>Pre Meet</h3>
+        <p class="task-hint">Before leaving for the meet.</p>
+        <label class="complete-row">
+          <input id="task_bringIpads" type="checkbox">
+          <span>Bring iPads</span>
+        </label>
+        <label class="complete-row">
+          <input id="task_restockMedkit" type="checkbox">
+          <span>Restock/organize medkit
+            <span class="detail">Tampons, pads (various sizes), hair ties, hair rubber bands, tape, re-wrap, band aids, and finals singlets in the bag.</span>
+          </span>
+        </label>
+        <label class="complete-row">
+          <input id="task_bringMedkit" type="checkbox">
+          <span>Bring medkit</span>
+        </label>
+      </article>
+
+      <article class="task-card">
+        <h3>During Meet</h3>
+        <p class="task-hint">While the meet is happening.</p>
+        <label class="complete-row">
+          <input id="task_matbossVideo" type="checkbox">
+          <span>Matboss video</span>
+        </label>
+        <label class="complete-row">
+          <input id="task_markHighlights" type="checkbox">
+          <span>Mark cool highlights during recording</span>
+        </label>
+        <label class="complete-row">
+          <input id="task_verifyScore" type="checkbox">
+          <span>Be ready to verify score (ind. or team)</span>
+        </label>
+        <label class="complete-row">
+          <input id="task_funPhotos" type="checkbox">
+          <span>Take fun photos</span>
+        </label>
+      </article>
+
+      <article class="task-card">
+        <h3>Post Meet</h3>
+        <p class="task-hint">After the meet, before heading home.</p>
+        <label class="complete-row">
+          <input id="task_uploadMatboss" type="checkbox">
+          <span>Upload Matboss videos
+            <span class="detail">Plug in the iPads before leaving and go to "Upload".</span>
+          </span>
+        </label>
+        <label class="complete-row">
+          <input id="task_verifyMatboss" type="checkbox">
+          <span>Matboss verify
+            <span class="detail">Compare to USA Bracketing, fill in missing matches, and correct scores if needed.</span>
+          </span>
+        </label>
+      </article>
+
+      <article class="task-card">
+        <h3>Weekly / Monthly Upkeep</h3>
+        <p class="task-hint">Rotates between managers.</p>
+        <label class="complete-row">
+          <input id="task_sweepVacuum" type="checkbox">
+          <span>Sweep mats and vacuum the room edges — weekly
+            <span class="detail">Off the mat and under the wall mats, girls side only.</span>
+          </span>
+        </label>
+        <label class="complete-row">
+          <input id="task_ropeWall" type="checkbox">
+          <span>Organize and make the rope wall pretty — weekly</span>
+        </label>
+        <label class="complete-row">
+          <input id="task_drawers" type="checkbox">
+          <span>Organize our drawers — weekly</span>
+        </label>
+        <label class="complete-row">
+          <input id="task_wipeWalls" type="checkbox">
+          <span>Spray and wipe down the mat walls — monthly</span>
+        </label>
+      </article>
+    </div>
+  </section>
+</section>
+</main>
+
+<script>
+document.getElementById("app").style.display = "block";
+
+const STORAGE_KEY = "holmenManagerChecklist";
+const taskIds = ["task_bringIpads","task_restockMedkit","task_bringMedkit","task_matbossVideo","task_markHighlights","task_verifyScore","task_funPhotos","task_uploadMatboss","task_verifyMatboss","task_sweepVacuum","task_ropeWall","task_drawers","task_wipeWalls"];
+const taskBoxes = taskIds.map(id => document.getElementById(id));
+
+function saveChecklist() {
+  const state = {};
+  taskIds.forEach((id, i) => { state[id] = Boolean(taskBoxes[i] && taskBoxes[i].checked); });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+taskIds.forEach((id, i) => {
+  if (taskBoxes[i]) taskBoxes[i].checked = Boolean(saved[id]);
+});
+
+taskBoxes.forEach(box => { if (box) box.addEventListener("change", saveChecklist); });
+</script>
+</body>
+</html>

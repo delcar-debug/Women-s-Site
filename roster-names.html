@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Team Roster | Holmen Women’s Wrestling</title>
+<style>
+:root{--maroon:#6d1730;--dark:#3f0b1a;--light:#f5f5f7;--ink:#19191d;--muted:#676b73;--border:#e1e2e5}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--light);color:var(--ink)}
+a{color:inherit}
+.header{height:74px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:20}
+.brand,.back{font-weight:900;color:var(--maroon);text-decoration:none}
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--maroon),var(--dark));color:#fff;padding:50px 20px}
+.hero-watermark{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;z-index:0;pointer-events:none;overflow:hidden}
+.hero-watermark img{width:min(700px,70%);opacity:.12;object-fit:contain;transform:translateY(45%)}
+.hero .container{position:relative;z-index:1}
+.container{width:min(1000px,calc(100% - 28px));margin:auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;font-weight:900;color:#efc8d4}
+h1{font-size:clamp(2.2rem,5vw,3.6rem);letter-spacing:-.05em;margin:8px 0}
+.hero p{max-width:760px;line-height:1.65;color:#f0dde3}
+.content{padding:32px 0 70px}
+h2.section-title{font-size:1.4rem;letter-spacing:-.02em;margin:0 0 6px;color:var(--maroon)}
+.section-sub{font-size:.88rem;color:var(--muted);margin:0 0 20px}
+.name-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.name-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 6px 18px rgba(20,12,15,.05)}
+.name-num{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:#f7eef1;color:var(--maroon);font-weight:900;font-size:.82rem;display:flex;align-items:center;justify-content:center}
+.name-text{font-weight:800;font-size:.98rem}
+.empty-note{color:var(--muted);font-size:.9rem}
+@media(max-width:600px){.header{padding:0 14px}}
+</style>
+</head>
+<body>
+<header class="header">
+<a class="brand" href="manager-hub.html">Holmen Women’s Wrestling</a>
+<a class="back" href="manager-hub.html">Back to Manager Hub</a>
+</header>
+
+<section class="hero">
+<div class="hero-watermark"><img src="assets/images/logo.png" alt=""></div>
+<div class="container">
+<div class="eyebrow">Manager Hub</div>
+<h1>Team Roster</h1>
+<p>Just the wrestler names on our roster. Contact info, addresses, and other personal details are only available to coaches in the Coach Hub.</p>
+</div>
+</section>
+
+<main class="content">
+<div class="container">
+
+<h2 class="section-title">Wrestlers</h2>
+<p class="section-sub">Sorted alphabetically by first name.</p>
+<div class="name-grid" id="nameGrid"></div>
+<p class="empty-note" id="emptyNote" style="display:none">No wrestlers on the roster yet.</p>
+
+</div>
+</main>
+
+<script>
+const STORAGE_KEY = 'holmenWWRosterManager';
+
+const ORIGINAL_NAMES = ['Peyton Kratochvill','Avalee Euler','Ellie Adams','Abby Molling','Sophia Walter','Aini Anderson','Kaytlynn Lambries','Celia Drogseth','Olive Bergmann','Karis Dylhoff','Ruby Gustafson','Ema Nedoba','Lynzi Neumann','Mallory','Kaina Westlie','Riley Inglett','Kayleen Bazan','Pazong Xiong','Birgitta Finn'];
+
+function getNames(){
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(saved){
+    try {
+      const parsed = JSON.parse(saved);
+      if(Array.isArray(parsed) && parsed.length){
+        return parsed
+          .map(e => ((e.firstName||'') + ' ' + (e.lastName||'')).trim())
+          .filter(Boolean);
+      }
+    } catch(e) { /* fall through to defaults */ }
+  }
+  return ORIGINAL_NAMES.slice();
+}
+
+function renderNames(){
+  const names = getNames().sort((a, b) => a.localeCompare(b));
+  const grid = document.getElementById('nameGrid');
+  const emptyNote = document.getElementById('emptyNote');
+  grid.innerHTML = '';
+  if(!names.length){
+    emptyNote.style.display = 'block';
+    return;
+  }
+  emptyNote.style.display = 'none';
+  names.forEach((name, i) => {
+    const card = document.createElement('div');
+    card.className = 'name-card';
+    const num = document.createElement('div');
+    num.className = 'name-num';
+    num.textContent = String(i + 1);
+    const text = document.createElement('div');
+    text.className = 'name-text';
+    text.textContent = name;
+    card.appendChild(num);
+    card.appendChild(text);
+    grid.appendChild(card);
+  });
+}
+
+renderNames();
+</script>
+</body>
+</html>

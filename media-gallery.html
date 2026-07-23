@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Media Gallery | Holmen Women’s Wrestling</title>
+<style>
+:root{--maroon:#6d1730;--dark:#3f0b1a;--light:#f5f5f7;--ink:#19191d;--muted:#676b73;--border:#e1e2e5}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--light);color:var(--ink)}
+a{color:inherit}
+.header{height:74px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:20}
+.brand,.back{font-weight:900;color:var(--maroon);text-decoration:none}
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--maroon),var(--dark));color:#fff;padding:58px 20px}
+.hero-watermark{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;z-index:0;pointer-events:none;overflow:hidden}
+.hero-watermark img{width:min(700px,70%);opacity:.12;object-fit:contain;transform:translateY(45%);}
+.hero .container{position:relative;z-index:1}
+.container{width:min(1100px,calc(100% - 28px));margin:auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;font-weight:900;color:#efc8d4}
+h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
+.hero p{max-width:760px;line-height:1.65;color:#f0dde3}
+.content{padding:40px 0 70px}
+h2.section-title{font-size:1.5rem;letter-spacing:-.02em;margin:0 0 18px;color:var(--maroon)}
+.video-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.video-card{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 10px 28px rgba(20,12,15,.06)}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:#000}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-card h3{margin:0;padding:16px 18px;font-size:1.05rem;letter-spacing:-.01em}
+.gallery-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+.gallery-tab{border:1px solid #d8bcc5;background:#fff;color:var(--maroon);border-radius:999px;min-height:44px;padding:0 20px;font-weight:850;cursor:pointer;font-size:.95rem}
+.gallery-tab.active{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+.gallery-panel{display:none}
+.gallery-panel.active{display:block}
+.year-title{margin:28px 0 14px;font-size:1.1rem;color:var(--maroon);letter-spacing:-.01em}
+.year-title:first-of-type{margin-top:0}
+.finisher-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+.finisher-tab{border:1px solid #d8bcc5;background:#fff;color:var(--maroon);border-radius:999px;min-height:40px;padding:0 18px;font-weight:800;cursor:pointer;font-size:.9rem}
+.finisher-tab.active{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+.finisher-panel{display:none}
+.finisher-panel.active{display:block}
+.photo-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:8px}
+.photo-card{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 8px 22px rgba(20,12,15,.06);text-decoration:none;color:inherit;display:block;transition:.15s ease;position:relative}
+.photo-card:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(20,12,15,.12)}
+.photo-card img{width:100%;height:260px;object-fit:cover;display:block;background:#eee}
+.photo-card span{display:block;padding:12px 14px;font-size:.88rem;font-weight:750;line-height:1.35}
+.photo-grid-lg{grid-template-columns:repeat(3,minmax(0,1fr))}
+.photo-grid-lg .photo-card img{height:480px;object-fit:contain;background:#111}
+@media(max-width:900px){.photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.video-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.header{padding:0 14px}.photo-grid{grid-template-columns:1fr 1fr}.photo-card img{height:200px}.photo-grid-lg .photo-card img{height:280px}}
+</style>
+</head>
+<body>
+<header class="header">
+<a class="brand" href="index.html">Holmen Women’s Wrestling</a>
+<a class="back" href="index.html">Back to Home</a>
+</header>
+
+<section class="hero">
+<div class="hero-watermark"><img src="assets/images/logo.png" alt=""></div>
+<div class="container">
+<div class="eyebrow">Herstory</div>
+<h1>Media Gallery</h1>
+<p>Relive our seasons through highlight videos from the mat.</p>
+</div>
+</section>
+
+<main class="content">
+<div class="container">
+
+<div class="gallery-tabs">
+<button class="gallery-tab active" data-panel="videos">Highlight Videos</button>
+<button class="gallery-tab" data-panel="seniors">Senior Posters</button>
+<button class="gallery-tab" data-panel="finishers">Season Finishers</button>
+</div>
+
+<div id="panel-videos" class="gallery-panel active">
+<h2 class="section-title">Highlight Videos</h2>
+<p style="color:var(--muted);margin:-10px 0 24px;line-height:1.6">Credit for the highlight videos goes to <a href="https://www.lancehougdahl.com/" target="_blank" rel="noopener">Lance Hougdahl</a>!</p>
+<div class="video-grid">
+
+<div class="video-card">
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/akHnYYhunhQ" title="Holmen Women's Wrestling 2025-26 Highlight Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+<h3>2025-26 Highlight Video</h3>
+</div>
+
+<div class="video-card">
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/rQOj9rSBaRk" title="Holmen Women's Wrestling 2024-25 Highlight Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+<h3>2024-25 Highlight Video</h3>
+</div>
+
+<div class="video-card">
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/eVMGArn9xz4" title="Holmen Women's Wrestling - 2024 State Qualifiers" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+<h3>2023-24 Highlight Video</h3>
+</div>
+
+<div class="video-card">
+<div class="video-frame"><iframe src="https://www.youtube.com/embed/xAsoVFm5Xdg" title="Holmen Women's Wrestling 2023-24 Highlight Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+<h3>2022-23 Highlight Video</h3>
+</div>
+
+</div>
+</div>
+
+<div id="panel-seniors" class="gallery-panel">
+<h2 class="section-title">Senior Posters</h2>
+<p style="color:var(--muted);margin:-10px 0 24px;line-height:1.6">Credit for the senior posters goes to <a href="https://www.lancehougdahl.com/" target="_blank" rel="noopener">Lance Hougdahl</a>! Click a poster to download it.</p>
+
+<h3 class="year-title">Class of 2023</h3>
+<div class="photo-grid photo-grid-lg">
+<a class="photo-card" href="assets/images/seniors/bella-xiong.jpg" download><img src="assets/images/seniors/bella-xiong.jpg" alt="Bella Xiong senior award poster"></a>
+<a class="photo-card" href="assets/images/seniors/nora-lee.jpg" download><img src="assets/images/seniors/nora-lee.jpg" alt="Nora Lee senior award poster"></a>
+<a class="photo-card" href="assets/images/seniors/evelyn-vetsch.jpg" download><img src="assets/images/seniors/evelyn-vetsch.jpg" alt="Evelyn Vetsch senior award poster"></a>
+<a class="photo-card" href="assets/images/seniors/josye-olson.jpg" download><img src="assets/images/seniors/josye-olson.jpg" alt="Josye Olson senior award poster"></a>
+</div>
+
+<h3 class="year-title">Class of 2024</h3>
+<div class="photo-grid photo-grid-lg">
+<a class="photo-card" href="assets/images/seniors/lauren-barnett.jpg" download><img src="assets/images/seniors/lauren-barnett.jpg" alt="Lauren Barnett senior award poster"></a>
+<a class="photo-card" href="assets/images/seniors/maddie-hall.jpg" download><img src="assets/images/seniors/maddie-hall.jpg" alt="Maddie Hall senior award poster"></a>
+<a class="photo-card" href="assets/images/seniors/nat-johnson.jpg" download><img src="assets/images/seniors/nat-johnson.jpg" alt="Nat Johnson senior award poster"></a>
+<a class="photo-card" href="assets/images/seniors/alice-blackdeer.jpg" download><img src="assets/images/seniors/alice-blackdeer.jpg" alt="Alice Blackdeer senior award poster"></a>
+</div>
+
+<h3 class="year-title">Class of 2025</h3>
+<div class="photo-grid photo-grid-lg">
+<a class="photo-card" href="assets/images/seniors/jozie-collins.jpg" download><img src="assets/images/seniors/jozie-collins.jpg" alt="Jozie Collins senior award poster"></a>
+<a class="photo-card" href="assets/images/seniors/carissa-ceresa.jpg" download><img src="assets/images/seniors/carissa-ceresa.jpg" alt="Carissa Ceresa senior award poster"></a>
+<a class="photo-card" href="assets/images/seniors/alexa-szak.jpg" download><img src="assets/images/seniors/alexa-szak.jpg" alt="Alexa Szak senior award poster"></a>
+<a class="photo-card" href="assets/images/seniors/haley-dezelske.jpg" download><img src="assets/images/seniors/haley-dezelske.jpg" alt="Haley Dezelske senior award poster"></a>
+<a class="photo-card" href="assets/images/seniors/keionna-noel.jpg" download><img src="assets/images/seniors/keionna-noel.jpg" alt="Keionna Noel senior award poster"></a>
+<a class="photo-card" href="assets/images/seniors/natalie-markos.jpg" download><img src="assets/images/seniors/natalie-markos.jpg" alt="Natalie Markos senior award poster"></a>
+<a class="photo-card" href="assets/images/seniors/lexi-maier.jpg" download><img src="assets/images/seniors/lexi-maier.jpg" alt="Lexi Maier senior award poster"></a>
+<a class="photo-card" href="assets/images/seniors/allison-weiss.jpg" download><img src="assets/images/seniors/allison-weiss.jpg" alt="Allison Weiss senior award poster"></a>
+</div>
+
+<h3 class="year-title">Class of 2026</h3>
+<div class="photo-grid photo-grid-lg">
+<a class="photo-card" href="assets/images/seniors/peyton-kratochvill.jpg" download><img src="assets/images/seniors/peyton-kratochvill.jpg" alt="Peyton Kratochvill senior award poster"></a>
+<a class="photo-card" href="assets/images/seniors/sophia-walter.jpg" download><img src="assets/images/seniors/sophia-walter.jpg" alt="Sophia Walter senior award poster"></a>
+</div>
+</div>
+
+<div id="panel-finishers" class="gallery-panel">
+<h2 class="section-title">Season Finishers</h2>
+<p style="color:var(--muted);margin:-10px 0 24px;line-height:1.6">Click a photo to download it.</p>
+<div class="finisher-tabs">
+<button class="finisher-tab active" data-subpanel="sf2526">2025-26</button>
+<button class="finisher-tab" data-subpanel="sf2425">2024-25</button>
+<button class="finisher-tab" data-subpanel="sf2324">2023-24</button>
+<button class="finisher-tab" data-subpanel="sf2223">2022-23</button>
+</div>
+<div id="sf2526" class="finisher-panel active">
+<div class="photo-grid">
+<a class="photo-card" href="assets/images/season-finishers/2025-26-avalee-euler.jpg" download><img src="assets/images/season-finishers/2025-26-avalee-euler.jpg" alt="Avalee Euler — Season Finisher photo"><span>Avalee Euler</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2025-26-celia-drogseth.jpg" download><img src="assets/images/season-finishers/2025-26-celia-drogseth.jpg" alt="Celia Drogseth — Season Finisher photo"><span>Celia Drogseth</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2025-26-ellie-adam.jpg" download><img src="assets/images/season-finishers/2025-26-ellie-adam.jpg" alt="Ellie Adam — Season Finisher photo"><span>Ellie Adam</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2025-26-ema-nedoba.jpg" download><img src="assets/images/season-finishers/2025-26-ema-nedoba.jpg" alt="Ema Nedoba — Season Finisher photo"><span>Ema Nedoba</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2025-26-kaina-westlie.jpg" download><img src="assets/images/season-finishers/2025-26-kaina-westlie.jpg" alt="Kaina Westlie — Season Finisher photo"><span>Kaina Westlie</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2025-26-karis-dylhoff.jpg" download><img src="assets/images/season-finishers/2025-26-karis-dylhoff.jpg" alt="Karis Dylhoff — Season Finisher photo"><span>Karis Dylhoff</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2025-26-kayleen-bazan.jpg" download><img src="assets/images/season-finishers/2025-26-kayleen-bazan.jpg" alt="Kayleen Bazan — Season Finisher photo"><span>Kayleen Bazan</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2025-26-kaytlynn-lambries.jpg" download><img src="assets/images/season-finishers/2025-26-kaytlynn-lambries.jpg" alt="Kaytlynn Lambries — Season Finisher photo"><span>Kaytlynn Lambries</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2025-26-lynzi-neumann.jpg" download><img src="assets/images/season-finishers/2025-26-lynzi-neumann.jpg" alt="Lynzi Neumann — Season Finisher photo"><span>Lynzi Neumann</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2025-26-mallory-kemper.jpg" download><img src="assets/images/season-finishers/2025-26-mallory-kemper.jpg" alt="Mallory Kemper — Season Finisher photo"><span>Mallory Kemper</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2025-26-olive-bergman.jpg" download><img src="assets/images/season-finishers/2025-26-olive-bergman.jpg" alt="Olive Bergman — Season Finisher photo"><span>Olive Bergman</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2025-26-peyton-kratochvill.jpg" download><img src="assets/images/season-finishers/2025-26-peyton-kratochvill.jpg" alt="Peyton Kratochvill — Season Finisher photo"><span>Peyton Kratochvill</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2025-26-ruby-gustafson.jpg" download><img src="assets/images/season-finishers/2025-26-ruby-gustafson.jpg" alt="Ruby Gustafson — Season Finisher photo"><span>Ruby Gustafson</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2025-26-sophia-walter.jpg" download><img src="assets/images/season-finishers/2025-26-sophia-walter.jpg" alt="Sophia Walter — Season Finisher photo"><span>Sophia Walter</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2025-26-aini-anderson.jpg" download><img src="assets/images/season-finishers/2025-26-aini-anderson.jpg" alt="Aini Anderson — Season Finisher photo"><span>Aini Anderson</span></a>
+</div>
+</div>
+<div id="sf2425" class="finisher-panel">
+<div class="photo-grid">
+<a class="photo-card" href="assets/images/season-finishers/2024-25-abby-molling-standing-lexi-schauf.jpg" download><img src="assets/images/season-finishers/2024-25-abby-molling-standing-lexi-schauf.jpg" alt="Abby Molling (standing), Lexi Schauf — Season Finisher photo"><span>Abby Molling (standing), Lexi Schauf</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-alexa-szak.jpg" download><img src="assets/images/season-finishers/2024-25-alexa-szak.jpg" alt="Alexa Szak — Season Finisher photo"><span>Alexa Szak</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-allison-weiss.jpg" download><img src="assets/images/season-finishers/2024-25-allison-weiss.jpg" alt="Allison Weiss — Season Finisher photo"><span>Allison Weiss</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-aubrey-hauser-elsie-hakala.jpg" download><img src="assets/images/season-finishers/2024-25-aubrey-hauser-elsie-hakala.jpg" alt="Aubrey Hauser, Elsie Hakala — Season Finisher photo"><span>Aubrey Hauser, Elsie Hakala</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-carissa-ceresa.jpg" download><img src="assets/images/season-finishers/2024-25-carissa-ceresa.jpg" alt="Carissa Ceresa — Season Finisher photo"><span>Carissa Ceresa</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-celia-drogseth.jpg" download><img src="assets/images/season-finishers/2024-25-celia-drogseth.jpg" alt="Celia Drogseth — Season Finisher photo"><span>Celia Drogseth</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-haley-dezelske.jpg" download><img src="assets/images/season-finishers/2024-25-haley-dezelske.jpg" alt="Haley Dezelske — Season Finisher photo"><span>Haley Dezelske</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-jozie-collins.jpg" download><img src="assets/images/season-finishers/2024-25-jozie-collins.jpg" alt="Jozie Collins — Season Finisher photo"><span>Jozie Collins</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-kaytlynn-lambiries-aini-anderson.jpg" download><img src="assets/images/season-finishers/2024-25-kaytlynn-lambiries-aini-anderson.jpg" alt="Kaytlynn Lambiries, Aini Anderson — Season Finisher photo"><span>Kaytlynn Lambiries, Aini Anderson</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-keionna-noel-standing-kayleen-bazan.jpg" download><img src="assets/images/season-finishers/2024-25-keionna-noel-standing-kayleen-bazan.jpg" alt="Keionna Noel (standing), Kayleen Bazan — Season Finisher photo"><span>Keionna Noel (standing), Kayleen Bazan</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-lexi-maier.jpg" download><img src="assets/images/season-finishers/2024-25-lexi-maier.jpg" alt="Lexi Maier — Season Finisher photo"><span>Lexi Maier</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-natalie-markos.jpg" download><img src="assets/images/season-finishers/2024-25-natalie-markos.jpg" alt="Natalie Markos — Season Finisher photo"><span>Natalie Markos</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-olive-bergman.jpg" download><img src="assets/images/season-finishers/2024-25-olive-bergman.jpg" alt="Olive Bergman — Season Finisher photo"><span>Olive Bergman</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-olivia-and-ema-nedoba.jpg" download><img src="assets/images/season-finishers/2024-25-olivia-and-ema-nedoba.jpg" alt="Olivia and Ema Nedoba — Season Finisher photo"><span>Olivia and Ema Nedoba</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-peyton-kratochvill.jpg" download><img src="assets/images/season-finishers/2024-25-peyton-kratochvill.jpg" alt="Peyton Kratochvill — Season Finisher photo"><span>Peyton Kratochvill</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-ruby-gustafson.jpg" download><img src="assets/images/season-finishers/2024-25-ruby-gustafson.jpg" alt="Ruby Gustafson — Season Finisher photo"><span>Ruby Gustafson</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-sophia-walter-blue-ellie-adam.jpg" download><img src="assets/images/season-finishers/2024-25-sophia-walter-blue-ellie-adam.jpg" alt="Sophia Walter (blue), Ellie Adam — Season Finisher photo"><span>Sophia Walter (blue), Ellie Adam</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2024-25-sophia-walter-avalee-euler.jpg" download><img src="assets/images/season-finishers/2024-25-sophia-walter-avalee-euler.jpg" alt="Sophia Walter, Avalee Euler — Season Finisher photo"><span>Sophia Walter, Avalee Euler</span></a>
+</div>
+</div>
+<div id="sf2324" class="finisher-panel">
+<div class="photo-grid">
+<a class="photo-card" href="assets/images/season-finishers/2023-24-abby-molling-jozie-collins.jpg" download><img src="assets/images/season-finishers/2023-24-abby-molling-jozie-collins.jpg" alt="Abby Molling, Jozie Collins — Season Finisher photo"><span>Abby Molling, Jozie Collins</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-alexa-szak-maddie-hall.jpg" download><img src="assets/images/season-finishers/2023-24-alexa-szak-maddie-hall.jpg" alt="Alexa Szak, Maddie Hall — Season Finisher photo"><span>Alexa Szak, Maddie Hall</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-allison-weiss.jpg" download><img src="assets/images/season-finishers/2023-24-allison-weiss.jpg" alt="Allison Weiss — Season Finisher photo"><span>Allison Weiss</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-anna-strasser.jpg" download><img src="assets/images/season-finishers/2023-24-anna-strasser.jpg" alt="Anna Strasser — Season Finisher photo"><span>Anna Strasser</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-ava-kelemen-haley-dezelske.jpg" download><img src="assets/images/season-finishers/2023-24-ava-kelemen-haley-dezelske.jpg" alt="Ava Kelemen, Haley Dezelske — Season Finisher photo"><span>Ava Kelemen, Haley Dezelske</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-ava-kelemen-peyton-kratochvill.jpg" download><img src="assets/images/season-finishers/2023-24-ava-kelemen-peyton-kratochvill.jpg" alt="Ava Kelemen, Peyton Kratochvill — Season Finisher photo"><span>Ava Kelemen, Peyton Kratochvill</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-birgitta-finn-aini-anderson.jpg" download><img src="assets/images/season-finishers/2023-24-birgitta-finn-aini-anderson.jpg" alt="Birgitta Finn, Aini Anderson — Season Finisher photo"><span>Birgitta Finn, Aini Anderson</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-freya-finn-kaytlynn-lambries-standing.jpg" download><img src="assets/images/season-finishers/2023-24-freya-finn-kaytlynn-lambries-standing.jpg" alt="Freya Finn, Kaytlynn Lambries (standing) — Season Finisher photo"><span>Freya Finn, Kaytlynn Lambries (standing)</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-haley-dezelske-sophia-walter.jpg" download><img src="assets/images/season-finishers/2023-24-haley-dezelske-sophia-walter.jpg" alt="Haley Dezelske, Sophia Walter — Season Finisher photo"><span>Haley Dezelske, Sophia Walter</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-kaylee-mosser-aini-anderson.jpg" download><img src="assets/images/season-finishers/2023-24-kaylee-mosser-aini-anderson.jpg" alt="Kaylee Mosser, Aini Anderson — Season Finisher photo"><span>Kaylee Mosser, Aini Anderson</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-kayleen-bazan-abby-molling.jpg" download><img src="assets/images/season-finishers/2023-24-kayleen-bazan-abby-molling.jpg" alt="Kayleen Bazan, Abby Molling — Season Finisher photo"><span>Kayleen Bazan, Abby Molling</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-kaytlynn-lambries-gabbie-hopkins.jpg" download><img src="assets/images/season-finishers/2023-24-kaytlynn-lambries-gabbie-hopkins.jpg" alt="Kaytlynn Lambries, Gabbie Hopkins — Season Finisher photo"><span>Kaytlynn Lambries, Gabbie Hopkins</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-keionna-noel.jpg" download><img src="assets/images/season-finishers/2023-24-keionna-noel.jpg" alt="Keionna Noel — Season Finisher photo"><span>Keionna Noel</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-lauren-barnett.jpg" download><img src="assets/images/season-finishers/2023-24-lauren-barnett.jpg" alt="Lauren Barnett — Season Finisher photo"><span>Lauren Barnett</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-lexi-schauf.jpg" download><img src="assets/images/season-finishers/2023-24-lexi-schauf.jpg" alt="Lexi Schauf — Season Finisher photo"><span>Lexi Schauf</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-maddie-eggerichs-abby-molling.jpg" download><img src="assets/images/season-finishers/2023-24-maddie-eggerichs-abby-molling.jpg" alt="Maddie Eggerichs, Abby Molling — Season Finisher photo"><span>Maddie Eggerichs, Abby Molling</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2023-24-nat-johnson.jpg" download><img src="assets/images/season-finishers/2023-24-nat-johnson.jpg" alt="Nat Johnson — Season Finisher photo"><span>Nat Johnson</span></a>
+</div>
+</div>
+<div id="sf2223" class="finisher-panel">
+<div class="photo-grid">
+<a class="photo-card" href="assets/images/season-finishers/2022-23-marci-jacobson-maddie-eggerichs.jpg" download><img src="assets/images/season-finishers/2022-23-marci-jacobson-maddie-eggerichs.jpg" alt="Marci Jacobson, Maddie Eggerichs — Season Finisher photo"><span>Marci Jacobson, Maddie Eggerichs</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-adriana-vang.jpg" download><img src="assets/images/season-finishers/2022-23-adriana-vang.jpg" alt="Adriana Vang — Season Finisher photo"><span>Adriana Vang</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-alexa-szak.jpg" download><img src="assets/images/season-finishers/2022-23-alexa-szak.jpg" alt="Alexa Szak — Season Finisher photo"><span>Alexa Szak</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-allison-weiss.jpg" download><img src="assets/images/season-finishers/2022-23-allison-weiss.jpg" alt="Allison Weiss — Season Finisher photo"><span>Allison Weiss</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-anna-strasser-standing-ava-kelemen.jpg" download><img src="assets/images/season-finishers/2022-23-anna-strasser-standing-ava-kelemen.jpg" alt="Anna Strasser (standing), Ava Kelemen — Season Finisher photo"><span>Anna Strasser (standing), Ava Kelemen</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-bella-xiong-left-nora-lee.jpg" download><img src="assets/images/season-finishers/2022-23-bella-xiong-left-nora-lee.jpg" alt="Bella Xiong (left), Nora Lee — Season Finisher photo"><span>Bella Xiong (left), Nora Lee</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-evelyn-vetsch.jpg" download><img src="assets/images/season-finishers/2022-23-evelyn-vetsch.jpg" alt="Evelyn Vetsch — Season Finisher photo"><span>Evelyn Vetsch</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-gabbie-hopkins.jpg" download><img src="assets/images/season-finishers/2022-23-gabbie-hopkins.jpg" alt="Gabbie Hopkins — Season Finisher photo"><span>Gabbie Hopkins</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-haley-hopkins.jpg" download><img src="assets/images/season-finishers/2022-23-haley-hopkins.jpg" alt="Haley Hopkins — Season Finisher photo"><span>Haley Hopkins</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-josye-olson.jpg" download><img src="assets/images/season-finishers/2022-23-josye-olson.jpg" alt="Josye Olson — Season Finisher photo"><span>Josye Olson</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-jozie-collins-addie-goodell.jpg" download><img src="assets/images/season-finishers/2022-23-jozie-collins-addie-goodell.jpg" alt="Jozie Collins, Addie Goodell — Season Finisher photo"><span>Jozie Collins, Addie Goodell</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-kaitlyn-weiss.jpg" download><img src="assets/images/season-finishers/2022-23-kaitlyn-weiss.jpg" alt="Kaitlyn Weiss — Season Finisher photo"><span>Kaitlyn Weiss</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-lexi-maier.jpg" download><img src="assets/images/season-finishers/2022-23-lexi-maier.jpg" alt="Lexi Maier — Season Finisher photo"><span>Lexi Maier</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-maddie-hall.jpg" download><img src="assets/images/season-finishers/2022-23-maddie-hall.jpg" alt="Maddie Hall — Season Finisher photo"><span>Maddie Hall</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-mere-korish.jpg" download><img src="assets/images/season-finishers/2022-23-mere-korish.jpg" alt="Mere Korish — Season Finisher photo"><span>Mere Korish</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-nat-johnson.jpg" download><img src="assets/images/season-finishers/2022-23-nat-johnson.jpg" alt="Nat Johnson — Season Finisher photo"><span>Nat Johnson</span></a>
+<a class="photo-card" href="assets/images/season-finishers/2022-23-river-klingbeil.jpg" download><img src="assets/images/season-finishers/2022-23-river-klingbeil.jpg" alt="River Klingbeil — Season Finisher photo"><span>River Klingbeil</span></a>
+</div>
+</div>
+</div>
+
+</div>
+</main>
+
+<script>
+const tabs = [...document.querySelectorAll('.gallery-tab')];
+const panels = [...document.querySelectorAll('.gallery-panel')];
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.toggle('active', t === tab));
+    const target = 'panel-' + tab.dataset.panel;
+    panels.forEach(p => p.classList.toggle('active', p.id === target));
+  });
+});
+
+const finisherTabs = [...document.querySelectorAll('.finisher-tab')];
+const finisherPanels = [...document.querySelectorAll('.finisher-panel')];
+finisherTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    finisherTabs.forEach(t => t.classList.toggle('active', t === tab));
+    finisherPanels.forEach(p => p.classList.toggle('active', p.id === tab.dataset.subpanel));
+  });
+});
+</script>
+</body>
+</html>

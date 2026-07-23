@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Roster Manager | Holmen Women’s Wrestling</title>
+<style>
+:root{--maroon:#6d1730;--dark:#3f0b1a;--light:#f5f5f7;--ink:#19191d;--muted:#676b73;--border:#e1e2e5}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--light);color:var(--ink)}
+a{color:inherit}
+.header{height:74px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:20}
+.brand,.back{font-weight:900;color:var(--maroon);text-decoration:none}
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--maroon),var(--dark));color:#fff;padding:50px 20px}
+.hero-watermark{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;z-index:0;pointer-events:none;overflow:hidden}
+.hero-watermark img{width:min(700px,70%);opacity:.12;object-fit:contain;transform:translateY(45%)}
+.hero .container{position:relative;z-index:1}
+.container{width:min(1300px,calc(100% - 28px));margin:auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;font-weight:900;color:#efc8d4}
+h1{font-size:clamp(2.2rem,5vw,3.6rem);letter-spacing:-.05em;margin:8px 0}
+.hero p{max-width:760px;line-height:1.65;color:#f0dde3}
+.content{padding:32px 0 70px}
+h2.section-title{font-size:1.4rem;letter-spacing:-.02em;margin:0 0 6px;color:var(--maroon)}
+.section-sub{font-size:.88rem;color:var(--muted);margin:0 0 14px}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.toolbar-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:1px solid var(--border);background:#fff;border-radius:10px;padding:9px 16px;font-weight:800;font-size:.88rem;cursor:pointer;color:var(--ink)}
+.btn.primary{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.btn.danger{color:#b3261e;border-color:#f1c9c5}
+.btn.small{padding:6px 12px;font-size:.8rem}
+.save-note{font-size:.82rem;color:var(--muted)}
+.save-note strong{color:var(--maroon)}
+.table-scroll{overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 22px rgba(20,12,15,.05)}
+table{border-collapse:collapse;width:100%;font-size:.74rem;min-width:1850px}
+th,td{border:1px solid var(--border);padding:4px 6px;text-align:center;white-space:nowrap}
+thead th{background:#f7eef1;color:var(--maroon);font-size:.62rem;text-transform:uppercase;letter-spacing:.03em;position:sticky;top:0}
+td[contenteditable="true"]{cursor:text;min-width:68px}
+td[contenteditable="true"]:focus{outline:2px solid var(--maroon);outline-offset:-2px;background:#fdf6f8}
+td input[type="date"],td select{width:100%;border:0;background:none;font:inherit;color:inherit;padding:4px 3px;cursor:pointer;text-align:center;text-align-last:center}
+td input[type="date"]:focus,td select:focus{outline:2px solid var(--maroon);outline-offset:-2px;background:#fdf6f8}
+.name-cell{padding:0}
+td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width:auto;width:28px;padding:4px 3px}
+.name-btn{width:100%;text-align:center;background:none;border:0;padding:4px 6px;font-weight:800;color:var(--maroon);cursor:pointer;font-size:.74rem;font-family:inherit}
+.name-btn:hover{text-decoration:underline;background:#fdf6f8}
+.row-remove{border:0;background:none;color:#b3261e;font-weight:900;font-size:.85rem;cursor:pointer;padding:1px 5px;line-height:1}
+.status-pill{display:inline-block;padding:1px 7px;border-radius:999px;font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.02em}
+.status-pill.complete{background:#eaf6ee;color:#1c7a3c}
+.status-pill.incomplete{background:#fbeeee;color:#b3261e}
+.result-note{font-size:.85rem;color:var(--muted);margin:14px 0 0;line-height:1.6}
+@media(max-width:600px){.header{padding:0 14px}}
+.modal-overlay{position:fixed;inset:0;background:rgba(20,12,15,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:18px;max-width:640px;width:100%;padding:24px 26px;box-shadow:0 20px 50px rgba(0,0,0,.3);max-height:88vh;overflow-y:auto}
+.modal-box h3{margin:0 0 4px;color:var(--maroon);font-size:1.3rem;letter-spacing:-.02em}
+.modal-box .modal-sub{font-size:.8rem;color:var(--muted);margin:0 0 18px}
+.modal-section{margin:0 0 18px}
+.modal-section h4{margin:0 0 10px;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:800}
+.modal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.modal-field{display:grid;gap:5px}
+.modal-field.full{grid-column:1/-1}
+.modal-field label{font-size:.76rem;font-weight:800;color:var(--muted)}
+.modal-field input,.modal-field select{width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:.88rem;font-family:inherit;color:var(--ink)}
+.modal-field input:focus,.modal-field select:focus{outline:2px solid var(--maroon);outline-offset:-1px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}
+@media(max-width:600px){.modal-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="header">
+<a class="brand" href="coach-hub.html">Holmen Women’s Wrestling</a>
+<a class="back" href="coach-hub.html">Back to Coach Hub</a>
+</header>
+
+<section class="hero">
+<div class="hero-watermark"><img src="assets/images/logo.png" alt=""></div>
+<div class="container">
+<div class="eyebrow">Coach Hub</div>
+<h1>Roster Manager</h1>
+<p>Holds the information wrestlers and parents submit through the Athlete Information Form — contact info, sizing, address, and parent/guardian details. Click a wrestler's name to view or edit everything on file.</p>
+</div>
+</section>
+
+<main class="content">
+<div class="container">
+
+<h2 class="section-title">Team Roster</h2>
+<p class="section-sub">Click "Import from Athlete Form" to pull in any submissions saved on this device, or add and edit wrestlers directly.</p>
+<div class="toolbar">
+<div class="save-note">Changes save automatically in <strong>this browser</strong>. Use Export CSV to back up or share a copy.</div>
+<div class="toolbar-actions">
+<button class="btn" id="addRowBtn">+ Add Wrestler</button>
+<button class="btn" id="importBtn">Import from Athlete Form</button>
+<button class="btn" id="exportBtn">Export CSV</button>
+<button class="btn" id="exportUsaBtn">Export USA Card CSV</button>
+<button class="btn danger" id="resetBtn">Reset to Roster Names Only</button>
+</div>
+</div>
+
+<div class="table-scroll" id="rosterScroll">
+<table id="rosterTable">
+<thead>
+<tr>
+<th>#</th>
+<th>Name</th>
+<th>Birthday</th>
+<th>T-Shirt Size</th>
+<th>Min. Weight Class</th>
+<th>Weight Class</th>
+<th>Wrestler Phone</th>
+<th>Wrestler Email</th>
+<th>Street</th>
+<th>City</th>
+<th>State</th>
+<th>ZIP</th>
+<th>Parent 1 Name</th>
+<th>Parent 1 Phone</th>
+<th>Parent 1 Email</th>
+<th>Parent 2 Name</th>
+<th>Parent 2 Phone</th>
+<th>Parent 2 Email</th>
+<th>USA Wrestling #</th>
+<th>Status</th>
+<th></th>
+</tr>
+</thead>
+<tbody id="rosterBody"></tbody>
+</table>
+</div>
+
+<p class="result-note">This roster started from our known wrestler list. "Import from Athlete Form" pulls in any submissions saved in this browser from the <a href="athlete-information.html">Athlete Information Form</a> and matches them to existing wrestlers by name (or adds a new row). Click a wrestler's name for their full profile — birthday, sizing, address, both parents/guardians, and USA Wrestling number.</p>
+
+</div>
+</main>
+
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal-box">
+<h3 id="modalTitle">Wrestler Profile</h3>
+<p class="modal-sub">Edit any field, then hit Save Changes.</p>
+
+<div class="modal-section">
+<h4>Athlete Information</h4>
+<div class="modal-grid">
+<div class="modal-field"><label>First Name</label><input id="modal_firstName" data-field="firstName"></div>
+<div class="modal-field"><label>Last Name</label><input id="modal_lastName" data-field="lastName"></div>
+<div class="modal-field"><label>Birthday</label><input type="date" id="modal_birthday" data-field="birthday"></div>
+<div class="modal-field"><label>T-Shirt Size</label>
+<select id="modal_shirtSize" data-field="shirtSize">
+<option value="">Select a size</option>
+<option>Youth XL</option><option>Adult XS</option><option>Adult S</option>
+<option>Adult M</option><option>Adult L</option><option>Adult XL</option><option>Adult 2XL</option>
+</select>
+</div>
+<div class="modal-field"><label>Min. Weight Class</label><input id="modal_minWeightClass" data-field="minWeightClass"></div>
+<div class="modal-field"><label>Weight Class</label><input id="modal_weightClass" data-field="weightClass"></div>
+<div class="modal-field"><label>Wrestler Cell Phone</label><input type="tel" id="modal_wrestlerPhone" data-field="wrestlerPhone"></div>
+<div class="modal-field"><label>Wrestler Email</label><input type="email" id="modal_wrestlerEmail" data-field="wrestlerEmail"></div>
+</div>
+</div>
+
+<div class="modal-section">
+<h4>Home Address</h4>
+<div class="modal-grid">
+<div class="modal-field full"><label>Street Address</label><input id="modal_street" data-field="street"></div>
+<div class="modal-field"><label>City</label><input id="modal_city" data-field="city"></div>
+<div class="modal-field"><label>State</label><input id="modal_state" data-field="state"></div>
+<div class="modal-field"><label>ZIP Code</label><input id="modal_zip" data-field="zip"></div>
+</div>
+</div>
+
+<div class="modal-section">
+<h4>Parent / Guardian 1</h4>
+<div class="modal-grid">
+<div class="modal-field"><label>Name</label><input id="modal_parent1Name" data-field="parent1Name"></div>
+<div class="modal-field"><label>Cell Phone</label><input type="tel" id="modal_parent1Phone" data-field="parent1Phone"></div>
+<div class="modal-field full"><label>Email</label><input type="email" id="modal_parent1Email" data-field="parent1Email"></div>
+</div>
+</div>
+
+<div class="modal-section">
+<h4>Parent / Guardian 2 (Optional)</h4>
+<div class="modal-grid">
+<div class="modal-field"><label>Name</label><input id="modal_parent2Name" data-field="parent2Name"></div>
+<div class="modal-field"><label>Cell Phone</label><input type="tel" id="modal_parent2Phone" data-field="parent2Phone"></div>
+<div class="modal-field full"><label>Email</label><input type="email" id="modal_parent2Email" data-field="parent2Email"></div>
+</div>
+</div>
+
+<div class="modal-section">
+<h4>Wrestling Information</h4>
+<div class="modal-grid">
+<div class="modal-field full"><label>USA Wrestling Membership Number</label><input id="modal_usaCardNumber" data-field="usaCardNumber"></div>
+</div>
+</div>
+
+<div class="modal-actions">
+<button class="btn" id="modalCancelBtn">Cancel</button>
+<button class="btn primary" id="modalSaveBtn">Save Changes</button>
+</div>
+</div>
+</div>
+
+<script>
+const STORAGE_KEY = 'holmenWWRosterManager';
+const ATHLETE_FORM_KEY = 'holmenAthleteInformation';
+// Same Apps Script Web app URL pasted into athlete-information.html — see AthleteFormSync.gs.
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDy2Nf8EFSF3rPdhkk16K6z4J90a8z5QSaCHABHbZwM9teZynnqOYUxxjOk-UT-McA/exec';
+
+const FIELDS = ['firstName','lastName','birthday','shirtSize','minWeightClass','weightClass','wrestlerPhone','wrestlerEmail','street','city','state','zip','parent1Name','parent1Phone','parent1Email','parent2Name','parent2Phone','parent2Email','usaCardNumber'];
+const REQUIRED_FIELDS = ['firstName','lastName','birthday','shirtSize','wrestlerPhone','street','city','state','zip','parent1Name','parent1Phone','parent1Email'];
+
+function blankEntry(firstName, lastName){
+  const entry = {};
+  FIELDS.forEach(f => entry[f] = '');
+  entry.firstName = firstName || '';
+  entry.lastName = lastName || '';
+  entry.state = 'WI';
+  return entry;
+}
+
+const ORIGINAL_NAMES = ['Peyton Kratochvill','Avalee Euler','Ellie Adams','Abby Molling','Sophia Walter','Aini Anderson','Kaytlynn Lambries','Celia Drogseth','Olive Bergmann','Karis Dylhoff','Ruby Gustafson','Ema Nedoba','Lynzi Neumann','Mallory','Kaina Westlie','Riley Inglett','Kayleen Bazan','Pazong Xiong','Birgitta Finn'];
+
+const ORIGINAL_ROSTER = ORIGINAL_NAMES.map(full => {
+  const parts = full.trim().split(/\s+/);
+  const first = parts[0];
+  const last = parts.slice(1).join(' ');
+  return blankEntry(first, last);
+});
+
+function loadRoster(){
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(saved){
+    try { return JSON.parse(saved); } catch(e) { return JSON.parse(JSON.stringify(ORIGINAL_ROSTER)); }
+  }
+  return JSON.parse(JSON.stringify(ORIGINAL_ROSTER));
+}
+
+function saveRoster(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(currentRoster));
+}
+
+function isComplete(entry){
+  return REQUIRED_FIELDS.every(f => (entry[f] || '').toString().trim() !== '');
+}
+
+function sortByName(data){
+  return data.slice().sort((a, b) => {
+    const an = ((a.firstName||'') + ' ' + (a.lastName||'')).trim().toLowerCase();
+    const bn = ((b.firstName||'') + ' ' + (b.lastName||'')).trim().toLowerCase();
+    return an.localeCompare(bn);
+  });
+}
+
+let modalIndex = null;
+
+function escapeAttr(s){
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+}
+
+function openModal(idx){
+  modalIndex = idx;
+  const entry = currentRoster[idx];
+  document.getElementById('modalTitle').textContent = ((entry.firstName||'') + ' ' + (entry.lastName||'')).trim() || 'Wrestler Profile';
+  document.querySelectorAll('#modalOverlay [data-field]').forEach(field => {
+    field.value = entry[field.dataset.field] || '';
+  });
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  modalIndex = null;
+}
+
+function saveModal(){
+  if(modalIndex === null) return;
+  document.querySelectorAll('#modalOverlay [data-field]').forEach(field => {
+    currentRoster[modalIndex][field.dataset.field] = field.value.trim();
+  });
+  saveRoster();
+  sortAndRerender();
+  closeModal();
+}
+
+document.getElementById('modalSaveBtn').addEventListener('click', saveModal);
+document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', (e) => {
+  if(e.target.id === 'modalOverlay') closeModal();
+});
+
+const SHIRT_SIZES = ['', 'Youth XL','Adult XS','Adult S','Adult M','Adult L','Adult XL','Adult 2XL'];
+
+function buildRow(idx){
+  const entry = currentRoster[idx];
+  const tr = document.createElement('tr');
+  tr.dataset.idx = idx;
+
+  const numTd = document.createElement('td');
+  numTd.dataset.numCell = 'true';
+  numTd.textContent = String(idx + 1);
+  tr.appendChild(numTd);
+
+  const nameTd = document.createElement('td');
+  nameTd.className = 'name-cell';
+  const nameBtn = document.createElement('button');
+  nameBtn.className = 'name-btn';
+  nameBtn.type = 'button';
+  const fullName = ((entry.firstName||'') + ' ' + (entry.lastName||'')).trim();
+  nameBtn.textContent = fullName || '(unnamed)';
+  nameBtn.title = 'Click to view full profile';
+  nameBtn.addEventListener('click', () => openModal(idx));
+  nameTd.appendChild(nameBtn);
+  tr.appendChild(nameTd);
+
+  const birthdayTd = document.createElement('td');
+  const birthdayInput = document.createElement('input');
+  birthdayInput.type = 'date';
+  birthdayInput.value = entry.birthday || '';
+  birthdayInput.addEventListener('change', () => {
+    currentRoster[idx].birthday = birthdayInput.value;
+    saveRoster();
+    refreshStatus(idx);
+  });
+  birthdayTd.appendChild(birthdayInput);
+  tr.appendChild(birthdayTd);
+
+  const shirtTd = document.createElement('td');
+  const shirtSelect = document.createElement('select');
+  SHIRT_SIZES.forEach(opt => {
+    const optionEl = document.createElement('option');
+    optionEl.value = opt;
+    optionEl.textContent = opt === '' ? '—' : opt;
+    shirtSelect.appendChild(optionEl);
+  });
+  shirtSelect.value = entry.shirtSize || '';
+  shirtSelect.addEventListener('change', () => {
+    currentRoster[idx].shirtSize = shirtSelect.value;
+    saveRoster();
+    refreshStatus(idx);
+  });
+  shirtTd.appendChild(shirtSelect);
+  tr.appendChild(shirtTd);
+
+  ['minWeightClass','weightClass','wrestlerPhone','wrestlerEmail','street','city','state','zip','parent1Name','parent1Phone','parent1Email','parent2Name','parent2Phone','parent2Email','usaCardNumber'].forEach(field => {
+    const td = document.createElement('td');
+    td.contentEditable = 'true';
+    td.textContent = entry[field] || '';
+    td.addEventListener('input', () => {
+      currentRoster[idx][field] = td.textContent.trim();
+      saveRoster();
+      refreshStatus(idx);
+    });
+    tr.appendChild(td);
+  });
+
+  const statusTd = document.createElement('td');
+  statusTd.dataset.statusCell = 'true';
+  statusTd.appendChild(buildStatusPill(entry));
+  tr.appendChild(statusTd);
+
+  const removeTd = document.createElement('td');
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'row-remove';
+  removeBtn.innerHTML = '&times;';
+  removeBtn.title = 'Remove wrestler';
+  removeBtn.addEventListener('click', () => {
+    if(confirm('Remove ' + (fullName || 'this wrestler') + ' from the roster?')){
+      currentRoster.splice(idx, 1);
+      saveRoster();
+      renderRoster();
+    }
+  });
+  removeTd.appendChild(removeBtn);
+  tr.appendChild(removeTd);
+
+  return tr;
+}
+
+function buildStatusPill(entry){
+  const span = document.createElement('span');
+  const complete = isComplete(entry);
+  span.className = 'status-pill ' + (complete ? 'complete' : 'incomplete');
+  span.textContent = complete ? 'Complete' : 'Incomplete';
+  return span;
+}
+
+function refreshStatus(idx){
+  const body = document.getElementById('rosterBody');
+  const tr = Array.from(body.children).find(r => Number(r.dataset.idx) === idx);
+  if(!tr) return;
+  const cell = tr.querySelector('td[data-status-cell]');
+  if(!cell) return;
+  cell.innerHTML = '';
+  cell.appendChild(buildStatusPill(currentRoster[idx]));
+}
+
+function renderRoster(){
+  const body = document.getElementById('rosterBody');
+  body.innerHTML = '';
+  currentRoster.forEach((entry, idx) => body.appendChild(buildRow(idx)));
+}
+
+function sortAndRerender(){
+  currentRoster = sortByName(currentRoster);
+  saveRoster();
+  renderRoster();
+}
+
+let currentRoster = sortByName(loadRoster());
+renderRoster();
+saveRoster();
+
+document.getElementById('addRowBtn').addEventListener('click', () => {
+  const firstName = prompt('Wrestler first name:', '');
+  if(firstName === null || firstName.trim() === '') return;
+  const lastName = prompt('Wrestler last name:', '');
+  currentRoster.push(blankEntry(firstName.trim(), lastName === null ? '' : lastName.trim()));
+  sortAndRerender();
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if(confirm('Reset the roster back to just the known wrestler names? All other saved info in this browser will be lost.')){
+    currentRoster = sortByName(JSON.parse(JSON.stringify(ORIGINAL_ROSTER)));
+    saveRoster();
+    renderRoster();
+  }
+});
+
+function mergeSubmissions(submissions){
+  let updated = 0, added = 0;
+  submissions.forEach(sub => {
+    const subFirst = (sub.firstName || '').trim().toLowerCase();
+    const subLast = (sub.lastName || '').trim().toLowerCase();
+    if(!subFirst && !subLast) return;
+    const match = currentRoster.find(entry =>
+      (entry.firstName || '').trim().toLowerCase() === subFirst &&
+      (entry.lastName || '').trim().toLowerCase() === subLast
+    );
+    if(match){
+      FIELDS.forEach(f => { if(sub[f]) match[f] = sub[f]; });
+      updated++;
+    } else {
+      const entry = blankEntry(sub.firstName || '', sub.lastName || '');
+      FIELDS.forEach(f => { if(sub[f]) entry[f] = sub[f]; });
+      currentRoster.push(entry);
+      added++;
+    }
+  });
+  return {added, updated};
+}
+
+function getLocalSubmissions(){
+  const raw = localStorage.getItem(ATHLETE_FORM_KEY);
+  if(!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch(e) { return []; }
+}
+
+document.getElementById('importBtn').addEventListener('click', () => {
+  const isConfigured = GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.indexOf('PASTE_YOUR') === -1;
+  const localSubmissions = getLocalSubmissions();
+
+  if(!isConfigured){
+    if(localSubmissions.length === 0){
+      alert('No Athlete Information Form submissions were found saved in this browser yet, and the Google Sheet sync isn\'t set up yet — see AthleteFormSync.gs for setup steps.');
+      return;
+    }
+    const {added, updated} = mergeSubmissions(localSubmissions);
+    sortAndRerender();
+    alert('Import complete: ' + added + ' new wrestler(s) added, ' + updated + ' existing wrestler(s) updated.\n\n(This only pulled submissions saved on this browser — set up the Google Sheet sync in AthleteFormSync.gs to pull in submissions from any device.)');
+    return;
+  }
+
+  const importBtn = document.getElementById('importBtn');
+  importBtn.disabled = true;
+  const originalLabel = importBtn.textContent;
+  importBtn.textContent = 'Importing…';
+
+  fetch(GOOGLE_SCRIPT_URL)
+    .then(r => r.json())
+    .then(remoteSubmissions => {
+      if(!Array.isArray(remoteSubmissions)) remoteSubmissions = [];
+      // Merge local-only submissions in too, in case someone filled out the form
+      // on this exact browser before the Google Sheet sync was set up.
+      const combined = remoteSubmissions.concat(localSubmissions);
+      if(combined.length === 0){
+        alert('No Athlete Information Form submissions found yet — nothing to import.');
+        return;
+      }
+      const {added, updated} = mergeSubmissions(combined);
+      sortAndRerender();
+      alert('Import complete: ' + added + ' new wrestler(s) added, ' + updated + ' existing wrestler(s) updated.');
+    })
+    .catch(() => {
+      alert('Could not reach the Google Sheet. Check your internet connection, or that the GOOGLE_SCRIPT_URL is set correctly.');
+    })
+    .finally(() => {
+      importBtn.disabled = false;
+      importBtn.textContent = originalLabel;
+    });
+});
+
+function exportCSV(){
+  const headers = ['First Name','Last Name','Birthday','T-Shirt Size','Min. Weight Class','Weight Class','Wrestler Phone','Wrestler Email','Street','City','State','ZIP','Parent 1 Name','Parent 1 Phone','Parent 1 Email','Parent 2 Name','Parent 2 Phone','Parent 2 Email','USA Wrestling #'];
+  const lines = [headers.join(',')];
+  currentRoster.forEach(e => {
+    const row = FIELDS.map(f => e[f] || '');
+    lines.push(row.map(v => '"' + String(v).replace(/"/g,'""') + '"').join(','));
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'roster-manager.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById('exportBtn').addEventListener('click', exportCSV);
+
+/* ----- USA Wrestling club-upload CSV export -----
+   Matches the columns in "USA Cards Blank.xlsx" (club_uploads_example.csv):
+   usaw_id, email, first_name, last_name, dob, cell_phone, phone, gender,
+   address_1, address_2, city, state, zip, parent_first_name, parent_last_name,
+   parent_email, parent2_first_name, parent2_last_name, parent2_email, remove */
+
+function splitName(full){
+  const trimmed = (full || '').trim();
+  if(!trimmed) return {first:'', last:''};
+  const parts = trimmed.split(/\s+/);
+  return {first: parts[0], last: parts.slice(1).join(' ')};
+}
+
+function formatDobUSA(iso){
+  if(!iso) return '';
+  const parts = String(iso).split('-');
+  if(parts.length !== 3) return iso;
+  const [y, m, d] = parts;
+  return m + '/' + d + '/' + y;
+}
+
+function exportUSACardCSV(){
+  const headers = ['usaw_id','email','first_name','last_name','dob','cell_phone','phone','gender','address_1','address_2','city','state','zip','parent_first_name','parent_last_name','parent_email','parent2_first_name','parent2_last_name','parent2_email','remove'];
+  const lines = [headers.join(',')];
+  currentRoster.forEach(e => {
+    const parent1 = splitName(e.parent1Name);
+    const parent2 = splitName(e.parent2Name);
+    const row = [
+      e.usaCardNumber || '',
+      e.wrestlerEmail || '',
+      e.firstName || '',
+      e.lastName || '',
+      formatDobUSA(e.birthday),
+      e.wrestlerPhone || '',
+      '',
+      'F',
+      e.street || '',
+      '',
+      e.city || '',
+      e.state || '',
+      e.zip || '',
+      parent1.first,
+      parent1.last,
+      e.parent1Email || '',
+      parent2.first,
+      parent2.last,
+      e.parent2Email || '',
+      ''
+    ];
+    lines.push(row.map(v => '"' + String(v).replace(/"/g,'""') + '"').join(','));
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'usa-card-upload.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById('exportUsaBtn').addEventListener('click', exportUSACardCSV);
+</script>
+</body>
+</html>

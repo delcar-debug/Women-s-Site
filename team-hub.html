@@ -19,7 +19,7 @@ button,input { font:inherit; }
 .brand { display:flex; align-items:center; gap:10px; color:var(--maroon); font-weight:900; text-decoration:none; }
 .brand img { width:54px; height:54px; object-fit:contain; }
 .header-actions { display:flex; gap:12px; align-items:center; }
-.link-button,.primary-button { border:0; border-radius:999px; min-height:43px; padding:0 17px; font-weight:850; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+.link-button,.primary-button { border:0; border-radius:999px; min-height:43px; padding:0 17px; font-weight:850; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; white-space:nowrap; }
 .link-button { background:#fff; color:var(--maroon); border:1px solid #d8bcc5; }
 .primary-button { background:var(--maroon); color:#fff; }
 .login { min-height:calc(100vh - 76px); display:grid; place-items:center; padding:24px; background:linear-gradient(rgba(55,5,20,.91),rgba(55,5,20,.91)),radial-gradient(circle at top right,#a94461,#3d0918 65%); }
@@ -32,8 +32,11 @@ button,input { font:inherit; }
 .login-card .primary-button { width:100%; margin-top:14px; }
 .error { display:none; color:#982323; background:#fff0f0; border-radius:10px; margin-top:12px; padding:10px; font-weight:750; }
 .app { display:none; }
-.hero { background:linear-gradient(135deg,var(--maroon),var(--dark)); color:#fff; padding:45px 28px; }
-.hero-inner { width:min(1240px,100%); margin:auto; display:flex; justify-content:space-between; align-items:end; gap:25px; flex-wrap:wrap; }
+.hero { position:relative; overflow:hidden; background:linear-gradient(135deg,var(--maroon),var(--dark)); color:#fff; padding:45px 28px; }
+.hero-watermark { position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center; z-index:0; pointer-events:none; overflow:hidden; }
+.hero-watermark img { width:min(700px,70%); opacity:.12; object-fit:contain; transform:translateY(45%);}
+.hero-inner { position:relative; z-index:1; width:min(1240px,100%); margin:auto; display:flex; justify-content:space-between; align-items:end; gap:25px; flex-wrap:wrap; }
+.hero-inner-actions { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
 .hero h1 { margin:5px 0 8px; font-size:clamp(2.4rem,5vw,4.4rem); letter-spacing:-.055em; }
 .hero p { margin:0; color:#ecd9df; line-height:1.6; max-width:720px; }
 .eyebrow { text-transform:uppercase; letter-spacing:.16em; font-size:.75rem; font-weight:900; color:#efc8d4; }
@@ -93,6 +96,55 @@ blockquote cite { display:block; margin-top:10px; font-style:normal; font-weight
   .sidebar-actions { grid-template-columns:1fr; }
 }
 
+.weekly-updates {
+  width:min(1240px,calc(100% - 28px));
+  margin:24px auto 0;
+}
+.weekly-updates h2 {
+  margin:0 0 14px;
+  font-size:1.65rem;
+  letter-spacing:-.03em;
+}
+.update-card {
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:22px 24px;
+  box-shadow:0 10px 32px rgba(20,15,17,.06);
+  margin-bottom:16px;
+}
+.update-card:last-child { margin-bottom:0; }
+.update-card summary {
+  cursor:pointer;
+  list-style:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.update-card summary::-webkit-details-marker { display:none; }
+.update-card summary::after {
+  content:"+";
+  font-size:1.3rem;
+  font-weight:900;
+  color:var(--maroon);
+  flex:none;
+  transition:transform .15s ease;
+}
+.update-card[open] summary::after { transform:rotate(45deg); }
+.update-date {
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:.78rem;
+  font-weight:850;
+  color:var(--maroon);
+}
+.update-body {
+  white-space:pre-line;
+  line-height:1.7;
+  color:#2a2a2e;
+  margin-top:14px;
+}
 .resource-library {
   width:min(1240px,calc(100% - 28px));
   margin:24px auto 0;
@@ -107,12 +159,27 @@ blockquote cite { display:block; margin-top:10px; font-style:normal; font-weight
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:16px;
 }
+.resource-card-stack {
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:16px;
+}
+.resource-card-stack .resource-card {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
 .resource-card {
   background:#fff;
   border:1px solid var(--border);
   border-radius:20px;
   padding:20px;
   box-shadow:0 10px 32px rgba(20,15,17,.06);
+}
+.resource-card.wide {
+  grid-column:1/-1;
 }
 .resource-card h3 {
   margin:0 0 8px;
@@ -220,7 +287,7 @@ blockquote cite { display:block; margin-top:10px; font-style:normal; font-weight
     <h1>Team Hub</h1>
     <p>Enter the team passcode to access the Team Handbook &amp; Program Guide.</p>
     <label for="passcode" style="display:block;text-align:left;font-weight:850">Team Passcode</label>
-    <input id="passcode" type="password" required autofocus>
+    <input id="passcode" type="password" required>
     <button class="primary-button" type="submit">Enter Team Hub</button>
     <div id="error" class="error">That passcode is incorrect.</div>
   </form>
@@ -228,35 +295,75 @@ blockquote cite { display:block; margin-top:10px; font-style:normal; font-weight
 
 <section id="app" class="app">
   <div class="hero">
+    <div class="hero-watermark"><img src="assets/images/logo.png" alt=""></div>
     <div class="hero-inner">
       <div>
         <div class="eyebrow">Protected Team Resource</div>
         <h1>Team Hub</h1>
         <p>Your one-stop location for the team handbook, transportation form, learning resources, and other important team information and documents.</p>
       </div>
-      
+      <div class="hero-inner-actions">
+        <a class="link-button" href="#weekly-updates">📢 Weekly Update</a>
+        <a class="link-button" href="https://docs.google.com/forms/d/e/1FAIpQLSekt3VhVMqfFiLDu7L0i1TcrzW-ZM2Em4XG8ihFkejPHAXKgA/viewform" target="_blank" rel="noopener">🏛️ Pillar Nominations</a>
+        <a class="link-button" href="manager-hub.html">📹 Manager Hub</a>
+      </div>
     </div>
   </div>
+
+  <section id="weekly-updates" class="weekly-updates">
+    <h2>Weekly Updates</h2>
+    <details class="update-card">
+      <summary><div class="update-date">Week of July 21, 2026 — Coach Carl</div></summary>
+      <div class="update-body">Hola team,
+
+Shout out again to Ruby for competing at Fargo. You keep working hard and improving. Great to coach you out there!
+
+Team Wisconsin crushed it as always. We had 14 All-Americans and two champs (Madi Peach and Brooke Huffman). It was awesome to be in the corner for lots of Wisconsin girls and I got to be in Madi's corner for most of the tournament, including the semis and finals.
+
+I also get to rub it in to the head officials that I won a protest against them
+
+Schedule this week:
+• Wednesday: Open Mat 6:00 - 7:30pm
+
+Fun Opportunity!
+• We got invited by Coach E and Herky Jerk Ranch to spend a few days there! I will get some dates finalized.
+• We'll do some wrestling, go tubing down the Wolf River, and make Tik Toks with Nellie and Piper, of course. It will be super fun.
+• Coach E offered also to go over how they built their following and give Insta/Tik Tok tips for anyone who wants to try to grow their own.
+• I'll get details out soon and I'm really excited for this!
+
+You're all awesome and hope you're enjoying summer,
+Coach Carl</div>
+    </details>
+  </section>
 
   <section class="resource-library">
     <h2>Team Resources</h2>
     <div class="resource-card-grid">
-      <article class="resource-card">
-        <h3>Team Handbook &amp; Program Guide</h3>
-        
-        <div class="resource-card-actions">
-          <button class="primary-button" type="button" onclick="document.querySelector('.layout').scrollIntoView({behavior:'smooth'})">Read Handbook</button>
-        </div>
-      </article>
+      <div class="resource-card-stack">
+        <article class="resource-card">
+          <h3>📖 Team Handbook &amp; Program Guide</h3>
 
-      
+          <div class="resource-card-actions">
+            <button class="primary-button" type="button" onclick="document.querySelector('.layout').scrollIntoView({behavior:'smooth'})">Read Handbook</button>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <h3>✅ Preseason Checklist</h3>
+          <p>Complete the required preseason tasks before the wrestling season begins.</p>
+          <div class="resource-card-actions">
+            <a class="primary-button" href="preseason-checklist.html">Open Preseason Checklist</a>
+          </div>
+        </article>
+      </div>
+
       <article class="resource-card">
         <h3>🚗 Transportation Form</h3>
         <p><strong>Leaving an event with a parent or guardian?</strong></p>
         <p>Fill out this form if a wrestler will be leaving an event with her parent or legal guardian instead of riding home with the team.</p>
         <ul>
           <li>Coach Carl must receive the completed transportation form.</li>
-          <li><strong>Email:</strong> <a href="mailto:delcar@holmen.k12.wi.us">delcar@holmen.k12.wi.us</a></li>
+          <li><strong>Email:</strong> <a href="contact.html">delcar@holmen.k12.wi.us</a></li>
           <li><strong>Wrestlers cannot travel home with another wrestler's parent or guardian.</strong></li>
         </ul>
         <div class="resource-card-actions">
@@ -264,23 +371,7 @@ blockquote cite { display:block; margin-top:10px; font-style:normal; font-weight
         </div>
       </article>
 
-
-      <article class="resource-card">
-        <h3>Weight Management Guide</h3>
-        <p><em>The Female Wrestler’s Guide to Weight Mastery</em> by Katherine Shai and LuchaFit.</p>
-        <div class="resource-message">
-          Like Coach Carl and our Team Handbook emphasize, losing weight is never required.
-          Wrestlers are encouraged to compete at the weight class that is healthiest and best for them.
-          If you choose to manage your weight, this is a strong resource to help you do so safely.
-        </div>
-        <div class="resource-card-actions">
-          
-          <a class="link-button" href="assets/pdfs/weight-management-guide.pdf" download="Female-Wrestlers-Weight-Management-Guide.pdf">Download PDF</a>
-        </div>
-        
-      </article>
-    
-      <article class="resource-card">
+      <article class="resource-card wide">
         <h3>📚 Learning Resources</h3>
         <p>Helpful resources for wrestlers, parents, and coaches.</p>
 
@@ -289,6 +380,12 @@ blockquote cite { display:block; margin-top:10px; font-style:normal; font-weight
             <strong>⚖️ LuchaFit</strong>
             <span>Best all-around girls wrestling resource available.</span>
             <a class="primary-button" href="https://www.luchafit.com/" target="_blank" rel="noopener">Visit LuchaFit</a>
+          </div>
+
+          <div class="learning-item">
+            <strong>🎗️ Wrestle Like A Girl</strong>
+            <span>Empowering girls and women through wrestling, with resources and coach certification.</span>
+            <a class="primary-button" href="https://wrestlelikeagirl.org/" target="_blank" rel="noopener">Visit Wrestle Like A Girl</a>
           </div>
 
           <div class="learning-item">
@@ -335,6 +432,18 @@ blockquote cite { display:block; margin-top:10px; font-style:normal; font-weight
         </div>
       </article>
 
+      <article class="resource-card">
+        <h3>⚖️ Weight Management Guide</h3>
+        <p><em>The Female Wrestler’s Guide to Weight Mastery</em> by Katherine Shai and LuchaFit.</p>
+        <div class="resource-message">
+          Like Coach Carl and our Team Handbook emphasize, losing weight is never required.
+          Wrestlers are encouraged to compete at the weight class that is healthiest and best for them.
+          If you choose to manage your weight, this is a strong resource to help you do so safely.
+        </div>
+        <div class="resource-card-actions">
+          <a class="link-button" href="assets/pdfs/weight-management-guide.pdf" download="Female-Wrestlers-Weight-Management-Guide.pdf">Download PDF</a>
+        </div>
+      </article>
 
       <article class="resource-card">
         <h3>👨‍👩‍👧 Parent Resources</h3>
@@ -362,14 +471,6 @@ blockquote cite { display:block; margin-top:10px; font-style:normal; font-weight
       </article>
 
 
-      
-      <article class="resource-card">
-        <h3>✅ Preseason Checklist</h3>
-        <p>Complete the required preseason tasks before the wrestling season begins.</p>
-        <div class="resource-card-actions">
-          <a class="primary-button" href="preseason-checklist.html">Open Preseason Checklist</a>
-        </div>
-      </article>
 </div>
   </section>
 
@@ -639,7 +740,7 @@ blockquote cite { display:block; margin-top:10px; font-style:normal; font-weight
 <div class="contact-card">
 <h3>Contact Information</h3>
 <p><strong>Head Coach:</strong> Carl DeLuca<br>
-<a href="mailto:delcar@holmen.k12.wi.us">delcar@holmen.k12.wi.us</a><br>
+<a href="contact.html">delcar@holmen.k12.wi.us</a><br>
 <a href="tel:+17152047433">715-204-7433</a></p>
 <p><strong>Head Assistant Coach:</strong> Kelsie Speltz</p>
 <p><strong>Assistant Coaches:</strong><br>Joey Perrigo, Jozie Collins</p>
@@ -686,7 +787,7 @@ blockquote cite { display:block; margin-top:10px; font-style:normal; font-weight
 </main>
 
 <script>
-const PASSCODE = "Vikings";
+const PASSCODE = "forher";
 const SESSION_KEY = "holmenTeamHubAccess";
 const sections = ['mission', 'environment', 'wrestlers', 'coaches', 'parents', 'lettering', 'wrestleoffs', 'communication', 'other'];
 const titles = ['Mission, Vision & Pillars', 'Fun, Positive & Relaxed Environment', 'Wrestler Standards', 'Coach Standards', 'Parent Standards', 'Lettering Criteria', 'Wrestle-Off Policy', 'Communication', 'Other Information'];
@@ -722,7 +823,7 @@ function showLogin() {
   input.focus();
 }
 
-function showSection(index) {
+function showSection(index, scroll = true) {
   currentIndex = Math.max(0, Math.min(index, sections.length - 1));
   handbookSections.forEach((el, i) => el.classList.toggle("active", i === currentIndex));
   tocLinks.forEach((el, i) => el.classList.toggle("active", i === currentIndex));
@@ -730,9 +831,11 @@ function showSection(index) {
   prevButton.disabled = currentIndex === 0;
   nextButton.disabled = currentIndex === sections.length - 1;
   searchResults.style.display = "none";
-  const headerHeight = document.querySelector(".header").offsetHeight;
-  const layoutTop = document.querySelector(".layout").getBoundingClientRect().top + window.scrollY;
-  window.scrollTo({ top: layoutTop - headerHeight - 20, behavior: "smooth" });
+  if (scroll) {
+    const headerHeight = document.querySelector(".header").offsetHeight;
+    const layoutTop = document.querySelector(".layout").getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: layoutTop - headerHeight - 20, behavior: "smooth" });
+  }
 }
 
 form.addEventListener("submit", e => {
@@ -778,7 +881,8 @@ searchInput.addEventListener("input", () => {
 });
 
 if (sessionStorage.getItem(SESSION_KEY) === "granted") showApp();
-showSection(0);
+showSection(0, false);
+window.scrollTo(0, 0);
 
 const athleteInfoForm=document.getElementById("athleteInfoForm");
 const athleteFormStatus=document.getElementById("athleteFormStatus");

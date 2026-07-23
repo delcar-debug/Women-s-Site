@@ -64,9 +64,30 @@
       border:1px solid #d8bcc5;
     }
     .hero{
+      position:relative;
+      overflow:hidden;
       background:linear-gradient(135deg,var(--maroon),var(--maroon-dark));
       color:#fff;
       padding:54px 20px;
+    }
+    .hero-watermark{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      z-index:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .hero-watermark img{
+      width:min(700px,70%);
+      opacity:.12;
+      object-fit:contain;
+    transform:translateY(45%);}
+    .hero .container{
+      position:relative;
+      z-index:1;
     }
     .container{
       width:min(980px,calc(100% - 28px));
@@ -150,7 +171,7 @@
     .codes{
       display:grid;
       grid-template-columns:repeat(2,1fr);
-      gap:14px;
+      gap:10px;
       margin:22px 0;
     }
     .code-card{
@@ -183,12 +204,12 @@
     .task-actions{
       display:flex;
       flex-wrap:wrap;
-      gap:10px;
-      margin-top:20px;
+      gap:8px;
+      margin-top:14px;
     }
     .complete-row{
-      margin-top:24px;
-      padding-top:20px;
+      margin-top:16px;
+      padding-top:14px;
       border-top:1px solid var(--border);
       display:flex;
       gap:10px;
@@ -223,6 +244,7 @@
 
   <main>
     <section class="hero">
+      <div class="hero-watermark"><img src="assets/images/logo.png" alt=""></div>
       <div class="container">
         <div class="eyebrow">Team Hub</div>
         <h1>Preseason Checklist</h1>
@@ -261,7 +283,7 @@
           </label>
         </article>
 
-        <article class="task-card" style="margin-top:20px">
+        <article class="task-card" style="margin-top:16px">
           <div class="task-head">
             <div class="task-number">2</div>
             <div>
@@ -297,7 +319,7 @@
         </article>
 
 
-        <article class="task-card" style="margin-top:20px">
+        <article class="task-card" style="margin-top:16px">
           <div class="task-head">
             <div class="task-number">3</div>
             <div>
@@ -316,7 +338,7 @@
           </label>
         </article>
 
-        <article class="task-card" style="margin-top:20px">
+        <article class="task-card" style="margin-top:16px">
           <div class="task-head">
             <div class="task-number">4</div>
             <div>
@@ -336,7 +358,7 @@
         </article>
 
 
-        <article class="task-card" style="margin-top:20px">
+        <article class="task-card" style="margin-top:16px">
           <div class="task-head">
             <div class="task-number">5</div>
             <div>

@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Equipment Tracker | Holmen Women’s Wrestling</title>
+<style>
+:root{--maroon:#6d1730;--dark:#3f0b1a;--light:#f5f5f7;--ink:#19191d;--muted:#676b73;--border:#e1e2e5}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--light);color:var(--ink)}
+a{color:inherit}
+.header{height:74px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:20}
+.brand,.back{font-weight:900;color:var(--maroon);text-decoration:none}
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--maroon),var(--dark));color:#fff;padding:50px 20px}
+.hero-watermark{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;z-index:0;pointer-events:none;overflow:hidden}
+.hero-watermark img{width:min(700px,70%);opacity:.12;object-fit:contain;transform:translateY(45%)}
+.hero .container{position:relative;z-index:1}
+.container{width:min(1300px,calc(100% - 28px));margin:auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;font-weight:900;color:#efc8d4}
+h1{font-size:clamp(2.2rem,5vw,3.6rem);letter-spacing:-.05em;margin:8px 0}
+.hero p{max-width:760px;line-height:1.65;color:#f0dde3}
+.content{padding:32px 0 70px}
+h2.section-title{font-size:1.4rem;letter-spacing:-.02em;margin:36px 0 6px;color:var(--maroon)}
+.section-sub{font-size:.88rem;color:var(--muted);margin:0 0 14px}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.toolbar-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:1px solid var(--border);background:#fff;border-radius:10px;padding:9px 16px;font-weight:800;font-size:.88rem;cursor:pointer;color:var(--ink)}
+.btn.primary{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.btn.danger{color:#b3261e;border-color:#f1c9c5}
+.btn.small{padding:6px 12px;font-size:.8rem}
+.save-note{font-size:.82rem;color:var(--muted)}
+.save-note strong{color:var(--maroon)}
+.table-scroll{overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 22px rgba(20,12,15,.05)}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:1150px}
+th,td{border:1px solid var(--border);padding:8px 10px;text-align:left;white-space:nowrap}
+thead th{background:#f7eef1;color:var(--maroon);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0}
+thead tr:first-child th{text-align:center}
+td[contenteditable="true"]{cursor:text;min-width:60px}
+td[contenteditable="true"]:focus{outline:2px solid var(--maroon);outline-offset:-2px;background:#fdf6f8}
+td .cell-select{width:100%;border:0;background:none;font:inherit;color:inherit;padding:8px 6px;cursor:pointer}
+td .cell-select:focus{outline:2px solid var(--maroon);outline-offset:-2px;background:#fdf6f8}
+.name-cell{padding:0}
+.name-btn{width:100%;text-align:left;background:none;border:0;padding:8px 10px;font-weight:800;color:var(--maroon);cursor:pointer;font-size:.88rem;font-family:inherit}
+.name-btn:hover{text-decoration:underline;background:#fdf6f8}
+.row-remove{border:0;background:none;color:#b3261e;font-weight:900;font-size:1rem;cursor:pointer;padding:2px 8px}
+.result-note{font-size:.85rem;color:var(--muted);margin:14px 0 0;line-height:1.6}
+.inventory-grid{display:flex;flex-direction:column;gap:20px}
+.inventory-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+.inventory-block{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px 18px;box-shadow:0 8px 22px rgba(20,12,15,.05);min-width:0}
+.inventory-block h3{margin:0 0 4px;font-size:1rem;color:var(--maroon)}
+.inventory-block .block-note{font-size:.78rem;color:var(--muted);margin:0 0 10px}
+.mini-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:10px}
+.mini-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.mini-table.wide{min-width:640px}
+.mini-table.narrow{min-width:260px}
+.mini-table th,.mini-table td{border-bottom:1px solid var(--border);border-right:1px solid var(--border);padding:6px 8px;text-align:left;white-space:nowrap}
+.mini-table th:last-child,.mini-table td:last-child{border-right:0}
+.mini-table th{background:#f7eef1;color:var(--maroon);font-size:.68rem;text-transform:uppercase;letter-spacing:.03em}
+.mini-table td[contenteditable="true"]{cursor:text;white-space:normal;min-width:80px}
+.mini-table td[contenteditable="true"]:focus{outline:2px solid var(--maroon);outline-offset:-2px;background:#fdf6f8}
+.mini-table td.locked-cell{background:#f1f1f3;color:var(--muted);cursor:not-allowed}
+.mini-table td.computed-cell{background:#eaf6ee;color:#1c7a3c;font-weight:800;cursor:default}
+.mini-table td.num-cell,.mini-table th.num-cell{text-align:center}
+.random-dropdown{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px 18px;box-shadow:0 8px 22px rgba(20,12,15,.05)}
+.random-dropdown summary{cursor:pointer;font-weight:850;color:var(--maroon);font-size:1rem}
+.random-list{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 20px}
+.random-list li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:.85rem}
+.random-list li span:last-child{color:var(--muted);font-weight:700}
+@media(max-width:600px){.random-list{grid-template-columns:1fr}}
+@media(max-width:760px){.inventory-row{grid-template-columns:1fr}}
+@media(max-width:600px){.header{padding:0 14px}}
+.modal-overlay{position:fixed;inset:0;background:rgba(20,12,15,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:18px;max-width:420px;width:100%;padding:24px 26px;box-shadow:0 20px 50px rgba(0,0,0,.3);max-height:85vh;overflow-y:auto}
+.modal-box h3{margin:0 0 4px;color:var(--maroon);font-size:1.3rem;letter-spacing:-.02em}
+.modal-box .modal-sub{font-size:.8rem;color:var(--muted);margin:0 0 16px}
+.modal-list{list-style:none;margin:0 0 18px;padding:0}
+.modal-list li{display:grid;grid-template-columns:120px 1fr 1fr;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.85rem}
+.modal-list li.single-field{grid-template-columns:120px 1fr}
+.modal-list li span{color:var(--muted);font-weight:700}
+.modal-list li input,.modal-list li select{width:100%;border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:.85rem;font-family:inherit;color:var(--ink);background:#fff}
+.modal-list li input:focus,.modal-list li select:focus{outline:2px solid var(--maroon);outline-offset:-1px}
+.modal-name-field{margin:0 0 16px}
+.modal-name-field label{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:800;margin-bottom:4px}
+.modal-name-field input{width:100%;border:1px solid var(--border);border-radius:10px;padding:9px 12px;font-size:1.05rem;font-weight:800;color:var(--maroon);font-family:inherit}
+.modal-empty{color:var(--muted);font-size:.9rem;margin:0 0 18px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px}
+.modal-save-note{font-size:.78rem;color:var(--muted);margin:-6px 0 14px}
+</style>
+</head>
+<body>
+<header class="header">
+<a class="brand" href="coach-hub.html">Holmen Women’s Wrestling</a>
+<a class="back" href="coach-hub.html">Back to Coach Hub</a>
+</header>
+
+<section class="hero">
+<div class="hero-watermark"><img src="assets/images/logo.png" alt=""></div>
+<div class="container">
+<div class="eyebrow">Coach Hub</div>
+<h1>Equipment Tracker</h1>
+<p>Every wrestler's checked-out gear and our total inventory on hand. Click any cell to edit, or click a wrestler's name to see everything they have checked out.</p>
+</div>
+</section>
+
+<main class="content">
+<div class="container">
+
+<h2 class="section-title">Checked-Out Gear by Wrestler</h2>
+<p class="section-sub">Every wrestler, everything they have checked out. Click a name for a quick summary popup.</p>
+<div class="toolbar">
+<div class="save-note">Changes save automatically in <strong>this browser</strong>. Use Export CSV to back up or share a copy.</div>
+<div class="toolbar-actions">
+<button class="btn" id="addRowBtn">+ Add Wrestler</button>
+<button class="btn" id="exportBtn">Export CSV</button>
+<button class="btn danger" id="resetBtn">Reset to Original Data</button>
+</div>
+</div>
+
+<div class="table-scroll" id="inventoryScroll">
+<table id="inventoryTable">
+<thead>
+<tr>
+<th rowspan="2">Name</th>
+<th colspan="2">New Black Singlet</th>
+<th colspan="2">Maroon Singlet</th>
+<th colspan="2">Black/Pink Singlet</th>
+<th colspan="2">Shorts</th>
+<th colspan="2">1/4 Zip</th>
+<th rowspan="2">Bags</th>
+<th rowspan="2">Blue</th>
+<th rowspan="2">Red</th>
+<th rowspan="2">Old Black</th>
+<th rowspan="2">Old Maroon</th>
+<th rowspan="2"></th>
+</tr>
+<tr>
+<th>Size</th><th>Number</th>
+<th>Size</th><th>Number</th>
+<th>Size</th><th>Number</th>
+<th>Size</th><th>Number</th>
+<th>Size</th><th>Number</th>
+</tr>
+</thead>
+<tbody id="inventoryBody"></tbody>
+</table>
+</div>
+
+<p class="result-note">This tracker started from the "Inventory.xlsx" Tracking sheet. Add new wrestlers, delete anyone who's graduated or left, edit any size/number field directly in the table, and click a wrestler's name for a quick summary.</p>
+
+<h2 class="section-title">Total Gear Inventory</h2>
+<p class="section-sub">Our full stock on hand. Size and Max are locked; Checked Out and Available auto-update from the checkout table above.</p>
+
+<div class="inventory-grid">
+
+<div class="inventory-row">
+<div class="inventory-block">
+<h3>New Black Singlet</h3>
+<p class="block-note">Size and Max are locked. Checked Out and Available auto-update from the checkout table above.</p>
+<div class="mini-scroll"><table class="mini-table narrow" id="gearNewBlackTable">
+<thead><tr><th>Size</th><th class="num-cell">Max</th><th class="num-cell">Checked Out</th><th class="num-cell">Available</th></tr></thead>
+<tbody id="gearNewBlackBody"></tbody>
+</table></div>
+</div>
+
+<div class="inventory-block">
+<h3>New Maroon Singlet</h3>
+<p class="block-note">Size and Max are locked. Checked Out and Available auto-update from the checkout table above.</p>
+<div class="mini-scroll"><table class="mini-table narrow" id="gearNewMaroonTable">
+<thead><tr><th>Size</th><th class="num-cell">Max</th><th class="num-cell">Checked Out</th><th class="num-cell">Available</th></tr></thead>
+<tbody id="gearNewMaroonBody"></tbody>
+</table></div>
+</div>
+</div>
+
+<div class="inventory-row">
+<div class="inventory-block">
+<h3>Black/Pink Singlet</h3>
+<p class="block-note">Size and Max are locked. Checked Out and Available auto-update from the checkout table above.</p>
+<div class="mini-scroll"><table class="mini-table narrow" id="gearBlackPinkTable">
+<thead><tr><th>Size</th><th class="num-cell">Max</th><th class="num-cell">Checked Out</th><th class="num-cell">Available</th></tr></thead>
+<tbody id="gearBlackPinkBody"></tbody>
+</table></div>
+</div>
+
+<div class="inventory-block">
+<h3>Red Singlet</h3>
+<p class="block-note">Size and Max are locked. Checked Out and Available auto-update from the checkout table above.</p>
+<div class="mini-scroll"><table class="mini-table narrow" id="gearRedTable">
+<thead><tr><th>Size</th><th class="num-cell">Max</th><th class="num-cell">Checked Out</th><th class="num-cell">Available</th></tr></thead>
+<tbody id="gearRedBody"></tbody>
+</table></div>
+</div>
+</div>
+
+<div class="inventory-row">
+<div class="inventory-block">
+<h3>Blue Singlet</h3>
+<p class="block-note">Size and Max are locked. Checked Out and Available auto-update from the checkout table above.</p>
+<div class="mini-scroll"><table class="mini-table narrow" id="gearBlueTable">
+<thead><tr><th>Size</th><th class="num-cell">Max</th><th class="num-cell">Checked Out</th><th class="num-cell">Available</th></tr></thead>
+<tbody id="gearBlueBody"></tbody>
+</table></div>
+</div>
+
+<div class="inventory-block">
+<h3>Old Maroon Singlet</h3>
+<p class="block-note">Size and Max are locked. Checked Out and Available auto-update from the checkout table above.</p>
+<div class="mini-scroll"><table class="mini-table narrow" id="gearOldMaroonTable">
+<thead><tr><th>Size</th><th class="num-cell">Max</th><th class="num-cell">Checked Out</th><th class="num-cell">Available</th></tr></thead>
+<tbody id="gearOldMaroonBody"></tbody>
+</table></div>
+</div>
+</div>
+
+<div class="inventory-row">
+<div class="inventory-block">
+<h3>Old Black Finals Singlet</h3>
+<p class="block-note">Size and Max are locked. Checked Out and Available auto-update from the checkout table above.</p>
+<div class="mini-scroll"><table class="mini-table narrow" id="gearOldBlackTable">
+<thead><tr><th>Size</th><th class="num-cell">Max</th><th class="num-cell">Checked Out</th><th class="num-cell">Available</th></tr></thead>
+<tbody id="gearOldBlackBody"></tbody>
+</table></div>
+</div>
+
+<div class="inventory-block">
+<h3>1/4 Zips</h3>
+<p class="block-note">Size and Max are locked. Checked Out and Available auto-update from the checkout table above.</p>
+<div class="mini-scroll"><table class="mini-table narrow" id="gearZipsTable">
+<thead><tr><th>Size</th><th class="num-cell">Max</th><th class="num-cell">Checked Out</th><th class="num-cell">Available</th></tr></thead>
+<tbody id="gearZipsBody"></tbody>
+</table></div>
+</div>
+</div>
+
+<div class="inventory-row">
+<div class="inventory-block">
+<h3>Shorts</h3>
+<p class="block-note">Size and Max are locked. Checked Out and Available auto-update from the checkout table above.</p>
+<div class="mini-scroll"><table class="mini-table narrow" id="gearShortsTable">
+<thead><tr><th>Size</th><th class="num-cell">Max</th><th class="num-cell">Checked Out</th><th class="num-cell">Available</th></tr></thead>
+<tbody id="gearShortsBody"></tbody>
+</table></div>
+</div>
+
+<div class="inventory-block">
+<h3>Compression Shirts</h3>
+<p class="block-note">Size and Max are locked. Not tracked by wrestler, so Checked Out always shows 0.</p>
+<div class="mini-scroll"><table class="mini-table narrow" id="gearCompressionTable">
+<thead><tr><th>Size</th><th class="num-cell">Max</th><th class="num-cell">Checked Out</th><th class="num-cell">Available</th></tr></thead>
+<tbody id="gearCompressionBody"></tbody>
+</table></div>
+</div>
+</div>
+
+<div class="inventory-row">
+<div class="inventory-block">
+<h3>Tank Tops</h3>
+<p class="block-note">Current tank top stock by size. Locked.</p>
+<div class="mini-scroll"><table class="mini-table narrow" id="tanktopsTable">
+<thead><tr><th>Size</th><th class="num-cell">Qty</th></tr></thead>
+<tbody id="tanktopsBody"></tbody>
+</table></div>
+</div>
+
+<div class="inventory-block">
+<h3>Ordering Quantities</h3>
+<p class="block-note">Reference quantities to order by size. Locked.</p>
+<div class="mini-scroll"><table class="mini-table narrow" id="orderingTable">
+<thead><tr><th>Size</th><th class="num-cell">Qty</th></tr></thead>
+<tbody id="orderingBody"></tbody>
+</table></div>
+</div>
+</div>
+
+<details class="random-dropdown">
+<summary>Random Stuff</summary>
+<ul class="random-list" id="randomList"></ul>
+</details>
+
+</div>
+</div>
+</main>
+
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal-box">
+<div class="modal-name-field">
+<label for="modalNameInput">Wrestler Name</label>
+<input id="modalNameInput" type="text">
+</div>
+<p class="modal-sub">Checked-out gear</p>
+<p class="modal-save-note">Edit any field, then hit Save Changes.</p>
+<ul class="modal-list" id="modalList"></ul>
+<div class="modal-actions">
+<button class="btn" id="modalCancelBtn">Cancel</button>
+<button class="btn primary" id="modalSaveBtn">Save Changes</button>
+</div>
+</div>
+</div>
+
+<script>
+const STORAGE_KEY = 'holmenWWEquipmentTracker';
+const GEAR_STORAGE_KEY = 'holmenWWGearInventoryV2';
+const COLUMNS = ['blackSize','blackNum','maroonSize','maroonNum','blackPink','blackPinkNum','shortsSize','shortsNum','zipSize','zipNum','bags','blue','red','oldBlack','oldMaroon'];
+
+const SIZE_FIELDS = ['blackSize','maroonSize','shortsSize','zipSize','blue','red','oldBlack','oldMaroon','blackPink'];
+const NUMBER_FIELDS = ['blackNum','maroonNum','shortsNum','zipNum','blackPinkNum'];
+const SIZE_OPTIONS = ['', 'XS','S','M','L','XL','2XL','YS','YM','YL','YXL','N/A'];
+const NUMBER_OPTIONS = (function(){ const opts = ['']; for(let i=1;i<=160;i++) opts.push(String(i)); opts.push('N/A'); return opts; })();
+
+const GROUPS = [
+  {label:'New Black Singlet', size:'blackSize', num:'blackNum'},
+  {label:'Maroon Singlet', size:'maroonSize', num:'maroonNum'},
+  {label:'Black/Pink Singlet', size:'blackPink', num:'blackPinkNum'},
+  {label:'Shorts', size:'shortsSize', num:'shortsNum'},
+  {label:'1/4 Zip', size:'zipSize', num:'zipNum'}
+];
+const SINGLE_FIELDS = [
+  {label:'Bags', field:'bags'},
+  {label:'Blue', field:'blue'},
+  {label:'Red', field:'red'},
+  {label:'Old Black', field:'oldBlack'},
+  {label:'Old Maroon', field:'oldMaroon'}
+];
+
+const ORIGINAL_DATA = [{"name": "Peyton Kratochvill", "blackSize": "M", "blackNum": "", "maroonSize": "", "maroonNum": "29", "shortsSize": "", "shortsNum": "12", "zipSize": "YL", "zipNum": "", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Avalee Euler", "blackSize": "M", "blackNum": "15", "maroonSize": "L", "maroonNum": "100", "shortsSize": "M", "shortsNum": "37", "zipSize": "S", "zipNum": "22", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Ellie Adams", "blackSize": "S", "blackNum": "N/A", "maroonSize": "S", "maroonNum": "", "shortsSize": "S", "shortsNum": "", "zipSize": "XS", "zipNum": "1", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Abby Molling", "blackSize": "M", "blackNum": "101", "maroonSize": "S", "maroonNum": "8", "shortsSize": "M", "shortsNum": "15", "zipSize": "", "zipNum": "100", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Sophia Walter", "blackSize": "L", "blackNum": "18", "maroonSize": "L", "maroonNum": "", "shortsSize": "L", "shortsNum": "3", "zipSize": "L", "zipNum": "36", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Aini Anderson", "blackSize": "XS", "blackNum": "13", "maroonSize": "XS", "maroonNum": "", "shortsSize": "XS", "shortsNum": "", "zipSize": "XS", "zipNum": "", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Kaytlynn Lambries", "blackSize": "", "blackNum": "N/A", "maroonSize": "M", "maroonNum": "27", "shortsSize": "S", "shortsNum": "21", "zipSize": "S", "zipNum": "2", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Celia Drogseth", "blackSize": "M", "blackNum": "23", "maroonSize": "M", "maroonNum": "21", "shortsSize": "S", "shortsNum": "17", "zipSize": "XS", "zipNum": "44", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Olive Bergmann", "blackSize": "S", "blackNum": "N/A", "maroonSize": "S", "maroonNum": "6", "shortsSize": "", "shortsNum": "", "zipSize": "XS", "zipNum": "5", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Karis Dylhoff", "blackSize": "XL", "blackNum": "N/A", "maroonSize": "XL", "maroonNum": "14", "shortsSize": "", "shortsNum": "", "zipSize": "M", "zipNum": "", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Ruby Gustafson", "blackSize": "M", "blackNum": "N/A", "maroonSize": "M", "maroonNum": "37", "shortsSize": "S", "shortsNum": "", "zipSize": "S", "zipNum": "30", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Ema Nedoba", "blackSize": "S", "blackNum": "27", "maroonSize": "S", "maroonNum": "9", "shortsSize": "S", "shortsNum": "", "zipSize": "XS", "zipNum": "11", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Lynzi Neumann", "blackSize": "S", "blackNum": "N/A", "maroonSize": "XS", "maroonNum": "31", "shortsSize": "S", "shortsNum": "14", "zipSize": "YL", "zipNum": "", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Mallory", "blackSize": "S", "blackNum": "36", "maroonSize": "S", "maroonNum": "5", "shortsSize": "S", "shortsNum": "23", "zipSize": "XS", "zipNum": "", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Kaina Westlie", "blackSize": "S", "blackNum": "N/A", "maroonSize": "S", "maroonNum": "2", "shortsSize": "S", "shortsNum": "35", "zipSize": "S", "zipNum": "23", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Riley Inglett", "blackSize": "S", "blackNum": "N/A", "maroonSize": "S", "maroonNum": "36", "shortsSize": "S", "shortsNum": "20", "zipSize": "S", "zipNum": "33", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Kayleen Bazan", "blackSize": "S", "blackNum": "3", "maroonSize": "S", "maroonNum": "3", "shortsSize": "S", "shortsNum": "", "zipSize": "S", "zipNum": "N/A", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Pazong Xiong", "blackSize": "L", "blackNum": "27", "maroonSize": "L", "maroonNum": "16", "shortsSize": "XL", "shortsNum": "4", "zipSize": "L", "zipNum": "35", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}, {"name": "Birgitta Finn", "blackSize": "S", "blackNum": "N/A", "maroonSize": "S", "maroonNum": "", "shortsSize": "S", "shortsNum": "", "zipSize": "XS", "zipNum": "", "bags": "", "blue": "", "red": "", "oldBlack": "", "oldMaroon": "", "blackPink": "", "blackPinkNum": ""}];
+
+const RANDOM_STUFF = [{"item": "16 piece puzzles", "qty": "6"}, {"item": "Bag tags", "qty": "25"}, {"item": "balloons", "qty": "1/2 pack"}, {"item": "bandanas", "qty": "lots"}, {"item": "bean boozled", "qty": "2 small packs"}, {"item": "Black small storage container", "qty": ""}, {"item": "blindfold", "qty": "1"}, {"item": "bowls", "qty": "10"}, {"item": "Colorful labels", "qty": "42"}, {"item": "cotton balls", "qty": "2 pack of 100"}, {"item": "cups", "qty": "a whole shit load"}, {"item": "Disco balls", "qty": "2"}, {"item": "fabric markers", "qty": "40"}, {"item": "Fabric markers", "qty": "40"}, {"item": "fairy wings", "qty": "3"}, {"item": "gift bags", "qty": "5"}, {"item": "magic wands", "qty": "4"}, {"item": "Paper sized plastic container", "qty": ""}, {"item": "permant markers multi colored", "qty": "100"}, {"item": "Polaroid film", "qty": "30"}, {"item": "Star stickers", "qty": ""}, {"item": "steal the bacon rope", "qty": "1"}, {"item": "straws", "qty": "1 pack"}, {"item": "thank you cards", "qty": "200"}, {"item": "Tv remotes", "qty": "2"}, {"item": "White labels", "qty": "15"}, {"item": "yarn", "qty": "2 rolls"}];
+
+/* ---------- Per-wrestler checkout table ---------- */
+
+function loadData(){
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(saved){
+    try { return JSON.parse(saved); } catch(e) { return JSON.parse(JSON.stringify(ORIGINAL_DATA)); }
+  }
+  return JSON.parse(JSON.stringify(ORIGINAL_DATA));
+}
+
+function saveData(data){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+let modalIndex = null;
+
+function openModal(entry, idx){
+  modalIndex = idx;
+  document.getElementById('modalNameInput').value = entry.name || '';
+  const list = document.getElementById('modalList');
+  list.innerHTML = '';
+
+  GROUPS.forEach(g => {
+    const li = document.createElement('li');
+    const sizeId = 'modal_' + g.size;
+    const numId = 'modal_' + g.num;
+    li.innerHTML = '<span>' + g.label + '</span>' +
+      '<select id="' + sizeId + '" data-field="' + g.size + '">' + selectOptionsHtml(SIZE_OPTIONS, entry[g.size] || '') + '</select>' +
+      '<select id="' + numId + '" data-field="' + g.num + '">' + selectOptionsHtml(NUMBER_OPTIONS, entry[g.num] || '') + '</select>';
+    list.appendChild(li);
+  });
+
+  SINGLE_FIELDS.forEach(f => {
+    const li = document.createElement('li');
+    li.className = 'single-field';
+    const fieldId = 'modal_' + f.field;
+    const val = entry[f.field] || '';
+    if(SIZE_FIELDS.includes(f.field)){
+      li.innerHTML = '<span>' + f.label + '</span>' +
+        '<select id="' + fieldId + '" data-field="' + f.field + '">' + selectOptionsHtml(SIZE_OPTIONS, val) + '</select>';
+    } else {
+      li.innerHTML = '<span>' + f.label + '</span>' +
+        '<input id="' + fieldId + '" data-field="' + f.field + '" value="' + escapeAttr(val) + '">';
+    }
+    list.appendChild(li);
+  });
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function escapeAttr(s){
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+}
+
+function selectOptionsHtml(options, currentVal){
+  let html = '';
+  let hasMatch = false;
+  options.forEach(opt => {
+    if(opt === currentVal) hasMatch = true;
+    html += '<option value="' + escapeAttr(opt) + '">' + (opt === '' ? '—' : escapeAttr(opt)) + '</option>';
+  });
+  if(!hasMatch && currentVal !== ''){
+    html += '<option value="' + escapeAttr(currentVal) + '">' + escapeAttr(currentVal) + '</option>';
+  }
+  return html;
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  modalIndex = null;
+}
+
+function saveModal(){
+  if(modalIndex === null) return;
+  const newName = document.getElementById('modalNameInput').value.trim();
+  currentData[modalIndex].name = newName || '(unnamed)';
+  document.querySelectorAll('#modalList [data-field]').forEach(field => {
+    currentData[modalIndex][field.dataset.field] = field.value.trim();
+  });
+  saveData(currentData);
+  sortAndRerenderAll();
+  closeModal();
+}
+
+document.getElementById('modalSaveBtn').addEventListener('click', saveModal);
+document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', (e) => {
+  if(e.target.id === 'modalOverlay') closeModal();
+});
+
+/* A field can appear in two tables at once (the master table and its one category
+   table). setFieldValue updates the data and mirrors the value into every matching
+   cell across both, skipping the cell the edit came from so typing isn't disrupted. */
+function setFieldValue(idx, field, value, sourceCell){
+  currentData[idx][field] = value;
+  document.querySelectorAll('tr[data-idx="' + idx + '"] > td[data-field="' + field + '"]').forEach(cell => {
+    if(cell === sourceCell) return;
+    const select = cell.querySelector('select');
+    if(select){
+      let opt = Array.from(select.options).find(o => o.value === value);
+      if(!opt && value !== ''){
+        opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = value;
+        select.appendChild(opt);
+      }
+      select.value = value;
+    } else {
+      cell.textContent = value;
+    }
+  });
+  saveData(currentData);
+  if(typeof refreshInventoryCounts === 'function') refreshInventoryCounts();
+}
+
+function buildFieldCell(idx, field){
+  const td = document.createElement('td');
+  td.dataset.field = field;
+  const currentVal = currentData[idx][field] || '';
+  if(SIZE_FIELDS.includes(field) || NUMBER_FIELDS.includes(field)){
+    const options = SIZE_FIELDS.includes(field) ? SIZE_OPTIONS : NUMBER_OPTIONS;
+    const select = document.createElement('select');
+    select.className = 'cell-select';
+    let hasMatch = false;
+    options.forEach(opt => {
+      const optionEl = document.createElement('option');
+      optionEl.value = opt;
+      optionEl.textContent = opt === '' ? '—' : opt;
+      if(opt === currentVal){ hasMatch = true; }
+      select.appendChild(optionEl);
+    });
+    if(!hasMatch && currentVal !== ''){
+      const customOpt = document.createElement('option');
+      customOpt.value = currentVal;
+      customOpt.textContent = currentVal;
+      select.appendChild(customOpt);
+    }
+    select.value = currentVal;
+    select.addEventListener('change', () => {
+      setFieldValue(idx, field, select.value.trim(), td);
+    });
+    td.appendChild(select);
+  } else {
+    td.contentEditable = 'true';
+    td.textContent = currentVal;
+    td.addEventListener('input', () => {
+      setFieldValue(idx, field, td.textContent.trim(), td);
+    });
+  }
+  return td;
+}
+
+function buildNameCell(idx){
+  const nameTd = document.createElement('td');
+  nameTd.className = 'name-cell';
+  const nameBtn = document.createElement('button');
+  nameBtn.className = 'name-btn';
+  nameBtn.type = 'button';
+  nameBtn.textContent = currentData[idx].name || '(unnamed)';
+  nameBtn.title = 'Click to see everything checked out';
+  nameBtn.addEventListener('click', () => {
+    openModal(currentData[idx], idx);
+  });
+  nameBtn.addEventListener('dblclick', () => {
+    const newName = prompt('Rename wrestler:', currentData[idx].name || '');
+    if(newName !== null && newName.trim() !== ''){
+      currentData[idx].name = newName.trim();
+      sortAndRerenderAll();
+    }
+  });
+  nameTd.appendChild(nameBtn);
+  return nameTd;
+}
+
+function buildRemoveCell(idx){
+  const removeTd = document.createElement('td');
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'row-remove';
+  removeBtn.innerHTML = '&times;';
+  removeBtn.title = 'Remove wrestler (from every table)';
+  removeBtn.addEventListener('click', () => {
+    if(confirm('Remove ' + (currentData[idx].name || 'this wrestler') + ' from the tracker entirely?')){
+      currentData.splice(idx, 1);
+      saveData(currentData);
+      renderAll();
+    }
+  });
+  removeTd.appendChild(removeBtn);
+  return removeTd;
+}
+
+function renderMasterRow(idx){
+  const tr = document.createElement('tr');
+  tr.dataset.idx = idx;
+  tr.appendChild(buildNameCell(idx));
+  COLUMNS.forEach(col => tr.appendChild(buildFieldCell(idx, col)));
+  tr.appendChild(buildRemoveCell(idx));
+  return tr;
+}
+
+function renderMasterTable(){
+  const body = document.getElementById('inventoryBody');
+  body.innerHTML = '';
+  currentData.forEach((entry, idx) => body.appendChild(renderMasterRow(idx)));
+}
+
+function renderAll(){
+  renderMasterTable();
+  if(typeof refreshInventoryCounts === 'function') refreshInventoryCounts();
+}
+
+function sortByName(data){
+  return data.slice().sort((a, b) => (a.name || '').toLowerCase().localeCompare((b.name || '').toLowerCase()));
+}
+
+function sortAndRerenderAll(){
+  currentData = sortByName(currentData);
+  saveData(currentData);
+  renderAll();
+}
+
+function exportCSV(){
+  const headers = ['Name','New Black Size','New Black Number','Maroon Size','Maroon Number','Black/Pink Size','Black/Pink Number','Shorts Size','Shorts Number','1/4 Zip Size','1/4 Zip Number','Bags','Blue','Red','Old Black','Old Maroon'];
+  const lines = [headers.join(',')];
+  currentData.forEach(e => {
+    const row = [e.name, e.blackSize, e.blackNum, e.maroonSize, e.maroonNum, e.blackPink, e.blackPinkNum, e.shortsSize, e.shortsNum, e.zipSize, e.zipNum, e.bags, e.blue, e.red, e.oldBlack, e.oldMaroon];
+    lines.push(row.map(v => '"' + String(v||'').replace(/"/g,'""') + '"').join(','));
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'equipment-tracker.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+let currentData = sortByName(loadData());
+renderMasterTable();
+saveData(currentData);
+
+document.getElementById('addRowBtn').addEventListener('click', () => {
+  const blank = {name:'New Wrestler'};
+  COLUMNS.forEach(c => blank[c] = '');
+  currentData.push(blank);
+  saveData(currentData);
+  renderAll();
+  const newName = prompt('Wrestler name:', 'New Wrestler');
+  if(newName !== null && newName.trim() !== ''){
+    currentData[currentData.length - 1].name = newName.trim();
+    sortAndRerenderAll();
+  }
+});
+
+document.getElementById('exportBtn').addEventListener('click', exportCSV);
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if(confirm('Reset the tracker back to the original spreadsheet data? Any edits made in this browser will be lost.')){
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(GEAR_STORAGE_KEY);
+    currentData = sortByName(loadData());
+    saveData(currentData);
+    renderAll();
+    if(typeof loadGear === 'function'){
+      currentGear = loadGear();
+      renderAllGearTables();
+      renderSimpleTable('tanktops');
+      renderSimpleTable('ordering');
+      saveGear();
+    }
+  }
+});
+
+/* ---------- Total gear inventory ---------- */
+
+/* Each color/gear type gets its own table. "bucket" is how that table's Checked Out
+   column is matched against the wrestler checkout table above (null = not tracked
+   by wrestler, so Checked Out always shows 0). */
+const GEAR_TABLES = [
+  {key:'newBlack', bodyId:'gearNewBlackBody', bucket:'NEW BLACK'},
+  {key:'newMaroon', bodyId:'gearNewMaroonBody', bucket:'NEW MAROON'},
+  {key:'blackPinkGear', bodyId:'gearBlackPinkBody', bucket:'BLACK/PINK'},
+  {key:'red', bodyId:'gearRedBody', bucket:'RED'},
+  {key:'blue', bodyId:'gearBlueBody', bucket:'BLUE'},
+  {key:'oldMaroonGear', bodyId:'gearOldMaroonBody', bucket:'OLD MAROON'},
+  {key:'oldBlackFinals', bodyId:'gearOldBlackBody', bucket:'OLD BLACK'},
+  {key:'zips', bodyId:'gearZipsBody', bucket:'ZIP'},
+  {key:'shorts', bodyId:'gearShortsBody', bucket:'SHORT'},
+  {key:'compression', bodyId:'gearCompressionBody', bucket:null}
+];
+
+const SIMPLE_TABLES = {
+  tanktops: {bodyId:'tanktopsBody'},
+  ordering: {bodyId:'orderingBody'}
+};
+
+const ORIGINAL_GEAR = {
+  newBlack: [
+    {size:'Extra Small (one needs to be fixed)', max:4},
+    {size:'Small', max:14},
+    {size:'Medium', max:10},
+    {size:'Large', max:5},
+    {size:'Extra Large', max:4}
+  ],
+  newMaroon: [
+    {size:'Extra Small', max:3},
+    {size:'Small', max:11},
+    {size:'Medium', max:11},
+    {size:'Large', max:3},
+    {size:'Extra Large', max:1}
+  ],
+  blackPinkGear: [
+    {size:'XS', max:2},
+    {size:'Small', max:6},
+    {size:'Medium', max:4},
+    {size:'Large', max:1},
+    {size:'XL', max:1}
+  ],
+  red: [
+    {size:'Small', max:3},
+    {size:'Medium', max:5},
+    {size:'Large', max:2}
+  ],
+  blue: [
+    {size:'Small', max:4},
+    {size:'Medium', max:5},
+    {size:'Large', max:1}
+  ],
+  oldMaroonGear: [
+    {size:'Small', max:11},
+    {size:'Medium', max:6},
+    {size:'Large', max:2},
+    {size:'XL', max:1},
+    {size:'2XL', max:1}
+  ],
+  oldBlackFinals: [
+    {size:'Small', max:2},
+    {size:'Medium', max:5},
+    {size:'Large', max:4},
+    {size:'XL', max:2},
+    {size:'2XL', max:1}
+  ],
+  zips: [
+    {size:'Youth Large', max:3},
+    {size:'Youth XL', max:1},
+    {size:'Extra Small', max:7},
+    {size:'Small', max:16},
+    {size:'Medium', max:14},
+    {size:'Large', max:2},
+    {size:'Extra Large', max:1}
+  ],
+  shorts: [
+    {size:'Extra Small', max:2},
+    {size:'Small', max:9},
+    {size:'Medium', max:15},
+    {size:'Large', max:4},
+    {size:'Extra Large', max:1}
+  ],
+  compression: [
+    {size:'XS', max:2},
+    {size:'Small', max:3},
+    {size:'Medium', max:3},
+    {size:'Large', max:2},
+    {size:'XL', max:2}
+  ],
+  tanktops: [
+    {size:'Small', qty:1},
+    {size:'Medium', qty:2},
+    {size:'Large', qty:2}
+  ],
+  ordering: [
+    {size:'YL', qty:3},
+    {size:'YXL', qty:4},
+    {size:'XS', qty:5},
+    {size:'Small', qty:15},
+    {size:'Medium', qty:15},
+    {size:'Large', qty:4},
+    {size:'XL', qty:2}
+  ]
+};
+
+function loadGear(){
+  const saved = localStorage.getItem(GEAR_STORAGE_KEY);
+  if(saved){
+    try { return JSON.parse(saved); } catch(e) { return JSON.parse(JSON.stringify(ORIGINAL_GEAR)); }
+  }
+  return JSON.parse(JSON.stringify(ORIGINAL_GEAR));
+}
+
+function saveGear(){
+  localStorage.setItem(GEAR_STORAGE_KEY, JSON.stringify(currentGear));
+}
+
+/* ----- size normalization + checkout counting ----- */
+
+function normalizeSize(s){
+  if(!s) return '';
+  let t = String(s).replace(/\(.*?\)/g, '').trim().toUpperCase();
+  const map = {
+    'EXTRA SMALL':'XS','X-SMALL':'XS','XS':'XS',
+    'SMALL':'S','S':'S',
+    'MEDIUM':'M','MED':'M','M':'M',
+    'LARGE':'L','L':'L',
+    'EXTRA LARGE':'XL','X-LARGE':'XL','XL':'XL',
+    '2XL':'2XL','XXL':'2XL','XX-LARGE':'2XL',
+    'YOUTH SMALL':'YS','YS':'YS',
+    'YOUTH MEDIUM':'YM','YM':'YM',
+    'YOUTH LARGE':'YL','YL':'YL',
+    'YOUTH XL':'YXL','YXL':'YXL','YOUTH EXTRA LARGE':'YXL',
+    'N/A':'', 'NA':''
+  };
+  return map[t] || t;
+}
+
+function getCheckoutCounts(){
+  const counts = {};
+  function bump(bucket, size){
+    const ns = normalizeSize(size);
+    if(!ns) return;
+    const key = bucket + '||' + ns;
+    counts[key] = (counts[key] || 0) + 1;
+  }
+  currentData.forEach(w => {
+    bump('NEW BLACK', w.blackSize);
+    bump('NEW MAROON', w.maroonSize);
+    bump('BLACK/PINK', w.blackPink);
+    bump('RED', w.red);
+    bump('BLUE', w.blue);
+    bump('OLD MAROON', w.oldMaroon);
+    bump('OLD BLACK', w.oldBlack);
+    bump('ZIP', w.zipSize);
+    bump('SHORT', w.shortsSize);
+  });
+  return counts;
+}
+
+function checkedOutFor(bucket, size, counts){
+  if(!bucket) return 0;
+  const ns = normalizeSize(size);
+  return counts[bucket + '||' + ns] || 0;
+}
+
+function buildGearRow(tableKey, idx){
+  const cfg = GEAR_TABLES.find(g => g.key === tableKey);
+  const entry = currentGear[tableKey][idx];
+  const tr = document.createElement('tr');
+  tr.dataset.idx = idx;
+
+  const sizeTd = document.createElement('td');
+  sizeTd.dataset.field = 'size';
+  sizeTd.className = 'locked-cell';
+  sizeTd.title = 'Locked';
+  sizeTd.textContent = entry.size || '';
+  tr.appendChild(sizeTd);
+
+  const maxTd = document.createElement('td');
+  maxTd.dataset.field = 'max';
+  maxTd.className = 'locked-cell num-cell';
+  maxTd.title = 'Locked';
+  maxTd.textContent = (entry.max === undefined || entry.max === null) ? '' : entry.max;
+  tr.appendChild(maxTd);
+
+  const counts = getCheckoutCounts();
+  const checkedOut = checkedOutFor(cfg.bucket, entry.size, counts);
+  const maxNum = parseFloat(entry.max);
+  const available = isNaN(maxNum) ? '' : Math.max(0, maxNum - checkedOut);
+
+  const coTd = document.createElement('td');
+  coTd.dataset.field = 'checkedOut';
+  coTd.className = 'computed-cell num-cell';
+  coTd.title = 'Auto-calculated from the checkout table above';
+  coTd.textContent = String(checkedOut);
+  tr.appendChild(coTd);
+
+  const avTd = document.createElement('td');
+  avTd.dataset.field = 'available';
+  avTd.className = 'computed-cell num-cell';
+  avTd.title = 'Auto-calculated from the checkout table above';
+  avTd.textContent = String(available);
+  tr.appendChild(avTd);
+
+  return tr;
+}
+
+function renderGearTable(tableKey){
+  const cfg = GEAR_TABLES.find(g => g.key === tableKey);
+  const body = document.getElementById(cfg.bodyId);
+  body.innerHTML = '';
+  currentGear[tableKey].forEach((entry, idx) => body.appendChild(buildGearRow(tableKey, idx)));
+}
+
+function renderAllGearTables(){
+  GEAR_TABLES.forEach(cfg => renderGearTable(cfg.key));
+}
+
+function refreshAllGearCounts(){
+  const counts = getCheckoutCounts();
+  GEAR_TABLES.forEach(cfg => {
+    const body = document.getElementById(cfg.bodyId);
+    if(!body) return;
+    Array.from(body.children).forEach(tr => {
+      const idx = Number(tr.dataset.idx);
+      const entry = currentGear[cfg.key][idx];
+      if(!entry) return;
+      const checkedOut = checkedOutFor(cfg.bucket, entry.size, counts);
+      const maxNum = parseFloat(entry.max);
+      const available = isNaN(maxNum) ? '' : Math.max(0, maxNum - checkedOut);
+      const coCell = tr.querySelector('td[data-field="checkedOut"]');
+      const avCell = tr.querySelector('td[data-field="available"]');
+      if(coCell) coCell.textContent = String(checkedOut);
+      if(avCell) avCell.textContent = String(available);
+    });
+  });
+}
+
+function refreshInventoryCounts(){
+  refreshAllGearCounts();
+}
+
+/* ----- Simple stock tables (Tank Tops, Ordering Quantities — no checkout tracking) ----- */
+
+function buildSimpleRow(tableKey, idx){
+  const entry = currentGear[tableKey][idx];
+  const tr = document.createElement('tr');
+  tr.dataset.idx = idx;
+
+  const sizeTd = document.createElement('td');
+  sizeTd.className = 'locked-cell';
+  sizeTd.title = 'Locked';
+  sizeTd.textContent = entry.size || '';
+  tr.appendChild(sizeTd);
+
+  const qtyTd = document.createElement('td');
+  qtyTd.className = 'locked-cell num-cell';
+  qtyTd.title = 'Locked';
+  qtyTd.textContent = (entry.qty === undefined || entry.qty === null) ? '' : entry.qty;
+  tr.appendChild(qtyTd);
+
+  return tr;
+}
+
+function renderSimpleTable(tableKey){
+  const body = document.getElementById(SIMPLE_TABLES[tableKey].bodyId);
+  body.innerHTML = '';
+  currentGear[tableKey].forEach((entry, idx) => body.appendChild(buildSimpleRow(tableKey, idx)));
+}
+
+let currentGear = loadGear();
+renderAllGearTables();
+renderSimpleTable('tanktops');
+renderSimpleTable('ordering');
+saveGear();
+
+/* ----- Random Stuff dropdown ----- */
+
+const randomListEl = document.getElementById('randomList');
+RANDOM_STUFF.forEach(r => {
+  const li = document.createElement('li');
+  li.innerHTML = '<span>' + r.item + '</span><span>' + (r.qty || '&mdash;') + '</span>';
+  randomListEl.appendChild(li);
+});
+</script>
+</body>
+</html>

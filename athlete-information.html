@@ -11,7 +11,10 @@
     body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--light);color:var(--ink)}
     .header{min-height:74px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 22px}
     .header a{font-weight:900;color:var(--maroon);text-decoration:none}
-    .hero{background:linear-gradient(135deg,var(--maroon),var(--dark));color:#fff;padding:50px 20px}
+    .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--maroon),var(--dark));color:#fff;padding:50px 20px}
+    .hero-watermark{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;z-index:0;pointer-events:none;overflow:hidden}
+    .hero-watermark img{width:min(700px,70%);opacity:.12;object-fit:contain;transform:translateY(45%);}
+    .hero .container{position:relative;z-index:1}
     .container{width:min(900px,calc(100% - 28px));margin:auto}
     h1{font-size:clamp(2.5rem,6vw,4.3rem);letter-spacing:-.05em;margin:0 0 12px}
     .hero p{line-height:1.65;color:#f0dde3;max-width:760px}
@@ -36,6 +39,7 @@
 </header>
 
 <section class="hero">
+  <div class="hero-watermark"><img src="assets/images/logo.png" alt=""></div>
   <div class="container">
     <h1>Athlete Information Form</h1>
     <p>Use this form so we have all your contact information and can get you a USA Wrestling Membership. The membership is important for camps and tournaments and can provide supplemental insurance. One of our wrestlers was reimbursed $500 after an injury.</p>
@@ -103,20 +107,58 @@
 </main>
 
 <script>
+// After deploying the Apps Script (see AthleteFormSync.gs setup instructions),
+// paste the Web app URL here — it should end in /exec.
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDy2Nf8EFSF3rPdhkk16K6z4J90a8z5QSaCHABHbZwM9teZynnqOYUxxjOk-UT-McA/exec';
+
 const form=document.getElementById('athleteForm');
 const status=document.getElementById('status');
+
+function showStatus(message){
+  status.textContent=message;
+  status.className='status success';
+}
+
 form.addEventListener('submit',e=>{
   e.preventDefault();
   if(!form.checkValidity()){form.reportValidity();return;}
   const entry=Object.fromEntries(new FormData(form).entries());
   entry.submittedAt=new Date().toISOString();
+
+  // Always keep a local backup on this device too.
   const saved=JSON.parse(localStorage.getItem('holmenAthleteInformation')||'[]');
   saved.push(entry);
   localStorage.setItem('holmenAthleteInformation',JSON.stringify(saved));
-  form.reset();
-  form.elements.state.value='WI';
-  status.textContent='Athlete information saved on this device.';
-  status.className='status success';
+
+  const isConfigured = GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.indexOf('PASTE_YOUR') === -1;
+
+  if(!isConfigured){
+    form.reset();
+    form.elements.state.value='WI';
+    showStatus('Athlete information saved on this device.');
+    return;
+  }
+
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    body: JSON.stringify(entry)
+  })
+    .then(r => r.json())
+    .then(res => {
+      form.reset();
+      form.elements.state.value='WI';
+      if(res && res.status === 'ok'){
+        showStatus("Thanks! Glad to have you on the team!");
+      } else {
+        showStatus('Saved on this device, but sending to the coaches failed. Please let a coach know.');
+      }
+    })
+    .catch(() => {
+      form.reset();
+      form.elements.state.value='WI';
+      showStatus("Saved on this device, but we couldn't reach the coaches' sheet — check your connection and let a coach know.");
+    });
 });
 </script>
 </body>

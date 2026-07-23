@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Recaps | Holmen Women’s Wrestling</title>
+<style>
+:root{--maroon:#6d1730;--dark:#3f0b1a;--light:#f5f5f7;--ink:#19191d;--muted:#676b73;--border:#e1e2e5}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--light);color:var(--ink)}
+a{color:inherit}
+.header{height:74px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:20}
+.brand,.back{font-weight:900;color:var(--maroon);text-decoration:none}
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--maroon),var(--dark));color:#fff;padding:58px 20px}
+.hero-watermark{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;z-index:0;pointer-events:none;overflow:hidden}
+.hero-watermark img{width:min(700px,70%);opacity:.12;object-fit:contain;transform:translateY(45%)}
+.hero .container{position:relative;z-index:1}
+.container{width:min(1000px,calc(100% - 28px));margin:auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;font-weight:900;color:#efc8d4}
+h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
+.hero p{max-width:760px;line-height:1.65;color:#f0dde3}
+.content{padding:40px 0 70px}
+h2.section-title{font-size:1.5rem;letter-spacing:-.02em;margin:0 0 18px;color:var(--maroon)}
+.top-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-bottom:36px}
+.top-card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:24px;box-shadow:0 10px 32px rgba(20,15,17,.06);display:flex;flex-direction:column}
+.top-card h3{margin:0 0 10px;font-size:1.2rem;color:var(--maroon)}
+.top-card p{margin:0;line-height:1.6;color:var(--muted);flex:1}
+.top-card .button{margin-top:16px;align-self:flex-start;border:1px solid #d8bcc5;background:#fff;color:var(--maroon);border-radius:999px;min-height:42px;padding:0 18px;font-weight:850;text-decoration:none;display:inline-flex;align-items:center}
+.top-card .button:hover{background:#faf3f5}
+.results-link-row{display:flex;justify-content:flex-end;margin:-16px 0 30px}
+.results-link-row a{border:0;border-radius:999px;min-height:43px;padding:0 20px;font-weight:850;text-decoration:none;background:var(--maroon);color:#fff;display:inline-flex;align-items:center}
+.recap-list{display:flex;flex-direction:column;gap:14px}
+.recap-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:20px 22px;box-shadow:0 8px 22px rgba(20,12,15,.05)}
+.recap-card summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.recap-card summary::-webkit-details-marker{display:none}
+.recap-card summary::after{content:"+";font-size:1.3rem;font-weight:900;color:var(--maroon);flex:none;transition:transform .15s ease}
+.recap-card[open] summary::after{transform:rotate(45deg)}
+.recap-title{font-weight:850;font-size:1.05rem}
+.recap-date{text-transform:uppercase;letter-spacing:.08em;font-size:.74rem;font-weight:850;color:var(--maroon);margin-top:4px}
+.recap-body{white-space:pre-line;line-height:1.7;color:#2a2a2e;margin-top:14px}
+.empty-state{background:#fff;border:1px dashed var(--border);border-radius:18px;padding:34px 24px;text-align:center;color:var(--muted);line-height:1.6}
+@media(max-width:760px){.top-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.header{padding:0 14px}}
+</style>
+</head>
+<body>
+<header class="header">
+<a class="brand" href="index.html">Holmen Women’s Wrestling</a>
+<a class="back" href="index.html">Back to Home</a>
+</header>
+
+<section class="hero">
+<div class="hero-watermark"><img src="assets/images/logo.png" alt=""></div>
+<div class="container">
+<div class="eyebrow">Herstory</div>
+<h1>Recaps</h1>
+<p>Recaps from our meets and tournaments, what's coming up next, and links to the full season results and our recap archive.</p>
+</div>
+</section>
+
+<main class="content">
+<div class="container">
+
+<div class="top-grid">
+<div class="top-card">
+<h3>Latest Recap</h3>
+<p>Ruby Gustafson competed at Fargo Nationals — the largest wrestling tournament in the world!</p>
+</div>
+<div class="top-card">
+<h3>Upcoming</h3>
+<p>We'll be heading to Herky Jerk Ranch for a wrestling camp!</p>
+<a class="button" href="calendar.html">View Calendar</a>
+</div>
+</div>
+
+<div class="results-link-row">
+<a href="results.html">Past Season Results</a>
+</div>
+
+<h2 class="section-title">All Recaps</h2>
+<div class="recap-list" id="recap-list">
+<div class="empty-state">No recaps yet — check back soon!</div>
+</div>
+
+</div>
+</main>
+</body>
+</html>

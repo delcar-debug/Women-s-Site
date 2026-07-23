@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Past Season Results | Holmen Women’s Wrestling</title>
+<style>
+:root{--maroon:#6d1730;--dark:#3f0b1a;--light:#f5f5f7;--ink:#19191d;--muted:#676b73;--border:#e1e2e5}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--light);color:var(--ink)}
+a{color:inherit}
+.header{height:74px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:20}
+.brand,.back{font-weight:900;color:var(--maroon);text-decoration:none}
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--maroon),var(--dark));color:#fff;padding:58px 20px}
+.hero-watermark{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;z-index:0;pointer-events:none;overflow:hidden}
+.hero-watermark img{width:min(700px,70%);opacity:.12;object-fit:contain;transform:translateY(45%)}
+.hero .container{position:relative;z-index:1}
+.container{width:min(950px,calc(100% - 28px));margin:auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;font-weight:900;color:#efc8d4}
+h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
+.hero p{max-width:760px;line-height:1.65;color:#f0dde3}
+.content{padding:40px 0 70px}
+.intro-note{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px 22px;margin-bottom:24px;box-shadow:0 8px 22px rgba(20,12,15,.05);line-height:1.6;color:#3b3d43;font-size:.94rem}
+.results-subtitle{font-size:1.15rem;letter-spacing:-.02em;color:var(--maroon);margin:0 0 14px}
+.tabs{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+.tab{border:1px solid var(--border);background:#fff;border-radius:999px;padding:10px 20px;font-weight:850;font-size:.92rem;cursor:pointer;color:var(--muted)}
+.tab.active{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.panel{display:none}
+.panel.active{display:block}
+.result-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px 22px;margin-bottom:14px;box-shadow:0 8px 22px rgba(20,12,15,.05)}
+.result-card h3{margin:0 0 10px;font-size:1.02rem;color:var(--maroon)}
+.result-table{width:100%;border-collapse:collapse;font-size:.92rem}
+.result-table th,.result-table td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)}
+.result-table th{color:var(--muted);font-size:.76rem;text-transform:uppercase;letter-spacing:.06em}
+.result-table tr:last-child td{border-bottom:0}
+.mark-cell{text-align:center;font-weight:800;color:var(--maroon)}
+.result-list{list-style:none;margin:0;padding:0}
+.result-list li{padding:7px 0;border-bottom:1px solid var(--border);font-size:.92rem}
+.result-list li:last-child{border-bottom:0}
+.record-badge{display:inline-block;background:#f5e3e8;color:var(--maroon);font-weight:850;font-size:.85rem;padding:4px 12px;border-radius:999px;margin-top:10px}
+.result-note{font-size:.85rem;color:var(--muted);margin:0}
+@media(max-width:600px){.header{padding:0 14px}.result-table{font-size:.82rem}.result-table th,.result-table td{padding:7px 6px}}
+</style>
+</head>
+<body>
+<header class="header">
+<a class="brand" href="index.html">Holmen Women’s Wrestling</a>
+<a class="back" href="index.html">Back to Home</a>
+</header>
+
+<section class="hero">
+<div class="hero-watermark"><img src="assets/images/logo.png" alt=""></div>
+<div class="container">
+<div class="eyebrow">Herstory</div>
+<h1>Past Season Results</h1>
+<p>Season-by-season results, from regional and sectional champions to our state tournament qualifiers and placewinners.</p>
+</div>
+</section>
+
+<main class="content">
+<div class="container">
+
+<div class="tabs">
+<button class="tab active" data-panel="s2026">2025–2026</button>
+<button class="tab" data-panel="s2025">2024–2025</button>
+<button class="tab" data-panel="s2024">2023–2024</button>
+<button class="tab" data-panel="s2023">2022–2023</button>
+<button class="tab" data-panel="s2022">2021–2022</button>
+<button class="tab" data-panel="s2020">2019–2020</button>
+<button class="tab" data-panel="s2019">2018–2019</button>
+<button class="tab" data-panel="s2018">2017–2018</button>
+<button class="tab" data-panel="allmeets">All Duals &amp; Tournaments</button>
+<button class="tab" data-panel="allpostseason">Postseason Honor Roll</button>
+</div>
+<div class="panel active" id="s2026">
+<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>GET/MM Girls Invite — 1st Place</li><li>Eau Claire Memorial Invite — 1st Place</li><li>Friday Night Fights — 1st Place</li><li>Bi-State Classic — 4th Place</li><li>Wisconsin Multi-Duals Championship — 2nd Place</li><li>Women's Warrior Challenge — 5th Place</li><li>Sparta Invitational — 2nd Place</li><li>Regionals — 1st Place</li><li>Sectionals — 1st Place</li></ul></div><div class="result-card"><h3>Duals</h3><ul class="result-list"><li>Holmen JV 35 – <strong>Kickapoo La Farge Youth Initiative 36</strong> (JV, not in overall record)</li><li><strong>Holmen 42</strong> – Tomahawk 21</li><li><strong>Holmen 42</strong> – Badger 28</li><li><strong>Holmen 39</strong> – Neenah 29</li><li>Holmen 30 – <strong>Bayport 42</strong></li><li><strong>Holmen 36</strong> – Saint Croix Falls 30</li><li><strong>Holmen 40</strong> – Stillwater, MN 28</li><li><strong>Holmen 48</strong> – Unity 11</li><li><strong>Holmen 57</strong> – Tomah 6</li></ul><div class="record-badge">Dual Record: 7–1</div><p class="result-note" style="margin-top:10px">First dual of the season was JV and is not included in the varsity record.</p></div>
+<div class="result-card"><h3>Postseason Results</h3><table class="result-table"><thead><tr><th>Wrestler</th><th>Weight</th><th>Regional Champion</th><th>Sectional Champion</th><th>State Result</th></tr></thead><tbody><tr><td>Aini Anderson</td><td>100</td><td class="mark-cell">&#10003;</td><td class="mark-cell">&#10003;</td><td>2nd</td></tr><tr><td>Peyton Kratochvill</td><td>114</td><td class="mark-cell">&#10003;</td><td class="mark-cell">&#8212;</td><td>&#8212;</td></tr><tr><td>Kaytlynn Lambries</td><td>126</td><td class="mark-cell">&#10003;</td><td class="mark-cell">&#10003;</td><td>2x Qualifier</td></tr><tr><td>Avalee Euler</td><td>185</td><td class="mark-cell">&#10003;</td><td class="mark-cell">&#8212;</td><td>Qualifier</td></tr></tbody></table></div>
+</div>
+<div class="panel" id="s2025">
+<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>Bi-State Classic — 5th</li><li>The Clash National Duals — 5th</li><li>Wisconsin Multi-Duals Championship — 3rd</li><li>Women's Warrior Challenge — 8th</li><li>Regionals — 1st</li><li>Sectionals — 1st</li></ul></div>
+<div class="result-card"><h3>Duals</h3><ul class="result-list"><li><strong>Holmen 42</strong> – Kickapoo La Farge Youth Initiative 24</li><li>Holmen 21 – <strong>Hastings, MN 47</strong></li><li>Holmen 21 – <strong>Apple Valley, MN 48</strong></li><li><strong>Holmen 51</strong> – St. Croix Falls 16</li><li><strong>Holmen 48</strong> – Mukwonago 21</li><li>Holmen 30 – <strong>Andrew, IL 39</strong></li><li><strong>Holmen 36</strong> – Hastings, MN 35</li><li>Holmen 34 – <strong>Central Cass, ND 42</strong></li><li><strong>Holmen 42</strong> – STMA, MN 36</li><li><strong>Holmen 47</strong> – Crestwood, IA 33</li><li>Holmen 24 – <strong>Decorah, IA 54</strong></li><li><strong>Holmen 54</strong> – Chilton-Hilbert 18</li><li><strong>Holmen 36</strong> – Bayport 30</li><li>Holmen 30 – <strong>Menasha 39</strong></li><li><strong>Holmen 39</strong> – Neenah 23</li></ul><div class="record-badge">Dual Record: 9–6</div><p class="result-note" style="margin-top:10px">JV also competed in 4 additional duals this season.</p></div>
+<div class="result-card"><h3>Postseason Results</h3><table class="result-table"><thead><tr><th>Wrestler</th><th>Weight</th><th>Regional Champion</th><th>Sectional Champion</th><th>State Result</th></tr></thead><tbody><tr><td>Kaytlynn Lambries</td><td>107</td><td class="mark-cell">&#10003;</td><td class="mark-cell">&#8212;</td><td>&#8212;</td></tr><tr><td>Haley Dezelske</td><td>114</td><td class="mark-cell">&#10003;</td><td class="mark-cell">&#10003;</td><td>Qualifier</td></tr><tr><td>Allison Weiss</td><td>120</td><td class="mark-cell">&#10003;</td><td class="mark-cell">&#8212;</td><td>2x Qualifier</td></tr><tr><td>Alexa Szak</td><td>138</td><td class="mark-cell">&#10003;</td><td class="mark-cell">&#8212;</td><td>&#8212;</td></tr><tr><td>Avalee Euler</td><td>165</td><td class="mark-cell">&#10003;</td><td class="mark-cell">&#8212;</td><td>&#8212;</td></tr></tbody></table></div>
+</div>
+<div class="panel" id="s2024">
+<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>Eau Claire North Husky Invite — 1st</li><li>Bi-State Classic — 1st</li><li>The Clash National Duals — 4th</li><li>Wisconsin Multi-Duals Championship — 1st</li><li>Wisconsin Challenge Series — 1st</li></ul></div>
+<div class="result-card"><h3>Duals</h3><ul class="result-list"><li><strong>Holmen 54</strong> – Eau Claire North 18</li><li><strong>Holmen 45</strong> – Nekoosa/Assumption/Port Edwards 21</li><li>Holmen 33 – <strong>Decorah, IA 40</strong></li><li>Holmen 12 – <strong>Osage, IA 69</strong></li><li><strong>Holmen 72</strong> – Mora, MN 6</li><li>Holmen 30 – <strong>Apple Valley, MN 45</strong></li><li><strong>Holmen 46</strong> – Batavia, IL 28</li><li><strong>Holmen 48</strong> – Minooka, IL 27</li><li>Holmen 33 – <strong>St. Michael-Albertville, MN 39</strong></li><li><strong>Holmen 60</strong> – Kimberly 6</li><li><strong>Holmen 42</strong> – Pulaski 27</li><li><strong>Holmen 48</strong> – Wausau West 24</li><li><strong>Holmen 48</strong> – Coulee Region 15 (not an official dual)</li></ul><div class="record-badge">Dual Record: 8–4</div></div>
+<div class="result-card"><h3>Postseason Results</h3><table class="result-table"><thead><tr><th>Wrestler</th><th>Weight</th><th>Regional Champion</th><th>Sectional Champion</th><th>State Result</th></tr></thead><tbody><tr><td>Aini Anderson</td><td>100</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>Qualifier</td></tr><tr><td>Kaytlynn Lambries</td><td>107</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>6th</td></tr><tr><td>Allison Weiss</td><td>114</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>Qualifier</td></tr><tr><td>Anna Strasser</td><td>126</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>Qualifier</td></tr><tr><td>Alexa Szak</td><td>145</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>2x Qualifier</td></tr><tr><td>Maddie Hall</td><td>165</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>Qualifier</td></tr><tr><td>Sophia Walter</td><td>185</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>Qualifier</td></tr></tbody></table></div>
+</div>
+<div class="panel" id="s2023">
+<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>Eau Claire North Husky Invite — 1st place</li><li>Badger State Invitational — 1st place</li><li>Central Girls Invite — 5th place</li><li>Warrior Cup — 1st place</li><li>Wisconsin Multi-Duals Championship — 1st place</li></ul></div>
+<div class="result-card"><h3>Duals</h3><ul class="result-list"><li>Holmen 30 – <strong>Decorah 54</strong></li><li>Holmen 30 – <strong>Osage 51</strong></li><li><strong>Holmen 45</strong> – Eau Claire North 18</li><li><strong>Holmen 42</strong> – Kimberly/Menasha 6 (not an official dual)</li><li><strong>Holmen 33</strong> – Wausau West 29</li></ul><div class="record-badge">Dual Record: 2–2</div></div>
+<div class="result-card"><h3>Postseason Results</h3><table class="result-table"><thead><tr><th>Wrestler</th><th>Weight</th><th>Regional Champion</th><th>Sectional Champion</th><th>State Result</th></tr></thead><tbody><tr><td>Nora Lee</td><td>100</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#8212;</td><td>5th</td></tr><tr><td>Evelyn Vetsch</td><td>145</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>3rd</td></tr><tr><td>Alexa Szak</td><td>152</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>Qualifier</td></tr><tr><td>Maddie Hall</td><td>165</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>Qualifier</td></tr></tbody></table></div>
+</div>
+<div class="panel" id="s2022">
+<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>Badger State Invitational — 2nd place</li><li>Central Girls Wrestling Invitational — 3rd place</li><li>Wisconsin High School Girls Championship — 1st place</li></ul></div>
+<div class="result-card"><h3>Postseason Results</h3><table class="result-table"><thead><tr><th>Wrestler</th><th>Weight</th><th>Regional Champion</th><th>Sectional Champion</th><th>State Result</th></tr></thead><tbody><tr><td>Evelyn Vetsch</td><td>152</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#8212;</td><td>4th</td></tr><tr><td>Emily Szak</td><td>165</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#8212;</td><td>5th</td></tr></tbody></table></div>
+</div>
+<div class="panel" id="s2020">
+<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>Wisconsin High School Girls Championship — 2nd place</li><li>Badger State Invitational — 2nd place</li></ul></div>
+</div>
+<div class="panel" id="s2019">
+<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>Badger State Invitational — 2nd place</li></ul></div>
+</div>
+<div class="panel" id="s2018">
+<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>Badger State Invitational — 24th place</li></ul></div>
+</div>
+<div class="panel" id="allmeets">
+<h2 class="results-subtitle">Tournament Results by Season</h2>
+<div class="result-card"><h3>2025–2026</h3><ul class="result-list"><li>GET/MM Girls Invite: 1st Place</li><li>Eau Claire Memorial Invite: 1st Place</li><li>Friday Night Fights: 1st Place</li><li>Bi-State Classic: 4th Place</li><li>Wisconsin Multi-Duals Championship: 2nd Place</li><li>Women's Warrior Challenge: 5th Place</li><li>Sparta Invitational: 2nd Place</li><li>Regionals: 1st Place</li><li>Sectionals: 1st Place</li></ul></div>
+<div class="result-card"><h3>2024–2025</h3><ul class="result-list"><li>Bi-State Classic: 5th Place</li><li>The Clash National Duals: 5th place</li><li>Wisconsin Multi-Duals Championship: 3rd Place</li><li>Women's Warrior Challenge: 8th Place</li><li>Regionals: 1st Place</li><li>Sectionals: 1st Place</li></ul></div>
+<div class="result-card"><h3>2023–2024</h3><ul class="result-list"><li>Eau Claire North Husky Invite: 1st place</li><li>Bi-State Classic: 1st Place</li><li>The Clash National Duals: 4th place</li><li>Wisconsin Multi-Duals Championship: 1st place</li><li>Wisconsin Challenge Series: 1st place</li></ul></div>
+<div class="result-card"><h3>2022–2023</h3><ul class="result-list"><li>Eau Claire North Husky Invite: 1st place</li><li>Badger State Invitational: 1st place</li><li>Central Girls Invite: 5th place</li><li>Warrior Cup: 1st place</li><li>Wisconsin Multi-Duals Championship: 1st place</li></ul></div>
+<div class="result-card"><h3>2021–2022</h3><ul class="result-list"><li>Badger State Invitational: 2nd place</li><li>Central Girls Wrestling Invitational: 3rd place</li><li>Wisconsin High School Girls Championship: 1st place</li></ul></div>
+<div class="result-card"><h3>2019–2020</h3><ul class="result-list"><li>Wisconsin High School Girls Championship: 2nd place</li><li>Badger State Invitational: 2nd place</li></ul></div>
+<div class="result-card"><h3>2018–2019</h3><ul class="result-list"><li>Badger State Invitational: 2nd place</li></ul></div>
+<div class="result-card"><h3>2017–2018</h3><ul class="result-list"><li>Badger State Invitational: 24th place</li></ul></div>
+<h2 class="results-subtitle" style="margin-top:8px">Dual Results by Season</h2>
+<div class="record-badge" style="margin-bottom:14px;font-size:.95rem">Overall Dual Record (2022–2026): 26–13</div>
+<div class="result-card"><h3>2025–2026</h3><ul class="result-list"><li>Holmen JV 35 – <strong>Kickapoo La Farge Youth Initiative 36</strong> (JV, not in overall record)</li><li><strong>Holmen 42</strong> – Tomahawk 21</li><li><strong>Holmen 42</strong> – Badger 28</li><li><strong>Holmen 39</strong> – Neenah 29</li><li>Holmen 30 – <strong>Bayport 42</strong></li><li><strong>Holmen 36</strong> – Saint Croix Falls 30</li><li><strong>Holmen 40</strong> – Stillwater, MN 28</li><li><strong>Holmen 48</strong> – Unity 11</li><li><strong>Holmen 57</strong> – Tomah 6</li></ul><div class="record-badge">Dual Record: 7–1</div></div>
+<div class="result-card"><h3>2024–2025</h3><ul class="result-list"><li><strong>Holmen 42</strong> – Kickapoo La Farge Youth Initiative 24</li><li>Holmen 21 – <strong>Hastings, MN 47</strong></li><li>Holmen 21 – <strong>Apple Valley, MN 48</strong></li><li><strong>Holmen 51</strong> – St. Croix Falls 16</li><li><strong>Holmen 48</strong> – Mukwonago 21</li><li>Holmen 30 – <strong>Andrew, IL 39</strong></li><li><strong>Holmen 36</strong> – Hastings, MN 35</li><li>Holmen 34 – <strong>Central Cass, ND 42</strong></li><li><strong>Holmen 42</strong> – STMA, MN 36</li><li><strong>Holmen 47</strong> – Crestwood, IA 33</li><li>Holmen 24 – <strong>Decorah, IA 54</strong></li><li><strong>Holmen 54</strong> – Chilton-Hilbert 18</li><li><strong>Holmen 36</strong> – Bayport 30</li><li>Holmen 30 – <strong>Menasha 39</strong></li><li><strong>Holmen 39</strong> – Neenah 23</li><li>Holmen JV 0 – <strong>Badger 72</strong> (JV, not in overall record)</li><li>Holmen JV 10 – <strong>Shawano Community 48</strong> (JV, not in overall record)</li><li>Holmen JV 18 – <strong>Kickapoo La Farge Youth Initiative 42</strong> (JV, not in overall record)</li><li>Holmen JV 24 – <strong>Chilton-Hilbert 39</strong> (JV, not in overall record)</li></ul><div class="record-badge">Dual Record: 9–6</div></div>
+<div class="result-card"><h3>2023–2024</h3><ul class="result-list"><li><strong>Holmen 54</strong> – Eau Claire North 18</li><li><strong>Holmen 45</strong> – Nekoosa/Assumption/Port Edwards 21</li><li>Holmen 33 – <strong>Decorah, IA 40</strong></li><li>Holmen 12 – <strong>Osage, IA 69</strong></li><li><strong>Holmen 72</strong> – Mora, MN 6</li><li>Holmen 30 – <strong>Apple Valley, MN 45</strong></li><li><strong>Holmen 46</strong> – Batavia, IL 28</li><li><strong>Holmen 48</strong> – Minooka, IL 27</li><li>Holmen 33 – <strong>St. Michael-Albertville, MN 39</strong></li><li><strong>Holmen 60</strong> – Kimberly 6</li><li><strong>Holmen 42</strong> – Pulaski 27</li><li><strong>Holmen 48</strong> – Wausau West 24</li><li><strong>Holmen 48</strong> – Coulee Region 15 (not an official dual)</li></ul><div class="record-badge">Dual Record: 8–4</div></div>
+<div class="result-card"><h3>2022–2023</h3><ul class="result-list"><li>Holmen 30 – <strong>Decorah, IA 54</strong></li><li>Holmen 30 – <strong>Osage, IA 51</strong></li><li><strong>Holmen 45</strong> – Eau Claire North 18</li><li><strong>Holmen 42</strong> – Kimberly/Menasha 6 (not an official dual)</li><li><strong>Holmen 33</strong> – Wausau West 29</li></ul><div class="record-badge">Dual Record: 2–2</div></div>
+<p class="result-note">Scramble meets structured like a dual are marked as unofficial and are not part of the team's dual record. JV duals are also shown but not included in the varsity record.</p>
+</div>
+<div class="panel" id="allpostseason">
+<div class="result-card"><h3>State Tournament Qualifiers &amp; Placewinners</h3><table class="result-table"><thead><tr><th>Year</th><th>Wrestler</th><th>Weight</th><th>Result</th></tr></thead><tbody><tr><td>2026</td><td>Aini Anderson</td><td>100</td><td>2nd</td></tr><tr><td>2026</td><td>Kaytlynn Lambries</td><td>126</td><td>2x Qualifier</td></tr><tr><td>2026</td><td>Avalee Euler</td><td>185</td><td>Qualifier</td></tr><tr><td>2025</td><td>Haley Dezelske</td><td>114</td><td>Qualifier</td></tr><tr><td>2025</td><td>Allison Weiss</td><td>120</td><td>2x Qualifier</td></tr><tr><td>2024</td><td>Aini Anderson</td><td>100</td><td>Qualifier</td></tr><tr><td>2024</td><td>Kaytlynn Lambries</td><td>107</td><td>6th</td></tr><tr><td>2024</td><td>Allison Weiss</td><td>114</td><td>Qualifier</td></tr><tr><td>2024</td><td>Anna Strasser</td><td>126</td><td>Qualifier</td></tr><tr><td>2024</td><td>Alexa Szak</td><td>145</td><td>2x Qualifier</td></tr><tr><td>2024</td><td>Maddie Hall</td><td>165</td><td>Qualifier</td></tr><tr><td>2024</td><td>Sophia Walter</td><td>185</td><td>Qualifier</td></tr><tr><td>2023</td><td>Nora Lee</td><td>100</td><td>5th</td></tr><tr><td>2023</td><td>Evelyn Vetsch</td><td>145</td><td>3rd</td></tr><tr><td>2023</td><td>Alexa Szak</td><td>152</td><td>Qualifier</td></tr><tr><td>2023</td><td>Maddie Hall</td><td>165</td><td>Qualifier</td></tr><tr><td>2022</td><td>Evelyn Vetsch</td><td>152</td><td>4th</td></tr><tr><td>2022</td><td>Emily Szak</td><td>165</td><td>5th</td></tr></tbody></table><p class="result-note">Girls state wrestling began in 2022.</p></div>
+<div class="result-card"><h3>Regional Champions</h3><table class="result-table"><thead><tr><th>Year</th><th>Wrestler</th><th>Weight</th></tr></thead><tbody><tr><td>2026</td><td>Aini Anderson</td><td>100</td></tr><tr><td>2026</td><td>Peyton Kratochvill</td><td>114</td></tr><tr><td>2026</td><td>Kaytlynn Lambries</td><td>126</td></tr><tr><td>2026</td><td>Avalee Euler</td><td>185</td></tr><tr><td>2025</td><td>Kaytlynn Lambries</td><td>107</td></tr><tr><td>2025</td><td>Haley Dezelske</td><td>114</td></tr><tr><td>2025</td><td>Allison Weiss</td><td>120</td></tr><tr><td>2025</td><td>Alexa Szak</td><td>138</td></tr><tr><td>2025</td><td>Avalee Euler</td><td>165</td></tr></tbody></table><p class="result-note">Girls regionals began in 2025.</p></div>
+<div class="result-card"><h3>Sectional Champions</h3><table class="result-table"><thead><tr><th>Year</th><th>Wrestler</th><th>Weight</th></tr></thead><tbody><tr><td>2026</td><td>Aini Anderson</td><td>100</td></tr><tr><td>2026</td><td>Kaytlynn Lambries</td><td>126</td></tr><tr><td>2025</td><td>Haley Dezelske</td><td>114</td></tr><tr><td>2024</td><td>Aini Anderson</td><td>100</td></tr><tr><td>2024</td><td>Kaytlynn Lambries</td><td>107</td></tr><tr><td>2024</td><td>Allison Weiss</td><td>114</td></tr><tr><td>2024</td><td>Anna Strasser</td><td>126</td></tr><tr><td>2024</td><td>Alexa Szak</td><td>145</td></tr><tr><td>2024</td><td>Maddie Hall</td><td>165</td></tr><tr><td>2024</td><td>Sophia Walter</td><td>185</td></tr><tr><td>2023</td><td>Evelyn Vetsch</td><td>145</td></tr><tr><td>2023</td><td>Alexa Szak</td><td>152</td></tr><tr><td>2023</td><td>Maddie Hall</td><td>165</td></tr></tbody></table><p class="result-note">Girls sectionals began in 2023.</p></div>
+</div>
+
+</div>
+</main>
+
+<script>
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.panel');
+tabs.forEach(t=>{
+  t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    panels.forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(t.dataset.panel).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
