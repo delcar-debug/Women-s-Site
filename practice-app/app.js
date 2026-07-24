@@ -924,14 +924,14 @@ ratingBody.appendChild(ratingB);
 const CARDS=[{id:'qrBox',el:qrBox},{id:'timerCard',el:timerCard},{id:'intervalBox',el:intervalBox},{id:'spotifyBox',el:spotifyBox},{id:'coachNotesPanel',el:notes},{id:'mobileRatingsWrap',el:ratingWrap}];
 const cardById=id=>{const c=CARDS.find(x=>x.id===id);return c?c.el:null};
 const DEFAULT_DESKTOP={practice:['qrBox','timerCard','intervalBox','spotifyBox'],tools:['coachNotesPanel','mobileRatingsWrap']};
-const DEFAULT_MOBILE=['qrBox','timerCard','intervalBox','spotifyBox','coachNotesPanel','mobileRatingsWrap'];
-const LAYOUT_KEY='wpp-coach-layout-v2';
+const DEFAULT_MOBILE=['timerCard','qrBox','intervalBox','spotifyBox','coachNotesPanel','mobileRatingsWrap'];
+const LAYOUT_KEY='wpp-coach-layout-v3';
 function loadLayout(){try{return JSON.parse(localStorage.getItem(LAYOUT_KEY)||'null')}catch(err){return null}}
 function saveLayout(layout){try{localStorage.setItem(LAYOUT_KEY,JSON.stringify(layout))}catch(err){}}
 function positionPlanPanel(){
   if(mq.matches){
     const cards=[...dashGrid.querySelectorAll(':scope > .coach-panel-card')];
-    const ref=cards[Math.min(4,cards.length)];
+    const ref=cards[Math.min(1,cards.length)];
     if(ref)dashGrid.insertBefore(planPanel,ref);else dashGrid.appendChild(planPanel);
   }
 }
