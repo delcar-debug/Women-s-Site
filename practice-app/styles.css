@@ -207,7 +207,7 @@ body.detached-tv .team-board-item.current .team-board-details,
 .interval-body,.inbox-body,.ratings-body{padding:0 9px 9px}
 .inbox-subtext{margin:0 0 8px;color:#6b7280;font-size:.85rem}
 .coach-panel-card{max-width:100%}
-#timerCard.coach-panel-card{resize:vertical;overflow:auto;min-height:230px}
+#timerCard.coach-panel-card{resize:vertical;overflow:auto;min-height:0}
 .coach-panel-card[open]{resize:vertical;overflow:auto;min-height:90px}
 .qr-head,.inbox-head,.interval-head,.spotify-head,.overall-notes-head,.ratings-head{display:flex;align-items:center;gap:6px}
 .panel-drag-handle{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;padding:2px 8px;border-radius:6px;color:var(--maroon);font-size:1.05rem;flex:0 0 auto;line-height:1.4}
