@@ -601,13 +601,30 @@ const RATING_COLORS={great:'#16a34a',good:'#2563eb',okay:'#d97706',poor:'#dc2626
 const RATING_LABELS={great:'Great',good:'Good',okay:'Okay',poor:'Poor'};
 function renderRatingButtons(){document.querySelectorAll('#practiceRatingRow .rating-btn').forEach(b=>b.classList.toggle('active',b.dataset.rating===state.practiceRating))}
 function renderCultureButtons(){document.querySelectorAll('#teamCultureRatingRow .rating-btn').forEach(b=>b.classList.toggle('active',b.dataset.rating===state.teamCultureRating))}
-const PRACTICE_TYPE_HINTS={learning:[{label:'Random/Variable Structure',cls:'hint-structure'},{label:'Summary/Bandwidth Feedback',cls:'hint-feedback'}],performance:[{label:'Block/Structured Structure',cls:'hint-structure'},{label:'Immediate Feedback',cls:'hint-feedback'}]};
+const PRACTICE_TYPE_HINTS={learning:[{label:'Random/Variable Structure',cls:'hint-structure',desc:'Wrestlers get a higher degree of error and room to experiment and take risks — mistakes are part of the process, not something to eliminate immediately. This builds long-term skill development instead of just looking good today.'},{label:'Summary/Bandwidth Feedback',cls:'hint-feedback',desc:'Feedback is given after a series of attempts (summary) or only once a wrestler crosses a real error threshold (bandwidth), instead of correcting every rep. This lets wrestlers build their own internal feedback instead of relying on us for every rep.'}],performance:[{label:'Block/Structured Structure',cls:'hint-structure',desc:'Wrestlers are held to a lower degree of error — this is a time to execute what’s already been learned, not work out new technique. Pace, pressure, and intensity should be close to match speed.'},{label:'Immediate Feedback',cls:'hint-feedback',desc:'Feedback is immediate and direct since the priority is short-term performance, simulating the pressure and stakes of an actual dual or tournament.'}]};
 function renderPracticeTypeHints(){
   const type=el.practiceType?.value||'';
   const hints=PRACTICE_TYPE_HINTS[type]||[];
-  const html=hints.length?hints.map(h=>`<span class="practice-type-chip ${h.cls}">${esc(h.label)}</span>`).join(''):'<span class="practice-type-chip practice-type-chip-empty">Select a practice type</span>';
-  document.querySelectorAll('.practice-type-hint').forEach(node=>node.innerHTML=html);
+  const html=hints.length?hints.map(h=>`<button type="button" class="practice-type-chip ${h.cls}" data-desc="${esc(h.desc)}">${esc(h.label)}</button>`).join(''):'<span class="practice-type-chip practice-type-chip-empty">Select a practice type</span>';
+  document.querySelectorAll('.practice-type-hint').forEach(node=>{node.innerHTML=html+'<div class="practice-type-desc" hidden></div>'});
 }
+document.addEventListener('click',e=>{
+  const chip=e.target.closest('.practice-type-chip[data-desc]');
+  if(chip){
+    const container=chip.closest('.practice-type-hint');
+    const descBox=container?container.querySelector('.practice-type-desc'):null;
+    if(!descBox)return;
+    const alreadyOpen=!descBox.hidden&&descBox.dataset.forChip===chip.dataset.desc;
+    container.querySelectorAll('.practice-type-chip').forEach(c=>c.classList.remove('active-chip'));
+    if(alreadyOpen){descBox.hidden=true;descBox.textContent='';descBox.dataset.forChip=''}
+    else{chip.classList.add('active-chip');descBox.textContent=chip.dataset.desc;descBox.dataset.forChip=chip.dataset.desc;descBox.hidden=false}
+    return;
+  }
+  if(!e.target.closest('.practice-type-desc')){
+    document.querySelectorAll('.practice-type-desc').forEach(d=>{d.hidden=true;d.textContent='';d.dataset.forChip=''});
+    document.querySelectorAll('.practice-type-chip.active-chip').forEach(c=>c.classList.remove('active-chip'));
+  }
+});
 const RATING_VALUES={poor:1,okay:2,good:3,great:4};
 function buildRatingHeatmapHtml(field='practiceRating',emptyText='Archive practices to see ratings.'){
   const items=datedArchivesSorted();
