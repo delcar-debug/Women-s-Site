@@ -907,7 +907,6 @@ if(!ratingWrap){
   ratingWrap=document.createElement('details');
   ratingWrap.id='mobileRatingsWrap';
   ratingWrap.className='ratings-box coach-panel-card';
-  ratingWrap.open=true;
   const summary=document.createElement('summary');
   summary.className='ratings-head';
   summary.innerHTML='<span class="panel-drag-handle" title="Drag to move">⠿</span><h2>Ratings</h2><span class="ratings-summary-hint">Tap to show</span>';
@@ -924,8 +923,8 @@ ratingBody.appendChild(ratingB);
 const CARDS=[{id:'qrBox',el:qrBox},{id:'timerCard',el:timerCard},{id:'intervalBox',el:intervalBox},{id:'spotifyBox',el:spotifyBox},{id:'coachNotesPanel',el:notes},{id:'mobileRatingsWrap',el:ratingWrap}];
 const cardById=id=>{const c=CARDS.find(x=>x.id===id);return c?c.el:null};
 const DEFAULT_DESKTOP={practice:['qrBox','timerCard','intervalBox','spotifyBox'],tools:['coachNotesPanel','mobileRatingsWrap']};
-const DEFAULT_MOBILE=['timerCard','qrBox','intervalBox','spotifyBox','coachNotesPanel','mobileRatingsWrap'];
-const LAYOUT_KEY='wpp-coach-layout-v3';
+const DEFAULT_MOBILE=['timerCard','intervalBox','spotifyBox','coachNotesPanel','mobileRatingsWrap','qrBox'];
+const LAYOUT_KEY='wpp-coach-layout-v4';
 function loadLayout(){try{return JSON.parse(localStorage.getItem(LAYOUT_KEY)||'null')}catch(err){return null}}
 function saveLayout(layout){try{localStorage.setItem(LAYOUT_KEY,JSON.stringify(layout))}catch(err){}}
 function positionPlanPanel(){
