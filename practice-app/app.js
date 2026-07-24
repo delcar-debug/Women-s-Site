@@ -880,7 +880,184 @@ function selectCoachBlock(index,{resetTimer=true}={}){
   return true;
 }
 $('sharePdfBtn').onclick=sharePracticePdf;$('coachPdfSendBtn').onclick=sharePracticePdf;$('coachPdfMarkSentBtn').onclick=()=>{setPdfStatus({sentAt:new Date().toISOString()});upsertAutoArchive({silent:true})};$('manageEmailsBtn').onclick=openEmailModal;$('addEmailBtn').onclick=addEmailRow;$('saveEmailListBtn').onclick=saveCoachEmails;$('cancelEmailModal').onclick=closeEmailModal;el.emailModal.onclick=e=>{if(e.target===el.emailModal)closeEmailModal()};$('addBtn').onclick=addBlock;$('saveBlockModal').onclick=saveBlockFromModal;$('cancelBlockModal').onclick=closeBlockModal;el.addCircuitRowBtn?.addEventListener('click',addCircuitRow);el.blockModal.onclick=e=>{if(e.target===el.blockModal)closeBlockModal()};el.activityName.onkeydown=e=>{if(e.key==='Enter')saveBlockFromModal()};[el.practiceDate,el.startTime,el.practiceLength,el.practiceGoal].filter(Boolean).forEach(x=>{x.oninput=()=>{render();save()};x.onchange=()=>{render();save()}});$('startBtn').onclick=startPractice;$('navBuilder').onclick=()=>showAppPage('builder');$('navCoach').onclick=()=>showAppPage('coach');(function(){const navTv=$('navTeam');if(!navTv)return;navTv.href=teamBoardTvUrl();navTv.target='_blank';navTv.addEventListener('click',e=>{if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();openDetachedTeamBoard()})})();$('navLibrary').onclick=()=>showAppPage('library');$('navData').onclick=()=>showAppPage('data');$('teamBoardBackBtn').onclick=()=>showAppPage('builder');(function(){const tvLink=$('teamBoardTvBtn');if(!tvLink)return;tvLink.href=teamBoardTvUrl();tvLink.target='_blank';tvLink.addEventListener('click',e=>{if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();openDetachedTeamBoard()})})();$('librarySearch').oninput=renderLibrary;$('librarySeason').onchange=renderLibrary;$('clearBtn').onclick=()=>{if(confirm('Clear the practice?')){endPractice();state.blocks=[];render()}};$('exitTimerBtn').textContent='Back to Practice Builder';$('exitTimerBtn').onclick=hideCoachMode;$('openTeamFromCoach').textContent='Open TV View';$('openTeamFromCoach').onclick=openDetachedTeamBoard;$('coachStartBtn').onclick=()=>{state.running=true;ensurePracticeTicker();saveLiveState()};$('pauseBtn').onclick=()=>{state.running=false;saveLiveState()};$('previousBtn').onclick=()=>{if(state.currentIndex<=0)return;selectCoachBlock(state.currentIndex-1)};$('nextBtn').onclick=()=>{if(state.currentIndex+1>=state.blocks.length){endPractice();return alert('Practice complete.')}selectCoachBlock(state.currentIndex+1)};$('intervalStartBtn').onclick=startInterval;$('intervalPauseBtn').onclick=()=>{state.interval.running=!state.interval.running;renderInterval()};$('intervalResetBtn').onclick=resetInterval;$('intervalTestBtn').onclick=async()=>{await unlockWhistle();await playWhistle()};$('intervalMatchBtn').onclick=()=>{el.workSeconds.value=120;el.restSeconds.value=15;el.intervalRounds.value=3;save();resetInterval();};$('intervalOneMinuteBtn').onclick=()=>{el.workSeconds.value=60;el.restSeconds.value=15;el.intervalRounds.value=7;save();resetInterval();};[el.workSeconds,el.restSeconds,el.intervalRounds].forEach(x=>x.oninput=()=>{save();if(state.interval.phase==='ready')resetInterval()});el.spotifyLoginBtn.onclick=async()=>{if(await token())await enableSpotifyPlayer();else loginSpotify()};$('prevTrackBtn').onclick=async()=>{if(!state.spotify.activated&&!(await enableSpotifyPlayer()))return;state.spotify.player?.previousTrack()};$('nextTrackBtn').onclick=async()=>{if(!state.spotify.activated&&!(await enableSpotifyPlayer()))return;state.spotify.player?.nextTrack()};$('playPauseBtn').onclick=async()=>{if(!state.spotify.activated&&!(await enableSpotifyPlayer()))return;state.spotify.player?.togglePlay()};document.querySelectorAll('.mobile-tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.mobile-tabs button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('[data-panel]').forEach(p=>p.classList.toggle('mobile-active',p.dataset.panel===b.dataset.tab))});
-(function(){const dashGrid=document.querySelector('.dash-grid');const practicePanel=document.querySelector('.practice-panel');const toolsPanel=document.querySelector('.tools-panel');const toolsScroll=toolsPanel?toolsPanel.querySelector('.tools-scroll'):null;const intervalBox=document.querySelector('.interval-box');const spotifyBox=document.getElementById('spotifyBox');const inbox=document.getElementById('nextPracticeNotesCoach');const notes=document.getElementById('coachNotesPanel');const ratingA=document.getElementById('practiceRatingRow');const ratingB=document.getElementById('teamCultureRatingRow');if(!dashGrid||!practicePanel||!toolsPanel||!toolsScroll||!intervalBox||!spotifyBox||!inbox||!notes||!ratingA||!ratingB)return;let ratingWrap=document.getElementById('mobileRatingsWrap');let ratingBody=document.getElementById('mobileRatingsBody');if(!ratingWrap){ratingWrap=document.createElement('details');ratingWrap.id='mobileRatingsWrap';ratingWrap.className='ratings-box';const summary=document.createElement('summary');summary.className='ratings-head';summary.innerHTML='<h2>Ratings</h2><span class="ratings-summary-hint">Tap to show</span>';ratingBody=document.createElement('div');ratingBody.id='mobileRatingsBody';ratingBody.className='ratings-body';ratingWrap.appendChild(summary);ratingWrap.appendChild(ratingBody)}const mq=window.matchMedia('(max-width:900px)');function apply(e){if(e.matches){dashGrid.appendChild(intervalBox);dashGrid.appendChild(spotifyBox);dashGrid.appendChild(inbox);dashGrid.appendChild(notes);ratingBody.appendChild(ratingA);ratingBody.appendChild(ratingB);dashGrid.appendChild(ratingWrap)}else{practicePanel.appendChild(intervalBox);practicePanel.appendChild(spotifyBox);toolsScroll.appendChild(notes);toolsScroll.appendChild(inbox);toolsScroll.appendChild(ratingA);toolsScroll.appendChild(ratingB)}}apply(mq);mq.addEventListener('change',apply)})();
+(function(){
+const dashGrid=document.querySelector('.dash-grid');
+const practicePanel=document.querySelector('.practice-panel');
+const toolsPanel=document.querySelector('.tools-panel');
+const toolsScroll=toolsPanel?toolsPanel.querySelector('.tools-scroll'):null;
+const planPanel=document.querySelector('.plan-panel');
+const qrBox=document.getElementById('qrBox');
+const timerCard=document.getElementById('timerCard');
+const intervalBox=document.querySelector('.interval-box');
+const spotifyBox=document.getElementById('spotifyBox');
+const inbox=document.getElementById('nextPracticeNotesCoach');
+const notes=document.getElementById('coachNotesPanel');
+const ratingA=document.getElementById('practiceRatingRow');
+const ratingB=document.getElementById('teamCultureRatingRow');
+if(!dashGrid||!practicePanel||!toolsPanel||!toolsScroll||!planPanel||!qrBox||!timerCard||!intervalBox||!spotifyBox||!inbox||!notes||!ratingA||!ratingB)return;
+let ratingWrap=document.getElementById('mobileRatingsWrap');
+let ratingBody=document.getElementById('mobileRatingsBody');
+if(!ratingWrap){
+  ratingWrap=document.createElement('details');
+  ratingWrap.id='mobileRatingsWrap';
+  ratingWrap.className='ratings-box coach-panel-card';
+  ratingWrap.open=true;
+  const summary=document.createElement('summary');
+  summary.className='ratings-head';
+  summary.innerHTML='<span class="panel-drag-handle" title="Drag to move">⠿</span><h2>Ratings</h2><span class="ratings-summary-hint">Tap to show</span>';
+  ratingBody=document.createElement('div');
+  ratingBody.id='mobileRatingsBody';
+  ratingBody.className='ratings-body';
+  ratingWrap.appendChild(summary);
+  ratingWrap.appendChild(ratingBody);
+}else{
+  ratingWrap.classList.add('coach-panel-card');
+}
+ratingBody.appendChild(ratingA);
+ratingBody.appendChild(ratingB);
+const CARDS=[{id:'qrBox',el:qrBox},{id:'timerCard',el:timerCard},{id:'intervalBox',el:intervalBox},{id:'spotifyBox',el:spotifyBox},{id:'nextPracticeNotesCoach',el:inbox},{id:'coachNotesPanel',el:notes},{id:'mobileRatingsWrap',el:ratingWrap}];
+const cardById=id=>{const c=CARDS.find(x=>x.id===id);return c?c.el:null};
+const DEFAULT_DESKTOP={practice:['qrBox','timerCard','intervalBox','spotifyBox'],tools:['coachNotesPanel','nextPracticeNotesCoach','mobileRatingsWrap']};
+const DEFAULT_MOBILE=['qrBox','timerCard','intervalBox','spotifyBox','nextPracticeNotesCoach','coachNotesPanel','mobileRatingsWrap'];
+const LAYOUT_KEY='wpp-coach-layout-v1';
+function loadLayout(){try{return JSON.parse(localStorage.getItem(LAYOUT_KEY)||'null')}catch(err){return null}}
+function saveLayout(layout){try{localStorage.setItem(LAYOUT_KEY,JSON.stringify(layout))}catch(err){}}
+function positionPlanPanel(){
+  if(mq.matches){
+    const cards=[...dashGrid.querySelectorAll(':scope > .coach-panel-card')];
+    const ref=cards[Math.min(4,cards.length)];
+    if(ref)dashGrid.insertBefore(planPanel,ref);else dashGrid.appendChild(planPanel);
+  }
+}
+function applyDesktop(layout){
+  const valid=layout&&Array.isArray(layout.practice)&&Array.isArray(layout.tools)&&layout.practice.length+layout.tools.length===CARDS.length;
+  const order=valid?layout:DEFAULT_DESKTOP;
+  order.practice.forEach(id=>{const el=cardById(id);if(el)practicePanel.appendChild(el)});
+  order.tools.forEach(id=>{const el=cardById(id);if(el)toolsScroll.appendChild(el)});
+}
+function applyMobile(layout){
+  const valid=layout&&Array.isArray(layout.mobile)&&layout.mobile.length===CARDS.length;
+  const order=valid?layout.mobile:DEFAULT_MOBILE;
+  order.forEach(id=>{const el=cardById(id);if(el)dashGrid.appendChild(el)});
+  positionPlanPanel();
+}
+function applySizes(layout){
+  if(!layout||!layout.sizes)return;
+  CARDS.forEach(c=>{const h=layout.sizes[c.id];if(h&&(c.el.tagName!=='DETAILS'||c.el.open))c.el.style.height=h});
+}
+const mq=window.matchMedia('(max-width:900px)');
+function apply(e){
+  const layout=loadLayout();
+  if(e.matches)applyMobile(layout);else applyDesktop(layout);
+  applySizes(layout);
+}
+function persist(){
+  const existing=loadLayout()||{};
+  const sizes={...existing.sizes};
+  CARDS.forEach(c=>{if(c.el.style.height&&(c.el.tagName!=='DETAILS'||c.el.open))sizes[c.id]=c.el.style.height});
+  const layoutPatch=mq.matches?{mobile:[...dashGrid.querySelectorAll(':scope > .coach-panel-card')].map(c=>c.id)}:{practice:[...practicePanel.querySelectorAll(':scope > .coach-panel-card')].map(c=>c.id),tools:[...toolsScroll.querySelectorAll(':scope > .coach-panel-card')].map(c=>c.id)};
+  saveLayout({...existing,...layoutPatch,sizes});
+}
+function panelZones(){return mq.matches?[dashGrid]:[practicePanel,toolsScroll]}
+function zoneCards(zone){return [...zone.querySelectorAll(':scope > .coach-panel-card')]}
+function startPanelDrag(e,source){
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  e.preventDefault();e.stopPropagation();
+  const startX=e.clientX,startY=e.clientY;
+  let active=false,cancelled=false,floatEl=null,placeholder=null,offsetX=0,offsetY=0;
+  const hold=setTimeout(activate,150);
+  function activate(){
+    if(cancelled)return;active=true;
+    const r=source.getBoundingClientRect();
+    offsetX=startX-r.left;offsetY=startY-r.top;
+    placeholder=document.createElement('div');
+    placeholder.className='panel-drag-placeholder';
+    placeholder.style.height=r.height+'px';
+    placeholder.style.width=r.width+'px';
+    source.after(placeholder);
+    floatEl=source.cloneNode(true);
+    floatEl.removeAttribute('id');
+    floatEl.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));
+    floatEl.classList.add('panel-drag-float');
+    floatEl.style.width=r.width+'px';
+    floatEl.style.height=r.height+'px';
+    floatEl.style.left=r.left+'px';
+    floatEl.style.top=r.top+'px';
+    document.body.appendChild(floatEl);
+    source.classList.add('panel-drag-source');
+    document.body.style.userSelect='none';
+    if(navigator.vibrate)navigator.vibrate(25);
+  }
+  function nearestZone(x){
+    const zones=panelZones();
+    let best=zones[0],bestDist=Infinity;
+    zones.forEach(z=>{const r=z.getBoundingClientRect();const dist=x<r.left?r.left-x:x>r.right?x-r.right:0;if(dist<bestDist){bestDist=dist;best=z}});
+    return best;
+  }
+  function move(ev){
+    if(!active){
+      if(Math.hypot(ev.clientX-startX,ev.clientY-startY)>10){cancelled=true;clearTimeout(hold);cleanupListeners()}
+      return;
+    }
+    ev.preventDefault();
+    floatEl.style.left=(ev.clientX-offsetX)+'px';
+    floatEl.style.top=(ev.clientY-offsetY)+'px';
+    const zone=nearestZone(ev.clientX);
+    const cards=zoneCards(zone).filter(c=>c!==source);
+    let placed=false;
+    for(const c of cards){
+      const r=c.getBoundingClientRect();
+      if(ev.clientY<r.top+r.height/2){zone.insertBefore(placeholder,c);placed=true;break}
+    }
+    if(!placed)zone.appendChild(placeholder);
+    const edge=72;
+    if(ev.clientY<edge)window.scrollBy(0,-14);else if(ev.clientY>window.innerHeight-edge)window.scrollBy(0,14);
+  }
+  function up(ev){
+    clearTimeout(hold);
+    if(active){
+      ev.preventDefault();
+      placeholder.replaceWith(source);
+      if(navigator.vibrate)navigator.vibrate(35);
+      positionPlanPanel();
+      persist();
+    }
+    cleanup();
+  }
+  function cleanupListeners(){document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up)}
+  function cleanup(){cleanupListeners();floatEl?.remove();placeholder?.remove();source.classList.remove('panel-drag-source');document.body.style.userSelect=''}
+  document.addEventListener('pointermove',move,{passive:false});
+  document.addEventListener('pointerup',up,{passive:false});
+  document.addEventListener('pointercancel',up,{passive:false});
+}
+function bindPanelDragging(){
+  CARDS.forEach(c=>{
+    const handle=c.el.querySelector('.panel-drag-handle');
+    if(handle&&!handle.dataset.bound){handle.dataset.bound='1';handle.addEventListener('pointerdown',ev=>startPanelDrag(ev,c.el))}
+  });
+}
+CARDS.forEach(c=>{
+  let resizeTimer=null;
+  new ResizeObserver(()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(persist,300)}).observe(c.el);
+  if(c.el.tagName==='DETAILS'){
+    c.el.addEventListener('toggle',()=>{
+      if(!c.el.open)return;
+      const layout=loadLayout();
+      const h=layout&&layout.sizes&&layout.sizes[c.id];
+      if(h)c.el.style.height=h;
+    });
+  }
+});
+const resetBtn=document.getElementById('resetCoachLayoutBtn');
+if(resetBtn)resetBtn.addEventListener('click',()=>{
+  try{localStorage.removeItem(LAYOUT_KEY)}catch(err){}
+  CARDS.forEach(c=>{c.el.style.height=''});
+  apply(mq);
+});
+bindPanelDragging();
+apply(mq);
+mq.addEventListener('change',apply);
+})();
 if(el.overallCoachNotes)el.overallCoachNotes.addEventListener('input',()=>{state.overallCoachNotes=el.overallCoachNotes.value;save()});load();if(el.overallCoachNotes)el.overallCoachNotes.value=state.overallCoachNotes||'';render();renderLibrary();checkUnratedPractices();resetInterval();restoreLiveState();ensurePracticeTicker();bootSpotify();if(['1','team-board'].includes(new URLSearchParams(location.search).get('tv'))){document.body.classList.add('detached-tv');showAppPage('team');el.teamBoardPage.classList.add('tv-mode');document.title='Holmen Women’s Wrestling — TV View';refreshTeamBoardFromStorage();}document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.practiceActive)saveLiveState()});
 document.querySelectorAll('#practiceRatingRow .rating-btn').forEach(b=>b.onclick=()=>{state.practiceRating=b.dataset.rating;renderRatingButtons();save()});
 document.querySelectorAll('#teamCultureRatingRow .rating-btn').forEach(b=>b.onclick=()=>{state.teamCultureRating=b.dataset.rating;renderCultureButtons();save()});
