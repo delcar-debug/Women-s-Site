@@ -25,6 +25,7 @@
     if(code==='F8'||code==='Space'){event.preventDefault();window.SpotifyController?.toggle();return}
     if(key==='w'||key==='W'){event.preventDefault();click('intervalTestBtn');return}
     if(key==='t'||key==='T'){event.preventDefault();intervalToggle();return}
+    if(key==='r'||key==='R'){event.preventDefault();click('intervalResetBtn');return}
     if(key==='m'||key==='M'){event.preventDefault();
       if(window.SpotifyController?.mute)window.SpotifyController.mute();
       else state.spotify.player?.getVolume().then(v=>state.spotify.player.setVolume(v>0?0:.7));
