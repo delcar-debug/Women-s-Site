@@ -194,7 +194,7 @@ body.detached-tv .team-board-item.current .team-board-details,
 .spotify-box[open] .spotify-head::after{transform:rotate(180deg)}
 .spotify-summary-status{font-size:.72rem;color:#6b7280;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px}
 .spotify-body{padding:0 9px 9px;display:flex;flex-direction:column;gap:9px}
-.interval-box,.inbox-box,.ratings-box{background:#fff;border:1px solid #d9dee6;border-radius:10px;padding:0;min-height:0;overflow:auto;margin:12px 0 0}
+.interval-box,.inbox-box,.ratings-box{background:#fff;border:1px solid #d9dee6;border-radius:10px;padding:0;min-height:0;overflow:auto}
 .interval-head,.inbox-head,.ratings-head{display:flex;align-items:center;justify-content:space-between;gap:8px;list-style:none;cursor:pointer;padding:9px;user-select:none}
 .interval-head::-webkit-details-marker,.inbox-head::-webkit-details-marker,.ratings-head::-webkit-details-marker{display:none}
 .interval-head h2,.inbox-head h2,.ratings-head h2{margin:0;font-size:.95rem}
