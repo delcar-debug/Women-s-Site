@@ -283,15 +283,40 @@
     .mobile-nav-panel .mobile-nav-group {
       display: flex;
       flex-direction: column;
+      border-bottom: 1px solid #f1eef0;
     }
 
     .mobile-nav-panel .mobile-nav-heading {
-      padding: 12px 4px 4px;
-      font-size: .72rem;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      font-weight: 800;
-      color: #9a9ea3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 12px 4px;
+      font-size: .96rem;
+      font-weight: 760;
+      color: var(--ink, #19191d);
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+
+    .mobile-nav-panel .mobile-nav-heading::-webkit-details-marker {
+      display: none;
+    }
+
+    .mobile-nav-panel .mobile-nav-heading::after {
+      content: "▾";
+      color: var(--maroon);
+      transition: transform .18s ease;
+      flex: 0 0 auto;
+    }
+
+    .mobile-nav-panel .mobile-nav-group[open] .mobile-nav-heading::after {
+      transform: rotate(180deg);
+    }
+
+    .mobile-nav-panel .mobile-nav-group a {
+      border-bottom: none;
     }
 
     .mobile-nav-panel .mobile-nav-group a {
@@ -1080,15 +1105,15 @@
       <a href="#top">Home</a>
       <a href="#pillars">About</a>
       <a href="calendar.html">Calendar</a>
-      <div class="mobile-nav-group">
-        <span class="mobile-nav-heading">Herstory</span>
+      <details class="mobile-nav-group">
+        <summary class="mobile-nav-heading">Herstory</summary>
         <a href="recaps.html">Recaps</a>
         <a href="timeline.html">Timeline</a>
         <a href="results.html">Past Season Results</a>
         <a href="stats-records.html">Stats, Records &amp; Awards</a>
         <a href="media-gallery.html">Media Gallery</a>
         <a href="grow-your-team.html">Women's Wrestling Resources</a>
-      </div>
+      </details>
       <a href="#join">Join</a>
       <a class="button" href="team-hub.html">Team Hub</a>
       <a class="button secondary" href="coach-hub.html">Coach Hub</a>
