@@ -173,16 +173,8 @@ function renderTimer(){
   let b=state.blocks[state.currentIndex];
   if(!b){stopPractice();return alert('Practice complete.')}
   el.timerTitle.textContent=b.name;
-  el.timerClock.textContent=fmt(state.secondsLeft);
   let n=state.blocks[state.currentIndex+1];
   el.timerNext.textContent=n?`Next: ${n.name} (${n.minutes} min)`:'Final block';
-  let future=state.blocks.slice(state.currentIndex+1).reduce((s,x)=>s+x.minutes*60,0);
-  let remainingSecs=state.secondsLeft+future;
-  el.practiceRemaining.textContent=fmt(remainingSecs);
-  const endsAt=$('practiceEndsAt');
-  if(endsAt){
-    endsAt.textContent=clock(startMins()+total());
-  }
   if(el.overallCoachNotes&&document.activeElement!==el.overallCoachNotes)el.overallCoachNotes.value=state.overallCoachNotes||'';
 
   const active=document.activeElement;
@@ -286,6 +278,16 @@ async function playWhistle(){
 }
 document.addEventListener('pointerdown',()=>{unlockWhistle().catch(()=>{})},{passive:true});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')unlockWhistle().catch(()=>{})});
+(function(){
+  const clockEl=document.getElementById('timerClock');
+  if(!clockEl)return;
+  function tick(){
+    const now=new Date();
+    clockEl.textContent=clock(now.getHours()*60+now.getMinutes());
+  }
+  tick();
+  setInterval(tick,1000*10);
+})();
 
 function vals(){return{work:Math.max(1,+el.workSeconds.value||1),rest:Math.max(0,+el.restSeconds.value||0),rounds:Math.max(1,+el.intervalRounds.value||1)}}function renderInterval(){let v=vals(),t=state.interval;el.intervalClock.textContent=fmt(t.secondsLeft);el.intervalPhase.textContent=t.phase==='work'?'WORK':t.phase==='rest'?'REST':t.phase==='complete'?'Complete':'Ready';el.intervalMeta.textContent=t.phase==='ready'?`${v.rounds} rounds · ${v.work}s/${v.rest}s`:t.phase==='complete'?`${v.rounds} rounds finished`:`Round ${t.round} of ${v.rounds}`}
 function resetInterval(){clearInterval(state.interval.timerId);Object.assign(state.interval,{phase:'ready',round:1,secondsLeft:vals().work,running:false,timerId:null});renderInterval()}function advanceInterval(){let v=vals(),t=state.interval;if(t.phase==='work'&&v.rest>0){t.phase='rest';t.secondsLeft=v.rest;playWhistle()}else if(t.round<v.rounds){t.round++;t.phase='work';t.secondsLeft=v.work;playWhistle()}else{t.phase='complete';t.running=false;clearInterval(t.timerId);playWhistle()}renderInterval()}async function startInterval(){let t=state.interval;if(t.phase==='complete'||t.phase==='ready'){t.phase='work';t.round=1;t.secondsLeft=vals().work}t.running=true;clearInterval(t.timerId);t.timerId=setInterval(()=>{if(!t.running)return;if(--t.secondsLeft<=0)advanceInterval();else renderInterval()},1000);renderInterval();saveLiveState?.();unlockWhistle().then(ok=>{if(ok)playWhistle()}).catch(e=>console.warn('Interval whistle initialization failed',e))}
