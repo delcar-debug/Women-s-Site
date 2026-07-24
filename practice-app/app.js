@@ -924,7 +924,7 @@ const CARDS=[{id:'qrBox',el:qrBox},{id:'timerCard',el:timerCard},{id:'intervalBo
 const cardById=id=>{const c=CARDS.find(x=>x.id===id);return c?c.el:null};
 const DEFAULT_DESKTOP={practice:['qrBox','timerCard','intervalBox','spotifyBox'],tools:['coachNotesPanel','mobileRatingsWrap']};
 const DEFAULT_MOBILE=['timerCard','intervalBox','spotifyBox','coachNotesPanel','mobileRatingsWrap','qrBox'];
-const LAYOUT_KEY='wpp-coach-layout-v4';
+const LAYOUT_KEY='wpp-coach-layout-v5';
 function loadLayout(){try{return JSON.parse(localStorage.getItem(LAYOUT_KEY)||'null')}catch(err){return null}}
 function saveLayout(layout){try{localStorage.setItem(LAYOUT_KEY,JSON.stringify(layout))}catch(err){}}
 function positionPlanPanel(){
