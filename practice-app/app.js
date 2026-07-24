@@ -174,7 +174,12 @@ function renderTimer(){
   if(!b){stopPractice();return alert('Practice complete.')}
   el.timerTitle.textContent=b.name;
   let n=state.blocks[state.currentIndex+1];
-  el.timerNext.textContent=n?`Next: ${n.name} (${n.minutes} min)`:'Final block';
+  if(n){
+    let startOffset=state.blocks.slice(0,state.currentIndex+1).reduce((s,x)=>s+x.minutes,0);
+    el.timerNext.textContent=`Next: ${n.name} (${clock(startMins()+startOffset)})`;
+  }else{
+    el.timerNext.textContent='Final block';
+  }
   if(el.overallCoachNotes&&document.activeElement!==el.overallCoachNotes)el.overallCoachNotes.value=state.overallCoachNotes||'';
 
   const active=document.activeElement;
@@ -187,11 +192,15 @@ function renderTimer(){
     const plannedStart=clock(startMins()+plannedRunning);
     plannedRunning+=x.minutes;
     return `<div class="plan-item ${i===state.currentIndex?'current':''} ${open?'open':''}" data-plan="${i}">
-      <button class="plan-summary" type="button" aria-expanded="${open}">
-        <span class="plan-num">${i<state.currentIndex?'✓':i+1}</span>
-        <span class="plan-name-wrap"><span class="plan-name">${esc(x.name)}</span><span class="plan-category">${esc(categoryInfo(x.category).label)}</span></span>
-        <span class="plan-time"><strong>${plannedStart}</strong><small>${x.minutes}m</small></span>
-      </button>
+      <div class="plan-row">
+        <button class="plan-select" type="button" title="Make this the current block" aria-label="Make ${esc(x.name)} the current block">
+          <span class="plan-num">${i<state.currentIndex?'✓':i+1}</span>
+        </button>
+        <button class="plan-summary" type="button" aria-expanded="${open}">
+          <span class="plan-name-wrap"><span class="plan-name">${esc(x.name)}</span><span class="plan-category">${esc(categoryInfo(x.category).label)}</span></span>
+          <span class="plan-time"><strong>${plannedStart}</strong><small>${x.minutes}m</small></span>
+        </button>
+      </div>
       <div class="plan-expanded">
         ${x.details?`<div class="plan-details"><strong>Plan details</strong><br>${esc(x.details)}</div>`:''}
         <label class="coach-note-label" for="coachNote-${i}">Notes from practice</label>
@@ -208,6 +217,13 @@ function renderTimer(){
       if(state.openPlanDetails.has(i))state.openPlanDetails.delete(i);else state.openPlanDetails.add(i);
       item.classList.toggle('open',state.openPlanDetails.has(i));
       summary.setAttribute('aria-expanded',String(state.openPlanDetails.has(i)));
+    };
+    const selectBtn=item.querySelector('.plan-select');
+    if(selectBtn)selectBtn.onclick=e=>{
+      e.stopPropagation();
+      let i=+item.dataset.plan;
+      if(i===state.currentIndex)return;
+      selectCoachBlock(i,true);
     };
   });
   document.querySelectorAll('.coach-note-input').forEach(input=>{
@@ -889,7 +905,7 @@ function selectCoachBlock(index,{resetTimer=true}={}){
   requestAnimationFrame(()=>document.querySelector(`[data-plan="${index}"]`)?.scrollIntoView({block:'nearest',behavior:'smooth'}));
   return true;
 }
-$('sharePdfBtn').onclick=sharePracticePdf;$('coachPdfSendBtn').onclick=sharePracticePdf;$('coachPdfMarkSentBtn').onclick=()=>{setPdfStatus({sentAt:new Date().toISOString()});upsertAutoArchive({silent:true})};$('manageEmailsBtn').onclick=openEmailModal;$('addEmailBtn').onclick=addEmailRow;$('saveEmailListBtn').onclick=saveCoachEmails;$('cancelEmailModal').onclick=closeEmailModal;el.emailModal.onclick=e=>{if(e.target===el.emailModal)closeEmailModal()};$('addBtn').onclick=addBlock;$('saveBlockModal').onclick=saveBlockFromModal;$('cancelBlockModal').onclick=closeBlockModal;el.addCircuitRowBtn?.addEventListener('click',addCircuitRow);el.blockModal.onclick=e=>{if(e.target===el.blockModal)closeBlockModal()};el.activityName.onkeydown=e=>{if(e.key==='Enter')saveBlockFromModal()};[el.practiceDate,el.startTime,el.practiceLength,el.practiceGoal].filter(Boolean).forEach(x=>{x.oninput=()=>{render();save()};x.onchange=()=>{render();save()}});$('startBtn').onclick=startPractice;$('navBuilder').onclick=()=>showAppPage('builder');$('navCoach').onclick=()=>showAppPage('coach');(function(){const navTv=$('navTeam');if(!navTv)return;navTv.href=teamBoardTvUrl();navTv.target='_blank';navTv.addEventListener('click',e=>{if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();openDetachedTeamBoard()})})();$('navLibrary').onclick=()=>showAppPage('library');$('navData').onclick=()=>showAppPage('data');$('teamBoardBackBtn').onclick=()=>showAppPage('builder');(function(){const tvLink=$('teamBoardTvBtn');if(!tvLink)return;tvLink.href=teamBoardTvUrl();tvLink.target='_blank';tvLink.addEventListener('click',e=>{if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();openDetachedTeamBoard()})})();$('librarySearch').oninput=renderLibrary;$('librarySeason').onchange=renderLibrary;$('clearBtn').onclick=()=>{if(confirm('Clear the practice?')){endPractice();state.blocks=[];render()}};$('exitTimerBtn').textContent='Back to Practice Builder';$('exitTimerBtn').onclick=hideCoachMode;$('openTeamFromCoach').textContent='Open TV View';$('openTeamFromCoach').onclick=openDetachedTeamBoard;$('coachStartBtn').onclick=()=>{state.running=true;ensurePracticeTicker();saveLiveState()};$('pauseBtn').onclick=()=>{state.running=false;saveLiveState()};$('previousBtn').onclick=()=>{if(state.currentIndex<=0)return;selectCoachBlock(state.currentIndex-1)};$('nextBtn').onclick=()=>{if(state.currentIndex+1>=state.blocks.length){endPractice();return alert('Practice complete.')}selectCoachBlock(state.currentIndex+1)};$('intervalStartBtn').onclick=startInterval;$('intervalPauseBtn').onclick=()=>{state.interval.running=!state.interval.running;renderInterval()};$('intervalResetBtn').onclick=resetInterval;$('intervalTestBtn').onclick=async()=>{const ok=await unlockWhistle();if(!ok){alert('Whistle failed to load: '+(whistleLastError||'unknown error'));return}try{await playWhistle()}catch(e){alert('Whistle playback failed: '+(e&&(e.message||e.name)||e))}};$('intervalMatchBtn').onclick=()=>{el.workSeconds.value=120;el.restSeconds.value=15;el.intervalRounds.value=3;save();resetInterval();};$('intervalOneMinuteBtn').onclick=()=>{el.workSeconds.value=60;el.restSeconds.value=15;el.intervalRounds.value=7;save();resetInterval();};[el.workSeconds,el.restSeconds,el.intervalRounds].forEach(x=>x.oninput=()=>{save();if(state.interval.phase==='ready')resetInterval()});el.spotifyLoginBtn.onclick=async()=>{if(await token())await enableSpotifyPlayer();else loginSpotify()};$('prevTrackBtn').onclick=async()=>{if(!state.spotify.activated&&!(await enableSpotifyPlayer()))return;state.spotify.player?.previousTrack()};$('nextTrackBtn').onclick=async()=>{if(!state.spotify.activated&&!(await enableSpotifyPlayer()))return;state.spotify.player?.nextTrack()};$('playPauseBtn').onclick=async()=>{if(!state.spotify.activated&&!(await enableSpotifyPlayer()))return;state.spotify.player?.togglePlay()};document.querySelectorAll('.mobile-tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.mobile-tabs button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('[data-panel]').forEach(p=>p.classList.toggle('mobile-active',p.dataset.panel===b.dataset.tab))});
+$('sharePdfBtn').onclick=sharePracticePdf;$('coachPdfSendBtn').onclick=sharePracticePdf;$('coachPdfMarkSentBtn').onclick=()=>{setPdfStatus({sentAt:new Date().toISOString()});upsertAutoArchive({silent:true})};$('manageEmailsBtn').onclick=openEmailModal;$('addEmailBtn').onclick=addEmailRow;$('saveEmailListBtn').onclick=saveCoachEmails;$('cancelEmailModal').onclick=closeEmailModal;el.emailModal.onclick=e=>{if(e.target===el.emailModal)closeEmailModal()};$('addBtn').onclick=addBlock;$('saveBlockModal').onclick=saveBlockFromModal;$('cancelBlockModal').onclick=closeBlockModal;el.addCircuitRowBtn?.addEventListener('click',addCircuitRow);el.blockModal.onclick=e=>{if(e.target===el.blockModal)closeBlockModal()};el.activityName.onkeydown=e=>{if(e.key==='Enter')saveBlockFromModal()};[el.practiceDate,el.startTime,el.practiceLength,el.practiceGoal].filter(Boolean).forEach(x=>{x.oninput=()=>{render();save()};x.onchange=()=>{render();save()}});$('startBtn').onclick=startPractice;$('navBuilder').onclick=()=>showAppPage('builder');$('navCoach').onclick=()=>showAppPage('coach');(function(){const navTv=$('navTeam');if(!navTv)return;navTv.href=teamBoardTvUrl();navTv.target='_blank';navTv.addEventListener('click',e=>{if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();openDetachedTeamBoard()})})();$('navLibrary').onclick=()=>showAppPage('library');$('navData').onclick=()=>showAppPage('data');$('teamBoardBackBtn').onclick=()=>showAppPage('builder');(function(){const tvLink=$('teamBoardTvBtn');if(!tvLink)return;tvLink.href=teamBoardTvUrl();tvLink.target='_blank';tvLink.addEventListener('click',e=>{if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();openDetachedTeamBoard()})})();$('librarySearch').oninput=renderLibrary;$('librarySeason').onchange=renderLibrary;$('clearBtn').onclick=()=>{if(confirm('Clear the practice?')){endPractice();state.blocks=[];render()}};$('exitTimerBtn').textContent='Back to Practice Builder';$('exitTimerBtn').onclick=hideCoachMode;$('openTeamFromCoach').textContent='Open TV View';$('openTeamFromCoach').onclick=openDetachedTeamBoard;$('previousBtn').onclick=()=>{if(state.currentIndex<=0)return;selectCoachBlock(state.currentIndex-1)};$('nextBtn').onclick=()=>{if(state.currentIndex+1>=state.blocks.length){endPractice();return alert('Practice complete.')}selectCoachBlock(state.currentIndex+1)};$('intervalStartBtn').onclick=startInterval;$('intervalPauseBtn').onclick=()=>{state.interval.running=!state.interval.running;renderInterval()};$('intervalResetBtn').onclick=resetInterval;$('intervalTestBtn').onclick=async()=>{const ok=await unlockWhistle();if(!ok){alert('Whistle failed to load: '+(whistleLastError||'unknown error'));return}try{await playWhistle()}catch(e){alert('Whistle playback failed: '+(e&&(e.message||e.name)||e))}};$('intervalMatchBtn').onclick=()=>{el.workSeconds.value=120;el.restSeconds.value=15;el.intervalRounds.value=3;save();resetInterval();};$('intervalOneMinuteBtn').onclick=()=>{el.workSeconds.value=60;el.restSeconds.value=15;el.intervalRounds.value=7;save();resetInterval();};[el.workSeconds,el.restSeconds,el.intervalRounds].forEach(x=>x.oninput=()=>{save();if(state.interval.phase==='ready')resetInterval()});el.spotifyLoginBtn.onclick=async()=>{if(await token())await enableSpotifyPlayer();else loginSpotify()};$('prevTrackBtn').onclick=async()=>{if(!state.spotify.activated&&!(await enableSpotifyPlayer()))return;state.spotify.player?.previousTrack()};$('nextTrackBtn').onclick=async()=>{if(!state.spotify.activated&&!(await enableSpotifyPlayer()))return;state.spotify.player?.nextTrack()};$('playPauseBtn').onclick=async()=>{if(!state.spotify.activated&&!(await enableSpotifyPlayer()))return;state.spotify.player?.togglePlay()};document.querySelectorAll('.mobile-tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.mobile-tabs button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('[data-panel]').forEach(p=>p.classList.toggle('mobile-active',p.dataset.panel===b.dataset.tab))});
 function initCoachPanels(){
 const dashGrid=document.querySelector('.dash-grid');
 const practicePanel=document.querySelector('.practice-panel');
@@ -932,9 +948,9 @@ ratingBody.appendChild(ratingA);
 ratingBody.appendChild(ratingB);
 const CARDS=[{id:'qrBox',el:qrBox},{id:'timerCard',el:timerCard},{id:'intervalBox',el:intervalBox},{id:'spotifyBox',el:spotifyBox},{id:'coachNotesPanel',el:notes},{id:'mobileRatingsWrap',el:ratingWrap}];
 const cardById=id=>{const c=CARDS.find(x=>x.id===id);return c?c.el:null};
-const DEFAULT_DESKTOP={practice:['qrBox','timerCard','intervalBox','spotifyBox'],tools:['coachNotesPanel','mobileRatingsWrap']};
+const DEFAULT_DESKTOP={practice:['timerCard','intervalBox','spotifyBox'],tools:['coachNotesPanel','mobileRatingsWrap','qrBox']};
 const DEFAULT_MOBILE=['timerCard','intervalBox','spotifyBox','coachNotesPanel','mobileRatingsWrap','qrBox'];
-const LAYOUT_KEY='wpp-coach-layout-v5';
+const LAYOUT_KEY='wpp-coach-layout-v6';
 function loadLayout(){try{return JSON.parse(localStorage.getItem(LAYOUT_KEY)||'null')}catch(err){return null}}
 function saveLayout(layout){try{localStorage.setItem(LAYOUT_KEY,JSON.stringify(layout))}catch(err){}}
 function positionPlanPanel(){
