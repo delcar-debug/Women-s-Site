@@ -532,6 +532,7 @@ body.dash-resizing .dash-resize-handle::after{background:var(--maroon)}
 .brand-section:first-of-type{margin-top:10px;padding-top:0;border-top:0}
 .brand-section h3{margin:0 0 10px;font-size:.86rem;text-transform:uppercase;letter-spacing:.02em;color:var(--muted)}
 .brand-settings-modal .field{display:block;min-width:0;font-size:.74rem;font-weight:850;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+#practiceDate,#startTime,#practiceLength{height:42px;box-sizing:border-box;font-size:.92rem}
 .brand-settings-modal .field input{margin-top:5px}
 .color-field input[type="color"]{height:42px;padding:3px;cursor:pointer}
 .logo-preview-row{display:flex;align-items:center;gap:10px;margin-top:4px}
