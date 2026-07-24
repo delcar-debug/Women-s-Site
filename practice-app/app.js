@@ -946,11 +946,15 @@ if(!ratingWrap){
 }
 ratingBody.appendChild(ratingA);
 ratingBody.appendChild(ratingB);
-const CARDS=[{id:'qrBox',el:qrBox},{id:'timerCard',el:timerCard},{id:'intervalBox',el:intervalBox},{id:'spotifyBox',el:spotifyBox},{id:'coachNotesPanel',el:notes},{id:'mobileRatingsWrap',el:ratingWrap}];
+const CARDS=[{id:'qrBox',el:qrBox},{id:'intervalBox',el:intervalBox},{id:'spotifyBox',el:spotifyBox},{id:'coachNotesPanel',el:notes},{id:'mobileRatingsWrap',el:ratingWrap}];
 const cardById=id=>{const c=CARDS.find(x=>x.id===id);return c?c.el:null};
-const DEFAULT_DESKTOP={practice:['timerCard','intervalBox','spotifyBox'],tools:['coachNotesPanel','mobileRatingsWrap','qrBox']};
-const DEFAULT_MOBILE=['timerCard','intervalBox','spotifyBox','coachNotesPanel','mobileRatingsWrap','qrBox'];
-const LAYOUT_KEY='wpp-coach-layout-v7';
+const DEFAULT_DESKTOP={practice:['intervalBox','spotifyBox'],tools:['coachNotesPanel','mobileRatingsWrap','qrBox']};
+const DEFAULT_MOBILE=['intervalBox','spotifyBox','coachNotesPanel','mobileRatingsWrap','qrBox'];
+function positionTimerCard(){
+  if(mq.matches){dashGrid.insertBefore(timerCard,dashGrid.firstChild)}
+  else{practicePanel.insertBefore(timerCard,practicePanel.firstChild)}
+}
+const LAYOUT_KEY='wpp-coach-layout-v8';
 function loadLayout(){try{return JSON.parse(localStorage.getItem(LAYOUT_KEY)||'null')}catch(err){return null}}
 function saveLayout(layout){try{localStorage.setItem(LAYOUT_KEY,JSON.stringify(layout))}catch(err){}}
 function positionPlanPanel(){
@@ -981,6 +985,7 @@ function apply(e){
   const layout=loadLayout();
   if(e.matches)applyMobile(layout);else applyDesktop(layout);
   applySizes(layout);
+  positionTimerCard();
 }
 function persist(){
   const existing=loadLayout()||{};
