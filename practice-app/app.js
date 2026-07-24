@@ -880,7 +880,7 @@ function selectCoachBlock(index,{resetTimer=true}={}){
   return true;
 }
 $('sharePdfBtn').onclick=sharePracticePdf;$('coachPdfSendBtn').onclick=sharePracticePdf;$('coachPdfMarkSentBtn').onclick=()=>{setPdfStatus({sentAt:new Date().toISOString()});upsertAutoArchive({silent:true})};$('manageEmailsBtn').onclick=openEmailModal;$('addEmailBtn').onclick=addEmailRow;$('saveEmailListBtn').onclick=saveCoachEmails;$('cancelEmailModal').onclick=closeEmailModal;el.emailModal.onclick=e=>{if(e.target===el.emailModal)closeEmailModal()};$('addBtn').onclick=addBlock;$('saveBlockModal').onclick=saveBlockFromModal;$('cancelBlockModal').onclick=closeBlockModal;el.addCircuitRowBtn?.addEventListener('click',addCircuitRow);el.blockModal.onclick=e=>{if(e.target===el.blockModal)closeBlockModal()};el.activityName.onkeydown=e=>{if(e.key==='Enter')saveBlockFromModal()};[el.practiceDate,el.startTime,el.practiceLength,el.practiceGoal].filter(Boolean).forEach(x=>{x.oninput=()=>{render();save()};x.onchange=()=>{render();save()}});$('startBtn').onclick=startPractice;$('navBuilder').onclick=()=>showAppPage('builder');$('navCoach').onclick=()=>showAppPage('coach');(function(){const navTv=$('navTeam');if(!navTv)return;navTv.href=teamBoardTvUrl();navTv.target='_blank';navTv.addEventListener('click',e=>{if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();openDetachedTeamBoard()})})();$('navLibrary').onclick=()=>showAppPage('library');$('navData').onclick=()=>showAppPage('data');$('teamBoardBackBtn').onclick=()=>showAppPage('builder');(function(){const tvLink=$('teamBoardTvBtn');if(!tvLink)return;tvLink.href=teamBoardTvUrl();tvLink.target='_blank';tvLink.addEventListener('click',e=>{if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();openDetachedTeamBoard()})})();$('librarySearch').oninput=renderLibrary;$('librarySeason').onchange=renderLibrary;$('clearBtn').onclick=()=>{if(confirm('Clear the practice?')){endPractice();state.blocks=[];render()}};$('exitTimerBtn').textContent='Back to Practice Builder';$('exitTimerBtn').onclick=hideCoachMode;$('openTeamFromCoach').textContent='Open TV View';$('openTeamFromCoach').onclick=openDetachedTeamBoard;$('coachStartBtn').onclick=()=>{state.running=true;ensurePracticeTicker();saveLiveState()};$('pauseBtn').onclick=()=>{state.running=false;saveLiveState()};$('previousBtn').onclick=()=>{if(state.currentIndex<=0)return;selectCoachBlock(state.currentIndex-1)};$('nextBtn').onclick=()=>{if(state.currentIndex+1>=state.blocks.length){endPractice();return alert('Practice complete.')}selectCoachBlock(state.currentIndex+1)};$('intervalStartBtn').onclick=startInterval;$('intervalPauseBtn').onclick=()=>{state.interval.running=!state.interval.running;renderInterval()};$('intervalResetBtn').onclick=resetInterval;$('intervalTestBtn').onclick=async()=>{await unlockWhistle();await playWhistle()};$('intervalMatchBtn').onclick=()=>{el.workSeconds.value=120;el.restSeconds.value=15;el.intervalRounds.value=3;save();resetInterval();};$('intervalOneMinuteBtn').onclick=()=>{el.workSeconds.value=60;el.restSeconds.value=15;el.intervalRounds.value=7;save();resetInterval();};[el.workSeconds,el.restSeconds,el.intervalRounds].forEach(x=>x.oninput=()=>{save();if(state.interval.phase==='ready')resetInterval()});el.spotifyLoginBtn.onclick=async()=>{if(await token())await enableSpotifyPlayer();else loginSpotify()};$('prevTrackBtn').onclick=async()=>{if(!state.spotify.activated&&!(await enableSpotifyPlayer()))return;state.spotify.player?.previousTrack()};$('nextTrackBtn').onclick=async()=>{if(!state.spotify.activated&&!(await enableSpotifyPlayer()))return;state.spotify.player?.nextTrack()};$('playPauseBtn').onclick=async()=>{if(!state.spotify.activated&&!(await enableSpotifyPlayer()))return;state.spotify.player?.togglePlay()};document.querySelectorAll('.mobile-tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.mobile-tabs button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('[data-panel]').forEach(p=>p.classList.toggle('mobile-active',p.dataset.panel===b.dataset.tab))});
-(function(){
+function initCoachPanels(){
 const dashGrid=document.querySelector('.dash-grid');
 const practicePanel=document.querySelector('.practice-panel');
 const toolsPanel=document.querySelector('.tools-panel');
@@ -890,11 +890,17 @@ const qrBox=document.getElementById('qrBox');
 const timerCard=document.getElementById('timerCard');
 const intervalBox=document.querySelector('.interval-box');
 const spotifyBox=document.getElementById('spotifyBox');
-const inbox=document.getElementById('nextPracticeNotesCoach');
 const notes=document.getElementById('coachNotesPanel');
 const ratingA=document.getElementById('practiceRatingRow');
 const ratingB=document.getElementById('teamCultureRatingRow');
-if(!dashGrid||!practicePanel||!toolsPanel||!toolsScroll||!planPanel||!qrBox||!timerCard||!intervalBox||!spotifyBox||!inbox||!notes||!ratingA||!ratingB)return;
+if(!dashGrid||!practicePanel||!toolsPanel||!toolsScroll||!planPanel||!qrBox||!timerCard||!intervalBox||!spotifyBox||!notes||!ratingA||!ratingB)return;
+const inboxEl=document.getElementById('coachPracticeInbox')||document.getElementById('nextPracticeNotesCoach');
+if(inboxEl&&!inboxEl.dataset.mergedIntoNotes){
+  inboxEl.dataset.mergedIntoNotes='1';
+  inboxEl.classList.add('notes-inbox-nested');
+  inboxEl.removeAttribute('id');
+  notes.appendChild(inboxEl);
+}
 let ratingWrap=document.getElementById('mobileRatingsWrap');
 let ratingBody=document.getElementById('mobileRatingsBody');
 if(!ratingWrap){
@@ -915,11 +921,11 @@ if(!ratingWrap){
 }
 ratingBody.appendChild(ratingA);
 ratingBody.appendChild(ratingB);
-const CARDS=[{id:'qrBox',el:qrBox},{id:'timerCard',el:timerCard},{id:'intervalBox',el:intervalBox},{id:'spotifyBox',el:spotifyBox},{id:'nextPracticeNotesCoach',el:inbox},{id:'coachNotesPanel',el:notes},{id:'mobileRatingsWrap',el:ratingWrap}];
+const CARDS=[{id:'qrBox',el:qrBox},{id:'timerCard',el:timerCard},{id:'intervalBox',el:intervalBox},{id:'spotifyBox',el:spotifyBox},{id:'coachNotesPanel',el:notes},{id:'mobileRatingsWrap',el:ratingWrap}];
 const cardById=id=>{const c=CARDS.find(x=>x.id===id);return c?c.el:null};
-const DEFAULT_DESKTOP={practice:['qrBox','timerCard','intervalBox','spotifyBox'],tools:['coachNotesPanel','nextPracticeNotesCoach','mobileRatingsWrap']};
-const DEFAULT_MOBILE=['qrBox','timerCard','intervalBox','spotifyBox','nextPracticeNotesCoach','coachNotesPanel','mobileRatingsWrap'];
-const LAYOUT_KEY='wpp-coach-layout-v1';
+const DEFAULT_DESKTOP={practice:['qrBox','timerCard','intervalBox','spotifyBox'],tools:['coachNotesPanel','mobileRatingsWrap']};
+const DEFAULT_MOBILE=['qrBox','timerCard','intervalBox','spotifyBox','coachNotesPanel','mobileRatingsWrap'];
+const LAYOUT_KEY='wpp-coach-layout-v2';
 function loadLayout(){try{return JSON.parse(localStorage.getItem(LAYOUT_KEY)||'null')}catch(err){return null}}
 function saveLayout(layout){try{localStorage.setItem(LAYOUT_KEY,JSON.stringify(layout))}catch(err){}}
 function positionPlanPanel(){
@@ -1057,7 +1063,8 @@ if(resetBtn)resetBtn.addEventListener('click',()=>{
 bindPanelDragging();
 apply(mq);
 mq.addEventListener('change',apply);
-})();
+}
+if(document.readyState==='complete'){initCoachPanels()}else{window.addEventListener('load',initCoachPanels)}
 if(el.overallCoachNotes)el.overallCoachNotes.addEventListener('input',()=>{state.overallCoachNotes=el.overallCoachNotes.value;save()});load();if(el.overallCoachNotes)el.overallCoachNotes.value=state.overallCoachNotes||'';render();renderLibrary();checkUnratedPractices();resetInterval();restoreLiveState();ensurePracticeTicker();bootSpotify();if(['1','team-board'].includes(new URLSearchParams(location.search).get('tv'))){document.body.classList.add('detached-tv');showAppPage('team');el.teamBoardPage.classList.add('tv-mode');document.title='Holmen Women’s Wrestling — TV View';refreshTeamBoardFromStorage();}document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.practiceActive)saveLiveState()});
 document.querySelectorAll('#practiceRatingRow .rating-btn').forEach(b=>b.onclick=()=>{state.practiceRating=b.dataset.rating;renderRatingButtons();save()});
 document.querySelectorAll('#teamCultureRatingRow .rating-btn').forEach(b=>b.onclick=()=>{state.teamCultureRating=b.dataset.rating;renderCultureButtons();save()});

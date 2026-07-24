@@ -216,6 +216,7 @@ body.detached-tv .team-board-item.current .team-board-details,
 .panel-drag-float{position:fixed;z-index:9999;pointer-events:none;box-shadow:0 14px 35px rgba(0,0,0,.28);border-radius:12px;opacity:.97;background:#fff}
 .panel-drag-placeholder{border:2px dashed var(--maroon);border-radius:12px;background:rgba(122,23,50,.06);box-sizing:border-box}
 #resetCoachLayoutBtn{padding:9px 12px;font-size:.82rem}
+.notes-inbox-nested.practice-inbox-panel{border-width:1px;box-shadow:none;margin:14px 0 0}
 .spotify-controls-full{display:flex;flex-direction:column;gap:6px}
 .spotify-simple .now-playing{margin-top:0;grid-template-columns:minmax(0,1fr);padding:9px}
 .spotify-progress{display:flex;flex-direction:column;gap:2px}
