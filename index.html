@@ -653,6 +653,27 @@
 
     .recap-feature .button { position: relative; z-index: 1; align-self: flex-start; }
 
+    .recap-feature-download {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 2;
+      pointer-events: auto;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(20,4,10,.55);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1.05rem;
+      backdrop-filter: blur(2px);
+      transition: background .15s ease;
+    }
+    .recap-feature-download:hover { background: rgba(20,4,10,.8); }
+
     .recap-sidebar {
       display: flex;
       flex-direction: column;
@@ -1370,6 +1391,7 @@
         <div class="recaps-layout">
           <div class="recap-feature">
             <div class="recap-feature-watermark"><img src="assets/images/recap-ruby-fargo.jpg?v=2" alt="Ruby Gustafson at Fargo Nationals"></div>
+            <a class="recap-feature-download" href="assets/images/recap-ruby-fargo.jpg?v=2" download title="Download photo" aria-label="Download photo">⬇</a>
             <div class="recap-feature-eyebrow">Last Event</div>
             <h3>Ruby Gustafson Competes at Fargo Nationals</h3>
             <p>Ruby represented Holmen at Fargo Nationals — the largest wrestling tournament in the world!</p>
