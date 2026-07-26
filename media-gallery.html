@@ -45,9 +45,18 @@ h2.section-title{font-size:1.5rem;letter-spacing:-.02em;margin:0 0 18px;color:va
 .photo-card span{display:block;padding:12px 14px;font-size:.88rem;font-weight:750;line-height:1.35}
 .photo-grid-lg{grid-template-columns:repeat(3,minmax(0,1fr))}
 .photo-grid-lg .photo-card img{height:480px;object-fit:contain;background:#111}
-@media(max-width:900px){.photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.album-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:8px}
+.album-card{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 8px 22px rgba(20,12,15,.06);text-decoration:none;color:inherit;display:block;transition:.15s ease}
+.album-card:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(20,12,15,.12)}
+.album-card img{width:100%;height:150px;object-fit:cover;display:block;background:#eee}
+.album-card span{display:block;padding:12px 14px;font-size:.9rem;font-weight:800;line-height:1.3}
+.album-card span em{display:block;font-style:normal;font-weight:700;font-size:.78rem;color:var(--maroon);margin-top:4px}
+.album-card-noimg{background:linear-gradient(135deg,var(--maroon),var(--dark));color:#fff}
+.album-card-noimg .album-card-icon{display:flex;align-items:center;justify-content:center;height:150px;font-size:2.4rem}
+.album-card-noimg span em{color:#f0dde3}
+@media(max-width:900px){.photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.album-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.video-grid{grid-template-columns:1fr}}
-@media(max-width:600px){.header{padding:0 14px}.photo-grid{grid-template-columns:1fr 1fr}.photo-card img{height:200px}.photo-grid-lg .photo-card img{height:280px}}
+@media(max-width:600px){.header{padding:0 14px}.photo-grid{grid-template-columns:1fr 1fr}.photo-card img{height:200px}.photo-grid-lg .photo-card img{height:280px}.album-card img,.album-card-noimg .album-card-icon{height:120px}}
 </style>
 </head>
 <body>
@@ -72,6 +81,7 @@ h2.section-title{font-size:1.5rem;letter-spacing:-.02em;margin:0 0 18px;color:va
 <button class="gallery-tab active" data-panel="videos">Highlight Videos</button>
 <button class="gallery-tab" data-panel="seniors">Senior Posters</button>
 <button class="gallery-tab" data-panel="finishers">Season Finishers</button>
+<button class="gallery-tab" data-panel="albums">More Photo Albums</button>
 </div>
 
 <div id="panel-videos" class="gallery-panel active">
@@ -232,6 +242,74 @@ h2.section-title{font-size:1.5rem;letter-spacing:-.02em;margin:0 0 18px;color:va
 <a class="photo-card" href="assets/images/season-finishers/2022-23-nat-johnson.jpg" download><img src="assets/images/season-finishers/2022-23-nat-johnson.jpg" alt="Nat Johnson — Season Finisher photo"><span>Nat Johnson</span></a>
 <a class="photo-card" href="assets/images/season-finishers/2022-23-river-klingbeil.jpg" download><img src="assets/images/season-finishers/2022-23-river-klingbeil.jpg" alt="River Klingbeil — Season Finisher photo"><span>River Klingbeil</span></a>
 </div>
+</div>
+</div>
+
+<div id="panel-albums" class="gallery-panel">
+<h2 class="section-title">More Photo Albums</h2>
+<p style="color:var(--muted);margin:-10px 0 24px;line-height:1.6">These full-resolution event albums live outside our site. Click a card to open the full album and browse or download photos there.</p>
+<div class="album-grid">
+
+<a class="album-card" href="https://drive.google.com/drive/folders/1I_e18vMlazBy_AJXnZdWGUGts0llumdq" target="_blank" rel="noopener">
+<img src="https://drive.google.com/thumbnail?id=1Rbp5N2RzcN0v-KAV3lUEUYi5vqSEzPh5&sz=w600" alt="" loading="lazy">
+<span>Coaches (2022-23)<em>View Album ↗</em></span>
+</a>
+
+<a class="album-card" href="https://drive.google.com/drive/folders/1Glp_S7HebyqFmfBNthwla3KYJI6wcTIv" target="_blank" rel="noopener">
+<img src="https://drive.google.com/thumbnail?id=1UZ6gXnBxk2Kej-PRUBzCqisMwkpAQ_O-&sz=w600" alt="" loading="lazy">
+<span>Photo Studio (2023)<em>View Album ↗</em></span>
+</a>
+
+<a class="album-card" href="https://drive.google.com/drive/folders/1aj2Mt-xkUX6VhmJC17mV7O43ssH1R3w7" target="_blank" rel="noopener">
+<img src="https://drive.google.com/thumbnail?id=18vo5hqoeZ8GyzgHMi2zYg5cneYpNgstb&sz=w600" alt="" loading="lazy">
+<span>Random Pictures (2022-23)<em>View Album ↗</em></span>
+</a>
+
+<a class="album-card" href="https://drive.google.com/drive/folders/1swkfKwNlXRRvohqlthdtRW6zF8MtQIKz" target="_blank" rel="noopener">
+<img src="https://drive.google.com/thumbnail?id=1u8grxrbtCmimoT8SN2uiyXdvLuOuXiUE&sz=w600" alt="" loading="lazy">
+<span>Photo Studio (2024)<em>View Album ↗</em></span>
+</a>
+
+<a class="album-card" href="https://drive.google.com/drive/folders/1j1AkMWtLB0LDoEseshwRbh4ZBveEINFJ" target="_blank" rel="noopener">
+<img src="https://drive.google.com/thumbnail?id=1nOBc3RouA9uvaTZepdHx1V5uY9Y7zwRN&sz=w600" alt="" loading="lazy">
+<span>Photo Studio (2025)<em>View Album ↗</em></span>
+</a>
+
+<a class="album-card" href="https://drive.google.com/drive/folders/1II5XGfts7w1DbAlw0bnFba_h_MssO0l5" target="_blank" rel="noopener">
+<img src="https://drive.google.com/thumbnail?id=1R4_TyRpcTzcm5nNxQYu4fa576HIx4Fux&sz=w600" alt="" loading="lazy">
+<span>Decorah (Jan. 2025)<em>View Album ↗</em></span>
+</a>
+
+<a class="album-card" href="https://drive.google.com/drive/folders/1s-H6_fyr3RK_wZ16oXKYjeLRgEXGLt91" target="_blank" rel="noopener">
+<img src="https://drive.google.com/thumbnail?id=1-ddZ_E_STDcnAlO-i82nv7Cdvd14W3sE&sz=w600" alt="" loading="lazy">
+<span>The Clash (Jan. 2025)<em>View Album ↗</em></span>
+</a>
+
+<a class="album-card" href="https://drive.google.com/drive/folders/1xh-Cib8CA51Db8_Gr8hg7Z--gd0AiOPc" target="_blank" rel="noopener">
+<img src="https://drive.google.com/thumbnail?id=10hTfYotduLBWlNud7etPfWhWPI4clrR5&sz=w600" alt="" loading="lazy">
+<span>Photo Studio (2025-26)<em>View Album ↗</em></span>
+</a>
+
+<a class="album-card" href="https://drive.google.com/drive/folders/1bQR0HPnMuZuOAKlN6YZ4n2BJrbKuzEk6" target="_blank" rel="noopener">
+<img src="https://drive.google.com/thumbnail?id=1yBTZs_Rban7RY0rWMa79AHTfWmjL3zqb&sz=w600" alt="" loading="lazy">
+<span>State (2026)<em>View Album ↗</em></span>
+</a>
+
+<a class="album-card album-card-noimg" href="https://drive.google.com/drive/folders/1N3XCXasCk0X03DFVOzNPqZXlIv9FAaW_" target="_blank" rel="noopener">
+<span class="album-card-icon">🤼</span>
+<span>2025-26 Meet Photos<em>View Album ↗</em></span>
+</a>
+
+<a class="album-card album-card-noimg" href="https://www.facebook.com/groups/1502174103389461/media/albums" target="_blank" rel="noopener">
+<span class="album-card-icon">📘</span>
+<span>Facebook Photo Album 1<em>View Album ↗</em></span>
+</a>
+
+<a class="album-card album-card-noimg" href="https://www.facebook.com/groups/1067777241048480/media/albums" target="_blank" rel="noopener">
+<span class="album-card-icon">📘</span>
+<span>Facebook Photo Album 2<em>View Album ↗</em></span>
+</a>
+
 </div>
 </div>
 
