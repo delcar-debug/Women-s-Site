@@ -821,3 +821,8 @@ body.detached-tv .tv-theme-btn{background:rgba(0,0,0,.32)}
 .week-attendance-block{margin-top:12px}
 .week-attendance-block:first-child{margin-top:16px}
 .week-attendance-percent{font-size:.8rem;font-weight:900;color:var(--maroon);white-space:nowrap}
+
+/* Practice type hint chips moved beside the Practice Type selector */
+.practice-type-hint-field{grid-column:span 2;display:flex;flex-direction:column}
+.practice-type-hint-field .practice-type-hint{margin-top:2px}
+@media(max-width:700px){.practice-type-hint-field{grid-column:1/-1}}
