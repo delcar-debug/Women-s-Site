@@ -815,3 +815,9 @@ body.detached-tv .tv-theme-btn{background:rgba(0,0,0,.32)}
 #teamBoardPage.tv-mode[data-tv-theme="metallica"] .team-board-title h2::before{content:"⚡ "}
 #teamBoardPage.tv-mode[data-tv-theme="metallica"] .team-board-title h2::after{content:" ⚡"}
 #teamBoardPage.tv-mode[data-tv-theme="metallica"] .team-board-item.current::before{content:"🤘 CURRENT"}
+
+/* Weekly Attendance Summary (Data page) */
+.weekly-attendance-list{display:grid;gap:0}
+.week-attendance-block{margin-top:12px}
+.week-attendance-block:first-child{margin-top:16px}
+.week-attendance-percent{font-size:.8rem;font-weight:900;color:var(--maroon);white-space:nowrap}

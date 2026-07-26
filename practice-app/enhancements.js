@@ -1104,6 +1104,76 @@
       }
     }
 
+    function weekKey(dateStr) {
+      const d = new Date(dateStr + 'T12:00:00');
+      if (Number.isNaN(d.getTime())) return dateStr;
+      const dow = (d.getDay() + 6) % 7; // 0=Mon..6=Sun
+      const monday = new Date(d);
+      monday.setDate(d.getDate() - dow);
+      return monday.getFullYear() + '-' + String(monday.getMonth() + 1).padStart(2, '0') + '-' + String(monday.getDate()).padStart(2, '0');
+    }
+    function weekRangeLabel(mondayStr) {
+      const monday = new Date(mondayStr + 'T12:00:00');
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+      const startLabel = monday.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      const endLabel = sunday.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      return `${startLabel} – ${endLabel}, ${sunday.getFullYear()}`;
+    }
+    function computeWeeklyAttendance() {
+      const roster = loadRoster().filter(a => a.active !== false);
+      const rosterById = Object.fromEntries(roster.map(a => [a.id, a.name]));
+      const attendance = loadAttendance();
+      const dates = Object.keys(attendance).sort();
+      const weeks = {};
+      dates.forEach(date => {
+        const key = weekKey(date);
+        (weeks[key] = weeks[key] || []).push(date);
+      });
+      return Object.keys(weeks).sort((a, b) => b.localeCompare(a)).map(key => {
+        const weekDates = weeks[key].slice().sort();
+        let presentTotal = 0, absentTotal = 0;
+        const days = weekDates.map(date => {
+          const rec = attendance[date] || {};
+          let present = 0, absent = 0;
+          const absentNames = [];
+          Object.keys(rec).forEach(athleteId => {
+            const val = rec[athleteId];
+            if (val === 'present') present++;
+            else if (val === 'absent') { absent++; const name = rosterById[athleteId]; if (name) absentNames.push(name); }
+          });
+          presentTotal += present; absentTotal += absent;
+          return { date, present, absent, absentNames };
+        });
+        const total = presentTotal + absentTotal;
+        return { key, label: weekRangeLabel(key), days, percent: total ? Math.round((presentTotal / total) * 100) : null };
+      });
+    }
+    function installWeeklyAttendanceCard() {
+      const page = document.getElementById('practiceDataPage');
+      if (!page || document.getElementById('weeklyAttendanceCard')) return false;
+      const card = document.createElement('section');
+      card.className = 'data-card weekly-attendance-card';
+      card.id = 'weeklyAttendanceCard';
+      card.innerHTML = `<h2>Weekly Attendance Summary</h2><div id="weeklyAttendanceList" class="weekly-attendance-list"></div>`;
+      const anchor = document.getElementById('attendanceDataCard');
+      if (anchor) anchor.after(card); else page.prepend(card);
+      return true;
+    }
+    function renderWeeklyAttendance() {
+      const wrap = document.getElementById('weeklyAttendanceList');
+      if (!wrap) return;
+      const weeks = computeWeeklyAttendance();
+      if (!weeks.length) { wrap.innerHTML = '<div class="attendance-empty">No attendance recorded yet.</div>'; return; }
+      wrap.innerHTML = weeks.map((w, i) => `<details class="trend-chart-block week-attendance-block"${i === 0 ? ' open' : ''}>
+        <summary><h3>${esc(w.label)}</h3><span class="week-attendance-percent">${w.percent === null ? '—' : w.percent + '%'}</span></summary>
+        <div class="attendance-table-wrap" style="padding:0 12px 12px">
+          <table class="attendance-table"><thead><tr><th>Date</th><th>Present</th><th>Absent</th><th>Missed by</th></tr></thead>
+          <tbody>${w.days.map(d => `<tr><td>${esc(formatDate(d.date))}</td><td>${d.present}</td><td>${d.absent}</td><td>${d.absentNames.length ? esc(d.absentNames.join(', ')) : '—'}</td></tr>`).join('')}</tbody></table>
+        </div>
+      </details>`).join('');
+    }
+
     function renderSummary() {
       const roster = loadRoster().filter(a => a.active !== false);
       const wrap = q('attendanceSummary');
@@ -1122,6 +1192,8 @@
     renderCoachReminder();
     installDataCard();
     renderDataCard();
+    installWeeklyAttendanceCard();
+    renderWeeklyAttendance();
 
     const backdrop = document.createElement('div');
     backdrop.id = 'attendanceBackdrop';
@@ -1183,6 +1255,7 @@
         renderList();
         renderSummary();
         renderDataCard();
+        renderWeeklyAttendance();
       }));
     }
 
@@ -1231,6 +1304,7 @@
       renderAlert();
       renderCoachReminder();
       renderDataCard();
+      renderWeeklyAttendance();
       closeModal();
     });
 
