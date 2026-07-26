@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pillar Nominations | Holmen Women's Wrestling</title>
+<style>
+:root{--maroon:#6d1730;--dark:#3f0b1a;--light:#f5f5f7;--ink:#19191d;--muted:#676b73;--border:#e1e2e5}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--light);color:var(--ink)}
+a{color:inherit}
+.header{height:74px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:20}
+.brand,.back{font-weight:900;color:var(--maroon);text-decoration:none}
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--maroon),var(--dark));color:#fff;padding:48px 20px}
+.hero .container{position:relative;z-index:1}
+.container{width:min(820px,calc(100% - 28px));margin:auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;font-weight:900;color:#efc8d4}
+h1{font-size:clamp(2.2rem,5.5vw,3.4rem);letter-spacing:-.05em;margin:8px 0}
+.hero p{max-width:640px;line-height:1.65;color:#f0dde3;margin:0}
+.content{padding:32px 0 70px}
+.status{background:#fff;border:1px dashed var(--border);border-radius:16px;padding:26px;text-align:center;color:var(--muted);line-height:1.6}
+.status.error{border-color:#e3b6c0;background:#fff5f7;color:#7a2039}
+.date-heading{margin:30px 0 14px;font-size:1.05rem;font-weight:850;color:var(--maroon);letter-spacing:-.01em}
+.date-heading:first-of-type{margin-top:0}
+.nom-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px 20px;margin-bottom:14px;box-shadow:0 6px 18px rgba(20,12,15,.05)}
+.nom-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:8px}
+.nom-pillar{display:inline-block;background:var(--maroon);color:#fff;font-weight:800;font-size:.76rem;letter-spacing:.02em;text-transform:uppercase;border-radius:999px;padding:5px 12px}
+.nom-time{margin-left:auto;color:var(--muted);font-size:.78rem;font-weight:700}
+.nom-nominee{font-size:1.15rem;font-weight:850;letter-spacing:-.01em;margin:2px 0 2px}
+.nom-nominator{color:var(--muted);font-size:.86rem;font-weight:700;margin-bottom:10px}
+.nom-nominator strong{color:var(--ink)}
+.nom-reason{line-height:1.65;color:#33272c;white-space:pre-wrap}
+@media(max-width:600px){.header{padding:0 14px}.nom-top{gap:6px}.nom-time{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+<header class="header">
+<a class="brand" href="index.html">Holmen Women's Wrestling</a>
+<a class="back" href="coach-hub.html">Back to Coach Hub</a>
+</header>
+
+<section class="hero">
+<div class="container">
+<div class="eyebrow">Coach Hub</div>
+<h1>Pillar Nominations</h1>
+<p>Live nominations from the Pillar Tracking form, newest first. Pulled straight from the response sheet — no need to open the spreadsheet.</p>
+</div>
+</section>
+
+<main class="content">
+<div class="container">
+<div id="status" class="status">Loading nominations…</div>
+<div id="feed"></div>
+</div>
+</main>
+
+<script>
+const SHEET_ID = '1KqIIGXvJ-bAifBEFuK46Ne9mUAsXcqqltLgEG28sBto';
+const SHEET_NAME = 'Form Responses 1';
+const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+
+function parseGvizDate(v){
+  if (v == null) return null;
+  if (typeof v === 'string' && v.indexOf('Date(') === 0){
+    const parts = v.slice(5, -1).split(',').map(Number);
+    return new Date(parts[0], parts[1], parts[2], parts[3]||0, parts[4]||0, parts[5]||0);
+  }
+  const d = new Date(v);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function fmtDateHeading(d){
+  return d.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+}
+function fmtTime(d){
+  return d.toLocaleTimeString(undefined, { hour:'numeric', minute:'2-digit' });
+}
+
+fetch(url)
+  .then(r => r.text())
+  .then(text => {
+    const start = text.indexOf('{');
+    const end = text.lastIndexOf('}');
+    const json = JSON.parse(text.slice(start, end + 1));
+    const rows = json.table.rows || [];
+
+    const entries = rows.map(row => {
+      const c = row.c || [];
+      const get = i => (c[i] && (c[i].f != null ? c[i].f : c[i].v)) ?? '';
+      const rawTimestamp = c[0] ? c[0].v : null;
+      const date = parseGvizDate(rawTimestamp);
+      return {
+        date,
+        nominator: get(1),
+        nominee: get(2),
+        pillar: get(3),
+        reason: get(4)
+      };
+    }).filter(e => e.date && (e.nominee || e.reason));
+
+    entries.sort((a, b) => b.date - a.date);
+
+    const statusEl = document.getElementById('status');
+    const feedEl = document.getElementById('feed');
+
+    if (!entries.length){
+      statusEl.textContent = 'No nominations yet — check back soon!';
+      return;
+    }
+
+    statusEl.remove();
+
+    let lastDateKey = null;
+    let html = '';
+    entries.forEach(e => {
+      const dateKey = e.date.toDateString();
+      if (dateKey !== lastDateKey){
+        html += `<h3 class="date-heading">${esc(fmtDateHeading(e.date))}</h3>`;
+        lastDateKey = dateKey;
+      }
+      html += `
+        <article class="nom-card">
+          <div class="nom-top">
+            ${e.pillar ? `<span class="nom-pillar">${esc(e.pillar)}</span>` : ''}
+            <span class="nom-time">${esc(fmtTime(e.date))}</span>
+          </div>
+          <div class="nom-nominee">${esc(e.nominee || 'Unnamed nomination')}</div>
+          <div class="nom-nominator">Nominated by <strong>${esc(e.nominator || 'Anonymous')}</strong></div>
+          ${e.reason ? `<div class="nom-reason">${esc(e.reason)}</div>` : ''}
+        </article>`;
+    });
+    feedEl.innerHTML = html;
+  })
+  .catch(err => {
+    const statusEl = document.getElementById('status');
+    statusEl.classList.add('error');
+    statusEl.textContent = 'Nominations couldn\'t load right now. Make sure the response sheet is shared as "Anyone with the link can view," then refresh this page.';
+    console.error(err);
+  });
+</script>
+</body>
+</html>
