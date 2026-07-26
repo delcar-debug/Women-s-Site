@@ -585,7 +585,8 @@ const TV_THEME_MOTIFS={
   christmas:{emojis:['❄️','✨'],motion:'fall',count:24},
   spring:{emojis:['🌸','🌼','🦋'],motion:'drift',count:18},
   meetday:{emojis:['🔥'],motion:'flicker',count:14},
-  halloween:{emojis:['🎃','👻','🦇'],motion:'drift',count:16}
+  halloween:{emojis:['🎃','👻','🦇'],motion:'drift',count:16},
+  metallica:{emojis:['⚡','🤘','🔥'],motion:'tumble',count:16}
 };
 function renderTvMotifParticles(theme){
   const layer=document.getElementById('tvMotifLayer');
