@@ -207,6 +207,10 @@ blockquote cite { display:block; margin-top:10px; font-style:normal; font-weight
 }
 @media(max-width:760px) {
   .resource-card-grid { grid-template-columns:1fr; }
+  .resource-card-grid > #transportResourceCard { order:1; }
+  .resource-card-grid > #techResourceCard { order:2; }
+  .resource-card-grid > .resource-card-stack { order:3; }
+  .resource-card-grid > .resource-card.wide { order:4; }
 }
 
 
@@ -340,6 +344,14 @@ Coach Carl</div>
   <section class="resource-library">
     <h2>Team Resources</h2>
     <div class="resource-card-grid">
+      <article class="resource-card" id="techResourceCard">
+        <h3>🤼 Technique Philosophy &amp; Library</h3>
+        <p>Our approach to technique, priorities by position, and the full video library.</p>
+        <div class="resource-card-actions">
+          <button class="primary-button" type="button" onclick="document.querySelector('#techLayout').scrollIntoView({behavior:'smooth'})">Open Technique Library</button>
+        </div>
+      </article>
+
       <div class="resource-card-stack">
         <article class="resource-card">
           <h3>📖 Team Handbook &amp; Program Guide</h3>
@@ -356,17 +368,9 @@ Coach Carl</div>
             <a class="primary-button" href="preseason-checklist.html">Open Preseason Checklist</a>
           </div>
         </article>
-
-        <article class="resource-card">
-          <h3>🤼 Technique Philosophy &amp; Library</h3>
-          <p>Our approach to technique, priorities by position, and the full video library.</p>
-          <div class="resource-card-actions">
-            <button class="primary-button" type="button" onclick="document.querySelector('#techLayout').scrollIntoView({behavior:'smooth'})">Open Technique Library</button>
-          </div>
-        </article>
       </div>
 
-      <article class="resource-card">
+      <article class="resource-card" id="transportResourceCard">
         <h3>🚗 Transportation Form</h3>
         <p><strong>Leaving an event with a parent or guardian?</strong></p>
         <p>Fill out this form if a wrestler will be leaving an event with her parent or legal guardian instead of riding home with the team.</p>
