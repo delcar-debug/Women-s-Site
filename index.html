@@ -849,6 +849,30 @@
 
     .testimonial-social a:hover { text-decoration: underline; }
 
+    .coaches-section { background: var(--white); padding: 90px 0; }
+    .coach-grid-home {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+    }
+    .coach-card-home {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .coach-card-home img { width: 100%; height: auto; display: block; background: #eee; }
+    .coach-card-home-body { padding: 16px 18px 20px; }
+    .coach-card-home-name { font-size: 1.08rem; font-weight: 900; letter-spacing: -.01em; margin: 0; }
+    .coach-card-home-role { color: var(--maroon); font-weight: 800; font-size: .85rem; margin: 4px 0 10px; }
+    .coach-card-home-awards { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+    .coach-card-home-awards li { font-size: .8rem; line-height: 1.4; color: #3a3038; padding-left: 18px; position: relative; }
+    .coach-card-home-awards li::before { content: "🏆"; position: absolute; left: 0; top: 0; font-size: .78rem; }
+    .coach-group-title { font-weight: 900; color: var(--maroon); margin: 0 0 14px; font-size: 1.05rem; }
+    .coach-group + .coach-group { margin-top: 28px; }
+    @media (max-width: 1000px) { .coach-grid-home { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 560px) { .coach-grid-home { grid-template-columns: 1fr; } }
     .mission { background: var(--light); }
 
     .mission-grid {
@@ -1096,7 +1120,7 @@
         <a href="#top">Home</a>
         <a href="#quotes">About</a>
         <a href="calendar.html">Calendar</a>
-        <a href="coaches.html">Coaches</a>
+        <a href="#coaches">Coaches</a>
         <div class="nav-dropdown">
           <a class="nav-dropdown-trigger" href="#" aria-haspopup="true">Herstory</a>
           <div class="nav-dropdown-menu">
@@ -1122,7 +1146,7 @@
       <a href="#top">Home</a>
       <a href="#quotes">About</a>
       <a href="calendar.html">Calendar</a>
-      <a href="coaches.html">Coaches</a>
+      <a href="#coaches">Coaches</a>
       <div class="mobile-nav-group">
         <span class="mobile-nav-heading">Herstory</span>
         <a href="recaps.html">Recaps</a>
@@ -1348,7 +1372,105 @@
           <a href="#pillars">Our Mission</a>
           <a href="#join">New Wrestler FAQ</a>
           <a href="recaps.html">Recaps</a>
-          <a href="coaches.html">Meet the Coaches</a>
+          <a href="#coaches">Meet the Coaches</a>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="coaches" class="coaches-section">
+      <div class="container">
+        <div class="section-heading" style="text-align:center;margin-left:auto;margin-right:auto">
+          <div class="eyebrow" style="color:var(--maroon);text-align:center">Our Staff</div>
+          <h2>Meet the Coaches</h2>
+          <p style="text-align:center;margin-left:auto;margin-right:auto">The staff behind Holmen Women's Wrestling — on the mat, in the room, and building the program every day.</p>
+        </div>
+
+        <div class="coach-group">
+          <p class="coach-group-title">High School Staff</p>
+          <div class="coach-grid-home">
+
+            <div class="coach-card-home">
+              <img src="assets/images/coaches/carl-deluca.jpg" alt="Carl DeLuca">
+              <div class="coach-card-home-body">
+                <p class="coach-card-home-name">Carl DeLuca</p>
+                <p class="coach-card-home-role">Head High School Coach</p>
+                <ul class="coach-card-home-awards">
+                  <li>2024 State Girls Coach of the Year</li>
+                  <li>2023 &amp; 2026 MVC Girls Conference Coach of the Year</li>
+                  <li>Wisconsin Wrestling Federation Girls Fargo &amp; 14U Duals Coach</li>
+                  <li>2026 District 3 Head Girls Coach of the Year</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="coach-card-home">
+              <img src="assets/images/coaches/kelsie-speltz.jpg" alt="Kelsie Speltz">
+              <div class="coach-card-home-body">
+                <p class="coach-card-home-name">Kelsie Speltz</p>
+                <p class="coach-card-home-role">High School Head Assistant Coach</p>
+                <ul class="coach-card-home-awards">
+                  <li>2025 Assistant State Coach of the Year</li>
+                  <li>2026 District 3 Assistant Coach of the Year</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="coach-card-home">
+              <img src="assets/images/coaches/joey-perrigo.jpg" alt="Joey Perrigo">
+              <div class="coach-card-home-body">
+                <p class="coach-card-home-name">Joey Perrigo <span style="color:var(--muted);font-weight:700">"Joe Diva"</span></p>
+                <p class="coach-card-home-role">Assistant High School Coach</p>
+                <ul class="coach-card-home-awards">
+                  <li>2025 Assistant State Coach of the Year</li>
+                  <li>2026 District 3 Assistant Coach of the Year</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="coach-card-home">
+              <img src="assets/images/coaches/jozie-collins.jpg" alt="Jozie Collins">
+              <div class="coach-card-home-body">
+                <p class="coach-card-home-name">Jozie Collins</p>
+                <p class="coach-card-home-role">High School Assistant Coach</p>
+                <ul class="coach-card-home-awards">
+                  <li>2026 District 3 Assistant Coach of the Year</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="coach-group">
+          <p class="coach-group-title">Middle School &amp; Youth Staff</p>
+          <div class="coach-grid-home">
+
+            <div class="coach-card-home">
+              <img src="assets/images/coaches/steve-eggerichs.jpg" alt="Steve Eggerichs">
+              <div class="coach-card-home-body">
+                <p class="coach-card-home-name">Steve Eggerichs</p>
+                <p class="coach-card-home-role">Head Middle School Coach</p>
+              </div>
+            </div>
+
+            <div class="coach-card-home">
+              <img src="assets/images/coaches/ross-needham.jpg" alt="Ross Needham">
+              <div class="coach-card-home-body">
+                <p class="coach-card-home-name">Ross Needham</p>
+                <p class="coach-card-home-role">Assistant Middle School Coach &amp; Head Youth Girls Coach</p>
+              </div>
+            </div>
+
+            <div class="coach-card-home">
+              <img src="assets/images/coaches/evelyn-vetsch.jpg" alt="Evelyn Vetsch">
+              <div class="coach-card-home-body">
+                <p class="coach-card-home-name">Evelyn Vetsch</p>
+                <p class="coach-card-home-role">Assistant Middle School Coach</p>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </section>
