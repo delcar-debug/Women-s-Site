@@ -576,7 +576,7 @@ Coach Carl</div>
 
   <section class="technique-hub-intro" style="max-width:900px;margin:48px auto 0;text-align:center;padding:0 20px 8px">
     <h2 style="margin:0 0 10px">Technique Philosophy &amp; Library</h2>
-    <p style="color:var(--muted,#6b6b70)">Our approach to technique, plus the full library of instructional videos by position — kept separate from the handbook above.</p>
+    <p style="color:var(--muted,#6b6b70)">Our approach to technique, priorities by position, and the full library of instructional videos — kept separate from the handbook above.</p>
   </section>
 
   <div class="layout" id="techLayout">
@@ -586,12 +586,20 @@ Coach Carl</div>
         <input id="techSearchInput" class="search" type="search" placeholder="Search technique…">
         <select id="techMobileToc" class="mobile-toc" aria-label="Choose technique section">
           <option value="tech-philosophy">01 — Technique Philosophy</option>
-          <option value="tech-library">02 — Technique Library</option>
+          <option value="tech-priorities">02 — Position Priorities</option>
+          <option value="tech-library-neutral">03 — Library: Neutral</option>
+          <option value="tech-library-bottom">04 — Library: Bottom</option>
+          <option value="tech-library-top">05 — Library: Top</option>
+          <option value="tech-library-freestyle">06 — Library: Freestyle</option>
         </select>
       </div>
       <nav class="toc">
         <button class="toc-link active" data-target="tech-philosophy"><span>01</span>Technique Philosophy</button>
-        <button class="toc-link" data-target="tech-library"><span>02</span>Technique Library</button>
+        <button class="toc-link" data-target="tech-priorities"><span>02</span>Position Priorities</button>
+        <button class="toc-link" data-target="tech-library-neutral"><span>03</span>Library: Neutral</button>
+        <button class="toc-link" data-target="tech-library-bottom"><span>04</span>Library: Bottom</button>
+        <button class="toc-link" data-target="tech-library-top"><span>05</span>Library: Top</button>
+        <button class="toc-link" data-target="tech-library-freestyle"><span>06</span>Library: Freestyle</button>
       </nav>
     </aside>
 
@@ -612,6 +620,12 @@ Coach Carl</div>
 <p>We don’t have to “go back to the basics” because we don’t stop doing them. Practices look pretty consistent each week — we work and develop common positions.</p>
 <blockquote>“I fear not the man who has practiced 10,000 kicks once, but I fear the man who has practiced one kick 10,000 times.” — Bruce Lee</blockquote>
 <p><strong>3) Score points and have fun.</strong></p>
+        </div>
+      </article>
+      <article class="handbook-section" id="tech-priorities" data-index="1">
+        <div class="section-number">02</div>
+        <h2>Position Priorities</h2>
+        <div class="section-body">
 <h3>Neutral Priorities</h3>
 <ol>
 <li>Find your tie and control it</li>
@@ -653,13 +667,11 @@ Coach Carl</div>
 </ol>
         </div>
       </article>
-
-      <article class="handbook-section" id="tech-library" data-index="1">
-        <div class="section-number">02</div>
-        <h2>Technique Library</h2>
+      <article class="handbook-section" id="tech-library-neutral" data-index="2">
+        <div class="section-number">03</div>
+        <h2>Technique Library — Neutral</h2>
         <div class="section-body">
-<p>The full technique library used across our program — organized by position, with links to instructional videos for each technique. Click any linked technique name to watch the video.</p>
-<h3>Neutral</h3>
+<p>The full technique library used across our program, organized by position — with links to instructional videos for each technique. Click any linked technique name to watch the video.</p>
 <p><strong>Primary Goals: 1) Stay out from underneath her 2) Have elite defense</strong></p>
 <h4>Stance/Basics</h4>
 <ul>
@@ -815,7 +827,13 @@ Coach Carl</div>
 <li><a href="https://drive.google.com/file/d/19d1dD50RGsRWwrLzVeMmUVEvHZlxiZPm/view?usp=drive_link" target="_blank" rel="noopener">Arm Throw</a>
 </li>
 </ul>
-<h3>Bottom</h3>
+
+        </div>
+      </article>
+      <article class="handbook-section" id="tech-library-bottom" data-index="3">
+        <div class="section-number">04</div>
+        <h2>Technique Library — Bottom</h2>
+        <div class="section-body">
 <p><strong>#1 Goal: Get our hips and legs underneath us as fast as possible.</strong></p>
 <h4>Basic Info:</h4>
 <ul>
@@ -885,7 +903,13 @@ Coach Carl</div>
 <li><a href="https://drive.google.com/file/d/1WpCpX-75pdDsBplYbQmp66OLYkG0eGII/view?usp=share_link" target="_blank" rel="noopener">Clear Cross Wrist and One Wrist</a>
 </li>
 </ul>
-<h3>Top</h3>
+
+        </div>
+      </article>
+      <article class="handbook-section" id="tech-library-top" data-index="4">
+        <div class="section-number">05</div>
+        <h2>Technique Library — Top</h2>
+        <div class="section-body">
 <p><strong>#1 Goal: Get her head and shoulders to the mat as fast as possible.</strong></p>
 <h4>Basic Info:</h4>
 <ul>
@@ -938,7 +962,13 @@ Coach Carl</div>
 <li><a href="https://drive.google.com/file/d/1CcEmUQjziw6AILsYcGzIwhHN2yNOG8nU/view?usp=drive_link" target="_blank" rel="noopener">Mat Return</a>
 </li>
 </ul>
-<h3>Freestyle</h3>
+
+        </div>
+      </article>
+      <article class="handbook-section" id="tech-library-freestyle" data-index="5">
+        <div class="section-number">06</div>
+        <h2>Technique Library — Freestyle</h2>
+        <div class="section-body">
 <h4>Basic Rules</h4>
 <ul>
 <li>Scoring/Basics
@@ -1093,8 +1123,8 @@ showSection(0, false);
 window.scrollTo(0, 0);
 
 (function(){
-  const techSections = ['tech-philosophy', 'tech-library'];
-  const techTitles = ['Technique Philosophy', 'Technique Library'];
+  const techSections = ['tech-philosophy', 'tech-priorities', 'tech-library-neutral', 'tech-library-bottom', 'tech-library-top', 'tech-library-freestyle'];
+  const techTitles = ['Technique Philosophy', 'Position Priorities', 'Library: Neutral', 'Library: Bottom', 'Library: Top', 'Library: Freestyle'];
   let techIndex = 0;
   const techLayout = document.getElementById('techLayout');
   if (!techLayout) return;
