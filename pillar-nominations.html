@@ -22,13 +22,13 @@ h1{font-size:clamp(2.2rem,5.5vw,3.4rem);letter-spacing:-.05em;margin:8px 0}
 .status.error{border-color:#e3b6c0;background:#fff5f7;color:#7a2039}
 .date-heading{margin:30px 0 14px;font-size:1.05rem;font-weight:850;color:var(--maroon);letter-spacing:-.01em}
 .date-heading:first-of-type{margin-top:0}
+.nominator-heading{margin:18px 0 10px;font-size:.86rem;font-weight:800;color:var(--muted);letter-spacing:.02em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.nominator-heading::before{content:"";display:block;width:8px;height:8px;border-radius:50%;background:var(--maroon)}
 .nom-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px 20px;margin-bottom:14px;box-shadow:0 6px 18px rgba(20,12,15,.05)}
 .nom-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:8px}
 .nom-pillar{display:inline-block;background:var(--maroon);color:#fff;font-weight:800;font-size:.76rem;letter-spacing:.02em;text-transform:uppercase;border-radius:999px;padding:5px 12px}
 .nom-time{margin-left:auto;color:var(--muted);font-size:.78rem;font-weight:700}
 .nom-nominee{font-size:1.15rem;font-weight:850;letter-spacing:-.01em;margin:2px 0 2px}
-.nom-nominator{color:var(--muted);font-size:.86rem;font-weight:700;margin-bottom:10px}
-.nom-nominator strong{color:var(--ink)}
 .nom-reason{line-height:1.65;color:#33272c;white-space:pre-wrap}
 @media(max-width:600px){.header{padding:0 14px}.nom-top{gap:6px}.nom-time{margin-left:0;width:100%}}
 </style>
@@ -114,24 +114,47 @@ fetch(url)
 
     statusEl.remove();
 
-    let lastDateKey = null;
-    let html = '';
+    // Group by calendar day (newest first), then by who submitted the nomination.
+    const dateGroups = new Map();
     entries.forEach(e => {
-      const dateKey = e.date.toDateString();
-      if (dateKey !== lastDateKey){
-        html += `<h3 class="date-heading">${esc(fmtDateHeading(e.date))}</h3>`;
-        lastDateKey = dateKey;
-      }
-      html += `
-        <article class="nom-card">
-          <div class="nom-top">
-            ${e.pillar ? `<span class="nom-pillar">${esc(e.pillar)}</span>` : ''}
-            <span class="nom-time">${esc(fmtTime(e.date))}</span>
-          </div>
-          <div class="nom-nominee">${esc(e.nominee || 'Unnamed nomination')}</div>
-          <div class="nom-nominator">Nominated by <strong>${esc(e.nominator || 'Anonymous')}</strong></div>
-          ${e.reason ? `<div class="nom-reason">${esc(e.reason)}</div>` : ''}
-        </article>`;
+      const key = e.date.toDateString();
+      if (!dateGroups.has(key)) dateGroups.set(key, { date: e.date, items: [] });
+      dateGroups.get(key).items.push(e);
+    });
+
+    let html = '';
+    [...dateGroups.values()].forEach(group => {
+      html += `<h3 class="date-heading">${esc(fmtDateHeading(group.date))}</h3>`;
+
+      const nomGroups = new Map();
+      group.items.forEach(e => {
+        const name = (e.nominator || '').trim() || 'Anonymous';
+        if (!nomGroups.has(name)) nomGroups.set(name, []);
+        nomGroups.get(name).push(e);
+      });
+
+      const sortedNames = [...nomGroups.keys()].sort((a, b) => {
+        if (a === 'Anonymous') return 1;
+        if (b === 'Anonymous') return -1;
+        return a.localeCompare(b, undefined, { sensitivity: 'base' });
+      });
+
+      sortedNames.forEach(name => {
+        html += `<h4 class="nominator-heading">Nominated by ${esc(name)}</h4>`;
+        nomGroups.get(name)
+          .sort((a, b) => b.date - a.date)
+          .forEach(e => {
+            html += `
+              <article class="nom-card">
+                <div class="nom-top">
+                  ${e.pillar ? `<span class="nom-pillar">${esc(e.pillar)}</span>` : ''}
+                  <span class="nom-time">${esc(fmtTime(e.date))}</span>
+                </div>
+                <div class="nom-nominee">${esc(e.nominee || 'Unnamed nomination')}</div>
+                ${e.reason ? `<div class="nom-reason">${esc(e.reason)}</div>` : ''}
+              </article>`;
+          });
+      });
     });
     feedEl.innerHTML = html;
   })
