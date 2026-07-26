@@ -1,35 +1,7 @@
-// nav-fix-script
-
-(()=>{
-  const $=id=>document.getElementById(id);
-  const pageIds=['builderPage','libraryPage','practiceDataPage','practiceQueuePage','drillLibraryPage','teamBoardPage'];
-  const navIds=['navBuilder','navCoach','navTeam','navLibrary','navData','navQueue','navDrills'];
-  function hideStandard(){
-    $('builderPage')?.classList.add('hidden-page');
-    $('libraryPage')?.classList.remove('active');
-    $('practiceDataPage')?.classList.remove('active');
-    $('practiceQueuePage')?.classList.remove('active');
-    $('drillLibraryPage')?.classList.remove('active');
-    $('teamBoardPage')?.classList.remove('active');
-    $('timerPanel')?.classList.remove('active');
-    document.body.classList.remove('coach-mode-open');
-    navIds.forEach(id=>$(id)?.classList.remove('active'));
-  }
-  function openSpecial(which){
-    hideStandard();
-    const page=which==='queue'?$('practiceQueuePage'):$('drillLibraryPage');
-    const nav=which==='queue'?$('navQueue'):$('navDrills');
-    page?.classList.add('active');
-    nav?.classList.add('active');
-    try{ which==='queue'?window.renderQueue?.():window.renderDrillLibrary?.(); }catch(e){console.error(e)}
-    window.scrollTo({top:0});
-  }
-  const q=$('navQueue'),d=$('navDrills');
-  if(q){q.textContent='Practice Queue';q.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();openSpecial('queue')},true)}
-  if(d){d.textContent='Library';d.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();openSpecial('drills')},true)}
-  if($('navLibrary')) $('navLibrary').textContent='Archive';
-  if($('navData')) $('navData').textContent='Data';
-})();
+// nav-fix-script removed — navQueue/navDrills now route through the single
+// showAppPage() implementation in app.js (same path as every other nav button),
+// which eliminates a competing capture-phase click handler that could leave
+// the Inbox/Library pages unresponsive on the first click.
 
 
 // stability-fixes-script
