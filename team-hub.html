@@ -207,10 +207,14 @@ blockquote cite { display:block; margin-top:10px; font-style:normal; font-weight
 }
 @media(max-width:760px) {
   .resource-card-grid { grid-template-columns:1fr; }
-  .resource-card-grid > #transportResourceCard { order:1; }
-  .resource-card-grid > #techResourceCard { order:2; }
-  .resource-card-grid > .resource-card-stack { order:3; }
-  .resource-card-grid > .resource-card.wide { order:4; }
+  .resource-card-grid > .resource-card-stack { display:contents; }
+  #transportResourceCard { order:1; }
+  #handbookResourceCard { order:2; }
+  #techResourceCard { order:3; }
+  #weightResourceCard { order:4; }
+  #learningResourceCard { order:5; }
+  #parentResourceCard { order:6; }
+  #preseasonResourceCard { order:7; }
 }
 
 
@@ -353,7 +357,7 @@ Coach Carl</div>
       </article>
 
       <div class="resource-card-stack">
-        <article class="resource-card">
+        <article class="resource-card" id="handbookResourceCard">
           <h3>📖 Team Handbook &amp; Program Guide</h3>
 
           <div class="resource-card-actions">
@@ -361,7 +365,7 @@ Coach Carl</div>
           </div>
         </article>
 
-        <article class="resource-card">
+        <article class="resource-card" id="preseasonResourceCard">
           <h3>✅ Preseason Checklist</h3>
           <p>Complete the required preseason tasks before the wrestling season begins.</p>
           <div class="resource-card-actions">
@@ -384,7 +388,7 @@ Coach Carl</div>
         </div>
       </article>
 
-      <article class="resource-card wide">
+      <article class="resource-card wide" id="learningResourceCard">
         <h3>📚 Learning Resources</h3>
         <p>Helpful resources for wrestlers, parents, and coaches.</p>
 
@@ -451,7 +455,7 @@ Coach Carl</div>
         </div>
       </article>
 
-      <article class="resource-card">
+      <article class="resource-card" id="weightResourceCard">
         <h3>⚖️ Weight Management Guide</h3>
         <p><em>The Female Wrestler’s Guide to Weight Mastery</em> by Katherine Shai and LuchaFit.</p>
         <div class="resource-message">
@@ -464,7 +468,7 @@ Coach Carl</div>
         </div>
       </article>
 
-      <article class="resource-card">
+      <article class="resource-card" id="parentResourceCard">
         <h3>👨‍👩‍👧 Parent Resources</h3>
         <p>Helpful guides for supporting wrestlers throughout the season.</p>
 
