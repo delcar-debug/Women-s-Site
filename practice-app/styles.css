@@ -674,120 +674,114 @@ body.dash-resizing .dash-resize-handle::after{background:var(--maroon)}
 .tbf-name{flex:1;min-width:0;font-weight:900;color:#1f2937;font-size:1em;line-height:1.15;overflow-wrap:anywhere}
 .tbf-reps{flex:0 0 auto;font-weight:950;color:var(--maroon);white-space:nowrap;font-size:1em}
 
-/* ================= Christmas / Holiday theme — TV view only ================= */
-.team-board-page.tv-mode,
-body.detached-tv{
-  background:
-    radial-gradient(circle at 10% 15%,rgba(255,255,255,.4) 0 2px,transparent 3px),
-    radial-gradient(circle at 82% 10%,rgba(255,255,255,.35) 0 2px,transparent 3px),
-    radial-gradient(circle at 45% 25%,rgba(255,255,255,.3) 0 2px,transparent 3px),
-    radial-gradient(circle at 92% 60%,rgba(255,255,255,.3) 0 2px,transparent 3px),
-    radial-gradient(circle at 18% 68%,rgba(255,255,255,.32) 0 2px,transparent 3px),
-    radial-gradient(circle at 62% 88%,rgba(255,255,255,.25) 0 2px,transparent 3px),
-    radial-gradient(circle at 30% 92%,rgba(255,255,255,.28) 0 2px,transparent 3px),
-    linear-gradient(160deg,#0b3d24,#0a2e1c 55%,#123c22) !important;
+/* ================= TV view theme switcher ================= */
+.tv-theme-wrap{position:relative;display:none}
+#teamBoardPage.tv-mode .tv-theme-wrap{display:inline-block}
+.tv-theme-btn{width:24px;height:24px;padding:0;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;font-size:.75rem;line-height:1;display:grid;place-items:center;opacity:.55;border:1px solid rgba(255,255,255,.3)}
+.tv-theme-btn:hover{opacity:1}
+body.detached-tv .tv-theme-btn{background:rgba(255,255,255,.14)}
+.tv-theme-menu{position:absolute;top:30px;right:0;z-index:300;background:#fff;border:1px solid #d9dee6;border-radius:12px;box-shadow:0 14px 34px rgba(0,0,0,.28);padding:6px;display:grid;gap:2px;min-width:168px}
+.tv-theme-menu[hidden]{display:none}
+.tv-theme-menu button{width:100%;text-align:left;background:transparent;color:#253040;font-weight:750;font-size:.8rem;padding:7px 9px;border-radius:8px}
+.tv-theme-menu button:hover{background:#f1f3f6}
+.tv-theme-menu button.active{background:#741d2a;color:#fff}
+
+/* ---- shared theme mechanics (colors supplied per-theme below via custom properties) ---- */
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]){
+  background:linear-gradient(160deg,var(--tv-bg1),var(--tv-bg2) 55%,var(--tv-bg3)) !important;
 }
-.team-board-page.tv-mode .team-board-shell,
-body.detached-tv .team-board-shell{
-  background:transparent !important;
-  border:none !important;
-  position:relative;
-}
-.team-board-page.tv-mode .team-board-shell::before,
-body.detached-tv .team-board-shell::before{
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""])::after{
   content:"";
-  display:block;
-  height:10px;
-  margin-bottom:12px;
-  border-radius:6px;
-  background:repeating-linear-gradient(45deg,#c81d25 0 20px,#f5f5f5 20px 40px);
-  box-shadow:0 2px 8px rgba(0,0,0,.35);
-}
-.team-board-page.tv-mode .team-board-top,
-body.detached-tv .team-board-top{
-  background:linear-gradient(135deg,#7a1420,#4d0d15) !important;
-  border:2px solid #d4af37 !important;
-  color:#fff;
-}
-.team-board-page.tv-mode .team-board-title h2,
-body.detached-tv .team-board-title h2{color:#f6e6b8 !important}
-.team-board-page.tv-mode .team-board-title h2::before,
-body.detached-tv .team-board-title h2::before{content:"🎄 "}
-.team-board-page.tv-mode .team-board-title h2::after,
-body.detached-tv .team-board-title h2::after{content:" 🎄"}
-.team-board-page.tv-mode .team-board-title .team-slogan,
-body.detached-tv .team-board-title .team-slogan{color:#f0d9a8 !important}
-.team-board-page.tv-mode .team-board-date,
-body.detached-tv .team-board-date{color:#f6e6b8 !important}
-.team-board-page.tv-mode .team-goal,
-body.detached-tv .team-goal{
-  background:linear-gradient(135deg,#0f5c34,#0a3b21) !important;
-  border:2px solid #d4af37 !important;
-}
-.team-board-page.tv-mode .team-board-item,
-body.detached-tv .team-board-item{
-  background:#fffdf7 !important;
-  border-color:#1c6b3c !important;
-}
-.team-board-page.tv-mode .team-board-item.completed,
-.team-board-page.tv-mode .team-board-item.partial,
-body.detached-tv .team-board-item.completed,
-body.detached-tv .team-board-item.partial{background:#f3f2ea !important}
-.team-board-page.tv-mode .team-board-num,
-body.detached-tv .team-board-num{background:#1c6b3c !important}
-.team-board-page.tv-mode .team-board-time,
-body.detached-tv .team-board-time{color:#a41e22 !important}
-.team-board-page.tv-mode .team-board-empty,
-body.detached-tv .team-board-empty{background:#fffdf7 !important;border-color:#d4af37 !important}
-.team-board-page.tv-mode .team-board-item.current,
-body.detached-tv .team-board-item.current{
-  border-color:#a41e22 !important;
-  background:#fff7f0 !important;
-  box-shadow:0 0 0 7px rgba(164,30,34,.22),0 14px 34px rgba(10,59,33,.35) !important;
-}
-.team-board-page.tv-mode .team-board-item.current::before,
-body.detached-tv .team-board-item.current::before{
-  content:"🎁 CURRENT";
-  background:#a41e22 !important;
-  border:2px solid #d4af37;
-}
-.team-board-page.tv-mode .team-board-item.current .team-board-item-name,
-body.detached-tv .team-board-item.current .team-board-item-name{color:#0a3b21 !important}
-.team-board-page.tv-mode .team-board-circuit-toggle,
-body.detached-tv .team-board-circuit-toggle{
-  border-color:#d4af37 !important;
-  color:#1c6b3c !important;
-}
-.team-board-page.tv-mode .team-board-focus-name,
-body.detached-tv .team-board-focus-name{color:#f6e6b8 !important}
-.team-board-page.tv-mode .team-board-focus-sub,
-body.detached-tv .team-board-focus-sub{color:#e7d9b6 !important}
-.team-board-page.tv-mode .team-board-focus-exit,
-body.detached-tv .team-board-focus-exit{border-color:#d4af37 !important;color:#1c6b3c !important}
-.team-board-page.tv-mode .team-board-focus-row,
-body.detached-tv .team-board-focus-row{border-color:#c9dfce !important}
-.team-board-page.tv-mode .tbf-num,
-body.detached-tv .tbf-num{background:#1c6b3c !important}
-.team-board-page.tv-mode .tbf-reps,
-body.detached-tv .tbf-reps{color:#a41e22 !important}
-/* gentle falling-snow overlay, decorative only */
-.team-board-page.tv-mode::after,
-body.detached-tv::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:5;
-  pointer-events:none;
-  background-image:radial-gradient(circle,#fff 1.6px,transparent 1.8px);
+  position:fixed;inset:0;z-index:5;pointer-events:none;
+  background-image:radial-gradient(circle,var(--tv-dot,#fff) 1.6px,transparent 1.8px);
   background-size:130px 130px;
   opacity:.5;
-  animation:tv-snowfall 14s linear infinite;
+  animation:tv-theme-drift 14s linear infinite;
 }
-@keyframes tv-snowfall{
-  from{background-position:0 -260px}
-  to{background-position:70px calc(100vh + 260px)}
+@keyframes tv-theme-drift{from{background-position:0 -260px}to{background-position:70px calc(100vh + 260px)}}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-shell{background:transparent !important;border:none !important;position:relative}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-shell::before{
+  content:"";display:block;height:10px;margin-bottom:12px;border-radius:6px;
+  background:var(--tv-stripe);box-shadow:0 2px 8px rgba(0,0,0,.35);
 }
-@media(max-width:900px){
-  .team-board-page.tv-mode .team-board-title h2::before,
-  body.detached-tv .team-board-title h2::before{content:"🎄 "}
-}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-top{background:linear-gradient(135deg,var(--tv-top1),var(--tv-top2)) !important;border:2px solid var(--tv-accent) !important;color:#fff}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-title h2{color:var(--tv-title) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-title .team-slogan{color:var(--tv-title-sub) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-date{color:var(--tv-title) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-goal{background:linear-gradient(135deg,var(--tv-goal1),var(--tv-goal2)) !important;border:2px solid var(--tv-accent) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-item{background:var(--tv-card) !important;border-color:var(--tv-item-border) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-item.completed,
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-item.partial{background:var(--tv-card-dim) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-num{background:var(--tv-item-border) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-time{color:var(--tv-accent2) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-empty{background:var(--tv-card) !important;border-color:var(--tv-accent) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-item.current{border-color:var(--tv-accent2) !important;background:var(--tv-current-bg) !important;box-shadow:0 0 0 7px var(--tv-current-glow),0 14px 34px rgba(0,0,0,.35) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-item.current::before{background:var(--tv-accent2) !important;border:2px solid var(--tv-accent)}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-item.current .team-board-item-name{color:var(--tv-current-name) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-circuit-toggle{border-color:var(--tv-accent) !important;color:var(--tv-item-border) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-focus-name{color:var(--tv-title) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-focus-sub{color:var(--tv-title-sub) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-focus-exit{border-color:var(--tv-accent) !important;color:var(--tv-item-border) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-focus-row{border-color:var(--tv-item-border-light) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .tbf-num{background:var(--tv-item-border) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .tbf-reps{color:var(--tv-accent2) !important}
+
+/* ---- Fall ---- */
+#teamBoardPage.tv-mode[data-tv-theme="fall"]{--tv-bg1:#5c2e0e;--tv-bg2:#3d1d08;--tv-bg3:#6b3a12;--tv-top1:#8a3b12;--tv-top2:#5c260a;--tv-accent:#d98324;--tv-accent2:#b5461b;--tv-goal1:#a1531a;--tv-goal2:#6b350f;--tv-item-border:#a1531a;--tv-item-border-light:#e8c9a0;--tv-card:#fff8ef;--tv-card-dim:#f1e6d6;--tv-current-bg:#fff3e0;--tv-current-glow:rgba(181,70,27,.25);--tv-current-name:#5c260a;--tv-title:#ffe4c2;--tv-title-sub:#f3caa0;--tv-dot:#e8a33d;--tv-stripe:repeating-linear-gradient(45deg,#b5461b 0 20px,#d98324 20px 40px)}
+#teamBoardPage.tv-mode[data-tv-theme="fall"] .team-board-title h2::before{content:"🍂 "}
+#teamBoardPage.tv-mode[data-tv-theme="fall"] .team-board-title h2::after{content:" 🍁"}
+#teamBoardPage.tv-mode[data-tv-theme="fall"] .team-board-item.current::before{content:"🍁 CURRENT"}
+
+/* ---- Winter ---- */
+#teamBoardPage.tv-mode[data-tv-theme="winter"]{--tv-bg1:#0d2438;--tv-bg2:#081826;--tv-bg3:#123252;--tv-top1:#1c4f7c;--tv-top2:#0d2438;--tv-accent:#bfe4ff;--tv-accent2:#1c6fa8;--tv-goal1:#1c4f7c;--tv-goal2:#0d2438;--tv-item-border:#2a72a8;--tv-item-border-light:#cfe8f7;--tv-card:#f5fbff;--tv-card-dim:#e7f1f7;--tv-current-bg:#eaf7ff;--tv-current-glow:rgba(42,114,168,.25);--tv-current-name:#0d2438;--tv-title:#eaf6ff;--tv-title-sub:#c8e6f7;--tv-dot:#ffffff;--tv-stripe:repeating-linear-gradient(45deg,#bfe4ff 0 20px,#1c4f7c 20px 40px)}
+#teamBoardPage.tv-mode[data-tv-theme="winter"] .team-board-title h2::before{content:"❄️ "}
+#teamBoardPage.tv-mode[data-tv-theme="winter"] .team-board-title h2::after{content:" ⛄"}
+#teamBoardPage.tv-mode[data-tv-theme="winter"] .team-board-item.current::before{content:"❄️ CURRENT"}
+
+/* ---- Valentine's Day ---- */
+#teamBoardPage.tv-mode[data-tv-theme="valentine"]{--tv-bg1:#5c0a24;--tv-bg2:#3d0618;--tv-bg3:#7a1030;--tv-top1:#c2185b;--tv-top2:#7a1030;--tv-accent:#ffd1dc;--tv-accent2:#c2185b;--tv-goal1:#a8134a;--tv-goal2:#6d0c30;--tv-item-border:#c2185b;--tv-item-border-light:#ffd1dc;--tv-card:#fff5f8;--tv-card-dim:#fbe6ec;--tv-current-bg:#fff0f5;--tv-current-glow:rgba(194,24,91,.25);--tv-current-name:#7a1030;--tv-title:#ffd9e6;--tv-title-sub:#ffc2d6;--tv-dot:#ff9ebb;--tv-stripe:repeating-linear-gradient(45deg,#c2185b 0 20px,#ff8fab 20px 40px)}
+#teamBoardPage.tv-mode[data-tv-theme="valentine"] .team-board-title h2::before{content:"💕 "}
+#teamBoardPage.tv-mode[data-tv-theme="valentine"] .team-board-title h2::after{content:" 💕"}
+#teamBoardPage.tv-mode[data-tv-theme="valentine"] .team-board-item.current::before{content:"💘 CURRENT"}
+
+/* ---- Bi-State ---- */
+#teamBoardPage.tv-mode[data-tv-theme="bistate"]{--tv-bg1:#101820;--tv-bg2:#0a0f14;--tv-bg3:#161f2a;--tv-top1:#1f2937;--tv-top2:#101820;--tv-accent:#c9a24b;--tv-accent2:#741d2a;--tv-goal1:#1f2937;--tv-goal2:#0a0f14;--tv-item-border:#374151;--tv-item-border-light:#d8dde5;--tv-card:#f7f7f8;--tv-card-dim:#e9eaec;--tv-current-bg:#fff7f0;--tv-current-glow:rgba(116,29,42,.25);--tv-current-name:#101820;--tv-title:#e8e8ea;--tv-title-sub:#c9a24b;--tv-dot:#c9a24b;--tv-stripe:repeating-linear-gradient(45deg,#741d2a 0 20px,#c9a24b 20px 40px)}
+#teamBoardPage.tv-mode[data-tv-theme="bistate"] .team-board-title h2::before{content:"🤼‍♀️ "}
+#teamBoardPage.tv-mode[data-tv-theme="bistate"] .team-board-title h2::after{content:" 🏆"}
+#teamBoardPage.tv-mode[data-tv-theme="bistate"] .team-board-item.current::before{content:"🏆 CURRENT"}
+
+/* ---- State Tournament ---- */
+#teamBoardPage.tv-mode[data-tv-theme="state"]{--tv-bg1:#000000;--tv-bg2:#0d0d0d;--tv-bg3:#141414;--tv-top1:#1a1a1a;--tv-top2:#000000;--tv-accent:#ffd700;--tv-accent2:#b8860b;--tv-goal1:#1a1a1a;--tv-goal2:#000000;--tv-item-border:#b8860b;--tv-item-border-light:#f0dfa0;--tv-card:#fffdf5;--tv-card-dim:#efe9d8;--tv-current-bg:#fff9e6;--tv-current-glow:rgba(184,134,11,.3);--tv-current-name:#1a1a1a;--tv-title:#ffd700;--tv-title-sub:#f0dfa0;--tv-dot:#ffd700;--tv-stripe:repeating-linear-gradient(45deg,#ffd700 0 20px,#000 20px 40px)}
+#teamBoardPage.tv-mode[data-tv-theme="state"] .team-board-title h2::before{content:"🏆 "}
+#teamBoardPage.tv-mode[data-tv-theme="state"] .team-board-title h2::after{content:" ⭐"}
+#teamBoardPage.tv-mode[data-tv-theme="state"] .team-board-item.current::before{content:"⭐ CURRENT"}
+
+/* ---- Thanksgiving ---- */
+#teamBoardPage.tv-mode[data-tv-theme="thanksgiving"]{--tv-bg1:#4a1f0d;--tv-bg2:#2e1207;--tv-bg3:#5c2810;--tv-top1:#7a2f10;--tv-top2:#4a1f0d;--tv-accent:#e8a33d;--tv-accent2:#8a3410;--tv-goal1:#6b350f;--tv-goal2:#3d1d08;--tv-item-border:#8a3410;--tv-item-border-light:#e8c9a0;--tv-card:#fff8ef;--tv-card-dim:#f1e2cf;--tv-current-bg:#fff2df;--tv-current-glow:rgba(138,52,16,.25);--tv-current-name:#3d1d08;--tv-title:#ffe0b8;--tv-title-sub:#f0c98f;--tv-dot:#e8a33d;--tv-stripe:repeating-linear-gradient(45deg,#8a3410 0 20px,#e8a33d 20px 40px)}
+#teamBoardPage.tv-mode[data-tv-theme="thanksgiving"] .team-board-title h2::before{content:"🦃 "}
+#teamBoardPage.tv-mode[data-tv-theme="thanksgiving"] .team-board-title h2::after{content:" 🍂"}
+#teamBoardPage.tv-mode[data-tv-theme="thanksgiving"] .team-board-item.current::before{content:"🦃 CURRENT"}
+
+/* ---- Christmas ---- */
+#teamBoardPage.tv-mode[data-tv-theme="christmas"]{--tv-bg1:#0b3d24;--tv-bg2:#0a2e1c;--tv-bg3:#123c22;--tv-top1:#7a1420;--tv-top2:#4d0d15;--tv-accent:#d4af37;--tv-accent2:#a41e22;--tv-goal1:#0f5c34;--tv-goal2:#0a3b21;--tv-item-border:#1c6b3c;--tv-item-border-light:#c9dfce;--tv-card:#fffdf7;--tv-card-dim:#f3f2ea;--tv-current-bg:#fff7f0;--tv-current-glow:rgba(164,30,34,.22);--tv-current-name:#0a3b21;--tv-title:#f6e6b8;--tv-title-sub:#f0d9a8;--tv-dot:#ffffff;--tv-stripe:repeating-linear-gradient(45deg,#c81d25 0 20px,#f5f5f5 20px 40px)}
+#teamBoardPage.tv-mode[data-tv-theme="christmas"] .team-board-title h2::before{content:"🎄 "}
+#teamBoardPage.tv-mode[data-tv-theme="christmas"] .team-board-title h2::after{content:" 🎄"}
+#teamBoardPage.tv-mode[data-tv-theme="christmas"] .team-board-item.current::before{content:"🎁 CURRENT"}
+
+/* ---- Spring ---- */
+#teamBoardPage.tv-mode[data-tv-theme="spring"]{--tv-bg1:#2f6b3f;--tv-bg2:#1e4a2b;--tv-bg3:#3d7a4d;--tv-top1:#4a8f5c;--tv-top2:#2f6b3f;--tv-accent:#ffd1e8;--tv-accent2:#2f6b3f;--tv-goal1:#4a8f5c;--tv-goal2:#2f6b3f;--tv-item-border:#4a8f5c;--tv-item-border-light:#cdeed6;--tv-card:#f6fff8;--tv-card-dim:#e6f5ea;--tv-current-bg:#f0fff2;--tv-current-glow:rgba(74,143,92,.25);--tv-current-name:#1e4a2b;--tv-title:#f0fff2;--tv-title-sub:#d6f2dc;--tv-dot:#ffd1e8;--tv-stripe:repeating-linear-gradient(45deg,#ffd1e8 0 20px,#4a8f5c 20px 40px)}
+#teamBoardPage.tv-mode[data-tv-theme="spring"] .team-board-title h2::before{content:"🌸 "}
+#teamBoardPage.tv-mode[data-tv-theme="spring"] .team-board-title h2::after{content:" 🌱"}
+#teamBoardPage.tv-mode[data-tv-theme="spring"] .team-board-item.current::before{content:"🌸 CURRENT"}
+
+/* ---- Meet Day ---- */
+#teamBoardPage.tv-mode[data-tv-theme="meetday"]{--tv-bg1:#3f0b1a;--tv-bg2:#2a0611;--tv-bg3:#55131d;--tv-top1:#741d2a;--tv-top2:#3f0b1a;--tv-accent:#ffffff;--tv-accent2:#741d2a;--tv-goal1:#741d2a;--tv-goal2:#3f0b1a;--tv-item-border:#741d2a;--tv-item-border-light:#e6cdd5;--tv-card:#ffffff;--tv-card-dim:#f1e6ea;--tv-current-bg:#fff5f7;--tv-current-glow:rgba(116,29,42,.3);--tv-current-name:#3f0b1a;--tv-title:#ffffff;--tv-title-sub:#f0dde3;--tv-dot:#ffffff;--tv-stripe:repeating-linear-gradient(45deg,#741d2a 0 20px,#fff 20px 40px)}
+#teamBoardPage.tv-mode[data-tv-theme="meetday"] .team-board-title h2::before{content:"🔥 "}
+#teamBoardPage.tv-mode[data-tv-theme="meetday"] .team-board-title h2::after{content:" 🏁"}
+#teamBoardPage.tv-mode[data-tv-theme="meetday"] .team-board-item.current::before{content:"🔥 CURRENT"}
+
+/* ---- Halloween ---- */
+#teamBoardPage.tv-mode[data-tv-theme="halloween"]{--tv-bg1:#0d0714;--tv-bg2:#050308;--tv-bg3:#1a0d26;--tv-top1:#3d1a5c;--tv-top2:#170a24;--tv-accent:#ff8c1a;--tv-accent2:#8a3fc9;--tv-goal1:#3d1a5c;--tv-goal2:#170a24;--tv-item-border:#ff8c1a;--tv-item-border-light:#e8c9a0;--tv-card:#fff8ef;--tv-card-dim:#efe4d4;--tv-current-bg:#fff2e0;--tv-current-glow:rgba(138,63,201,.3);--tv-current-name:#170a24;--tv-title:#ff8c1a;--tv-title-sub:#c9a0f0;--tv-dot:#ff8c1a;--tv-stripe:repeating-linear-gradient(45deg,#ff8c1a 0 20px,#0d0714 20px 40px)}
+#teamBoardPage.tv-mode[data-tv-theme="halloween"] .team-board-title h2::before{content:"🎃 "}
+#teamBoardPage.tv-mode[data-tv-theme="halloween"] .team-board-title h2::after{content:" 👻"}
+#teamBoardPage.tv-mode[data-tv-theme="halloween"] .team-board-item.current::before{content:"🎃 CURRENT"}

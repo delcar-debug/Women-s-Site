@@ -562,7 +562,37 @@ function openDetachedTeamBoard(){
 }
 const teamBoardChannel=('BroadcastChannel' in window)?new BroadcastChannel('holmen-team-board-sync'):null;
 function broadcastTeamBoard(){try{teamBoardChannel?.postMessage({type:'refresh',at:Date.now()})}catch{}}
+const TV_THEME_KEY='wpp-tv-theme';
+function loadTvTheme(){try{return localStorage.getItem(TV_THEME_KEY)||''}catch{return''}}
+function applyTvTheme(theme){
+  const page=document.getElementById('teamBoardPage');
+  if(page)page.dataset.tvTheme=theme||'';
+  document.querySelectorAll('.tv-theme-menu [data-tv-theme-choice]').forEach(btn=>{
+    btn.classList.toggle('active',(btn.dataset.tvThemeChoice||'')===(theme||''));
+  });
+}
+function setTvTheme(theme){
+  try{localStorage.setItem(TV_THEME_KEY,theme||'')}catch{}
+  applyTvTheme(theme);
+  broadcastTeamBoard();
+}
+function closeTvThemeMenu(){document.getElementById('tvThemeMenu')?.setAttribute('hidden','')}
+(function(){
+  const btn=document.getElementById('tvThemeBtn');
+  const menu=document.getElementById('tvThemeMenu');
+  if(!btn||!menu)return;
+  btn.addEventListener('click',e=>{
+    e.stopPropagation();
+    menu.hidden?menu.removeAttribute('hidden'):menu.setAttribute('hidden','');
+  });
+  menu.querySelectorAll('[data-tv-theme-choice]').forEach(item=>{
+    item.addEventListener('click',()=>{setTvTheme(item.dataset.tvThemeChoice);closeTvThemeMenu()});
+  });
+  document.addEventListener('click',e=>{if(!menu.hidden&&!menu.contains(e.target)&&e.target!==btn)closeTvThemeMenu()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTvThemeMenu()});
+})();
 function refreshTeamBoardFromStorage(){
+  applyTvTheme(loadTvTheme());
   try{
     const d=JSON.parse(localStorage.getItem('wpp-v2')||'null');
     if(d){
@@ -583,7 +613,7 @@ function refreshTeamBoardFromStorage(){
   }catch{}
 }
 teamBoardChannel?.addEventListener('message',e=>{if(e.data?.type==='refresh')refreshTeamBoardFromStorage()});
-window.addEventListener('storage',e=>{if(e.key==='wpp-v2'||e.key==='wpp-live-session')refreshTeamBoardFromStorage()});
+window.addEventListener('storage',e=>{if(e.key==='wpp-v2'||e.key==='wpp-live-session'||e.key===TV_THEME_KEY)refreshTeamBoardFromStorage()});
 function blockTotals(blocks,useActual=false){const totals=Object.fromEntries(CATEGORIES.map(c=>[c.id,0]));(blocks||[]).forEach(b=>{totals[categoryInfo(b.category).id]+=Math.max(0,Number(b.minutes)||0)});return totals}
 function renderBreakdownPair(totals,overallId,techId,emptyText){const grand=Object.values(totals).reduce((a,b)=>a+b,0);$(overallId).innerHTML=overallBreakdownHtml(totals,grand,emptyText);$(techId).innerHTML=techniqueBreakdownHtml(totals,emptyText)}
 function populateDataArchiveSelect(){const sel=$('dataArchiveSelect');if(!sel)return;const current=sel.value;const sorted=[...(state.archives||[])].sort((a,b)=>new Date(b.archivedAt||b.date||0)-new Date(a.archivedAt||a.date||0));sel.innerHTML='<option value="">Choose an archived practice…</option>'+sorted.map(a=>`<option value="${a.id}">${esc(archiveDateLabel(a))}${a.goal?' — '+esc(a.goal):''}</option>`).join('');if(sorted.some(a=>a.id===current))sel.value=current}
@@ -1095,7 +1125,7 @@ apply(mq);
 mq.addEventListener('change',apply);
 }
 if(document.readyState==='complete'){initCoachPanels()}else{window.addEventListener('load',initCoachPanels)}
-if(el.overallCoachNotes)el.overallCoachNotes.addEventListener('input',()=>{state.overallCoachNotes=el.overallCoachNotes.value;save()});load();if(el.overallCoachNotes)el.overallCoachNotes.value=state.overallCoachNotes||'';render();renderLibrary();checkUnratedPractices();resetInterval();restoreLiveState();ensurePracticeTicker();bootSpotify();if(['1','team-board'].includes(new URLSearchParams(location.search).get('tv'))){document.body.classList.add('detached-tv');showAppPage('team');el.teamBoardPage.classList.add('tv-mode');document.title='Holmen Women’s Wrestling — TV View';refreshTeamBoardFromStorage();}document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.practiceActive)saveLiveState()});
+if(el.overallCoachNotes)el.overallCoachNotes.addEventListener('input',()=>{state.overallCoachNotes=el.overallCoachNotes.value;save()});load();if(el.overallCoachNotes)el.overallCoachNotes.value=state.overallCoachNotes||'';render();renderLibrary();checkUnratedPractices();resetInterval();restoreLiveState();ensurePracticeTicker();bootSpotify();applyTvTheme(loadTvTheme());if(['1','team-board'].includes(new URLSearchParams(location.search).get('tv'))){document.body.classList.add('detached-tv');showAppPage('team');el.teamBoardPage.classList.add('tv-mode');document.title='Holmen Women’s Wrestling — TV View';refreshTeamBoardFromStorage();}document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.practiceActive)saveLiveState()});
 document.querySelectorAll('#practiceRatingRow .rating-btn').forEach(b=>b.onclick=()=>{state.practiceRating=b.dataset.rating;renderRatingButtons();save()});
 document.querySelectorAll('#teamCultureRatingRow .rating-btn').forEach(b=>b.onclick=()=>{state.teamCultureRating=b.dataset.rating;renderCultureButtons();save()});
 if(el.practiceType)el.practiceType.onchange=()=>{renderPracticeTypeHints();save()};
