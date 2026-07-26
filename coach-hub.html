@@ -345,7 +345,7 @@ Coach Carl</div>
     </div>
   </section>
 
-  <div class="layout">
+  <div class="layout" id="mainHandbookLayout">
     <aside class="sidebar">
       <div class="sidebar-top">
         <h2>Sections</h2>
@@ -356,8 +356,6 @@ Coach Carl</div>
           <option value="leadership">03 — Leadership Keys</option>
           <option value="feedback">04 — Giving Good Feedback</option>
           <option value="improve">05 — Improve as Coaches</option>
-          <option value="technique">06 — Technique Philosophy</option>
-          <option value="technique-library">07 — Technique Library</option>
         </select>
       </div>
       <nav class="toc">
@@ -367,8 +365,6 @@ Coach Carl</div>
         <button class="toc-link" data-target="practice-types"><span>04</span>Learning vs. Performance Practice</button>
         <button class="toc-link" data-target="feedback"><span>05</span>Giving Good Feedback</button>
         <button class="toc-link" data-target="improve"><span>06</span>Improve as Coaches</button>
-        <button class="toc-link" data-target="technique"><span>07</span>Technique Philosophy</button>
-        <button class="toc-link" data-target="technique-library"><span>08</span>Technique Library</button>
       </nav>
     </aside>
 
@@ -531,6 +527,7 @@ Coach Carl</div>
         <h2>Improve as Coaches</h2>
         <div class="section-body">
 <p>All of our coaches work to improve, both for ourselves and for the program. Coach Carl wants to know every coach’s coaching goal(s) for each season and beyond.</p>
+<p>See our <a href="javascript:void(0)" onclick="document.querySelector('#techLayout [data-target=tech-philosophy]').click()">Technique Philosophy &amp; Library</a> section further down this page for our approach to technique and the full video library.</p>
 <h3>Resources</h3>
 <ul>
 <li><a href="https://nhsca.com/" target="_blank" rel="noopener">NHSCA (National High School Coaches Association)</a></li>
@@ -567,8 +564,42 @@ Coach Carl</div>
         </div>
       </article>
 
-      <article class="handbook-section" id="technique" data-index="6">
-        <div class="section-number">07</div>
+
+      <div class="pagination">
+        <button id="prevButton">← Previous</button>
+        <button id="nextButton">Next →</button>
+      </div>
+
+      <div class="note-card">More coach resources — practice plans, roster tools, and more — will be added here next. Let Coach Carl know what should go here.</div>
+    </div>
+  </div>
+
+  <section class="technique-hub-intro" style="max-width:900px;margin:48px auto 0;text-align:center;padding:0 20px 8px">
+    <h2 style="margin:0 0 10px">Technique Philosophy &amp; Library</h2>
+    <p style="color:var(--muted,#6b6b70)">Our approach to technique, plus the full library of instructional videos by position — kept separate from the handbook above.</p>
+  </section>
+
+  <div class="layout" id="techLayout">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <h2>Sections</h2>
+        <input id="techSearchInput" class="search" type="search" placeholder="Search technique…">
+        <select id="techMobileToc" class="mobile-toc" aria-label="Choose technique section">
+          <option value="tech-philosophy">01 — Technique Philosophy</option>
+          <option value="tech-library">02 — Technique Library</option>
+        </select>
+      </div>
+      <nav class="toc">
+        <button class="toc-link active" data-target="tech-philosophy"><span>01</span>Technique Philosophy</button>
+        <button class="toc-link" data-target="tech-library"><span>02</span>Technique Library</button>
+      </nav>
+    </aside>
+
+    <div class="content">
+      <div id="techSearchResults" class="search-results"></div>
+
+      <article class="handbook-section active" id="tech-philosophy" data-index="0">
+        <div class="section-number">01</div>
         <h2>Technique Philosophy</h2>
         <div class="section-body">
 <p><strong>1) Be great at a few things rather than average (or worse) at a lot of things.</strong></p>
@@ -623,8 +654,8 @@ Coach Carl</div>
         </div>
       </article>
 
-      <article class="handbook-section" id="technique-library" data-index="7">
-        <div class="section-number">08</div>
+      <article class="handbook-section" id="tech-library" data-index="1">
+        <div class="section-number">02</div>
         <h2>Technique Library</h2>
         <div class="section-body">
 <p>The full technique library used across our program — organized by position, with links to instructional videos for each technique. Click any linked technique name to watch the video.</p>
@@ -948,25 +979,25 @@ Coach Carl</div>
 <ul>
 <li>Tight waist tilt
 </li>
-</ul>        </div>
+</ul>
+        </div>
       </article>
 
       <div class="pagination">
-        <button id="prevButton">← Previous</button>
-        <button id="nextButton">Next →</button>
+        <button id="techPrevButton">← Previous</button>
+        <button id="techNextButton">Next →</button>
       </div>
-
-      <div class="note-card">More coach resources — practice plans, roster tools, and more — will be added here next. Let Coach Carl know what should go here.</div>
     </div>
   </div>
+
 </section>
 </main>
 
 <script>
 const PASSCODE = "illhaveanother";
 const SESSION_KEY = "holmenCoachHubAccess";
-const sections = ['expectations', 'shared', 'leadership', 'practice-types', 'feedback', 'improve', 'technique', 'technique-library'];
-const titles = ['Head vs Assistant Coach Expectations', 'Shared Expectations', 'Leadership Keys', 'Learning vs. Performance Practice', 'Giving Good Feedback', 'Improve as Coaches', 'Technique Philosophy', 'Technique Library'];
+const sections = ['expectations', 'shared', 'leadership', 'practice-types', 'feedback', 'improve'];
+const titles = ['Head vs Assistant Coach Expectations', 'Shared Expectations', 'Leadership Keys', 'Learning vs. Performance Practice', 'Giving Good Feedback', 'Improve as Coaches'];
 let currentIndex = 0;
 
 const login = document.getElementById("login");
@@ -975,8 +1006,9 @@ const logout = document.getElementById("logout");
 const form = document.getElementById("loginForm");
 const input = document.getElementById("passcode");
 const error = document.getElementById("error");
-const tocLinks = [...document.querySelectorAll(".toc-link")];
-const handbookSections = [...document.querySelectorAll(".handbook-section")];
+const mainHandbookLayout = document.getElementById("mainHandbookLayout");
+const tocLinks = [...mainHandbookLayout.querySelectorAll(".toc-link")];
+const handbookSections = [...mainHandbookLayout.querySelectorAll(".handbook-section")];
 const prevButton = document.getElementById("prevButton");
 const nextButton = document.getElementById("nextButton");
 const mobileToc = document.getElementById("mobileToc");
@@ -1048,7 +1080,7 @@ searchInput.addEventListener("input", () => {
     : `<strong>No sections found for “${searchInput.value}”.</strong>`;
 
   searchResults.style.display = "block";
-  document.querySelectorAll(".search-result").forEach(btn =>
+  searchResults.querySelectorAll(".search-result").forEach(btn =>
     btn.addEventListener("click", () => {
       showSection(Number(btn.dataset.index));
       searchInput.value = "";
@@ -1059,6 +1091,69 @@ searchInput.addEventListener("input", () => {
 if (sessionStorage.getItem(SESSION_KEY) === "granted") showApp();
 showSection(0, false);
 window.scrollTo(0, 0);
+
+(function(){
+  const techSections = ['tech-philosophy', 'tech-library'];
+  const techTitles = ['Technique Philosophy', 'Technique Library'];
+  let techIndex = 0;
+  const techLayout = document.getElementById('techLayout');
+  if (!techLayout) return;
+  const techTocLinks = [...techLayout.querySelectorAll('.toc-link')];
+  const techHandbookSections = [...techLayout.querySelectorAll('.handbook-section')];
+  const techPrevButton = document.getElementById('techPrevButton');
+  const techNextButton = document.getElementById('techNextButton');
+  const techMobileToc = document.getElementById('techMobileToc');
+  const techSearchInput = document.getElementById('techSearchInput');
+  const techSearchResults = document.getElementById('techSearchResults');
+
+  function techShowSection(index, scroll = true) {
+    techIndex = Math.max(0, Math.min(index, techSections.length - 1));
+    techHandbookSections.forEach((el, i) => el.classList.toggle('active', i === techIndex));
+    techTocLinks.forEach((el, i) => el.classList.toggle('active', i === techIndex));
+    techMobileToc.value = techSections[techIndex];
+    techPrevButton.disabled = techIndex === 0;
+    techNextButton.disabled = techIndex === techSections.length - 1;
+    techSearchResults.style.display = 'none';
+    if (scroll) {
+      const headerHeight = document.querySelector('.header').offsetHeight;
+      const layoutTop = techLayout.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: layoutTop - headerHeight - 20, behavior: 'smooth' });
+    }
+  }
+
+  techTocLinks.forEach((link, index) => link.addEventListener('click', () => techShowSection(index)));
+  techMobileToc.addEventListener('change', () => techShowSection(techSections.indexOf(techMobileToc.value)));
+  techPrevButton.addEventListener('click', () => techShowSection(techIndex - 1));
+  techNextButton.addEventListener('click', () => techShowSection(techIndex + 1));
+
+  techSearchInput.addEventListener('input', () => {
+    const q = techSearchInput.value.trim().toLowerCase();
+    if (q.length < 2) {
+      techSearchResults.style.display = 'none';
+      return;
+    }
+    const matches = techHandbookSections.map((el, i) => ({
+      index: i,
+      text: el.innerText.toLowerCase()
+    })).filter(item => item.text.includes(q));
+
+    techSearchResults.innerHTML = matches.length
+      ? `<strong>${matches.length} section${matches.length === 1 ? '' : 's'} found</strong>` +
+        matches.map(m => `<button class="search-result" data-index="${m.index}"><strong>${techTitles[m.index]}</strong><br>Contains “${techSearchInput.value}”</button>`).join('')
+      : `<strong>No sections found for “${techSearchInput.value}”.</strong>`;
+
+    techSearchResults.style.display = 'block';
+    techSearchResults.querySelectorAll('.search-result').forEach(btn =>
+      btn.addEventListener('click', () => {
+        techShowSection(Number(btn.dataset.index));
+        techSearchInput.value = '';
+      })
+    );
+  });
+
+  techShowSection(0, false);
+})();
+
 </script>
 </body>
 </html>
