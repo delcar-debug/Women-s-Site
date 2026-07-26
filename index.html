@@ -4,6 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Holmen Women's Wrestling — For Her. Team news, schedule, coaches, records, photos, and program information." />
+  <link rel="canonical" href="https://holmenwomenswrestlingsite.netlify.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Holmen Women's Wrestling">
+  <meta property="og:description" content="Holmen Women's Wrestling — For Her. Team news, schedule, coaches, records, photos, and program information.">
+  <meta property="og:url" content="https://holmenwomenswrestlingsite.netlify.app/">
+  <meta property="og:image" content="https://holmenwomenswrestlingsite.netlify.app/assets/images/team-photo.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Holmen Women's Wrestling">
+  <meta name="twitter:description" content="Holmen Women's Wrestling — For Her. Team news, schedule, coaches, records, photos, and program information.">
+  <meta name="twitter:image" content="https://holmenwomenswrestlingsite.netlify.app/assets/images/team-photo.jpg">
   <title>Holmen Women's Wrestling</title>
   <style>
     :root {
@@ -253,10 +263,16 @@
       background: #fff;
       border-top: 1px solid #eee;
       padding: 10px 20px 22px;
-      max-height: calc(100vh - 78px);
-      max-height: calc(100dvh - 78px);
+      position: fixed;
+      top: 78px;
+      left: 0;
+      right: 0;
+      height: calc(100vh - 78px);
+      height: calc(100dvh - 78px);
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      z-index: 49;
     }
 
     .mobile-nav-panel.open { display: flex; }
@@ -873,6 +889,34 @@
     .coach-group + .coach-group { margin-top: 28px; }
     @media (max-width: 1000px) { .coach-grid-home { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 560px) { .coach-grid-home { grid-template-columns: 1fr; } }
+    .site-search { position: relative; display: flex; align-items: center; }
+    .site-search-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border);
+      background: #fff; font-size: 1rem; cursor: pointer; display: grid; place-items: center;
+      color: var(--maroon);
+    }
+    .site-search-btn:hover { background: var(--light); }
+    .site-search-panel {
+      position: absolute; top: calc(100% + 14px); right: 0; z-index: 60;
+      width: 300px; padding: 10px; border: 1px solid var(--border); border-radius: 15px;
+      background: #fff; box-shadow: 0 18px 45px rgba(20, 12, 15, .14);
+    }
+    .site-search-panel[hidden] { display: none; }
+    .site-search-input {
+      width: 100%; border: 1px solid var(--border); border-radius: 999px;
+      padding: 10px 14px; font: inherit; font-size: .92rem;
+    }
+    .site-search-input:focus { outline: 2px solid rgba(109, 23, 48, .25); border-color: var(--maroon); }
+    .site-search-results { display: grid; gap: 2px; margin-top: 8px; max-height: 320px; overflow-y: auto; }
+    .site-search-result {
+      display: block; text-decoration: none; color: inherit; padding: 9px 10px; border-radius: 9px;
+    }
+    .site-search-result:hover, .site-search-result.active { background: var(--light); }
+    .site-search-result strong { display: block; font-size: .92rem; color: var(--maroon); }
+    .site-search-result span { display: block; font-size: .78rem; color: var(--muted); margin-top: 2px; }
+    .site-search-empty { padding: 10px; color: var(--muted); font-size: .85rem; text-align: center; }
+    .site-search-mobile { padding: 4px 4px 12px; }
+    .site-search-mobile .site-search-results { max-height: 260px; }
     .mission { background: var(--light); }
 
     .mission-grid {
@@ -1135,6 +1179,13 @@
         </div>
         <a href="#join">Join</a>
         <a href="#newsletter">Newsletter</a>
+        <div class="site-search">
+          <button class="site-search-btn" id="siteSearchBtn" type="button" aria-label="Search the site" aria-haspopup="true">🔍</button>
+          <div class="site-search-panel" id="siteSearchPanel" hidden>
+            <input type="text" class="site-search-input" id="siteSearchInput" placeholder="Search the site…" autocomplete="off">
+            <div class="site-search-results" id="siteSearchResults"></div>
+          </div>
+        </div>
         <a class="button" href="team-hub.html">Team Hub</a>
         <a class="button secondary" href="coach-hub.html">Coach Hub</a>
       </div>
@@ -1143,6 +1194,10 @@
     </nav>
 
     <div class="mobile-nav-panel" id="mobileNavPanel">
+      <div class="site-search site-search-mobile">
+        <input type="text" class="site-search-input" id="siteSearchInputMobile" placeholder="Search the site…" autocomplete="off">
+        <div class="site-search-results" id="siteSearchResultsMobile"></div>
+      </div>
       <a href="#top">Home</a>
       <a href="#quotes">About</a>
       <a href="calendar.html">Calendar</a>
@@ -1688,12 +1743,14 @@
     panel.classList.remove("open");
     btn.setAttribute("aria-expanded", "false");
     btn.textContent = "☰";
+    document.body.style.overflow = "";
   }
 
   function openMenu() {
     panel.classList.add("open");
     btn.setAttribute("aria-expanded", "true");
     btn.textContent = "✕";
+    document.body.style.overflow = "hidden";
   }
 
   btn.addEventListener("click", function () {
@@ -1712,6 +1769,78 @@
   window.addEventListener("resize", function () {
     if (window.innerWidth > 980) closeMenu();
   });
+})();
+
+(function () {
+  var SITE_INDEX = [
+    { title: "Home", url: "#top", desc: "Homepage hero and overview", keywords: "home top" },
+    { title: "About / In Their Words", url: "#quotes", desc: "Wrestler and parent testimonials", keywords: "about quotes testimonials reviews" },
+    { title: "Meet the Coaches", url: "#coaches", desc: "Coaching staff, roles, and awards", keywords: "coaches staff carl deluca kelsie speltz joey perrigo joe diva jozie collins steve eggerichs ross needham evelyn vetsch awards coach of the year" },
+    { title: "Our Mission", url: "#pillars", desc: "Program mission statement and pillars", keywords: "mission pillars values fun ambition leadership" },
+    { title: "Join the Team", url: "#join", desc: "How to join / new wrestler FAQ", keywords: "join sign up new wrestler faq" },
+    { title: "Newsletter", url: "#newsletter", desc: "Sign up for team updates", keywords: "newsletter email signup subscribe" },
+    { title: "Calendar", url: "calendar.html", desc: "Practice schedule, meets, and events", keywords: "calendar schedule meets events practice" },
+    { title: "Recaps", url: "recaps.html", desc: "Meet recaps and season highlights", keywords: "recaps blog posts news highlights" },
+    { title: "Timeline", url: "timeline.html", desc: "Program history and milestones", keywords: "timeline history milestones herstory" },
+    { title: "Past Season Results", url: "results.html", desc: "Match history and season results", keywords: "results scores past seasons matches" },
+    { title: "Stats, Records & Awards", url: "stats-records.html", desc: "Career leaders, records, and awards", keywords: "stats records awards leaders wins career" },
+    { title: "Media Gallery", url: "media-gallery.html", desc: "Photos, videos, albums, senior posters", keywords: "media gallery photos videos albums senior posters season finishers" },
+    { title: "College Athletes", url: "college-athletes.html", desc: "Alumnae wrestling in college", keywords: "college athletes alumni alumnae" },
+    { title: "Women's Wrestling Resources", url: "grow-your-team.html", desc: "Resources for growing girls wrestling", keywords: "resources grow your team wrestle like a girl wwa girls advisory" },
+    { title: "New Wrestler FAQ", url: "faq.html", desc: "Answers for new wrestlers and families", keywords: "faq questions new wrestler join" },
+    { title: "Contact", url: "contact.html", desc: "Get in touch with the program", keywords: "contact email questions reach out" },
+    { title: "Team Hub", url: "team-hub.html", desc: "Wrestler and family portal", keywords: "team hub wrestler portal" },
+    { title: "Coach Hub", url: "coach-hub.html", desc: "Coach tools, roster, pillar tracking", keywords: "coach hub roster manager pillar tracking weekly update" }
+  ];
+
+  function setupSiteSearch(inputId, resultsId, panel) {
+    var input = document.getElementById(inputId);
+    var results = document.getElementById(resultsId);
+    if (!input || !results) return;
+
+    function render(query) {
+      var q = query.trim().toLowerCase();
+      if (!q) { results.innerHTML = ""; return; }
+      var matches = SITE_INDEX.filter(function (item) {
+        return (item.title + " " + item.desc + " " + item.keywords).toLowerCase().indexOf(q) !== -1;
+      }).slice(0, 8);
+      if (!matches.length) {
+        results.innerHTML = '<div class="site-search-empty">No matches. Try a different word.</div>';
+        return;
+      }
+      results.innerHTML = matches.map(function (item) {
+        return '<a class="site-search-result" href="' + item.url + '"><strong>' + item.title + '</strong><span>' + item.desc + '</span></a>';
+      }).join("");
+    }
+
+    input.addEventListener("input", function () { render(input.value); });
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        var first = results.querySelector(".site-search-result");
+        if (first) { window.location.href = first.getAttribute("href"); }
+      }
+    });
+    results.addEventListener("click", function () { if (panel) panel.hidden = true; input.value = ""; results.innerHTML = ""; });
+  }
+
+  setupSiteSearch("siteSearchInput", "siteSearchResults", document.getElementById("siteSearchPanel"));
+  setupSiteSearch("siteSearchInputMobile", "siteSearchResultsMobile", null);
+
+  var searchBtn = document.getElementById("siteSearchBtn");
+  var searchPanel = document.getElementById("siteSearchPanel");
+  if (searchBtn && searchPanel) {
+    searchBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      searchPanel.hidden = !searchPanel.hidden;
+      if (!searchPanel.hidden) document.getElementById("siteSearchInput").focus();
+    });
+    document.addEventListener("click", function (e) {
+      if (!searchPanel.hidden && !searchPanel.contains(e.target) && e.target !== searchBtn) searchPanel.hidden = true;
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") searchPanel.hidden = true;
+    });
+  }
 })();
 
 (function () {
