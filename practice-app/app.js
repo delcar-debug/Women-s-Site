@@ -564,12 +564,54 @@ const teamBoardChannel=('BroadcastChannel' in window)?new BroadcastChannel('holm
 function broadcastTeamBoard(){try{teamBoardChannel?.postMessage({type:'refresh',at:Date.now()})}catch{}}
 const TV_THEME_KEY='wpp-tv-theme';
 function loadTvTheme(){try{return localStorage.getItem(TV_THEME_KEY)||''}catch{return''}}
+const TV_THEME_MOTIFS={
+  fall:{emojis:['🍂','🍁','🍃'],motion:'tumble',count:20},
+  winter:{emojis:['❄️'],motion:'fall',count:26},
+  valentine:{emojis:['💕','💘','❤️'],motion:'rise',count:16},
+  bistate:{emojis:['⭐','🏅'],motion:'tumble',count:16},
+  state:{emojis:['⭐','🏆','🎉'],motion:'tumble',count:20},
+  thanksgiving:{emojis:['🍂','🦃'],motion:'tumble',count:14},
+  christmas:{emojis:['❄️','✨'],motion:'fall',count:24},
+  spring:{emojis:['🌸','🌼','🦋'],motion:'drift',count:18},
+  meetday:{emojis:['🔥'],motion:'flicker',count:14},
+  halloween:{emojis:['🎃','👻','🦇'],motion:'drift',count:16}
+};
+function renderTvMotifParticles(theme){
+  const layer=document.getElementById('tvMotifLayer');
+  if(!layer)return;
+  const config=TV_THEME_MOTIFS[theme];
+  if(!theme||!config){layer.dataset.motion='';layer.innerHTML='';return}
+  layer.dataset.motion=config.motion;
+  const frag=document.createDocumentFragment();
+  for(let i=0;i<config.count;i++){
+    const span=document.createElement('span');
+    span.className='tv-motif-particle';
+    span.textContent=config.emojis[Math.floor(Math.random()*config.emojis.length)];
+    const size=(config.motion==='flicker'?1.1:0.9)+Math.random()*1.3;
+    span.style.fontSize=size.toFixed(2)+'rem';
+    span.style.left=Math.round(Math.random()*100)+'%';
+    const duration=(config.motion==='flicker'?1.4:8)+Math.random()*(config.motion==='flicker'?1.6:10);
+    span.style.animationDuration=duration.toFixed(2)+'s';
+    span.style.animationDelay=(Math.random()*-duration).toFixed(2)+'s';
+    if(config.motion==='flicker'){
+      span.style.bottom=Math.round(Math.random()*8)+'%';
+      span.style.left=Math.round(10+Math.random()*80)+'%';
+    }else{
+      span.style.top='-12vh';
+    }
+    frag.appendChild(span);
+  }
+  layer.innerHTML='';
+  layer.appendChild(frag);
+}
+let lastAppliedTvTheme=null;
 function applyTvTheme(theme){
   const page=document.getElementById('teamBoardPage');
   if(page)page.dataset.tvTheme=theme||'';
   document.querySelectorAll('.tv-theme-menu [data-tv-theme-choice]').forEach(btn=>{
     btn.classList.toggle('active',(btn.dataset.tvThemeChoice||'')===(theme||''));
   });
+  if(theme!==lastAppliedTvTheme){renderTvMotifParticles(theme);lastAppliedTvTheme=theme}
 }
 function setTvTheme(theme){
   try{localStorage.setItem(TV_THEME_KEY,theme||'')}catch{}

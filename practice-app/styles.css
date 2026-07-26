@@ -677,9 +677,9 @@ body.dash-resizing .dash-resize-handle::after{background:var(--maroon)}
 /* ================= TV view theme switcher ================= */
 .tv-theme-wrap{position:relative;display:none}
 #teamBoardPage.tv-mode .tv-theme-wrap{display:inline-block}
-.tv-theme-btn{width:24px;height:24px;padding:0;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;font-size:.75rem;line-height:1;display:grid;place-items:center;opacity:.55;border:1px solid rgba(255,255,255,.3)}
+.tv-theme-btn{width:24px;height:24px;padding:0;border-radius:50%;background:rgba(0,0,0,.32);color:#fff;font-size:.75rem;line-height:1;display:grid;place-items:center;opacity:.55;border:1px solid rgba(255,255,255,.4)}
 .tv-theme-btn:hover{opacity:1}
-body.detached-tv .tv-theme-btn{background:rgba(255,255,255,.14)}
+body.detached-tv .tv-theme-btn{background:rgba(0,0,0,.32)}
 .tv-theme-menu{position:absolute;top:30px;right:0;z-index:300;background:#fff;border:1px solid #d9dee6;border-radius:12px;box-shadow:0 14px 34px rgba(0,0,0,.28);padding:6px;display:grid;gap:2px;min-width:168px}
 .tv-theme-menu[hidden]{display:none}
 .tv-theme-menu button{width:100%;text-align:left;background:transparent;color:#253040;font-weight:750;font-size:.8rem;padding:7px 9px;border-radius:8px}
@@ -690,15 +690,39 @@ body.detached-tv .tv-theme-btn{background:rgba(255,255,255,.14)}
 #teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]){
   background:linear-gradient(160deg,var(--tv-bg1),var(--tv-bg2) 55%,var(--tv-bg3)) !important;
 }
-#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""])::after{
-  content:"";
-  position:fixed;inset:0;z-index:5;pointer-events:none;
-  background-image:radial-gradient(circle,var(--tv-dot,#fff) 1.6px,transparent 1.8px);
-  background-size:130px 130px;
-  opacity:.5;
-  animation:tv-theme-drift 14s linear infinite;
+/* Themed particle layer — variety per theme instead of one repeated dot pattern */
+.tv-motif-layer{position:fixed;inset:0;z-index:5;pointer-events:none;overflow:hidden;display:none}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .tv-motif-layer{display:block}
+.tv-motif-particle{position:absolute;line-height:1;user-select:none;will-change:transform,opacity;animation-timing-function:linear;animation-iteration-count:infinite;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
+.tv-motif-layer[data-motion="fall"] .tv-motif-particle{animation-name:tv-motif-fall}
+.tv-motif-layer[data-motion="tumble"] .tv-motif-particle{animation-name:tv-motif-tumble}
+.tv-motif-layer[data-motion="rise"] .tv-motif-particle{animation-name:tv-motif-rise;animation-timing-function:ease-in-out}
+.tv-motif-layer[data-motion="drift"] .tv-motif-particle{animation-name:tv-motif-drift}
+.tv-motif-layer[data-motion="flicker"] .tv-motif-particle{animation-name:tv-motif-flicker;animation-timing-function:ease-in-out}
+@keyframes tv-motif-fall{
+  from{transform:translateY(-12vh) translateX(0) rotate(0deg)}
+  to{transform:translateY(112vh) translateX(18px) rotate(18deg)}
 }
-@keyframes tv-theme-drift{from{background-position:0 -260px}to{background-position:70px calc(100vh + 260px)}}
+@keyframes tv-motif-tumble{
+  0%{transform:translateY(-12vh) translateX(-10px) rotate(0deg)}
+  50%{transform:translateY(50vh) translateX(-34px) rotate(190deg)}
+  100%{transform:translateY(112vh) translateX(28px) rotate(360deg)}
+}
+@keyframes tv-motif-rise{
+  0%{transform:translateY(112vh) translateX(0) scale(.9);opacity:0}
+  12%{opacity:.9}
+  88%{opacity:.9}
+  100%{transform:translateY(-12vh) translateX(14px) scale(1.08);opacity:0}
+}
+@keyframes tv-motif-drift{
+  0%{transform:translateY(-12vh) translateX(-22px) rotate(-8deg)}
+  50%{transform:translateY(50vh) translateX(22px) rotate(8deg)}
+  100%{transform:translateY(112vh) translateX(-16px) rotate(-8deg)}
+}
+@keyframes tv-motif-flicker{
+  0%,100%{transform:translateY(0) scale(1);opacity:.5}
+  50%{transform:translateY(-16px) scale(1.18);opacity:.95}
+}
 #teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-shell{background:transparent !important;border:none !important;position:relative}
 #teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-shell::before{
   content:"";display:block;height:10px;margin-bottom:12px;border-radius:6px;
@@ -708,7 +732,7 @@ body.detached-tv .tv-theme-btn{background:rgba(255,255,255,.14)}
 #teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-title h2{color:var(--tv-title) !important}
 #teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-title .team-slogan{color:var(--tv-title-sub) !important}
 #teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-date{color:var(--tv-title) !important}
-#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-goal{background:linear-gradient(135deg,var(--tv-goal1),var(--tv-goal2)) !important;border:2px solid var(--tv-accent) !important}
+#teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-goal{background:linear-gradient(135deg,var(--tv-goal1),var(--tv-goal2)) !important;border:2px solid var(--tv-accent) !important;color:var(--tv-goal-text,#fff) !important}
 #teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-item{background:var(--tv-card) !important;border-color:var(--tv-item-border) !important}
 #teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-item.completed,
 #teamBoardPage.tv-mode[data-tv-theme]:not([data-tv-theme=""]) .team-board-item.partial{background:var(--tv-card-dim) !important}
@@ -768,11 +792,11 @@ body.detached-tv .tv-theme-btn{background:rgba(255,255,255,.14)}
 #teamBoardPage.tv-mode[data-tv-theme="christmas"] .team-board-title h2::after{content:" 🎄"}
 #teamBoardPage.tv-mode[data-tv-theme="christmas"] .team-board-item.current::before{content:"🎁 CURRENT"}
 
-/* ---- Spring ---- */
-#teamBoardPage.tv-mode[data-tv-theme="spring"]{--tv-bg1:#2f6b3f;--tv-bg2:#1e4a2b;--tv-bg3:#3d7a4d;--tv-top1:#4a8f5c;--tv-top2:#2f6b3f;--tv-accent:#ffd1e8;--tv-accent2:#2f6b3f;--tv-goal1:#4a8f5c;--tv-goal2:#2f6b3f;--tv-item-border:#4a8f5c;--tv-item-border-light:#cdeed6;--tv-card:#f6fff8;--tv-card-dim:#e6f5ea;--tv-current-bg:#f0fff2;--tv-current-glow:rgba(74,143,92,.25);--tv-current-name:#1e4a2b;--tv-title:#f0fff2;--tv-title-sub:#d6f2dc;--tv-dot:#ffd1e8;--tv-stripe:repeating-linear-gradient(45deg,#ffd1e8 0 20px,#4a8f5c 20px 40px)}
-#teamBoardPage.tv-mode[data-tv-theme="spring"] .team-board-title h2::before{content:"🌸 "}
-#teamBoardPage.tv-mode[data-tv-theme="spring"] .team-board-title h2::after{content:" 🌱"}
-#teamBoardPage.tv-mode[data-tv-theme="spring"] .team-board-item.current::before{content:"🌸 CURRENT"}
+/* ---- Spring (pastel yellow + light blue) ---- */
+#teamBoardPage.tv-mode[data-tv-theme="spring"]{--tv-bg1:#eaf6ff;--tv-bg2:#fff9de;--tv-bg3:#dff0ff;--tv-top1:#ffe98a;--tv-top2:#8fd3f4;--tv-accent:#2f6690;--tv-accent2:#caa000;--tv-goal1:#fff3b8;--tv-goal2:#a9defb;--tv-goal-text:#2f4858;--tv-item-border:#8fd3f4;--tv-item-border-light:#eaf6ff;--tv-card:#ffffff;--tv-card-dim:#f2f6f8;--tv-current-bg:#fffceb;--tv-current-glow:rgba(47,102,144,.25);--tv-current-name:#2f6690;--tv-title:#2f4858;--tv-title-sub:#3d5a6c;--tv-dot:#ffe98a;--tv-stripe:repeating-linear-gradient(45deg,#ffe98a 0 20px,#8fd3f4 20px 40px)}
+#teamBoardPage.tv-mode[data-tv-theme="spring"] .team-board-title h2::before{content:"🌼 "}
+#teamBoardPage.tv-mode[data-tv-theme="spring"] .team-board-title h2::after{content:" 🦋"}
+#teamBoardPage.tv-mode[data-tv-theme="spring"] .team-board-item.current::before{content:"🌼 CURRENT"}
 
 /* ---- Meet Day ---- */
 #teamBoardPage.tv-mode[data-tv-theme="meetday"]{--tv-bg1:#3f0b1a;--tv-bg2:#2a0611;--tv-bg3:#55131d;--tv-top1:#741d2a;--tv-top2:#3f0b1a;--tv-accent:#ffffff;--tv-accent2:#741d2a;--tv-goal1:#741d2a;--tv-goal2:#3f0b1a;--tv-item-border:#741d2a;--tv-item-border-light:#e6cdd5;--tv-card:#ffffff;--tv-card-dim:#f1e6ea;--tv-current-bg:#fff5f7;--tv-current-glow:rgba(116,29,42,.3);--tv-current-name:#3f0b1a;--tv-title:#ffffff;--tv-title-sub:#f0dde3;--tv-dot:#ffffff;--tv-stripe:repeating-linear-gradient(45deg,#741d2a 0 20px,#fff 20px 40px)}
