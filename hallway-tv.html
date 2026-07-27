@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Holmen Women's Wrestling — Hallway Showcase</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/images/logo-mark.png">
+<style>
+:root{
+  --maroon:#6d1730;
+  --dark:#3f0b1a;
+  --light:#f5f5f7;
+  --ink:#19191d;
+  --gold:#e8c37a;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#000;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:#fff;
+}
+
+#stage{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+}
+
+.slide-layer{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  z-index:1;
+  transition:opacity 1.3s ease;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,var(--maroon),var(--dark));
+}
+.slide-layer.active{ opacity:1; z-index:2; }
+
+.slide-bg-img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:0;
+}
+.slide-overlay{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:linear-gradient(180deg,rgba(15,4,9,.35) 0%, rgba(15,4,9,.55) 55%, rgba(15,4,9,.86) 100%);
+}
+.slide-inner{
+  position:relative;
+  z-index:2;
+  width:min(1500px,92vw);
+  max-height:88vh;
+  margin:auto;
+  text-align:center;
+  padding:40px;
+}
+
+/* Logo watermark, persistent corner */
+.tv-logo{
+  position:fixed;
+  top:28px;
+  left:32px;
+  z-index:50;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  opacity:.92;
+  pointer-events:none;
+}
+.tv-logo img{ height:56px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
+.tv-logo span{
+  font-weight:900;
+  font-size:1.15rem;
+  letter-spacing:-.02em;
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
+}
+
+/* Persistent clock, corner */
+#tv-clock{
+  position:fixed;
+  top:28px;
+  right:32px;
+  z-index:50;
+  text-align:right;
+  font-weight:800;
+  letter-spacing:.02em;
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
+  opacity:.92;
+  pointer-events:none;
+}
+#tv-clock .time{ font-size:1.5rem; }
+#tv-clock .date{ font-size:.85rem; font-weight:700; opacity:.85; text-transform:uppercase; letter-spacing:.1em; }
+
+/* Progress bar */
+#tv-progress-wrap{
+  position:fixed;
+  left:0; right:0; bottom:0;
+  height:6px;
+  background:rgba(255,255,255,.14);
+  z-index:60;
+}
+#tv-progress-bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--gold),#fff);
+}
+#tv-progress-bar.animate{ transition:width linear; }
+
+/* ---- Slide type: hero ---- */
+.tv-eyebrow{
+  text-transform:uppercase;
+  letter-spacing:.24em;
+  font-size:clamp(.85rem,1.3vw,1.15rem);
+  font-weight:900;
+  color:var(--gold);
+  margin:0 0 14px;
+}
+.tv-hero-title{
+  font-size:clamp(2.6rem,6.4vw,6.2rem);
+  font-weight:900;
+  letter-spacing:-.03em;
+  margin:0 0 20px;
+  line-height:1.03;
+  text-shadow:0 4px 20px rgba(0,0,0,.5);
+}
+.tv-hero-sub{
+  font-size:clamp(1.1rem,2.1vw,1.8rem);
+  font-weight:600;
+  max-width:900px;
+  margin:0 auto;
+  line-height:1.5;
+  opacity:.96;
+}
+
+/* ---- Slide type: mission / text statement ---- */
+.tv-statement{
+  font-size:clamp(1.6rem,3.4vw,3.1rem);
+  font-weight:800;
+  line-height:1.35;
+  letter-spacing:-.01em;
+  max-width:1200px;
+  margin:0 auto;
+}
+.tv-statement strong{ color:var(--gold); }
+
+/* ---- Slide type: pillars ---- */
+.tv-pillars-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:26px;
+  width:100%;
+}
+.tv-pillar-card{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:22px;
+  padding:26px 24px;
+  backdrop-filter:blur(4px);
+}
+.tv-pillar-card .icon{ font-size:clamp(2rem,4vw,3rem); }
+.tv-pillar-card h3{
+  margin:10px 0 8px;
+  font-size:clamp(1.2rem,2vw,1.7rem);
+  letter-spacing:-.02em;
+}
+.tv-pillar-card p{
+  margin:0;
+  font-size:clamp(.9rem,1.3vw,1.15rem);
+  line-height:1.5;
+  opacity:.92;
+}
+
+/* ---- Slide type: roster mosaic ---- */
+.tv-roster-title{
+  font-size:clamp(1.6rem,3vw,2.6rem);
+  font-weight:900;
+  margin:0 0 22px;
+  letter-spacing:-.02em;
+}
+.tv-roster-grid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:16px;
+  width:100%;
+}
+.tv-roster-tile{
+  position:relative;
+  border-radius:16px;
+  overflow:hidden;
+  aspect-ratio:3/4;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+}
+.tv-roster-tile img{ width:100%; height:100%; object-fit:cover; display:block; }
+.tv-roster-tile .name{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  padding:8px 8px 7px;
+  font-size:clamp(.68rem,1vw,.9rem);
+  font-weight:800;
+  text-align:center;
+  background:linear-gradient(0deg,rgba(0,0,0,.82),rgba(0,0,0,0));
+}
+
+/* ---- Slide type: quote ---- */
+.tv-quote-mark{ font-size:clamp(3rem,6vw,5.5rem); color:var(--gold); line-height:1; margin-bottom:6px; }
+.tv-quote-text{
+  font-size:clamp(1.7rem,3.6vw,3.4rem);
+  font-weight:800;
+  line-height:1.32;
+  letter-spacing:-.01em;
+  max-width:1150px;
+  margin:0 auto 22px;
+}
+.tv-quote-source{
+  font-size:clamp(1rem,1.6vw,1.35rem);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--gold);
+}
+
+/* ---- Slide type: stat-photo ---- */
+.tv-caption-box{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  z-index:2;
+  padding:50px 60px 60px;
+  text-align:left;
+}
+.tv-caption-box h2{
+  font-size:clamp(1.8rem,3.6vw,3.4rem);
+  font-weight:900;
+  margin:0 0 12px;
+  letter-spacing:-.02em;
+  max-width:1100px;
+}
+.tv-caption-box p{
+  font-size:clamp(1rem,1.6vw,1.4rem);
+  max-width:900px;
+  line-height:1.5;
+  opacity:.95;
+  margin:0;
+}
+
+/* ---- Slide type: coaches ---- */
+.tv-coach-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:22px;
+  width:100%;
+}
+.tv-coach-card{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:20px;
+  overflow:hidden;
+  text-align:left;
+}
+.tv-coach-card img{ width:100%; aspect-ratio:1/1; object-fit:cover; display:block; }
+.tv-coach-card .body{ padding:16px 18px 20px; }
+.tv-coach-card .name{ font-size:clamp(1rem,1.5vw,1.3rem); font-weight:900; margin:0 0 3px; }
+.tv-coach-card .role{ font-size:clamp(.78rem,1.1vw,.95rem); color:var(--gold); font-weight:700; margin:0 0 8px; }
+.tv-coach-card .awards{ font-size:clamp(.72rem,1vw,.85rem); line-height:1.45; opacity:.9; margin:0; padding-left:16px; }
+.tv-coach-card .awards li{ margin-bottom:3px; }
+
+/* ---- Slide type: bullets ---- */
+.tv-bullets-title{
+  font-size:clamp(1.8rem,3.6vw,3.4rem);
+  font-weight:900;
+  margin:0 0 30px;
+  letter-spacing:-.02em;
+}
+.tv-bullets-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:grid;
+  gap:16px;
+  text-align:left;
+  max-width:1050px;
+  margin-inline:auto;
+}
+.tv-bullets-list li{
+  font-size:clamp(1.05rem,1.9vw,1.65rem);
+  line-height:1.5;
+  font-weight:650;
+  padding-left:44px;
+  position:relative;
+}
+.tv-bullets-list li::before{
+  content:"🤼";
+  position:absolute;
+  left:0;
+  top:.05em;
+  font-size:1.1em;
+}
+
+/* ---- Slide type: countdown ---- */
+.tv-countdown-label{
+  font-size:clamp(1.3rem,2.6vw,2.2rem);
+  font-weight:800;
+  margin:0 0 26px;
+  color:var(--gold);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+}
+.tv-countdown-timer{
+  display:flex;
+  justify-content:center;
+  gap:clamp(16px,3vw,40px);
+}
+.tv-countdown-unit strong{
+  display:block;
+  font-size:clamp(3rem,8vw,7.5rem);
+  font-weight:900;
+  line-height:1;
+}
+.tv-countdown-unit span{
+  display:block;
+  margin-top:8px;
+  font-size:clamp(.8rem,1.3vw,1.1rem);
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  font-weight:700;
+  opacity:.85;
+}
+
+/* ---- Slide type: cta ---- */
+.tv-cta-title{
+  font-size:clamp(2rem,4.4vw,4rem);
+  font-weight:900;
+  margin:0 0 18px;
+  letter-spacing:-.03em;
+}
+.tv-cta-sub{
+  font-size:clamp(1.05rem,1.9vw,1.55rem);
+  max-width:850px;
+  margin:0 auto 30px;
+  line-height:1.55;
+  opacity:.95;
+}
+.tv-cta-social{
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  flex-wrap:wrap;
+  font-size:clamp(1rem,1.7vw,1.35rem);
+  font-weight:800;
+}
+.tv-cta-social span{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.3);
+  border-radius:999px;
+  padding:12px 22px;
+}
+
+/* Fullscreen helper button */
+#tv-fs-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  z-index:70;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.35);
+  color:#fff;
+  font-weight:800;
+  font-size:.85rem;
+  border-radius:999px;
+  padding:10px 18px;
+  cursor:pointer;
+  opacity:.55;
+}
+#tv-fs-btn:hover{ opacity:1; }
+
+@media(max-width:1100px){
+  .tv-pillars-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .tv-roster-grid{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .tv-coach-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:700px){
+  .tv-pillars-grid{ grid-template-columns:1fr; }
+  .tv-roster-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .tv-coach-grid{ grid-template-columns:1fr; }
+  .tv-logo img{ height:40px; }
+  .tv-logo span{ font-size:.9rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="tv-logo"><img src="assets/images/logo.png" alt=""><span>Holmen Women's Wrestling</span></div>
+<div id="tv-clock"><div class="time" id="tv-clock-time">--:--</div><div class="date" id="tv-clock-date">-- -- ----</div></div>
+
+<div id="stage">
+  <div class="slide-layer active" id="layerA"></div>
+  <div class="slide-layer" id="layerB"></div>
+</div>
+
+<div id="tv-progress-wrap"><div id="tv-progress-bar"></div></div>
+<button id="tv-fs-btn" type="button">⛶ Fullscreen</button>
+
+<script>
+const ROSTER_2025_26 = [
+  { file:'2025-26-ruby-gustafson.jpg', name:'Ruby Gustafson' },
+  { file:'2025-26-kaytlynn-lambries.jpg', name:'Kaytlynn Lambries' },
+  { file:'2025-26-sophia-walter.jpg', name:'Sophia Walter' },
+  { file:'2025-26-peyton-kratochvill.jpg', name:'Peyton Kratochvill' },
+  { file:'2025-26-aini-anderson.jpg', name:'Aini Anderson' },
+  { file:'2025-26-avalee-euler.jpg', name:'Avalee Euler' },
+  { file:'2025-26-celia-drogseth.jpg', name:'Celia Drogseth' },
+  { file:'2025-26-ellie-adam.jpg', name:'Ellie Adam' },
+  { file:'2025-26-ema-nedoba.jpg', name:'Ema Nedoba' },
+  { file:'2025-26-kaina-westlie.jpg', name:'Kaina Westlie' },
+  { file:'2025-26-karis-dylhoff.jpg', name:'Karis Dylhoff' },
+  { file:'2025-26-kayleen-bazan.jpg', name:'Kayleen Bazan' },
+  { file:'2025-26-lynzi-neumann.jpg', name:'Lynzi Neumann' },
+  { file:'2025-26-mallory-kemper.jpg', name:'Mallory Kemper' },
+  { file:'2025-26-olive-bergman.jpg', name:'Olive Bergman' }
+];
+
+const HS_COACHES = [
+  { file:'carl-deluca.jpg', name:'Carl DeLuca', role:'Head High School Coach', awards:['2024 State Girls Coach of the Year','2023 &amp; 2026 MVC Girls Conference Coach of the Year','2026 District 3 Head Girls Coach of the Year'] },
+  { file:'kelsie-speltz.jpg', name:'Kelsie Speltz', role:'High School Head Assistant Coach', awards:['2025 Assistant State Coach of the Year','2026 District 3 Assistant Coach of the Year'] },
+  { file:'joey-perrigo.jpg', name:'Joey Perrigo', role:'Assistant High School Coach', awards:['2025 Assistant State Coach of the Year','2026 District 3 Assistant Coach of the Year'] },
+  { file:'jozie-collins.jpg', name:'Jozie Collins', role:'High School Assistant Coach', awards:['2026 District 3 Assistant Coach of the Year'] }
+];
+
+const MS_COACHES = [
+  { file:'steve-eggerichs.jpg', name:'Steve Eggerichs', role:'Head Middle School Coach', awards:[] },
+  { file:'ross-needham.jpg', name:'Ross Needham', role:'Assistant Middle School Coach &amp; Head Youth Girls Coach', awards:[] },
+  { file:'evelyn-vetsch.jpg', name:'Evelyn Vetsch', role:'Assistant Middle School Coach', awards:[] }
+];
+
+const QUOTES = [
+  { quote:'This is the best team I’ve ever been on. I’ve never felt so much support and love from any other team I’ve been on.', source:'Wrestler' },
+  { quote:'I know I lost today, but I felt like such a winner within our team. I love our team!', source:'Wrestler' },
+  { quote:'This team makes me feel like I belong, like I matter. The coaching increases my confidence more and more and pushes me to be a better person and wrestler.', source:'Wrestler' },
+  { quote:'Thank you for always being there for me and pushing me even when I want to quit — you’ve reinforced my mindset to truly never quit.', source:'Wrestler' },
+  { quote:'I am so, so happy you are the wrestling coach — you\'re one of the best coaches I\'ve ever had. You are the most genuine and giving person I know.', source:'Wrestler' },
+  { quote:'This team makes me feel like I belong, like I matter.', source:'Wrestler' },
+  { quote:'As a first-time wrestling parent, I think you are all doing an outstanding job building an amazing culture of fun, supportiveness, discipline, and teamwork.', source:'Parent' },
+  { quote:'I love how genuine you are and how much you love every single girl.', source:'Wrestler' },
+  { quote:'You brighten the room and help everyone. You are irreplaceable.', source:'Wrestler' },
+  { quote:'You made me enjoy wrestling again. Thank you.', source:'Wrestler' }
+];
+
+const SLIDES = [
+  { type:'hero', duration:9000, image:'assets/images/team-photo.jpg',
+    eyebrow:'Holmen Women’s Wrestling',
+    title:'Fun. For Her. Ambition. Elite Mindset. Leadership. Improvement.',
+    sub:'One of Wisconsin’s largest and most successful girls wrestling programs.' },
+
+  { type:'mission', duration:8000,
+    text:'Everything we do is <strong>for each other</strong>, for women’s wrestling, and for women’s sports everywhere. On the mat, we fight for our teammates. Off the mat, we grow the sport for the next generation of girls — <strong>For Her.</strong>' },
+
+  { type:'pillars', duration:10000 },
+
+  { type:'roster', duration:9000, title:'Meet the 2025–26 Team', photos: ROSTER_2025_26.slice(0,10) },
+
+  { type:'quote', duration:6500, quote:QUOTES[0].quote, source:QUOTES[0].source },
+
+  { type:'roster', duration:8000, title:'Meet the 2025–26 Team', photos: ROSTER_2025_26.slice(10) },
+
+  { type:'quote', duration:6500, quote:QUOTES[1].quote, source:QUOTES[1].source },
+
+  { type:'stat-photo', duration:8000, image:'assets/images/kaytlynn-100-wins.jpg',
+    title:'100 Career Wins', text:'Kaytlynn Lambries became Holmen Women’s Wrestling’s first wrestler to reach 100 career wins.' },
+
+  { type:'quote', duration:6500, quote:QUOTES[2].quote, source:QUOTES[2].source },
+
+  { type:'coaches', duration:10000, title:'High School Staff', coaches:HS_COACHES },
+
+  { type:'quote', duration:6500, quote:QUOTES[3].quote, source:QUOTES[3].source },
+
+  { type:'coaches', duration:9000, title:'Middle School &amp; Youth Staff', coaches:MS_COACHES },
+
+  { type:'stat-photo', duration:8000, image:'assets/images/recap-ruby-fargo.jpg',
+    title:'Fargo Nationals', text:'Ruby Gustafson represented Holmen at Fargo Nationals — the largest wrestling tournament in the world!' },
+
+  { type:'quote', duration:6500, quote:QUOTES[4].quote, source:QUOTES[4].source },
+
+  { type:'bullets', duration:10000, title:'Why Holmen Women’s Wrestling?', items:[
+      'It’s fun! Sledding, team dinners, a yearly photo shoot, overnight meets, and more.',
+      'Girls only wrestle girls — never boys — in practice and competition.',
+      'No requirement to lose weight or hit a certain weight class, and a singlet isn’t required.',
+      'No experience needed — most of our wrestlers, including state finalists, started in high school.'
+    ] },
+
+  { type:'quote', duration:6500, quote:QUOTES[6].quote, source:QUOTES[6].source },
+
+  { type:'countdown', duration:9000, label:'Season Starts Nov 16, 2026', target:'2026-11-16T15:00:00' },
+
+  { type:'quote', duration:6500, quote:QUOTES[8].quote, source:QUOTES[8].source },
+
+  { type:'cta', duration:9000,
+    title:'Join the Team',
+    sub:'Come try it out — no experience needed. Follow along and learn more at our official team site.',
+    social:['@holmenwomenswrestling','holmenwomenswrestlingsite.netlify.app'] }
+];
+
+function renderSlide(slide){
+  switch(slide.type){
+    case 'hero':
+      return `
+        <img class="slide-bg-img" src="${slide.image}" alt="">
+        <div class="slide-overlay"></div>
+        <div class="slide-inner">
+          <div class="tv-eyebrow">${slide.eyebrow}</div>
+          <h1 class="tv-hero-title">${slide.title}</h1>
+          <p class="tv-hero-sub">${slide.sub}</p>
+        </div>`;
+
+    case 'mission':
+      return `<div class="slide-inner"><p class="tv-statement">${slide.text}</p></div>`;
+
+    case 'pillars':
+      return `<div class="slide-inner">
+        <div class="tv-eyebrow">Our Culture</div>
+        <div class="tv-pillars-grid">
+          <div class="tv-pillar-card"><div class="icon">\u{1F91D}</div><h3>For Her</h3><p>Hold each other accountable, accept everyone, and fight for your teammates.</p></div>
+          <div class="tv-pillar-card"><div class="icon">\u{1F389}</div><h3>Fun</h3><p>Create a fun, positive, and relaxed environment — it’s more fun than you think.</p></div>
+          <div class="tv-pillar-card"><div class="icon">\u{1F3AF}</div><h3>Ambition</h3><p>Be eager to learn, coachable, and willing to do extra — on and off the mat.</p></div>
+          <div class="tv-pillar-card"><div class="icon">\u{1F9E0}</div><h3>Elite Mindset</h3><p>Refuse to lose. Stay positive, learn from mistakes, and focus on the process.</p></div>
+          <div class="tv-pillar-card"><div class="icon">\u{1F9ED}</div><h3>Leadership</h3><p>Guide the team in a positive way and take satisfaction in teammates’ success.</p></div>
+          <div class="tv-pillar-card"><div class="icon">\u{1F4C8}</div><h3>Improvement</h3><p>Show improvement, especially on the mat, so the team is better for her.</p></div>
+        </div>
+      </div>`;
+
+    case 'roster':
+      return `<div class="slide-inner">
+        <div class="tv-roster-title">${slide.title}</div>
+        <div class="tv-roster-grid">
+          ${slide.photos.map(p => `
+            <div class="tv-roster-tile">
+              <img src="assets/images/season-finishers/${p.file}" alt="${p.name}">
+              <div class="name">${p.name}</div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+
+    case 'quote':
+      return `<div class="slide-inner">
+        <div class="tv-quote-mark">“</div>
+        <p class="tv-quote-text">${slide.quote}</p>
+        <div class="tv-quote-source">— ${slide.source}</div>
+      </div>`;
+
+    case 'stat-photo':
+      return `
+        <img class="slide-bg-img" src="${slide.image}" alt="">
+        <div class="slide-overlay"></div>
+        <div class="tv-caption-box">
+          <h2>${slide.title}</h2>
+          <p>${slide.text}</p>
+        </div>`;
+
+    case 'coaches':
+      return `<div class="slide-inner">
+        <div class="tv-roster-title">${slide.title}</div>
+        <div class="tv-coach-grid">
+          ${slide.coaches.map(c => `
+            <div class="tv-coach-card">
+              <img src="assets/images/coaches/${c.file}" alt="${c.name}">
+              <div class="body">
+                <p class="name">${c.name}</p>
+                <p class="role">${c.role}</p>
+                ${c.awards.length ? `<ul class="awards">${c.awards.map(a => `<li>${a}</li>`).join('')}</ul>` : ''}
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+
+    case 'bullets':
+      return `<div class="slide-inner">
+        <div class="tv-bullets-title">${slide.title}</div>
+        <ul class="tv-bullets-list">${slide.items.map(i => `<li>${i}</li>`).join('')}</ul>
+      </div>`;
+
+    case 'countdown':
+      return `<div class="slide-inner">
+        <div class="tv-countdown-label">${slide.label}</div>
+        <div class="tv-countdown-timer" id="tv-countdown-timer" data-target="${slide.target}">
+          <div class="tv-countdown-unit"><strong id="tv-cd-days">–</strong><span>Days</span></div>
+          <div class="tv-countdown-unit"><strong id="tv-cd-hours">–</strong><span>Hrs</span></div>
+          <div class="tv-countdown-unit"><strong id="tv-cd-mins">–</strong><span>Min</span></div>
+          <div class="tv-countdown-unit"><strong id="tv-cd-secs">–</strong><span>Sec</span></div>
+        </div>
+      </div>`;
+
+    case 'cta':
+      return `<div class="slide-inner">
+        <div class="tv-eyebrow">Follow Along</div>
+        <h2 class="tv-cta-title">${slide.title}</h2>
+        <p class="tv-cta-sub">${slide.sub}</p>
+        <div class="tv-cta-social">${slide.social.map(s => `<span>${s}</span>`).join('')}</div>
+      </div>`;
+
+    default:
+      return '';
+  }
+}
+
+let current = 0;
+let showingA = true;
+let countdownInterval = null;
+
+function stopCountdownInterval(){
+  if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+}
+
+function startCountdownIfNeeded(layer){
+  const el = layer.querySelector('#tv-countdown-timer');
+  if (!el) return;
+  const target = new Date(el.dataset.target).getTime();
+  function tick(){
+    const now = Date.now();
+    let diff = Math.max(0, target - now);
+    const days = Math.floor(diff / 86400000); diff -= days * 86400000;
+    const hours = Math.floor(diff / 3600000); diff -= hours * 3600000;
+    const mins = Math.floor(diff / 60000); diff -= mins * 60000;
+    const secs = Math.floor(diff / 1000);
+    const d = layer.querySelector('#tv-cd-days');
+    const h = layer.querySelector('#tv-cd-hours');
+    const m = layer.querySelector('#tv-cd-mins');
+    const s = layer.querySelector('#tv-cd-secs');
+    if (d) d.textContent = days;
+    if (h) h.textContent = String(hours).padStart(2,'0');
+    if (m) m.textContent = String(mins).padStart(2,'0');
+    if (s) s.textContent = String(secs).padStart(2,'0');
+  }
+  tick();
+  countdownInterval = setInterval(tick, 1000);
+}
+
+function runProgressBar(duration){
+  const bar = document.getElementById('tv-progress-bar');
+  bar.classList.remove('animate');
+  bar.style.transition = 'none';
+  bar.style.width = '0%';
+  // force reflow
+  void bar.offsetWidth;
+  bar.classList.add('animate');
+  bar.style.transition = `width ${duration}ms linear`;
+  bar.style.width = '100%';
+}
+
+function showSlide(index){
+  const slide = SLIDES[index];
+  const layerA = document.getElementById('layerA');
+  const layerB = document.getElementById('layerB');
+  const incoming = showingA ? layerB : layerA;
+  const outgoing = showingA ? layerA : layerB;
+
+  stopCountdownInterval();
+  incoming.innerHTML = renderSlide(slide);
+  incoming.classList.add('active');
+  outgoing.classList.remove('active');
+  showingA = !showingA;
+
+  startCountdownIfNeeded(incoming);
+  runProgressBar(slide.duration);
+
+  clearTimeout(window.__tvTimer);
+  window.__tvTimer = setTimeout(() => {
+    current = (current + 1) % SLIDES.length;
+    showSlide(current);
+  }, slide.duration);
+}
+
+function updateClock(){
+  const now = new Date();
+  const timeEl = document.getElementById('tv-clock-time');
+  const dateEl = document.getElementById('tv-clock-date');
+  if (timeEl) timeEl.textContent = now.toLocaleTimeString([], { hour:'numeric', minute:'2-digit' });
+  if (dateEl) dateEl.textContent = now.toLocaleDateString([], { weekday:'short', month:'short', day:'numeric' });
+}
+updateClock();
+setInterval(updateClock, 1000 * 15);
+
+document.getElementById('tv-fs-btn').addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'f' || e.key === 'F') {
+    document.getElementById('tv-fs-btn').click();
+  }
+});
+
+showSlide(current);
+</script>
+</body>
+</html>
