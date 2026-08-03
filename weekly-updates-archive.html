@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Weekly Updates Archive | Holmen Women’s Wrestling</title>
+<style>
+:root {
+  --maroon:#6d1730; --dark:#3e0919; --soft:#f4f4f6; --white:#fff;
+  --ink:#19191d; --muted:#666b73; --border:#e1e2e5;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:var(--soft); }
+a { color:var(--maroon); }
+button,input { font:inherit; }
+.header { height:76px; background:#fff; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; position:sticky; top:0; z-index:40; }
+.brand { display:flex; align-items:center; gap:10px; color:var(--maroon); font-weight:900; text-decoration:none; }
+.brand img { width:54px; height:54px; object-fit:contain; }
+.header-actions { display:flex; gap:12px; align-items:center; }
+.link-button,.primary-button { border:0; border-radius:999px; min-height:43px; padding:0 17px; font-weight:850; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; white-space:nowrap; }
+.link-button { background:#fff; color:var(--maroon); border:1px solid #d8bcc5; }
+.primary-button { background:var(--maroon); color:#fff; }
+.login { min-height:calc(100vh - 76px); display:grid; place-items:center; padding:24px; background:linear-gradient(rgba(55,5,20,.91),rgba(55,5,20,.91)),radial-gradient(circle at top right,#a94461,#3d0918 65%); }
+.login-card { width:min(460px,100%); background:#fff; border-radius:25px; padding:34px; text-align:center; box-shadow:0 28px 80px rgba(0,0,0,.3); }
+.login-card img { width:110px; height:110px; object-fit:contain; margin:auto; }
+.login-card h1 { margin:8px 0; font-size:2.5rem; letter-spacing:-.05em; }
+.login-card p { color:var(--muted); line-height:1.55; }
+.login-card input { width:100%; min-height:50px; padding:0 14px; border:1px solid #d4d6da; border-radius:11px; outline:none; margin-top:8px; }
+.login-card input:focus { border-color:var(--maroon); box-shadow:0 0 0 3px rgba(109,23,48,.12); }
+.login-card .primary-button { width:100%; margin-top:14px; }
+.error { display:none; color:#982323; background:#fff0f0; border-radius:10px; margin-top:12px; padding:10px; font-weight:750; }
+.app { display:none; }
+.hero { position:relative; overflow:hidden; background:linear-gradient(135deg,var(--maroon),var(--dark)); color:#fff; padding:45px 28px; }
+.hero-watermark { position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center; z-index:0; pointer-events:none; overflow:hidden; }
+.hero-watermark img { width:min(700px,70%); opacity:.12; object-fit:contain; transform:translateY(45%);}
+.hero-inner { position:relative; z-index:1; width:min(1240px,100%); margin:auto; display:flex; justify-content:space-between; align-items:end; gap:25px; flex-wrap:wrap; }
+.hero h1 { margin:5px 0 8px; font-size:clamp(2.2rem,4.6vw,3.8rem); letter-spacing:-.055em; }
+.hero p { margin:0; color:#ecd9df; line-height:1.6; max-width:720px; }
+.eyebrow { text-transform:uppercase; letter-spacing:.16em; font-size:.75rem; font-weight:900; color:#efc8d4; }
+
+.weekly-updates {
+  width:min(1240px,calc(100% - 28px));
+  margin:32px auto 70px;
+}
+.weekly-updates h2 {
+  margin:0 0 14px;
+  font-size:1.65rem;
+  letter-spacing:-.03em;
+}
+.update-card {
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:22px 24px;
+  box-shadow:0 10px 32px rgba(20,15,17,.06);
+  margin-bottom:16px;
+}
+.update-card:last-child { margin-bottom:0; }
+.update-card summary {
+  cursor:pointer;
+  list-style:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.update-card summary::-webkit-details-marker { display:none; }
+.update-card summary::after {
+  content:"+";
+  font-size:1.3rem;
+  font-weight:900;
+  color:var(--maroon);
+  flex:none;
+  transition:transform .15s ease;
+}
+.update-card[open] summary::after { transform:rotate(45deg); }
+.update-date { text-transform:uppercase; letter-spacing:.08em; font-size:.78rem; font-weight:850; color:var(--maroon); }
+.update-body { white-space:pre-line; line-height:1.7; color:#2a2a2e; margin-top:14px; }
+.empty-note { color:var(--muted); background:#fff; border:1px solid var(--border); border-radius:16px; padding:20px; }
+
+@media(max-width:620px) {
+  .header { padding:0 13px; }
+  .brand span { display:none; }
+  .header-actions .link-button { display:none; }
+  .hero { padding:34px 18px; }
+}
+</style>
+</head>
+<body>
+<header class="header">
+  <a class="brand" href="index.html"><img src="assets/images/logo-mark.png" alt="Holmen Women's Wrestling logo"><span>Holmen Women’s Wrestling</span></a>
+  <div class="header-actions">
+    <a class="link-button" href="coach-hub.html">Back to Coach Hub</a>
+    <button id="logout" class="primary-button" style="display:none">Log Out</button>
+  </div>
+</header>
+
+<main>
+<section id="login" class="login">
+  <form id="loginForm" class="login-card">
+    <img src="assets/images/logo.png" alt="Holmen Women's Wrestling logo">
+    <div class="eyebrow" style="color:var(--maroon)">Private coach access</div>
+    <h1>Updates Archive</h1>
+    <p>Enter the coach passcode to view past weekly updates.</p>
+    <label for="passcode" style="display:block;text-align:left;font-weight:850">Coach Passcode</label>
+    <input id="passcode" type="password" required>
+    <button class="primary-button" type="submit">View Archive</button>
+    <div id="error" class="error">That passcode is incorrect.</div>
+  </form>
+</section>
+
+<section id="app" class="app">
+  <div class="hero">
+    <div class="hero-watermark"><img src="assets/images/logo.png" alt=""></div>
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow">Coach Resources</div>
+        <h1>Weekly Updates Archive</h1>
+        <p>Older weekly updates, kept here once they age off the Team Hub and Coach Hub feeds.</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="weekly-updates">
+    <h2>Archived Updates</h2>
+    <details class="update-card">
+      <summary><div class="update-date">Week of July 21, 2026 — Coach Carl</div></summary>
+      <div class="update-body">Hola team,
+
+Shout out again to Ruby for competing at Fargo. You keep working hard and improving. Great to coach you out there!
+
+Team Wisconsin crushed it as always. We had 14 All-Americans and two champs (Madi Peach and Brooke Huffman). It was awesome to be in the corner for lots of Wisconsin girls and I got to be in Madi's corner for most of the tournament, including the semis and finals.
+
+I also get to rub it in to the head officials that I won a protest against them
+
+Schedule this week:
+• Wednesday: Open Mat 6:00 - 7:30pm
+
+Fun Opportunity!
+• We got invited by Coach E and Herky Jerk Ranch to spend a few days there! I will get some dates finalized.
+• We'll do some wrestling, go tubing down the Wolf River, and make Tik Toks with Nellie and Piper, of course. It will be super fun.
+• Coach E offered also to go over how they built their following and give Insta/Tik Tok tips for anyone who wants to try to grow their own.
+• I'll get details out soon and I'm really excited for this!
+
+You're all awesome and hope you're enjoying summer,
+Coach Carl</div>
+    </details>
+  </section>
+</section>
+</main>
+
+<script>
+const PASSCODE = "illhaveanother";
+const SESSION_KEY = "holmenCoachHubAccess";
+
+const login = document.getElementById("login");
+const app = document.getElementById("app");
+const logout = document.getElementById("logout");
+const form = document.getElementById("loginForm");
+const input = document.getElementById("passcode");
+const error = document.getElementById("error");
+
+function showApp() {
+  sessionStorage.setItem(SESSION_KEY, "granted");
+  login.style.display = "none";
+  app.style.display = "block";
+  logout.style.display = "inline-flex";
+}
+
+function showLogin() {
+  sessionStorage.removeItem(SESSION_KEY);
+  login.style.display = "grid";
+  app.style.display = "none";
+  logout.style.display = "none";
+  input.value = "";
+  input.focus();
+}
+
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  if (input.value.trim() === PASSCODE) {
+    error.style.display = "none";
+    showApp();
+  } else {
+    error.style.display = "block";
+    input.select();
+  }
+});
+
+logout.addEventListener("click", showLogin);
+
+if (sessionStorage.getItem(SESSION_KEY) === "granted") showApp();
+</script>
+</body>
+</html>
