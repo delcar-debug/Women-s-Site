@@ -79,7 +79,7 @@ function awardsBlockHtml(name){
   list.forEach(item=>{(byCat[item.cat]=byCat[item.cat]||[]).push(item.detail);});
   const cats=AWARD_CAT_ORDER.filter(c=>byCat[c]);
   Object.keys(byCat).forEach(c=>{if(!cats.includes(c))cats.push(c);});
-  const html=cats.map(c=>`<h5>${c}</h5><ul>${byCat[c].map(d=>`<li>${d}</li>`).join('')}</ul>`).join('');
+  const html=cats.map(c=>`<h5>${c}</h5><ul>${byCat[c].map(d=>`<li>${d.endsWith('— Winner')?`<strong>${d}</strong>`:d}</li>`).join('')}</ul>`).join('');
   return `<section class="stat-group awards-group"><h4>Awards &amp; Honors</h4>${html}</section>`;
 }
 function openWrestler(name){
