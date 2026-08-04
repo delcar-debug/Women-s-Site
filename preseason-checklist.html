@@ -257,7 +257,7 @@
         <div class="progress-card">
           <div class="progress-row">
             <strong>Preseason Progress</strong>
-            <span id="progressText">0 of 5 tasks completed</span>
+            <span id="progressText">0 of 4 tasks completed</span>
           </div>
           <div class="progress-track">
             <div id="progressFill" class="progress-fill"></div>
@@ -267,25 +267,6 @@
         <article class="task-card">
           <div class="task-head">
             <div class="task-number">1</div>
-            <div>
-              <h2>Athlete Information Form</h2>
-              <p>Complete the Athlete Information Form before the season begins. This provides coaches with contact information and roster details.</p>
-            </div>
-          </div>
-
-          <div class="task-actions">
-            <a class="button" href="athlete-information.html">Complete Athlete Information Form</a>
-          </div>
-
-          <label class="complete-row">
-            <input id="athleteInfoComplete" type="checkbox">
-            <span>I have completed the Athlete Information Form.</span>
-          </label>
-        </article>
-
-        <article class="task-card" style="margin-top:16px">
-          <div class="task-head">
-            <div class="task-number">2</div>
             <div>
               <h2>Join SportsYou</h2>
               <p>This app is our way of sending group messages to parents and wrestlers and messaging individual wrestlers. Email is also used. Use the code below to join the correct group.</p>
@@ -321,7 +302,7 @@
 
         <article class="task-card" style="margin-top:16px">
           <div class="task-head">
-            <div class="task-number">3</div>
+            <div class="task-number">2</div>
             <div>
               <h2>Create a USA Bracketing Account</h2>
               <p>Wrestlers need a USA Bracketing account so they can be added to our roster for meets. Anyone can create an account to find brackets and meet results.</p>
@@ -340,7 +321,7 @@
 
         <article class="task-card" style="margin-top:16px">
           <div class="task-head">
-            <div class="task-number">4</div>
+            <div class="task-number">3</div>
             <div>
               <h2>Register Through the School District</h2>
               <p>Complete the required school district athletics registration before the season begins.</p>
@@ -360,7 +341,7 @@
 
         <article class="task-card" style="margin-top:16px">
           <div class="task-head">
-            <div class="task-number">5</div>
+            <div class="task-number">4</div>
             <div>
               <h2>Add the Team Calendar to Your Device</h2>
               <p>Add the Holmen Women’s Wrestling calendar to your phone, tablet, or computer so you can keep up with practices, meets, and team events.</p>
@@ -386,7 +367,6 @@
   <script>
     const STORAGE_KEY = "holmenPreseasonChecklist";
     const sportsYou = document.getElementById("sportsYouComplete");
-    const athleteInfo = document.getElementById("athleteInfoComplete");
     const usaBracketing = document.getElementById("usaBracketingComplete");
     const districtRegistration = document.getElementById("districtRegistrationComplete");
     const calendarTask = document.getElementById("calendarComplete");
@@ -394,7 +374,7 @@
     const progressFill = document.getElementById("progressFill");
     const copyStatus = document.getElementById("copyStatus");
 
-    const taskBoxes = [sportsYou, athleteInfo, usaBracketing, districtRegistration, calendarTask];
+    const taskBoxes = [sportsYou, usaBracketing, districtRegistration, calendarTask];
 
     function updateProgress() {
       const completed = taskBoxes.filter(box => box && box.checked).length;
@@ -403,7 +383,6 @@
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         sportsYou: sportsYou.checked,
-        athleteInfo: athleteInfo.checked,
         usaBracketing: usaBracketing.checked,
         districtRegistration: districtRegistration.checked,
         calendar: calendarTask.checked
@@ -412,7 +391,6 @@
 
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
     sportsYou.checked = Boolean(saved.sportsYou);
-    athleteInfo.checked = Boolean(saved.athleteInfo);
     usaBracketing.checked = Boolean(saved.usaBracketing);
     districtRegistration.checked = Boolean(saved.districtRegistration);
     calendarTask.checked = Boolean(saved.calendar);
