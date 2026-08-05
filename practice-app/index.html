@@ -326,22 +326,36 @@ function isEditingPlanner(){
 }
 
 async function pullFromCloud(){
+  let planData = null;
   try {
     const planSnap = await getDoc(PLAN_DOC);
     if (planSnap.exists() && planSnap.data() && planSnap.data().data) {
-      localStorage.setItem('wpp-v2', JSON.stringify(planSnap.data().data));
+      planData = planSnap.data().data;
     } else {
       await pushPlanToCloud();
     }
   } catch (e) { console.warn('Could not load practice plan from cloud', e); }
+
+  // This fetch takes a moment, and the app is interactive the whole time —
+  // if the coach already started editing (e.g. changing the date) before it
+  // resolves, applying an older cloud copy now would stomp on that edit.
+  // Skip it; their edit becomes the new source of truth once it saves.
+  const editingNow = isEditingPlanner();
+  if (planData && !editingNow) {
+    localStorage.setItem('wpp-v2', JSON.stringify(planData));
+  }
+
   try {
     const liveSnap = await getDoc(LIVE_DOC);
     if (liveSnap.exists() && liveSnap.data() && liveSnap.data().data) {
       localStorage.setItem('wpp-live-session', JSON.stringify(liveSnap.data().data));
     }
   } catch (e) { console.warn('Could not load live session from cloud', e); }
-  window.load();
-  window.render();
+
+  if (!editingNow) {
+    window.load();
+    window.render();
+  }
   window.restoreLiveState();
   window.ensurePracticeTicker();
 }
@@ -468,8 +482,10 @@ async function startExtraPlannerSync(){
   await pullKeyFromCloud('wpp-drill-library');
   await pullKeyFromCloud('wpp-practice-queue');
   await pullKeyFromCloud('wpp-whiteboard');
-  applyArchiveRefresh();
-  applyDrillQueueRefresh();
+  if (!isEditingPlanner()) {
+    applyArchiveRefresh();
+    applyDrillQueueRefresh();
+  }
 
   onSnapshot(SYNCED_KEYS['wpp-practice-library'], (snap) => {
     if (keySuppressFlags['wpp-practice-library']) { keySuppressFlags['wpp-practice-library'] = false; return; }
