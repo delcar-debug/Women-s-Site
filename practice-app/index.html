@@ -374,7 +374,12 @@ function startPlannerSync(){
     onSnapshot(LIVE_DOC, (snap) => {
       if (suppressLiveSnapshot) { suppressLiveSnapshot = false; return; }
       if (!snap.exists()) return;
-      if (window.state && window.state.practiceActive && window.state.running) return;
+      const st = window.state;
+      // restoreLiveState() always force-stops the work/rest interval timer and
+      // resets the main countdown's "running" flag, so never call it while
+      // either timer is actively ticking on this device — that would be this
+      // device fighting itself every time its own save echoes back.
+      if (st && (st.running || (st.interval && st.interval.running))) return;
       const data = snap.data();
       if (data && data.data) {
         localStorage.setItem('wpp-live-session', JSON.stringify(data.data));
