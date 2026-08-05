@@ -249,6 +249,8 @@ const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getFirestore(fbApp);
 const COACH_EMAIL = 'coach@holmenwrestling.app';
+const COACH_PASSCODE = 'illhaveanother';
+const COACH_SESSION_KEY = 'holmenCoachHubAccess';
 const ROSTER_DOC = doc(db, 'rosterManager', 'roster');
 
 const loginScreen = document.getElementById('loginScreen');
@@ -271,13 +273,26 @@ loginForm.addEventListener('submit', (e) => {
 
 logoutBtn.addEventListener('click', () => signOut(auth));
 
+// If this browser already unlocked Coach Hub this session, sign in silently
+// instead of asking for the same passcode a second time.
+let autoSignInPending = sessionStorage.getItem(COACH_SESSION_KEY) === 'granted';
+if (autoSignInPending) {
+  signInWithEmailAndPassword(auth, COACH_EMAIL, COACH_PASSCODE)
+    .catch(() => {
+      // Shared passcode changed or sign-in failed — fall back to the visible form.
+      autoSignInPending = false;
+      loginScreen.style.display = 'grid';
+      appWrap.style.display = 'none';
+    });
+}
+
 onAuthStateChanged(auth, (user) => {
   if (user) {
     loginScreen.style.display = 'none';
     appWrap.style.display = 'block';
     passcodeInput.value = '';
     initRoster();
-  } else {
+  } else if (!autoSignInPending) {
     loginScreen.style.display = 'grid';
     appWrap.style.display = 'none';
   }
