@@ -1037,7 +1037,7 @@ const DEFAULT_DESKTOP={practice:['intervalBox','spotifyBox'],tools:['coachNotesP
 const DEFAULT_MOBILE=['intervalBox','spotifyBox','coachNotesPanel','mobileRatingsWrap','qrBox'];
 function positionTimerCard(){
   if(mq.matches){dashGrid.insertBefore(timerCard,dashGrid.firstChild)}
-  else{practicePanel.insertBefore(timerCard,practicePanel.firstChild)}
+  else{const planList=planPanel.querySelector('.plan-list');if(planList)planPanel.insertBefore(timerCard,planList);else planPanel.appendChild(timerCard)}
 }
 const LAYOUT_KEY='wpp-coach-layout-v8';
 function loadLayout(){try{return JSON.parse(localStorage.getItem(LAYOUT_KEY)||'null')}catch(err){return null}}
