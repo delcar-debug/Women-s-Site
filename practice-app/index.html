@@ -41,6 +41,7 @@ body.pp-authed .pp-login{display:none}
 <nav aria-label="App pages" class="page-nav"><button class="active" id="navBuilder" type="button">Practice Builder</button><button id="navCoach" type="button">Coach Mode</button><a id="navTeam" href="#" rel="noopener">TV View</a><button id="navLibrary" type="button">Archive</button><button id="navData" type="button">Data</button><button id="navQueue" type="button">Inbox</button><button id="navDrills" type="button">Library</button></nav>
 <div class="planner-grid page-view" id="builderPage">
 <div class="unrated-alert" id="unratedAlert" hidden></div>
+<div class="unrated-alert missed-attendance-alert" id="missedAttendanceAlert" hidden></div>
 <section class="card"><h2>Build Practice</h2><div class="settings">
 <div class="field"><label for="practiceDate">Practice date</label><input id="practiceDate" type="date"/></div>
 <div class="field"><label for="startTime">Start time</label><input id="startTime" type="time" value="15:30"/></div>
@@ -419,7 +420,9 @@ const SYNCED_KEYS = {
   'wpp-practice-library': doc(db, 'practicePlanner', 'archives'),
   'wpp-drill-library': doc(db, 'practicePlanner', 'drillLibrary'),
   'wpp-practice-queue': doc(db, 'practicePlanner', 'practiceQueue'),
-  'wpp-whiteboard': doc(db, 'practicePlanner', 'whiteboard')
+  'wpp-whiteboard': doc(db, 'practicePlanner', 'whiteboard'),
+  'wpp-roster': doc(db, 'practicePlanner', 'attendanceRoster'),
+  'wpp-attendance': doc(db, 'practicePlanner', 'attendanceRecords')
 };
 
 const keyPushTimers = {};
@@ -475,6 +478,10 @@ function applyDrillQueueRefresh(){
   if (typeof window.populateBlockDrillDropdown === 'function') window.populateBlockDrillDropdown();
 }
 
+function applyAttendanceRefresh(){
+  if (typeof window.refreshAttendanceUI === 'function') window.refreshAttendanceUI();
+}
+
 async function startExtraPlannerSync(){
   installStorageInterception();
 
@@ -482,9 +489,12 @@ async function startExtraPlannerSync(){
   await pullKeyFromCloud('wpp-drill-library');
   await pullKeyFromCloud('wpp-practice-queue');
   await pullKeyFromCloud('wpp-whiteboard');
+  await pullKeyFromCloud('wpp-roster');
+  await pullKeyFromCloud('wpp-attendance');
   if (!isEditingPlanner()) {
     applyArchiveRefresh();
     applyDrillQueueRefresh();
+    applyAttendanceRefresh();
   }
 
   onSnapshot(SYNCED_KEYS['wpp-practice-library'], (snap) => {
@@ -518,6 +528,22 @@ async function startExtraPlannerSync(){
     // built, with no global refresh hook — so this keeps the stored data
     // current for next load, but won't redraw an already-open editor live.
     localStorage.setItem('wpp-whiteboard', JSON.stringify(snap.data().data));
+  });
+
+  onSnapshot(SYNCED_KEYS['wpp-roster'], (snap) => {
+    if (keySuppressFlags['wpp-roster']) { keySuppressFlags['wpp-roster'] = false; return; }
+    if (!snap.exists() || !snap.data()) return;
+    if (isEditingPlanner()) return;
+    localStorage.setItem('wpp-roster', JSON.stringify(snap.data().data || []));
+    applyAttendanceRefresh();
+  });
+
+  onSnapshot(SYNCED_KEYS['wpp-attendance'], (snap) => {
+    if (keySuppressFlags['wpp-attendance']) { keySuppressFlags['wpp-attendance'] = false; return; }
+    if (!snap.exists() || !snap.data()) return;
+    if (isEditingPlanner()) return;
+    localStorage.setItem('wpp-attendance', JSON.stringify(snap.data().data || {}));
+    applyAttendanceRefresh();
   });
 }
 </script>

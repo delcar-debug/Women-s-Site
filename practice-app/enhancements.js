@@ -1037,6 +1037,32 @@
       coachReminder.hidden = isAttendanceDoneForDate(currentPracticeDate());
     }
 
+    function checkMissingAttendance() {
+      const box = document.getElementById('missedAttendanceAlert');
+      if (!box) return;
+      const roster = loadRoster().filter(a => a.active !== false);
+      if (!roster.length) { box.hidden = true; box.innerHTML = ''; return; }
+      const attendance = loadAttendance();
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const seenDates = new Set();
+      const missed = (typeof state !== 'undefined' ? (state.archives || []) : []).filter(a => {
+        if (!a.date || seenDates.has(a.date)) return false;
+        seenDates.add(a.date);
+        const d = new Date(a.date + 'T00:00:00');
+        if (Number.isNaN(d.getTime())) return false;
+        const nextDay = new Date(d.getTime() + 86400000);
+        if (today < nextDay) return false;
+        return !attendance[a.date];
+      }).sort((a, b) => new Date(a.date) - new Date(b.date));
+      if (!missed.length) { box.hidden = true; box.innerHTML = ''; return; }
+      const shown = missed.slice(0, 3).map(a => formatDate(a.date)).join(', ');
+      const more = missed.length > 3 ? ` and ${missed.length - 3} more` : '';
+      box.hidden = false;
+      box.innerHTML = `<span>📋 <strong>${missed.length} practice${missed.length === 1 ? '' : 's'} missing attendance:</strong> ${esc(shown)}${esc(more)}</span><button class="secondary" id="missedAttendanceGoBtn" type="button">Take attendance</button>`;
+      const goBtn = document.getElementById('missedAttendanceGoBtn');
+      if (goBtn) goBtn.onclick = () => openModal(missed[0].date);
+    }
+
     function computeAttendanceStats() {
       const roster = loadRoster().filter(a => a.active !== false);
       const attendance = loadAttendance();
@@ -1190,6 +1216,7 @@
     renderSummary();
     renderAlert();
     renderCoachReminder();
+    checkMissingAttendance();
     installDataCard();
     renderDataCard();
     installWeeklyAttendanceCard();
@@ -1303,12 +1330,25 @@
       renderSummary();
       renderAlert();
       renderCoachReminder();
+      checkMissingAttendance();
       renderDataCard();
       renderWeeklyAttendance();
       closeModal();
     });
 
-    setInterval(() => { renderAlert(); renderCoachReminder(); }, 1500);
+    setInterval(() => { renderAlert(); renderCoachReminder(); checkMissingAttendance(); }, 1500);
+
+    // Exposed so the cross-device sync layer (index.html) can refresh this
+    // UI after pulling fresh wpp-roster/wpp-attendance data from the cloud —
+    // these render functions are otherwise private to this closure.
+    window.refreshAttendanceUI = () => {
+      renderSummary();
+      renderAlert();
+      renderCoachReminder();
+      checkMissingAttendance();
+      renderDataCard();
+      renderWeeklyAttendance();
+    };
 
     return true;
   }
