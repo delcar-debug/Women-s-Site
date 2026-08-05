@@ -1005,14 +1005,10 @@ const notes=document.getElementById('coachNotesPanel');
 const ratingA=document.getElementById('practiceRatingRow');
 const ratingB=document.getElementById('teamCultureRatingRow');
 const resizeHandle=document.getElementById('dashResizeHandle');
-if(!dashGrid||!practicePanel||!toolsPanel||!toolsScroll||!planPanel||!qrBox||!timerCard||!intervalBox||!spotifyBox||!notes||!ratingA||!ratingB)return;
 const inboxEl=document.getElementById('coachPracticeInbox')||document.getElementById('nextPracticeNotesCoach');
-if(inboxEl&&!inboxEl.dataset.mergedIntoNotes){
-  inboxEl.dataset.mergedIntoNotes='1';
-  inboxEl.classList.add('notes-inbox-nested');
-  inboxEl.removeAttribute('id');
-  notes.appendChild(inboxEl);
-}
+if(!dashGrid||!practicePanel||!toolsPanel||!toolsScroll||!planPanel||!qrBox||!timerCard||!intervalBox||!spotifyBox||!notes||!ratingA||!ratingB||!inboxEl)return;
+inboxEl.classList.remove('notes-inbox-nested');
+delete inboxEl.dataset.mergedIntoNotes;
 let ratingWrap=document.getElementById('mobileRatingsWrap');
 let ratingBody=document.getElementById('mobileRatingsBody');
 if(!ratingWrap){
@@ -1032,10 +1028,10 @@ if(!ratingWrap){
 }
 ratingBody.appendChild(ratingA);
 ratingBody.appendChild(ratingB);
-const CARDS=[{id:'qrBox',el:qrBox},{id:'intervalBox',el:intervalBox},{id:'spotifyBox',el:spotifyBox},{id:'coachNotesPanel',el:notes},{id:'mobileRatingsWrap',el:ratingWrap}];
+const CARDS=[{id:'qrBox',el:qrBox},{id:'intervalBox',el:intervalBox},{id:'spotifyBox',el:spotifyBox},{id:'coachNotesPanel',el:notes},{id:'nextPracticeNotesCoach',el:inboxEl},{id:'mobileRatingsWrap',el:ratingWrap}];
 const cardById=id=>{const c=CARDS.find(x=>x.id===id);return c?c.el:null};
-const DEFAULT_DESKTOP={practice:['intervalBox','spotifyBox'],tools:['coachNotesPanel','mobileRatingsWrap','qrBox']};
-const DEFAULT_MOBILE=['intervalBox','spotifyBox','coachNotesPanel','mobileRatingsWrap','qrBox'];
+const DEFAULT_DESKTOP={practice:['intervalBox','spotifyBox'],tools:['coachNotesPanel','nextPracticeNotesCoach','mobileRatingsWrap','qrBox']};
+const DEFAULT_MOBILE=['intervalBox','spotifyBox','coachNotesPanel','nextPracticeNotesCoach','mobileRatingsWrap','qrBox'];
 function positionTimerCard(){
   if(mq.matches){dashGrid.insertBefore(timerCard,dashGrid.firstChild)}
   else{const planList=planPanel.querySelector('.plan-list');if(planList)planPanel.insertBefore(timerCard,planList);else planPanel.appendChild(timerCard)}
