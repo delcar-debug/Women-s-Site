@@ -279,7 +279,7 @@ function waitForGlobals(names, cb, tries){
 }
 
 function initPlannerSync(){
-  waitForGlobals(['save','saveLiveState','load','render','restoreLiveState','ensurePracticeTicker','state'], startPlannerSync);
+  waitForGlobals(['save','saveLiveState','load','render','restoreLiveState','ensurePracticeTicker','state','renderLibrary','loadCoachKnowledge','renderQueue','renderDrillLibrary','populateBlockDrillDropdown'], startPlannerSync);
 }
 
 let suppressPlanSnapshot = false;
@@ -389,6 +389,119 @@ function startPlannerSync(){
       window.restoreLiveState();
       window.ensurePracticeTicker();
     });
+  });
+
+  startExtraPlannerSync();
+}
+
+/* ----- Phase 2b/2c: archive, drill library, practice queue, whiteboard -----
+   Several call sites across app.js/enhancements.js write these keys directly
+   (not just one save() function like Phase 2a), and the whiteboard's save
+   logic is a private closure with no global hook at all. Rather than patch
+   every call site individually, intercept localStorage.setItem itself so any
+   write to a synced key — from anywhere — gets pushed to the cloud. */
+
+const SYNCED_KEYS = {
+  'wpp-practice-library': doc(db, 'practicePlanner', 'archives'),
+  'wpp-drill-library': doc(db, 'practicePlanner', 'drillLibrary'),
+  'wpp-practice-queue': doc(db, 'practicePlanner', 'practiceQueue'),
+  'wpp-whiteboard': doc(db, 'practicePlanner', 'whiteboard')
+};
+
+const keyPushTimers = {};
+const keySuppressFlags = {};
+
+function scheduleKeyPush(key){
+  clearTimeout(keyPushTimers[key]);
+  keyPushTimers[key] = setTimeout(() => pushKeyToCloud(key), 800);
+}
+
+async function pushKeyToCloud(key){
+  try {
+    const raw = localStorage.getItem(key);
+    keySuppressFlags[key] = true;
+    await setDoc(SYNCED_KEYS[key], { data: raw ? JSON.parse(raw) : null, updatedAt: serverTimestamp() });
+  } catch (e) { console.warn('Cloud sync failed for', key, e); }
+}
+
+function installStorageInterception(){
+  const originalSetItem = Storage.prototype.setItem;
+  Storage.prototype.setItem = function(key, value){
+    originalSetItem.call(this, key, value);
+    if (this === window.localStorage && SYNCED_KEYS[key]) {
+      scheduleKeyPush(key);
+    }
+  };
+}
+
+async function pullKeyFromCloud(key){
+  try {
+    const snap = await getDoc(SYNCED_KEYS[key]);
+    if (snap.exists() && snap.data() && snap.data().data !== undefined && snap.data().data !== null) {
+      localStorage.setItem(key, JSON.stringify(snap.data().data));
+    } else {
+      await pushKeyToCloud(key);
+    }
+  } catch (e) { console.warn('Could not load', key, 'from cloud', e); }
+}
+
+function applyArchiveRefresh(){
+  try {
+    const raw = localStorage.getItem('wpp-practice-library');
+    const parsed = raw ? JSON.parse(raw) : [];
+    if (window.state) window.state.archives = Array.isArray(parsed) ? parsed : [];
+  } catch (e) { /* ignore */ }
+  if (typeof window.renderLibrary === 'function') window.renderLibrary();
+}
+
+function applyDrillQueueRefresh(){
+  if (typeof window.loadCoachKnowledge === 'function') window.loadCoachKnowledge();
+  if (typeof window.renderQueue === 'function') window.renderQueue();
+  if (typeof window.renderDrillLibrary === 'function') window.renderDrillLibrary();
+  if (typeof window.populateBlockDrillDropdown === 'function') window.populateBlockDrillDropdown();
+}
+
+async function startExtraPlannerSync(){
+  installStorageInterception();
+
+  await pullKeyFromCloud('wpp-practice-library');
+  await pullKeyFromCloud('wpp-drill-library');
+  await pullKeyFromCloud('wpp-practice-queue');
+  await pullKeyFromCloud('wpp-whiteboard');
+  applyArchiveRefresh();
+  applyDrillQueueRefresh();
+
+  onSnapshot(SYNCED_KEYS['wpp-practice-library'], (snap) => {
+    if (keySuppressFlags['wpp-practice-library']) { keySuppressFlags['wpp-practice-library'] = false; return; }
+    if (!snap.exists() || !snap.data()) return;
+    if (isEditingPlanner()) return;
+    localStorage.setItem('wpp-practice-library', JSON.stringify(snap.data().data || []));
+    applyArchiveRefresh();
+  });
+
+  onSnapshot(SYNCED_KEYS['wpp-drill-library'], (snap) => {
+    if (keySuppressFlags['wpp-drill-library']) { keySuppressFlags['wpp-drill-library'] = false; return; }
+    if (!snap.exists() || !snap.data()) return;
+    if (isEditingPlanner()) return;
+    localStorage.setItem('wpp-drill-library', JSON.stringify(snap.data().data || []));
+    applyDrillQueueRefresh();
+  });
+
+  onSnapshot(SYNCED_KEYS['wpp-practice-queue'], (snap) => {
+    if (keySuppressFlags['wpp-practice-queue']) { keySuppressFlags['wpp-practice-queue'] = false; return; }
+    if (!snap.exists() || !snap.data()) return;
+    if (isEditingPlanner()) return;
+    localStorage.setItem('wpp-practice-queue', JSON.stringify(snap.data().data || []));
+    applyDrillQueueRefresh();
+  });
+
+  onSnapshot(SYNCED_KEYS['wpp-whiteboard'], (snap) => {
+    if (keySuppressFlags['wpp-whiteboard']) { keySuppressFlags['wpp-whiteboard'] = false; return; }
+    if (!snap.exists() || !snap.data() || !snap.data().data) return;
+    // The whiteboard's editor reads localStorage once when that page is first
+    // built, with no global refresh hook — so this keeps the stored data
+    // current for next load, but won't redraw an already-open editor live.
+    localStorage.setItem('wpp-whiteboard', JSON.stringify(snap.data().data));
   });
 }
 </script>
