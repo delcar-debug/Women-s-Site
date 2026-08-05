@@ -1004,6 +1004,7 @@ const spotifyBox=document.getElementById('spotifyBox');
 const notes=document.getElementById('coachNotesPanel');
 const ratingA=document.getElementById('practiceRatingRow');
 const ratingB=document.getElementById('teamCultureRatingRow');
+const resizeHandle=document.getElementById('dashResizeHandle');
 if(!dashGrid||!practicePanel||!toolsPanel||!toolsScroll||!planPanel||!qrBox||!timerCard||!intervalBox||!spotifyBox||!notes||!ratingA||!ratingB)return;
 const inboxEl=document.getElementById('coachPracticeInbox')||document.getElementById('nextPracticeNotesCoach');
 if(inboxEl&&!inboxEl.dataset.mergedIntoNotes){
@@ -1065,11 +1066,23 @@ function applySizes(layout){
   if(!layout||!layout.sizes)return;
   CARDS.forEach(c=>{const h=layout.sizes[c.id];if(h&&(c.el.tagName!=='DETAILS'||c.el.open))c.el.style.height=h});
 }
+function planWidthBounds(){
+  const min=340,gridW=dashGrid.getBoundingClientRect().width||0;
+  const max=gridW?Math.max(min,gridW-300-18):9999;
+  return {min,max};
+}
+function applyPlanWidth(layout){
+  if(mq.matches||!layout||!layout.planWidth){planPanel.style.flex='';return}
+  const {min,max}=planWidthBounds();
+  const w=Math.min(Math.max(layout.planWidth,min),max);
+  planPanel.style.flex='0 0 '+w+'px';
+}
 const mq=window.matchMedia('(max-width:900px)');
 function apply(e){
   const layout=loadLayout();
   if(e.matches)applyMobile(layout);else applyDesktop(layout);
   applySizes(layout);
+  applyPlanWidth(layout);
   positionTimerCard();
 }
 function persist(){
@@ -1157,6 +1170,52 @@ function bindPanelDragging(){
     if(handle&&!handle.dataset.bound){handle.dataset.bound='1';handle.addEventListener('pointerdown',ev=>startPanelDrag(ev,c.el))}
   });
 }
+function initPlanResize(){
+  if(!resizeHandle||resizeHandle.dataset.bound)return;
+  resizeHandle.dataset.bound='1';
+  function commitWidth(w){
+    const existing=loadLayout()||{};
+    saveLayout({...existing,planWidth:Math.round(w)});
+  }
+  function startResize(ev){
+    if(mq.matches)return;
+    if(ev.pointerType==='mouse'&&ev.button!==0)return;
+    ev.preventDefault();
+    const startX=ev.clientX;
+    const startWidth=planPanel.getBoundingClientRect().width;
+    document.body.classList.add('dash-resizing');
+    document.body.style.userSelect='none';
+    function move(e2){
+      e2.preventDefault();
+      const{min,max}=planWidthBounds();
+      const w=Math.min(Math.max(startWidth+(e2.clientX-startX),min),max);
+      planPanel.style.flex='0 0 '+w+'px';
+    }
+    function stop(){
+      document.removeEventListener('pointermove',move);
+      document.removeEventListener('pointerup',stop);
+      document.removeEventListener('pointercancel',stop);
+      document.body.classList.remove('dash-resizing');
+      document.body.style.userSelect='';
+      commitWidth(planPanel.getBoundingClientRect().width);
+    }
+    document.addEventListener('pointermove',move,{passive:false});
+    document.addEventListener('pointerup',stop,{passive:false});
+    document.addEventListener('pointercancel',stop,{passive:false});
+  }
+  resizeHandle.addEventListener('pointerdown',startResize);
+  resizeHandle.addEventListener('keydown',ev=>{
+    if(mq.matches)return;
+    if(ev.key!=='ArrowLeft'&&ev.key!=='ArrowRight')return;
+    ev.preventDefault();
+    const step=ev.shiftKey?60:20;
+    const{min,max}=planWidthBounds();
+    const cur=planPanel.getBoundingClientRect().width;
+    const w=Math.min(Math.max(cur+(ev.key==='ArrowRight'?step:-step),min),max);
+    planPanel.style.flex='0 0 '+w+'px';
+    commitWidth(w);
+  });
+}
 CARDS.forEach(c=>{
   let resizeTimer=null;
   new ResizeObserver(()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(persist,300)}).observe(c.el);
@@ -1173,9 +1232,11 @@ const resetBtn=document.getElementById('resetCoachLayoutBtn');
 if(resetBtn)resetBtn.addEventListener('click',()=>{
   try{localStorage.removeItem(LAYOUT_KEY)}catch(err){}
   CARDS.forEach(c=>{c.el.style.height=''});
+  planPanel.style.flex='';
   apply(mq);
 });
 bindPanelDragging();
+initPlanResize();
 apply(mq);
 mq.addEventListener('change',apply);
 }
