@@ -63,12 +63,42 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 .modal-field input:focus,.modal-field select:focus{outline:2px solid var(--maroon);outline-offset:-1px}
 .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}
 @media(max-width:600px){.modal-grid{grid-template-columns:1fr}}
+.login{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(rgba(55,5,20,.91),rgba(55,5,20,.91)),radial-gradient(circle at top right,#a94461,#3d0918 65%)}
+.login-card{width:min(440px,100%);background:#fff;border-radius:22px;padding:32px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.3)}
+.login-card h1{margin:6px 0;font-size:2rem;letter-spacing:-.04em}
+.login-card p{color:var(--muted);line-height:1.55}
+.login-card input{width:100%;min-height:48px;padding:0 14px;border:1px solid #d4d6da;border-radius:10px;outline:none;margin-top:8px;font-size:1rem}
+.login-card input:focus{border-color:var(--maroon);box-shadow:0 0 0 3px rgba(109,23,48,.12)}
+.login-card .btn.primary{width:100%;margin-top:14px;min-height:46px}
+.login-error{display:none;color:#982323;background:#fff0f0;border-radius:10px;margin-top:12px;padding:10px;font-weight:750;font-size:.88rem}
+#appWrap{display:none}
+.logout-btn{background:none;border:1px solid #d8bcc5;color:var(--maroon);border-radius:999px;padding:8px 16px;font-weight:800;font-size:.82rem;cursor:pointer}
+.sync-note{font-size:.72rem;color:var(--muted);margin-top:4px}
 </style>
 </head>
 <body>
+
+<section id="loginScreen" class="login">
+<div class="login-card">
+<img src="assets/images/logo.png" alt="Holmen Women's Wrestling logo" style="width:90px;height:90px;object-fit:contain">
+<h1>Roster Manager</h1>
+<p>Enter the coach passcode to view and edit the team roster.</p>
+<form id="loginForm">
+<label for="passcode" style="display:block;text-align:left;font-weight:850;font-size:.85rem">Coach Passcode</label>
+<input id="passcode" type="password" required autocomplete="current-password">
+<button class="btn primary" type="submit">Log In</button>
+</form>
+<div id="loginError" class="login-error">That passcode is incorrect.</div>
+</div>
+</section>
+
+<div id="appWrap">
 <header class="header">
 <a class="brand" href="coach-hub.html">Holmen Women’s Wrestling</a>
+<div style="display:flex;gap:10px;align-items:center">
 <a class="back" href="coach-hub.html">Back to Coach Hub</a>
+<button class="logout-btn" id="logoutBtn">Log Out</button>
+</div>
 </header>
 
 <section class="hero">
@@ -86,7 +116,7 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 <h2 class="section-title">Team Roster</h2>
 <p class="section-sub">Click "Import from Athlete Form" to pull in any submissions saved on this device, or add and edit wrestlers directly.</p>
 <div class="toolbar">
-<div class="save-note">Changes save automatically in <strong>this browser</strong>. Use Export CSV to back up or share a copy.</div>
+<div class="save-note">Changes sync automatically to <strong>all devices</strong>. <span id="syncStatus" class="sync-note"></span> Use Export CSV to back up or share a copy.</div>
 <div class="toolbar-actions">
 <button class="btn" id="addRowBtn">+ Add Wrestler</button>
 <button class="btn" id="importBtn">Import from Athlete Form</button>
@@ -199,7 +229,60 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 </div>
 </div>
 
-<script>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAC48XQb09XVyqCmmxRtX3Pox1BPVruf70",
+  authDomain: "holmen-women-s-wrestling.firebaseapp.com",
+  projectId: "holmen-women-s-wrestling",
+  storageBucket: "holmen-women-s-wrestling.firebasestorage.app",
+  messagingSenderId: "283572750466",
+  appId: "1:283572750466:web:566708849a7cd57afd4c9b"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = getFirestore(fbApp);
+const COACH_EMAIL = 'coach@holmenwrestling.app';
+const ROSTER_DOC = doc(db, 'rosterManager', 'roster');
+
+const loginScreen = document.getElementById('loginScreen');
+const appWrap = document.getElementById('appWrap');
+const loginForm = document.getElementById('loginForm');
+const passcodeInput = document.getElementById('passcode');
+const loginError = document.getElementById('loginError');
+const logoutBtn = document.getElementById('logoutBtn');
+const syncStatus = document.getElementById('syncStatus');
+
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  loginError.style.display = 'none';
+  signInWithEmailAndPassword(auth, COACH_EMAIL, passcodeInput.value)
+    .catch(() => {
+      loginError.style.display = 'block';
+      passcodeInput.select();
+    });
+});
+
+logoutBtn.addEventListener('click', () => signOut(auth));
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    loginScreen.style.display = 'none';
+    appWrap.style.display = 'block';
+    passcodeInput.value = '';
+    initRoster();
+  } else {
+    loginScreen.style.display = 'grid';
+    appWrap.style.display = 'none';
+  }
+});
+
 const STORAGE_KEY = 'holmenWWRosterManager';
 const ATHLETE_FORM_KEY = 'holmenAthleteInformation';
 // Same Apps Script Web app URL pasted into athlete-information.html — see AthleteFormSync.gs.
@@ -234,8 +317,62 @@ function loadRoster(){
   return JSON.parse(JSON.stringify(ORIGINAL_ROSTER));
 }
 
+let cloudSaveTimer = null;
+let suppressNextSnapshot = false;
+let rosterListenerAttached = false;
+
 function saveRoster(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(currentRoster));
+  if(syncStatus) syncStatus.textContent = 'Saving…';
+  clearTimeout(cloudSaveTimer);
+  cloudSaveTimer = setTimeout(pushRosterToCloud, 700);
+}
+
+async function pushRosterToCloud(){
+  if(!auth.currentUser) return;
+  try {
+    suppressNextSnapshot = true;
+    await setDoc(ROSTER_DOC, { entries: currentRoster, updatedAt: serverTimestamp() });
+    if(syncStatus) syncStatus.textContent = 'Synced just now.';
+  } catch(e) {
+    if(syncStatus) syncStatus.textContent = 'Sync failed — check connection.';
+  }
+}
+
+async function initRoster(){
+  if(syncStatus) syncStatus.textContent = 'Loading…';
+  try {
+    const snap = await getDoc(ROSTER_DOC);
+    if(snap.exists() && Array.isArray(snap.data().entries) && snap.data().entries.length){
+      currentRoster = sortByName(snap.data().entries);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(currentRoster));
+    } else {
+      currentRoster = sortByName(loadRoster());
+      suppressNextSnapshot = true;
+      await setDoc(ROSTER_DOC, { entries: currentRoster, updatedAt: serverTimestamp() });
+    }
+    if(syncStatus) syncStatus.textContent = 'Synced.';
+  } catch(e) {
+    currentRoster = sortByName(loadRoster());
+    if(syncStatus) syncStatus.textContent = 'Offline — showing last saved copy.';
+  }
+  renderRoster();
+  if(!rosterListenerAttached){
+    rosterListenerAttached = true;
+    onSnapshot(ROSTER_DOC, (snap) => {
+      if(suppressNextSnapshot){ suppressNextSnapshot = false; return; }
+      if(!snap.exists()) return;
+      const data = snap.data();
+      if(!data || !Array.isArray(data.entries)) return;
+      const rosterScroll = document.getElementById('rosterScroll');
+      const activeInRoster = document.activeElement && rosterScroll && rosterScroll.contains(document.activeElement);
+      if(activeInRoster) return;
+      currentRoster = sortByName(data.entries);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(currentRoster));
+      renderRoster();
+      if(syncStatus) syncStatus.textContent = 'Updated from another device.';
+    });
+  }
 }
 
 function isComplete(entry){
@@ -405,9 +542,7 @@ function sortAndRerender(){
   renderRoster();
 }
 
-let currentRoster = sortByName(loadRoster());
-renderRoster();
-saveRoster();
+let currentRoster = [];
 
 document.getElementById('addRowBtn').addEventListener('click', () => {
   const firstName = prompt('Wrestler first name:', '');
