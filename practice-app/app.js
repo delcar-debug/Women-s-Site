@@ -1052,7 +1052,7 @@ function positionPlanPanel(){
 function applyDesktop(layout){
   const valid=layout&&Array.isArray(layout.practice)&&Array.isArray(layout.tools)&&layout.practice.length+layout.tools.length===CARDS.length;
   const order=valid?layout:DEFAULT_DESKTOP;
-  order.practice.forEach(id=>{const el=cardById(id);if(el)practicePanel.appendChild(el)});
+  order.practice.forEach(id=>{const el=cardById(id);if(el)toolsScroll.appendChild(el)});
   order.tools.forEach(id=>{const el=cardById(id);if(el)toolsScroll.appendChild(el)});
 }
 function applyMobile(layout){
@@ -1079,7 +1079,7 @@ function persist(){
   const layoutPatch=mq.matches?{mobile:[...dashGrid.querySelectorAll(':scope > .coach-panel-card')].map(c=>c.id)}:{practice:[...practicePanel.querySelectorAll(':scope > .coach-panel-card')].map(c=>c.id),tools:[...toolsScroll.querySelectorAll(':scope > .coach-panel-card')].map(c=>c.id)};
   saveLayout({...existing,...layoutPatch,sizes});
 }
-function panelZones(){return mq.matches?[dashGrid]:[practicePanel,toolsScroll]}
+function panelZones(){return mq.matches?[dashGrid]:[toolsScroll]}
 function zoneCards(zone){return [...zone.querySelectorAll(':scope > .coach-panel-card')]}
 function startPanelDrag(e,source){
   if(e.pointerType==='mouse'&&e.button!==0)return;
