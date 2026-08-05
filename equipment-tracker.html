@@ -86,12 +86,42 @@ td .cell-select:focus{outline:2px solid var(--maroon);outline-offset:-2px;backgr
 .modal-empty{color:var(--muted);font-size:.9rem;margin:0 0 18px}
 .modal-actions{display:flex;justify-content:flex-end;gap:8px}
 .modal-save-note{font-size:.78rem;color:var(--muted);margin:-6px 0 14px}
+.login{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(rgba(55,5,20,.91),rgba(55,5,20,.91)),radial-gradient(circle at top right,#a94461,#3d0918 65%)}
+.login-card{width:min(440px,100%);background:#fff;border-radius:22px;padding:32px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.3)}
+.login-card h1{margin:6px 0;font-size:2rem;letter-spacing:-.04em}
+.login-card p{color:var(--muted);line-height:1.55}
+.login-card input{width:100%;min-height:48px;padding:0 14px;border:1px solid #d4d6da;border-radius:10px;outline:none;margin-top:8px;font-size:1rem}
+.login-card input:focus{border-color:var(--maroon);box-shadow:0 0 0 3px rgba(109,23,48,.12)}
+.login-card .btn.primary{width:100%;margin-top:14px;min-height:46px}
+.login-error{display:none;color:#982323;background:#fff0f0;border-radius:10px;margin-top:12px;padding:10px;font-weight:750;font-size:.88rem}
+#appWrap{display:none}
+.logout-btn{background:none;border:1px solid #d8bcc5;color:var(--maroon);border-radius:999px;padding:8px 16px;font-weight:800;font-size:.82rem;cursor:pointer}
+.sync-note{font-size:.72rem;color:var(--muted);margin-top:4px}
 </style>
 </head>
 <body>
+
+<section id="loginScreen" class="login">
+<div class="login-card">
+<img src="assets/images/logo.png" alt="Holmen Women's Wrestling logo" style="width:90px;height:90px;object-fit:contain">
+<h1>Equipment Tracker</h1>
+<p>Enter the coach passcode to view and edit the equipment tracker.</p>
+<form id="loginForm">
+<label for="passcode" style="display:block;text-align:left;font-weight:850;font-size:.85rem">Coach Passcode</label>
+<input id="passcode" type="password" required autocomplete="current-password">
+<button class="btn primary" type="submit">Log In</button>
+</form>
+<div id="loginError" class="login-error">That passcode is incorrect.</div>
+</div>
+</section>
+
+<div id="appWrap">
 <header class="header">
 <a class="brand" href="coach-hub.html">Holmen Women’s Wrestling</a>
+<div style="display:flex;gap:10px;align-items:center">
 <a class="back" href="coach-hub.html">Back to Coach Hub</a>
+<button class="logout-btn" id="logoutBtn">Log Out</button>
+</div>
 </header>
 
 <section class="hero">
@@ -109,7 +139,7 @@ td .cell-select:focus{outline:2px solid var(--maroon);outline-offset:-2px;backgr
 <h2 class="section-title">Checked-Out Gear by Wrestler</h2>
 <p class="section-sub">Every wrestler, everything they have checked out. Click a name for a quick summary popup.</p>
 <div class="toolbar">
-<div class="save-note">Changes save automatically in <strong>this browser</strong>. Use Export CSV to back up or share a copy.</div>
+<div class="save-note">Changes sync automatically to <strong>all devices</strong>. <span id="syncStatus" class="sync-note"></span> Use Export CSV to back up or share a copy.</div>
 <div class="toolbar-actions">
 <button class="btn" id="addRowBtn">+ Add Wrestler</button>
 <button class="btn" id="exportBtn">Export CSV</button>
@@ -298,7 +328,73 @@ td .cell-select:focus{outline:2px solid var(--maroon);outline-offset:-2px;backgr
 </div>
 </div>
 
-<script>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAC48XQb09XVyqCmmxRtX3Pox1BPVruf70",
+  authDomain: "holmen-women-s-wrestling.firebaseapp.com",
+  projectId: "holmen-women-s-wrestling",
+  storageBucket: "holmen-women-s-wrestling.firebasestorage.app",
+  messagingSenderId: "283572750466",
+  appId: "1:283572750466:web:566708849a7cd57afd4c9b"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = getFirestore(fbApp);
+const COACH_EMAIL = 'coach@holmenwrestling.app';
+const COACH_PASSCODE = 'illhaveanother';
+const COACH_SESSION_KEY = 'holmenCoachHubAccess';
+const CHECKOUT_DOC = doc(db, 'equipmentTracker', 'checkout');
+const GEAR_DOC = doc(db, 'equipmentTracker', 'gear');
+
+const loginScreen = document.getElementById('loginScreen');
+const appWrap = document.getElementById('appWrap');
+const loginForm = document.getElementById('loginForm');
+const passcodeInput = document.getElementById('passcode');
+const loginError = document.getElementById('loginError');
+const logoutBtn = document.getElementById('logoutBtn');
+const syncStatus = document.getElementById('syncStatus');
+
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  loginError.style.display = 'none';
+  signInWithEmailAndPassword(auth, COACH_EMAIL, passcodeInput.value)
+    .catch(() => {
+      loginError.style.display = 'block';
+      passcodeInput.select();
+    });
+});
+
+logoutBtn.addEventListener('click', () => signOut(auth));
+
+let autoSignInPending = sessionStorage.getItem(COACH_SESSION_KEY) === 'granted';
+if (autoSignInPending) {
+  signInWithEmailAndPassword(auth, COACH_EMAIL, COACH_PASSCODE)
+    .catch(() => {
+      autoSignInPending = false;
+      loginScreen.style.display = 'grid';
+      appWrap.style.display = 'none';
+    });
+}
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    loginScreen.style.display = 'none';
+    appWrap.style.display = 'block';
+    passcodeInput.value = '';
+    initEquipmentSync();
+  } else if (!autoSignInPending) {
+    loginScreen.style.display = 'grid';
+    appWrap.style.display = 'none';
+  }
+});
+
 const STORAGE_KEY = 'holmenWWEquipmentTracker';
 const GEAR_STORAGE_KEY = 'holmenWWGearInventoryV2';
 const COLUMNS = ['blackSize','blackNum','maroonSize','maroonNum','blackPink','blackPinkNum','shortsSize','shortsNum','zipSize','zipNum','bags','blue','red','oldBlack','oldMaroon'];
@@ -337,8 +433,24 @@ function loadData(){
   return JSON.parse(JSON.stringify(ORIGINAL_DATA));
 }
 
+let checkoutPushTimer = null;
+let suppressCheckoutSnapshot = false;
+
 function saveData(data){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  if (syncStatus) syncStatus.textContent = 'Saving…';
+  clearTimeout(checkoutPushTimer);
+  checkoutPushTimer = setTimeout(pushCheckoutToCloud, 700);
+}
+
+async function pushCheckoutToCloud(){
+  try {
+    suppressCheckoutSnapshot = true;
+    await setDoc(CHECKOUT_DOC, { entries: currentData, updatedAt: serverTimestamp() });
+    if (syncStatus) syncStatus.textContent = 'Synced just now.';
+  } catch (e) {
+    if (syncStatus) syncStatus.textContent = 'Sync failed — check connection.';
+  }
 }
 
 let modalIndex = null;
@@ -566,7 +678,6 @@ function exportCSV(){
 
 let currentData = sortByName(loadData());
 renderMasterTable();
-saveData(currentData);
 
 document.getElementById('addRowBtn').addEventListener('click', () => {
   const blank = {name:'New Wrestler'};
@@ -716,8 +827,22 @@ function loadGear(){
   return JSON.parse(JSON.stringify(ORIGINAL_GEAR));
 }
 
+let gearPushTimer = null;
+let suppressGearSnapshot = false;
+
 function saveGear(){
   localStorage.setItem(GEAR_STORAGE_KEY, JSON.stringify(currentGear));
+  clearTimeout(gearPushTimer);
+  gearPushTimer = setTimeout(pushGearToCloud, 700);
+}
+
+async function pushGearToCloud(){
+  try {
+    suppressGearSnapshot = true;
+    await setDoc(GEAR_DOC, { data: currentGear, updatedAt: serverTimestamp() });
+  } catch (e) {
+    if (syncStatus) syncStatus.textContent = 'Sync failed — check connection.';
+  }
 }
 
 /* ----- size normalization + checkout counting ----- */
@@ -878,7 +1003,6 @@ let currentGear = loadGear();
 renderAllGearTables();
 renderSimpleTable('tanktops');
 renderSimpleTable('ordering');
-saveGear();
 
 /* ----- Random Stuff dropdown ----- */
 
@@ -888,6 +1012,75 @@ RANDOM_STUFF.forEach(r => {
   li.innerHTML = '<span>' + r.item + '</span><span>' + (r.qty || '&mdash;') + '</span>';
   randomListEl.appendChild(li);
 });
+
+/* ----- Cloud sync (Firestore) ----- */
+
+function isEditingTracker(){
+  const active = document.activeElement;
+  if (!active) return false;
+  const tag = active.tagName;
+  return tag === 'INPUT' || tag === 'SELECT' || active.isContentEditable;
+}
+
+let equipmentSyncStarted = false;
+
+async function initEquipmentSync(){
+  if (equipmentSyncStarted) return;
+  equipmentSyncStarted = true;
+
+  if (syncStatus) syncStatus.textContent = 'Loading…';
+  try {
+    const checkoutSnap = await getDoc(CHECKOUT_DOC);
+    if (checkoutSnap.exists() && Array.isArray(checkoutSnap.data().entries) && checkoutSnap.data().entries.length) {
+      currentData = sortByName(checkoutSnap.data().entries);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+    } else {
+      await pushCheckoutToCloud();
+    }
+  } catch (e) { console.warn('Could not load equipment checkout data from cloud', e); }
+
+  try {
+    const gearSnap = await getDoc(GEAR_DOC);
+    if (gearSnap.exists() && gearSnap.data() && gearSnap.data().data) {
+      currentGear = gearSnap.data().data;
+      localStorage.setItem(GEAR_STORAGE_KEY, JSON.stringify(currentGear));
+    } else {
+      await pushGearToCloud();
+    }
+  } catch (e) { console.warn('Could not load gear inventory from cloud', e); }
+
+  renderAll();
+  renderAllGearTables();
+  renderSimpleTable('tanktops');
+  renderSimpleTable('ordering');
+  if (syncStatus) syncStatus.textContent = 'Synced.';
+
+  onSnapshot(CHECKOUT_DOC, (snap) => {
+    if (suppressCheckoutSnapshot) { suppressCheckoutSnapshot = false; return; }
+    if (!snap.exists()) return;
+    const data = snap.data();
+    if (!data || !Array.isArray(data.entries)) return;
+    if (isEditingTracker()) return;
+    currentData = sortByName(data.entries);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+    renderAll();
+    if (syncStatus) syncStatus.textContent = 'Updated from another device.';
+  });
+
+  onSnapshot(GEAR_DOC, (snap) => {
+    if (suppressGearSnapshot) { suppressGearSnapshot = false; return; }
+    if (!snap.exists()) return;
+    const data = snap.data();
+    if (!data || !data.data) return;
+    if (isEditingTracker()) return;
+    currentGear = data.data;
+    localStorage.setItem(GEAR_STORAGE_KEY, JSON.stringify(currentGear));
+    renderAllGearTables();
+    renderSimpleTable('tanktops');
+    renderSimpleTable('ordering');
+    if (syncStatus) syncStatus.textContent = 'Updated from another device.';
+  });
+}
 </script>
 </body>
 </html>
