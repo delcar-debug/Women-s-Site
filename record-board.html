@@ -73,29 +73,13 @@ html,body{
   opacity:.92;
   pointer-events:none;
 }
-.tv-logo img{ height:56px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
+.tv-logo img{ height:92px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
 .tv-logo span{
   font-weight:900;
-  font-size:1.15rem;
+  font-size:1.8rem;
   letter-spacing:-.02em;
   text-shadow:0 2px 8px rgba(0,0,0,.6);
 }
-
-/* Persistent clock, corner */
-#tv-clock{
-  position:fixed;
-  top:28px;
-  right:32px;
-  z-index:50;
-  text-align:right;
-  font-weight:800;
-  letter-spacing:.02em;
-  text-shadow:0 2px 8px rgba(0,0,0,.6);
-  opacity:.92;
-  pointer-events:none;
-}
-#tv-clock .time{ font-size:1.5rem; }
-#tv-clock .date{ font-size:.85rem; font-weight:700; opacity:.85; text-transform:uppercase; letter-spacing:.1em; }
 
 /* Progress bar */
 #tv-progress-wrap{
@@ -296,8 +280,8 @@ html,body{
   .tv-pillar-grid{ grid-template-columns:1fr 1fr; }
 }
 @media(max-width:700px){
-  .tv-logo img{ height:40px; }
-  .tv-logo span{ font-size:.9rem; }
+  .tv-logo img{ height:56px; }
+  .tv-logo span{ font-size:1.15rem; }
   .tv-pillar-grid{ grid-template-columns:1fr; }
   #tv-qr-box img{ width:70px; height:70px; }
   #tv-qr-box span{ font-size:.6rem; }
@@ -307,7 +291,6 @@ html,body{
 <body>
 
 <div class="tv-logo"><img src="assets/images/logo.png" alt=""><span>Holmen Women's Wrestling</span></div>
-<div id="tv-clock"><div class="time" id="tv-clock-time">--:--</div><div class="date" id="tv-clock-date">-- -- ----</div></div>
 
 <div id="stage">
   <div class="slide-layer active" id="layerA"></div>
@@ -332,7 +315,7 @@ const CAREER = {
     {r:4,name:'Sophia Walter',years:'2025-26',v:'74'},
     {r:5,name:'Evelyn Vetsch',years:'2020-2023',v:'65'}
   ],
-  'Win % (Min. 15 Matches)': [
+  'Win %': [
     {r:1,name:'Evelyn Vetsch',years:'2020-2023',v:'72%'},
     {r:1,name:'Nora Lee',years:'2020-2023',v:'72%'},
     {r:3,name:'Keionna Noel',years:'2024-2025',v:'70%'},
@@ -386,7 +369,7 @@ const SINGLE_SEASON = {
     {r:4,name:'Avalee Euler',years:'2025-26',v:'36'},
     {r:5,name:'Evelyn Vetsch',years:'2025-26',v:'35'}
   ],
-  'Win % (Min. 15 Matches)': [
+  'Win %': [
     {r:1,name:'Aini Anderson',years:'2025-26',v:'94%'},
     {r:2,name:'Evelyn Vetsch',years:'2022-23',v:'85%'},
     {r:3,name:'Aini Anderson',years:'2024-25',v:'84.6%'},
@@ -650,16 +633,6 @@ function showSlide(index){
     showSlide(current);
   }, slide.duration);
 }
-
-function updateClock(){
-  const now = new Date();
-  const timeEl = document.getElementById('tv-clock-time');
-  const dateEl = document.getElementById('tv-clock-date');
-  if (timeEl) timeEl.textContent = now.toLocaleTimeString([], { hour:'numeric', minute:'2-digit' });
-  if (dateEl) dateEl.textContent = now.toLocaleDateString([], { weekday:'short', month:'short', day:'numeric' });
-}
-updateClock();
-setInterval(updateClock, 1000 * 15);
 
 document.getElementById('tv-fs-btn').addEventListener('click', () => {
   if (!document.fullscreenElement) {
