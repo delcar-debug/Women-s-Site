@@ -133,10 +133,10 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 <div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>Wisconsin High School Girls Championship — 2nd place</li><li>Badger State Invitational — 2nd place</li></ul></div>
 </div>
 <div class="panel" id="s2019">
-<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>Badger State Invitational — 2nd place</li></ul></div>
+<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2019">Badger State Invitational</span> — 2nd place</li></ul></div>
 </div>
 <div class="panel" id="s2018">
-<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>Badger State Invitational — 24th place</li></ul></div>
+<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2018">Badger State Invitational</span> — 24th place</li></ul></div>
 </div>
 <div class="panel" id="allmeets">
 <h2 class="results-subtitle">Tournament Results by Season</h2>
@@ -146,8 +146,8 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 <div class="result-card"><h3>2022–2023</h3><ul class="result-list"><li>Eau Claire North Husky Invite: 1st place</li><li>Badger State Invitational: 1st place</li><li>Central Girls Invite: 5th place</li><li>Warrior Cup: 1st place</li><li>Wisconsin Multi-Duals Championship: 1st place</li></ul></div>
 <div class="result-card"><h3>2021–2022</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2022">Badger State Invitational</span>: 2nd place</li><li>Central Girls Wrestling Invitational: 3rd place</li><li>Wisconsin High School Girls Championship: 1st place</li></ul></div>
 <div class="result-card"><h3>2019–2020</h3><ul class="result-list"><li>Wisconsin High School Girls Championship: 2nd place</li><li>Badger State Invitational: 2nd place</li></ul></div>
-<div class="result-card"><h3>2018–2019</h3><ul class="result-list"><li>Badger State Invitational: 2nd place</li></ul></div>
-<div class="result-card"><h3>2017–2018</h3><ul class="result-list"><li>Badger State Invitational: 24th place</li></ul></div>
+<div class="result-card"><h3>2018–2019</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2019">Badger State Invitational</span>: 2nd place</li></ul></div>
+<div class="result-card"><h3>2017–2018</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2018">Badger State Invitational</span>: 24th place</li></ul></div>
 <h2 class="results-subtitle" style="margin-top:8px">Dual Results by Season</h2>
 <div class="record-badge" style="margin-bottom:14px;font-size:.95rem">Overall Dual Record (2022–2026): 26–13</div>
 <div class="result-card"><h3>2025–2026</h3><ul class="result-list"><li>Holmen JV 35 – <strong>Kickapoo La Farge Youth Initiative 36</strong> (JV, not in overall record)</li><li><strong>Holmen 42</strong> – Tomahawk 21</li><li><strong>Holmen 42</strong> – Badger 28</li><li><strong>Holmen 39</strong> – Neenah 29</li><li>Holmen 30 – <strong>Bayport 42</strong></li><li><strong>Holmen 36</strong> – Saint Croix Falls 30</li><li><strong>Holmen 40</strong> – Stillwater, MN 28</li><li><strong>Holmen 48</strong> – Unity 11</li><li><strong>Holmen 57</strong> – Tomah 6</li></ul><div class="record-badge">Dual Record: 7–1</div></div>
@@ -256,6 +256,122 @@ const TOURNEY_DATA = {
         'Round 5 — Lost by fall to Ashton Wolfe (Jefferson), 4:00'
       ]}
     ]
+  },
+  'badger-2018': {
+    title: 'Badger State Invitational',
+    sub: '2017–18 Season — Team scores and Holmen match results',
+    teamNote: 'Team scores for places 10–12 were not available from the source results.',
+    teams: [
+      {r:1,name:'Milwaukee Ronald Reagan',score:'48.0'},
+      {r:2,name:'Stoughton',score:'26.0'},
+      {r:3,name:'Madison Lafollette',score:'22.0'},
+      {r:4,name:'Burlington',score:'20.0'},
+      {r:5,name:'Cudahy',score:'20.0'},
+      {r:6,name:'Oshkosh West',score:'20.0'},
+      {r:7,name:'Poynette',score:'17.0'},
+      {r:8,name:'West Allis Central',score:'16.0'},
+      {r:9,name:'Wisconsin Dells',score:'16.0'},
+      {r:13,name:'Waupaca',score:'10.0'},
+      {r:14,name:'Deerfield',score:'9.0'},
+      {r:15,name:'Monona Grove-McFarland',score:'9.0'},
+      {r:16,name:'Waunakee',score:'9.0'},
+      {r:17,name:'Whitewater',score:'9.0'},
+      {r:18,name:'Hudson',score:'8.0'},
+      {r:19,name:'Viroqua',score:'7.0'},
+      {r:20,name:'Black River Falls',score:'4.0'},
+      {r:21,name:'Kenosha Bradford',score:'4.0'},
+      {r:22,name:'Waukesha South',score:'4.0'},
+      {r:23,name:'Elkhorn',score:'3.0'},
+      {r:24,name:'Holmen',score:'3.0',holmen:true},
+      {r:25,name:'Catholic Central',score:'0.0'},
+      {r:26,name:'Grafton',score:'0.0'}
+    ],
+    wrestlers: [
+      {name:'Morgan Pellowski', weight:'145', place:'2nd', pts:'0.0', bouts:[
+        'Round 1 — Lost by fall to Jade Herzer (Wisconsin Dells), 1:09',
+        'Round 2 — Lost by fall to Jade Herzer (Wisconsin Dells), 3:12'
+      ]},
+      {name:'Amber Callaway', weight:'160', place:'6th', pts:'3.0', bouts:[
+        'Quarterfinal — Lost by fall to Alessia De Feudis (Westfield Area), 1:27',
+        'Cons. Semifinal — Bye',
+        '5th Place Match — Lost by fall to Marta Jasperson (Hudson), 1:05'
+      ]}
+    ]
+  },
+  'badger-2019': {
+    title: 'Badger State Invitational',
+    sub: '2018–19 Season — Team scores and Holmen match results',
+    teams: [
+      {r:1,name:'Milwaukee Ronald Reagan',score:'71.0'},
+      {r:2,name:'Holmen',score:'54.0',holmen:true},
+      {r:3,name:'Northwestern',score:'26.0'},
+      {r:4,name:'Wisconsin Dells',score:'26.0'},
+      {r:5,name:'Clintonville/Marion',score:'24.0'},
+      {r:6,name:'Hudson',score:'24.0'},
+      {r:7,name:'Stoughton',score:'24.0'},
+      {r:8,name:'Ripon',score:'20.5'},
+      {r:9,name:'LaCrosse Logan/Central',score:'20.0'}
+    ],
+    wrestlers: [
+      {name:'Faith Steinhoff', weight:'106', place:'—', pts:'0.0', bouts:[
+        'Champ. Round 1 — Bye',
+        'Quarterfinal — Lost by fall to Leilani Felicaiano (Milwaukee Ronald Reagan), 3:52',
+        'Cons. Round 2 — Lost by decision to Jasmine Gabbard (Holmen), 7-4'
+      ]},
+      {name:'Jasmine Gabbard', weight:'106', place:'7th', pts:'6.0', bouts:[
+        'Champ. Round 1 — Lost by fall to Abby Nelson (Northwestern), 2:35',
+        'Cons. Round 1 — Bye',
+        'Cons. Round 2 — Won by decision over Faith Steinhoff (Holmen), 7-4',
+        'Cons. Semifinal — Lost by fall to Dareen Abu-Fares (Milwaukee Ronald Reagan), 2:00',
+        '7th Place Match — Won by fall over Zenona Jasso (Milwaukee Ronald Reagan), 3:57'
+      ]},
+      {name:'Hope Steinhoff', weight:'120', place:'7th', pts:'4.0', bouts:[
+        'Quarterfinal — Lost by fall to Caylee Fry (Reedsburg Area), 0:24',
+        'Cons. Semifinal — Lost by fall to Samantha Guzman (Random Lake), 0:39',
+        '7th Place Match — Won by fall over Lola Flores (Milwaukee Ronald Reagan), 2:33'
+      ]},
+      {name:'Amelia LaFleur', weight:'120', place:'4th', pts:'11.0', bouts:[
+        'Quarterfinal — Won by fall over Lola Flores (Milwaukee Ronald Reagan), 1:48',
+        'Semifinal — Lost by fall to Rose Ann Marshall (Stoughton), 2:43',
+        '3rd Place Match — Lost by fall to Elizah Leonard (Wisconsin Dells), 1:21'
+      ]},
+      {name:'Claire Eade', weight:'126', place:'2nd', pts:'0.0', bouts:[
+        'Round 1 — Lost by major decision to Jetlyn Michonski (Clintonville/Marion), 9-0',
+        'Round 2 — Lost by major decision to Jetlyn Michonski (Clintonville/Marion), 12-3'
+      ]},
+      {name:'Lynsey Anderson', weight:'132', place:'3rd', pts:'0.0', bouts:[
+        'Round 2 — Lost by fall to Anna Strand (Xavier), 1:41',
+        'Round 3 — Lost by fall to Aevri Ciha (Cambridge), 1:49'
+      ]},
+      {name:'Amber Eddy', weight:'138', place:'3rd', pts:'0.0', bouts:[
+        'Round 2 — Lost by fall to Nayeli Garay (Milwaukee Ronald Reagan), 1:21',
+        'Round 3 — Lost by fall to Camden Lindsey (Holmen), 1:37'
+      ]},
+      {name:'Camden Lindsey', weight:'138', place:'2nd', pts:'4.0', bouts:[
+        'Round 1 — Lost by fall to Nayeli Garay (Milwaukee Ronald Reagan), 5:34',
+        'Round 3 — Won by fall over Amber Eddy (Holmen), 1:37'
+      ]},
+      {name:'Abigail Bramwell', weight:'145', place:'3rd', pts:'9.0', bouts:[
+        'Round 1 — Won by fall over Deyana Jaraba (Milwaukee Ronald Reagan), 1:47',
+        'Round 2 — Lost by fall to Elaine Santiago-Soto (Milwaukee Ronald Reagan), 3:33',
+        'Round 3 — Lost by fall to Chariell Butler (LaCrosse Logan/Central), 0:29'
+      ]},
+      {name:'Gwenny Burrows', weight:'160', place:'7th', pts:'4.0', bouts:[
+        'Quarterfinal — Lost by fall to Tess Jisa (Wisconsin Dells), 2:56',
+        'Cons. Semifinal — Lost by tech fall to Katelynn Lewis (Peshtigo), 22-6',
+        '7th Place Match — Won by fall over Morgan Cudo (Holmen), 2:59'
+      ]},
+      {name:'Mykalia Olson', weight:'160', place:'3rd', pts:'15.0', bouts:[
+        'Quarterfinal — Won by fall over Angela Carrasquedo (Milwaukee Ronald Reagan), 0:25',
+        'Semifinal — Lost by fall to Marta Jasperson (Hudson), 1:02',
+        '3rd Place Match — Won by fall over Tess Jisa (Wisconsin Dells), 0:58'
+      ]},
+      {name:'Morgan Cudo', weight:'160', place:'8th', pts:'1.0', bouts:[
+        'Quarterfinal — Lost by fall to Marta Jasperson (Hudson), 0:42',
+        'Cons. Semifinal — Lost by fall to Angela Carrasquedo (Milwaukee Ronald Reagan), 0:55',
+        '7th Place Match — Lost by fall to Gwenny Burrows (Holmen), 2:59'
+      ]}
+    ]
   }
 };
 
@@ -264,6 +380,7 @@ function openTourneyModal(id){
   if(!data) return;
   const body = document.getElementById('tourneyModalBody');
   const teamRows = data.teams.map(t => `<tr class="${t.holmen ? 'is-holmen' : ''}"><td>${t.r}</td><td>${t.name}</td><td>${t.score}</td></tr>`).join('');
+  const teamNote = data.teamNote ? `<p class="result-note" style="margin:8px 0 0">${data.teamNote}</p>` : '';
   const wrestlerCards = data.wrestlers.map(w => `
     <div class="tourney-wrestler">
       <div class="tourney-wrestler-head">
@@ -277,6 +394,7 @@ function openTourneyModal(id){
     <p class="tourney-sub">${data.sub}</p>
     <h3>Team Scores</h3>
     <table class="tourney-team-table"><thead><tr><th>Place</th><th>Team</th><th>Score</th></tr></thead><tbody>${teamRows}</tbody></table>
+    ${teamNote}
     <h3>Holmen Match Results</h3>
     ${wrestlerCards}
   `;
