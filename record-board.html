@@ -215,28 +215,34 @@ html,body{
 .tv-pins-time{ font-size:clamp(1.15rem,1.9vw,1.6rem); font-weight:900; color:var(--gold); text-align:right; min-width:70px; }
 
 /* ---- Pillar winners slide ---- */
+.tv-pillar-groups{
+  display:grid;
+  gap:26px;
+}
 .tv-pillar-season{
-  font-size:clamp(1.6rem,3.2vw,2.8rem);
+  font-size:clamp(1.05rem,1.8vw,1.5rem);
   font-weight:900;
-  margin:0 0 26px;
-  letter-spacing:-.02em;
+  margin:0 0 12px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--gold);
 }
 .tv-pillar-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:14px;
-  max-width:1300px;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:10px;
+  max-width:1400px;
   margin:0 auto;
 }
 .tv-pillar-entry{
   background:rgba(255,255,255,.08);
   border:1px solid rgba(255,255,255,.2);
-  border-radius:14px;
-  padding:14px 18px;
+  border-radius:12px;
+  padding:10px 15px;
   text-align:left;
 }
-.tv-pillar-entry .name{ font-size:clamp(1rem,1.6vw,1.3rem); font-weight:800; margin:0 0 3px; }
-.tv-pillar-entry .pillar{ font-size:clamp(.8rem,1.2vw,1rem); font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:.06em; margin:0; }
+.tv-pillar-entry .name{ font-size:clamp(.88rem,1.35vw,1.1rem); font-weight:800; margin:0 0 2px; }
+.tv-pillar-entry .pillar{ font-size:clamp(.7rem,1.05vw,.88rem); font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:.05em; margin:0; }
 
 /* Fullscreen helper button */
 #tv-fs-btn{
@@ -256,6 +262,35 @@ html,body{
 }
 #tv-fs-btn:hover{ opacity:1; }
 
+/* QR code, persistent corner */
+#tv-qr-box{
+  position:fixed;
+  bottom:20px;
+  left:20px;
+  z-index:50;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  opacity:.92;
+}
+#tv-qr-box img{
+  width:100px;
+  height:100px;
+  border-radius:10px;
+  background:#fff;
+  padding:6px;
+  display:block;
+  box-shadow:0 4px 16px rgba(0,0,0,.45);
+}
+#tv-qr-box span{
+  font-size:.72rem;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
+}
+
 @media(max-width:1100px){
   .tv-lb-pair{ grid-template-columns:1fr; gap:20px; }
   .tv-pillar-grid{ grid-template-columns:1fr 1fr; }
@@ -264,6 +299,8 @@ html,body{
   .tv-logo img{ height:40px; }
   .tv-logo span{ font-size:.9rem; }
   .tv-pillar-grid{ grid-template-columns:1fr; }
+  #tv-qr-box img{ width:70px; height:70px; }
+  #tv-qr-box span{ font-size:.6rem; }
 }
 </style>
 </head>
@@ -279,6 +316,7 @@ html,body{
 
 <div id="tv-progress-wrap"><div id="tv-progress-bar"></div></div>
 <button id="tv-fs-btn" type="button">⛶ Fullscreen</button>
+<div id="tv-qr-box"><img id="tv-qr-img" alt="QR code linking to full stats and records"><span>Full Stats</span></div>
 
 <script>
 // ---- Data ----
@@ -485,13 +523,16 @@ for (let i=0; i<singleCats.length; i+=2){
 }
 
 // Fastest Pins
-SLIDES.push({ type:'title', duration:5000, eyebrow:'Record Board', title:'Fastest Pins', sub:'The ten fastest falls in program history.' });
-SLIDES.push({ type:'pins', duration:10000, list:FASTEST_PINS });
+SLIDES.push({ type:'pins', duration:10000, title:'Fastest Pins', list:FASTEST_PINS });
 
 // Pillar Award Winners
-SLIDES.push({ type:'title', duration:5000, eyebrow:'Record Board', title:'Pillar Award Winners', sub:'One wrestler embodies each pillar every season.' });
-PILLAR_WINNERS.forEach(group => {
-  SLIDES.push({ type:'pillar-winners', duration:9000, season:group.season, entries:group.entries });
+const PILLAR_SLIDE_GROUPS = [
+  [PILLAR_WINNERS[0], PILLAR_WINNERS[1]],
+  [PILLAR_WINNERS[2], PILLAR_WINNERS[4]],
+  [PILLAR_WINNERS[3]]
+];
+PILLAR_SLIDE_GROUPS.forEach(groups => {
+  SLIDES.push({ type:'pillar-winners', duration:9500, groups });
 });
 
 // ---- Rendering ----
@@ -538,6 +579,8 @@ function renderSlide(slide){
 
     case 'pins':
       return `<div class="slide-inner">
+        <div class="tv-lb-eyebrow">Record Board</div>
+        <h2 class="tv-lb-title">${slide.title}</h2>
         <div class="tv-pins-list">
           ${slide.list.map(row => `
             <div class="tv-pins-row ${row.r===1?'r1':''}">
@@ -551,12 +594,19 @@ function renderSlide(slide){
 
     case 'pillar-winners':
       return `<div class="slide-inner">
-        <div class="tv-pillar-season">${slide.season}</div>
-        <div class="tv-pillar-grid">
-          ${slide.entries.map(e => `
-            <div class="tv-pillar-entry">
-              <p class="name">${e.name}</p>
-              <p class="pillar">${e.pillar}</p>
+        <div class="tv-lb-eyebrow">Record Board</div>
+        <h2 class="tv-lb-title">Pillar Award Winners</h2>
+        <div class="tv-pillar-groups">
+          ${slide.groups.map(g => `
+            <div class="tv-pillar-group">
+              <div class="tv-pillar-season">${g.season}</div>
+              <div class="tv-pillar-grid">
+                ${g.entries.map(e => `
+                  <div class="tv-pillar-entry">
+                    <p class="name">${e.name}</p>
+                    <p class="pillar">${e.pillar}</p>
+                  </div>`).join('')}
+              </div>
             </div>`).join('')}
         </div>
       </div>`;
@@ -619,11 +669,28 @@ document.getElementById('tv-fs-btn').addEventListener('click', () => {
   }
 });
 
+function goToSlide(index){
+  current = (index + SLIDES.length) % SLIDES.length;
+  showSlide(current);
+}
+
 document.addEventListener('keydown', (e) => {
   if (e.key === 'f' || e.key === 'F') {
     document.getElementById('tv-fs-btn').click();
+  } else if (e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    goToSlide(current + 1);
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    goToSlide(current - 1);
   }
 });
+
+const qrImg = document.getElementById('tv-qr-img');
+if (qrImg) {
+  const statsUrl = location.origin + '/stats-records.html';
+  qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&data=' + encodeURIComponent(statsUrl);
+}
 
 showSlide(current);
 </script>
