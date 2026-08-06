@@ -52,6 +52,28 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 .record-badge{display:inline-block;background:#f5e3e8;color:var(--maroon);font-weight:850;font-size:.85rem;padding:4px 12px;border-radius:999px;margin-top:10px}
 .result-note{font-size:.85rem;color:var(--muted);margin:0}
 @media(max-width:600px){.header{padding:0 14px}.result-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:.82rem}.result-table th,.result-table td{padding:7px 10px;white-space:nowrap}}
+.tourney-trigger{color:var(--maroon);font-weight:850;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;background:none;border:none;padding:0;font:inherit}
+.tourney-trigger:hover{text-decoration-style:solid}
+.tourney-modal-overlay{display:none;position:fixed;inset:0;background:rgba(20,10,14,.72);z-index:100;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+.tourney-modal-overlay.open{display:flex}
+.tourney-modal{background:#fff;border-radius:18px;max-width:820px;width:100%;padding:28px 26px 34px;position:relative;box-shadow:0 30px 70px rgba(0,0,0,.4)}
+.tourney-modal-close{position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:#fff;font-size:1.1rem;cursor:pointer;color:var(--muted);line-height:1}
+.tourney-modal h2{margin:0 0 4px;color:var(--maroon);font-size:1.5rem}
+.tourney-modal .tourney-sub{color:var(--muted);font-size:.88rem;margin:0 0 20px}
+.tourney-modal h3{font-size:.82rem;color:var(--maroon);margin:22px 0 10px;text-transform:uppercase;letter-spacing:.06em}
+.tourney-team-table{width:100%;border-collapse:collapse;font-size:.9rem}
+.tourney-team-table th,.tourney-team-table td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--border)}
+.tourney-team-table th{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+.tourney-team-table tr.is-holmen{background:#f5e3e8;font-weight:800}
+.tourney-wrestler{border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:10px}
+.tourney-wrestler-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.tourney-wrestler-head strong{font-size:1rem}
+.tourney-wrestler-head .wt{color:var(--muted);font-size:.82rem;font-weight:600}
+.tourney-place{font-weight:850;color:var(--maroon);font-size:.85rem;white-space:nowrap}
+.tourney-bouts{list-style:none;margin:0;padding:0;font-size:.86rem;color:#3b3d43}
+.tourney-bouts li{padding:4px 0;border-top:1px dashed var(--border)}
+.tourney-bouts li:first-child{border-top:0}
+@media(max-width:600px){.tourney-modal{padding:24px 16px 28px}.tourney-team-table{display:block;overflow-x:auto}}
 </style>
 </head>
 <body>
@@ -104,7 +126,7 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 <div class="result-card"><h3>Postseason Results</h3><table class="result-table"><thead><tr><th>Wrestler</th><th>Weight</th><th>Regional Champion</th><th>Sectional Champion</th><th>State Result</th></tr></thead><tbody><tr><td>Nora Lee</td><td>100</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#8212;</td><td>5th</td></tr><tr><td>Evelyn Vetsch</td><td>145</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>3rd</td></tr><tr><td>Alexa Szak</td><td>152</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>Qualifier</td></tr><tr><td>Maddie Hall</td><td>165</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>Qualifier</td></tr></tbody></table></div>
 </div>
 <div class="panel" id="s2022">
-<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>Badger State Invitational — 2nd place</li><li>Central Girls Wrestling Invitational — 3rd place</li><li>Wisconsin High School Girls Championship — 1st place</li></ul></div>
+<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2022">Badger State Invitational</span> — 2nd place</li><li>Central Girls Wrestling Invitational — 3rd place</li><li>Wisconsin High School Girls Championship — 1st place</li></ul></div>
 <div class="result-card"><h3>Postseason Results</h3><table class="result-table"><thead><tr><th>Wrestler</th><th>Weight</th><th>Regional Champion</th><th>Sectional Champion</th><th>State Result</th></tr></thead><tbody><tr><td>Evelyn Vetsch</td><td>152</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#8212;</td><td>4th</td></tr><tr><td>Emily Szak</td><td>165</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#8212;</td><td>5th</td></tr></tbody></table></div>
 </div>
 <div class="panel" id="s2020">
@@ -122,7 +144,7 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 <div class="result-card"><h3>2024–2025</h3><ul class="result-list"><li>Bi-State Classic: 5th Place</li><li>The Clash National Duals: 5th place</li><li>Wisconsin Multi-Duals Championship: 3rd Place</li><li>Women's Warrior Challenge: 8th Place</li><li>Regionals: 1st Place</li><li>Sectionals: 1st Place</li></ul></div>
 <div class="result-card"><h3>2023–2024</h3><ul class="result-list"><li>Eau Claire North Husky Invite: 1st place</li><li>Bi-State Classic: 1st Place</li><li>The Clash National Duals: 4th place</li><li>Wisconsin Multi-Duals Championship: 1st place</li><li>Wisconsin Challenge Series: 1st place</li></ul></div>
 <div class="result-card"><h3>2022–2023</h3><ul class="result-list"><li>Eau Claire North Husky Invite: 1st place</li><li>Badger State Invitational: 1st place</li><li>Central Girls Invite: 5th place</li><li>Warrior Cup: 1st place</li><li>Wisconsin Multi-Duals Championship: 1st place</li></ul></div>
-<div class="result-card"><h3>2021–2022</h3><ul class="result-list"><li>Badger State Invitational: 2nd place</li><li>Central Girls Wrestling Invitational: 3rd place</li><li>Wisconsin High School Girls Championship: 1st place</li></ul></div>
+<div class="result-card"><h3>2021–2022</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2022">Badger State Invitational</span>: 2nd place</li><li>Central Girls Wrestling Invitational: 3rd place</li><li>Wisconsin High School Girls Championship: 1st place</li></ul></div>
 <div class="result-card"><h3>2019–2020</h3><ul class="result-list"><li>Wisconsin High School Girls Championship: 2nd place</li><li>Badger State Invitational: 2nd place</li></ul></div>
 <div class="result-card"><h3>2018–2019</h3><ul class="result-list"><li>Badger State Invitational: 2nd place</li></ul></div>
 <div class="result-card"><h3>2017–2018</h3><ul class="result-list"><li>Badger State Invitational: 24th place</li></ul></div>
@@ -143,7 +165,137 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 </div>
 </main>
 
+<div class="tourney-modal-overlay" id="tourneyOverlay">
+<div class="tourney-modal">
+<button class="tourney-modal-close" id="tourneyClose" type="button" aria-label="Close">&times;</button>
+<div id="tourneyModalBody"></div>
+</div>
+</div>
+
 <script>
+const TOURNEY_DATA = {
+  'badger-2022': {
+    title: 'Badger State Invitational',
+    sub: '2021–22 Season — Team scores and Holmen match results',
+    teams: [
+      {r:1,name:'Milwaukee Ronald Reagan',score:'101.0'},
+      {r:2,name:'Holmen',score:'71.0',holmen:true},
+      {r:3,name:'Eau Claire North',score:'67.0'},
+      {r:4,name:'Whitnall',score:'56.0'},
+      {r:5,name:'Chilton/Hilbert',score:'32.0'},
+      {r:6,name:'Brookfield East',score:'26.0'},
+      {r:7,name:'Cambridge',score:'26.0'},
+      {r:8,name:'DePere',score:'24.0'},
+      {r:9,name:'Hickman',score:'24.0'},
+      {r:10,name:'Fennimore',score:'21.0'},
+      {r:11,name:'Jefferson',score:'21.0'}
+    ],
+    wrestlers: [
+      {name:'Nora Lee', weight:'100', place:'3rd', pts:'15.0', bouts:[
+        'Quarterfinal — Won by fall over Abby Zysk (Whitnall), 0:49',
+        'Semifinal — Lost by fall to Brooke Corrigan (DePere), 2:56',
+        '3rd Place Match — Won by fall over Makenzie Hagen (Whitnall), 0:16'
+      ]},
+      {name:'Bella Xiong', weight:'107', place:'3rd', pts:'0.0', bouts:[
+        'Round 1 — Lost by fall to Leilani Feliciano (Milwaukee Ronald Reagan), 0:18',
+        'Round 2 — Lost by fall to Emma Hady (Richland Center), 2:27'
+      ]},
+      {name:'Allison Weiss', weight:'114', place:'6th', pts:'7.0', bouts:[
+        'Champ. Round 1 — Bye',
+        'Quarterfinal — Lost by fall to Cloey Knapp (Milwaukee Ronald Reagan), 1:34',
+        'Cons. Round 2 — Bye',
+        'Cons. Semifinal — Won by fall over Christina Contreras (Milwaukee Ronald Reagan), 1:11',
+        '5th Place Match — Lost by fall to Dakota Northouse (Fennimore), 1:46'
+      ]},
+      {name:'Anna Strasser', weight:'120', place:'3rd', pts:'7.0', bouts:[
+        'Round 1 — Lost by fall to Tatiana Rios (Jefferson), 1:49',
+        'Round 3 — Won by fall over Riley Heller (Chilton/Hilbert), 2:42',
+        'Round 4 — Won by injury default over Laynee Marson (Holmen), 1:21',
+        'Round 5 — Lost by fall to Meredith Korish (Holmen), 3:07'
+      ]},
+      {name:'Meredith Korish', weight:'120', place:'2nd', pts:'12.0', bouts:[
+        'Round 1 — Won by fall over Riley Heller (Chilton/Hilbert), 1:39',
+        'Round 2 — Lost by fall to Tatiana Rios (Jefferson), 0:59',
+        'Round 3 — Won by fall over Laynee Marson (Holmen), 1:40',
+        'Round 5 — Won by fall over Anna Strasser (Holmen), 3:07'
+      ]},
+      {name:'Laynee Marson', weight:'120', place:'4th', pts:'3.0', bouts:[
+        'Round 2 — Won by fall over Riley Heller (Chilton/Hilbert), 1:49',
+        'Round 3 — Lost by fall to Meredith Korish (Holmen), 1:40',
+        'Round 4 — Lost by injury default to Anna Strasser (Holmen), 1:21',
+        'Round 5 — Lost by injury default to Tatiana Rios (Jefferson), 0:00'
+      ]},
+      {name:'Molly Towner', weight:'126', place:'3rd', pts:'0.0', bouts:[
+        'Round 1 — Lost by major decision to Rosemary Triggs (Whitefish Bay), 10-2',
+        'Round 3 — Lost by major decision to Alexa Szak (Holmen), 16-7'
+      ]},
+      {name:'Alexa Szak', weight:'126', place:'2nd', pts:'3.0', bouts:[
+        'Round 2 — Lost by decision to Rosemary Triggs (Whitefish Bay), 9-4',
+        'Round 3 — Won by major decision over Molly Towner (Holmen), 16-7'
+      ]},
+      {name:'Madeline Eggerichs', weight:'132', place:'6th', pts:'6.0', bouts:[
+        'Quarterfinal — Lost by fall to Danya Kassem (Hickman), 0:28',
+        'Cons. Semifinal — Won by fall over Grace Santiago (Milwaukee Ronald Reagan), 1:42',
+        '5th Place Match — Lost by fall to Madison Mercurio (Waunakee), 2:08'
+      ]},
+      {name:'Maddie Hall', weight:'145', place:'—', pts:'0.0', bouts:[
+        'Champ. Round 1 — Bye',
+        'Quarterfinal — Lost by fall to Katlyn Grant (Eau Claire North), 1:56',
+        'Cons. Round 2 — Lost by fall to Bella Simmons (Hickman), 2:00'
+      ]},
+      {name:'Evelyn Vetsch', weight:'152', place:'1st', pts:'18.0', bouts:[
+        'Round 2 — Won by fall over Madi Zube (Viroqua), 1:56',
+        'Round 3 — Won by fall over Ashton Wolfe (Jefferson), 2:26',
+        'Round 4 — Won by fall over Jazmyn Manske (Holmen), 2:12',
+        'Round 5 — Won by fall over Natalie Maceau (Milwaukee Ronald Reagan), 0:20'
+      ]},
+      {name:'Jazmyn Manske', weight:'152', place:'5th', pts:'0.0', bouts:[
+        'Round 1 — Lost by decision to Natalie Maceau (Milwaukee Ronald Reagan), 12-11',
+        'Round 3 — Lost by fall to Madi Zube (Viroqua), 1:19',
+        'Round 4 — Lost by fall to Evelyn Vetsch (Holmen), 2:12',
+        'Round 5 — Lost by fall to Ashton Wolfe (Jefferson), 4:00'
+      ]}
+    ]
+  }
+};
+
+function openTourneyModal(id){
+  const data = TOURNEY_DATA[id];
+  if(!data) return;
+  const body = document.getElementById('tourneyModalBody');
+  const teamRows = data.teams.map(t => `<tr class="${t.holmen ? 'is-holmen' : ''}"><td>${t.r}</td><td>${t.name}</td><td>${t.score}</td></tr>`).join('');
+  const wrestlerCards = data.wrestlers.map(w => `
+    <div class="tourney-wrestler">
+      <div class="tourney-wrestler-head">
+        <div><strong>${w.name}</strong> <span class="wt">${w.weight}</span></div>
+        <div class="tourney-place">${w.place} place · ${w.pts} team pts</div>
+      </div>
+      <ul class="tourney-bouts">${w.bouts.map(b => `<li>${b}</li>`).join('')}</ul>
+    </div>`).join('');
+  body.innerHTML = `
+    <h2>${data.title}</h2>
+    <p class="tourney-sub">${data.sub}</p>
+    <h3>Team Scores</h3>
+    <table class="tourney-team-table"><thead><tr><th>Place</th><th>Team</th><th>Score</th></tr></thead><tbody>${teamRows}</tbody></table>
+    <h3>Holmen Match Results</h3>
+    ${wrestlerCards}
+  `;
+  document.getElementById('tourneyOverlay').classList.add('open');
+}
+
+document.querySelectorAll('.tourney-trigger').forEach(el=>{
+  el.addEventListener('click', () => openTourneyModal(el.dataset.tourney));
+});
+document.getElementById('tourneyClose').addEventListener('click', () => {
+  document.getElementById('tourneyOverlay').classList.remove('open');
+});
+document.getElementById('tourneyOverlay').addEventListener('click', (e) => {
+  if(e.target.id === 'tourneyOverlay') document.getElementById('tourneyOverlay').classList.remove('open');
+});
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') document.getElementById('tourneyOverlay').classList.remove('open');
+});
+
 const tabs = document.querySelectorAll('.tab');
 const panels = document.querySelectorAll('.panel');
 tabs.forEach(t=>{
