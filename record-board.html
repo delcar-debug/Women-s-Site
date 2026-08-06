@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Holmen Women's Wrestling — Record Board</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/images/logo-mark.png">
+<style>
+:root{
+  --maroon:#6d1730;
+  --dark:#3f0b1a;
+  --light:#f5f5f7;
+  --ink:#19191d;
+  --gold:#e8c37a;
+  --silver:#d7dde3;
+  --bronze:#d79a6a;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#000;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:#fff;
+}
+
+#stage{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+}
+
+.slide-layer{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  z-index:1;
+  transition:opacity 1.3s ease;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,var(--maroon),var(--dark));
+}
+.slide-layer.active{ opacity:1; z-index:2; }
+
+.slide-inner{
+  position:relative;
+  z-index:2;
+  width:min(1600px,94vw);
+  max-height:88vh;
+  margin:auto;
+  text-align:center;
+  padding:40px;
+}
+
+/* Logo watermark, persistent corner */
+.tv-logo{
+  position:fixed;
+  top:28px;
+  left:32px;
+  z-index:50;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  opacity:.92;
+  pointer-events:none;
+}
+.tv-logo img{ height:56px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
+.tv-logo span{
+  font-weight:900;
+  font-size:1.15rem;
+  letter-spacing:-.02em;
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
+}
+
+/* Persistent clock, corner */
+#tv-clock{
+  position:fixed;
+  top:28px;
+  right:32px;
+  z-index:50;
+  text-align:right;
+  font-weight:800;
+  letter-spacing:.02em;
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
+  opacity:.92;
+  pointer-events:none;
+}
+#tv-clock .time{ font-size:1.5rem; }
+#tv-clock .date{ font-size:.85rem; font-weight:700; opacity:.85; text-transform:uppercase; letter-spacing:.1em; }
+
+/* Progress bar */
+#tv-progress-wrap{
+  position:fixed;
+  left:0; right:0; bottom:0;
+  height:6px;
+  background:rgba(255,255,255,.14);
+  z-index:60;
+}
+#tv-progress-bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--gold),#fff);
+}
+#tv-progress-bar.animate{ transition:width linear; }
+
+/* ---- Slide type: title (section divider) ---- */
+.tv-eyebrow{
+  text-transform:uppercase;
+  letter-spacing:.24em;
+  font-size:clamp(.85rem,1.3vw,1.15rem);
+  font-weight:900;
+  color:var(--gold);
+  margin:0 0 14px;
+}
+.tv-title-heading{
+  font-size:clamp(3rem,7.5vw,7rem);
+  font-weight:900;
+  letter-spacing:-.03em;
+  margin:0 0 20px;
+  line-height:1.03;
+  text-shadow:0 4px 20px rgba(0,0,0,.5);
+}
+.tv-title-sub{
+  font-size:clamp(1.1rem,2.1vw,1.8rem);
+  font-weight:600;
+  max-width:900px;
+  margin:0 auto;
+  line-height:1.5;
+  opacity:.96;
+}
+
+/* ---- Leaderboard (single category) ---- */
+.tv-lb-eyebrow{
+  text-transform:uppercase;
+  letter-spacing:.2em;
+  font-size:clamp(.8rem,1.2vw,1.05rem);
+  font-weight:900;
+  color:var(--gold);
+  margin:0 0 6px;
+}
+.tv-lb-title{
+  font-size:clamp(2rem,4.4vw,4rem);
+  font-weight:900;
+  letter-spacing:-.02em;
+  margin:0 0 26px;
+}
+.tv-lb-list{
+  display:grid;
+  gap:10px;
+  max-width:1000px;
+  margin:0 auto;
+  text-align:left;
+}
+.tv-lb-row{
+  display:grid;
+  grid-template-columns:64px minmax(0,1fr) auto auto;
+  align-items:center;
+  gap:18px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:14px;
+  padding:12px 22px;
+}
+.tv-lb-row.r1{ background:rgba(232,195,122,.16); border-color:rgba(232,195,122,.45); }
+.tv-lb-row.r2{ background:rgba(215,221,227,.14); border-color:rgba(215,221,227,.4); }
+.tv-lb-row.r3{ background:rgba(215,154,106,.14); border-color:rgba(215,154,106,.4); }
+.tv-lb-rank{ font-size:clamp(1.3rem,2vw,1.8rem); font-weight:900; text-align:center; opacity:.85; }
+.tv-lb-name{ font-size:clamp(1.1rem,1.9vw,1.6rem); font-weight:800; letter-spacing:-.01em; }
+.tv-lb-years{ font-size:clamp(.8rem,1.1vw,1rem); font-weight:600; opacity:.75; text-align:right; white-space:nowrap; }
+.tv-lb-value{ font-size:clamp(1.3rem,2.2vw,1.9rem); font-weight:900; color:var(--gold); text-align:right; min-width:70px; }
+
+/* ---- Leaderboard pair (two categories side by side) ---- */
+.tv-lb-pair{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:44px;
+  width:100%;
+  align-items:start;
+}
+.tv-lb-pair .tv-lb-list{ margin:0; max-width:none; }
+.tv-lb-pair .tv-lb-row{ padding:10px 16px; grid-template-columns:48px minmax(0,1fr) auto auto; gap:10px; }
+
+/* ---- Fastest pins slide ---- */
+.tv-pins-list{
+  display:grid;
+  gap:8px;
+  max-width:920px;
+  margin:0 auto;
+  text-align:left;
+}
+.tv-pins-row{
+  display:grid;
+  grid-template-columns:56px minmax(0,1fr) auto auto;
+  align-items:center;
+  gap:16px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:12px;
+  padding:9px 20px;
+}
+.tv-pins-row.r1{ background:rgba(232,195,122,.16); border-color:rgba(232,195,122,.45); }
+.tv-pins-rank{ font-size:1.2rem; font-weight:900; text-align:center; opacity:.85; }
+.tv-pins-name{ font-size:clamp(1rem,1.6vw,1.35rem); font-weight:800; }
+.tv-pins-year{ font-size:.85rem; font-weight:600; opacity:.7; text-align:right; }
+.tv-pins-time{ font-size:clamp(1.15rem,1.9vw,1.6rem); font-weight:900; color:var(--gold); text-align:right; min-width:70px; }
+
+/* ---- Pillar winners slide ---- */
+.tv-pillar-season{
+  font-size:clamp(1.6rem,3.2vw,2.8rem);
+  font-weight:900;
+  margin:0 0 26px;
+  letter-spacing:-.02em;
+}
+.tv-pillar-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:14px;
+  max-width:1300px;
+  margin:0 auto;
+}
+.tv-pillar-entry{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:14px;
+  padding:14px 18px;
+  text-align:left;
+}
+.tv-pillar-entry .name{ font-size:clamp(1rem,1.6vw,1.3rem); font-weight:800; margin:0 0 3px; }
+.tv-pillar-entry .pillar{ font-size:clamp(.8rem,1.2vw,1rem); font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:.06em; margin:0; }
+
+/* Fullscreen helper button */
+#tv-fs-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  z-index:70;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.35);
+  color:#fff;
+  font-weight:800;
+  font-size:.85rem;
+  border-radius:999px;
+  padding:10px 18px;
+  cursor:pointer;
+  opacity:.55;
+}
+#tv-fs-btn:hover{ opacity:1; }
+
+@media(max-width:1100px){
+  .tv-lb-pair{ grid-template-columns:1fr; gap:20px; }
+  .tv-pillar-grid{ grid-template-columns:1fr 1fr; }
+}
+@media(max-width:700px){
+  .tv-logo img{ height:40px; }
+  .tv-logo span{ font-size:.9rem; }
+  .tv-pillar-grid{ grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="tv-logo"><img src="assets/images/logo.png" alt=""><span>Holmen Women's Wrestling</span></div>
+<div id="tv-clock"><div class="time" id="tv-clock-time">--:--</div><div class="date" id="tv-clock-date">-- -- ----</div></div>
+
+<div id="stage">
+  <div class="slide-layer active" id="layerA"></div>
+  <div class="slide-layer" id="layerB"></div>
+</div>
+
+<div id="tv-progress-wrap"><div id="tv-progress-bar"></div></div>
+<button id="tv-fs-btn" type="button">⛶ Fullscreen</button>
+
+<script>
+// ---- Data ----
+const MEDAL = ['🥇','🥈','🥉'];
+function rankLabel(rank){ return MEDAL[rank-1] || rank; }
+function rankClass(rank){ return rank<=3 ? ('r'+rank) : ''; }
+
+const CAREER = {
+  'Wins': [
+    {r:1,name:'Alexa Szak',years:'2022-2025',v:'85'},
+    {r:2,name:'Peyton Kratochvill',years:'2025-26',v:'82'},
+    {r:3,name:'Allison Weiss',years:'2022-2025',v:'81'},
+    {r:4,name:'Sophia Walter',years:'2025-26',v:'74'},
+    {r:5,name:'Evelyn Vetsch',years:'2020-2023',v:'65'}
+  ],
+  'Win % (Min. 15 Matches)': [
+    {r:1,name:'Evelyn Vetsch',years:'2020-2023',v:'72%'},
+    {r:1,name:'Nora Lee',years:'2020-2023',v:'72%'},
+    {r:3,name:'Keionna Noel',years:'2024-2025',v:'70%'},
+    {r:4,name:'Haley Dezelske',years:'2023-2024',v:'67%'},
+    {r:5,name:'Alexa Szak',years:'2022-2025',v:'66%'},
+    {r:5,name:'Anna Strasser',years:'2022-2024',v:'66%'}
+  ],
+  'Takedowns': [
+    {r:1,name:'Peyton Kratochvill',years:'2024-2026',v:'122'},
+    {r:2,name:'Allison Weiss',years:'2022-2025',v:'120'},
+    {r:3,name:'Alexa Szak',years:'2022-2025',v:'111'},
+    {r:4,name:'Evelyn Vetsch',years:'2020-2023',v:'96'},
+    {r:5,name:'Sophia Walter',years:'2024-2026',v:'77'},
+    {r:5,name:'Anna Strasser',years:'2022-2024',v:'77'}
+  ],
+  'Falls': [
+    {r:1,name:'Alexa Szak',years:'2022-2025',v:'60'},
+    {r:2,name:'Allison Weiss',years:'2022-2025',v:'53'},
+    {r:3,name:'Haley Dezelske',years:'2023-2024',v:'49'},
+    {r:4,name:'Sophia Walter',years:'2024-2026',v:'47'},
+    {r:5,name:'Peyton Kratochvill',years:'2024-2026',v:'46'},
+    {r:5,name:'Evelyn Vetsch',years:'2024-2026',v:'46'}
+  ],
+  'Tech Falls': [
+    {r:1,name:'Haley Dezelske',years:'2024-25',v:'2'},
+    {r:2,name:'Peyton Kratochvill',years:'2024-2026',v:'1'},
+    {r:2,name:'Allison Weiss',years:'2024-25',v:'1'},
+    {r:2,name:'Evelyn Vetsch',years:'2021-22',v:'1'}
+  ],
+  'Team Points': [
+    {r:1,name:'Alexa Szak',years:'2022-2025',v:'452'},
+    {r:2,name:'Allison Weiss',years:'2022-2025',v:'451.5'},
+    {r:3,name:'Sophia Walter',years:'2024-2026',v:'364'},
+    {r:4,name:'Peyton Kratochvill',years:'2024-2026',v:'360'},
+    {r:5,name:'Evelyn Vetsch',years:'2020-2023',v:'350'}
+  ],
+  'Nearfall Points': [
+    {r:1,name:'Peyton Kratochvill',years:'2024-2026',v:'131'},
+    {r:2,name:'Evelyn Vetsch',years:'2020-2023',v:'111'},
+    {r:3,name:'Allison Weiss',years:'2022-2025',v:'108'},
+    {r:4,name:'Alexa Szak',years:'2022-2025',v:'101'},
+    {r:5,name:'Haley Dezelske',years:'2023-2025',v:'65'}
+  ]
+};
+
+const SINGLE_SEASON = {
+  'Wins': [
+    {r:1,name:'Aini Anderson',years:'2025-26',v:'45'},
+    {r:2,name:'Kaytlynn Lambries',years:'2025-26',v:'44'},
+    {r:3,name:'Peyton Kratochvill',years:'2025-26',v:'40'},
+    {r:4,name:'Avalee Euler',years:'2025-26',v:'36'},
+    {r:5,name:'Evelyn Vetsch',years:'2025-26',v:'35'}
+  ],
+  'Win % (Min. 15 Matches)': [
+    {r:1,name:'Aini Anderson',years:'2025-26',v:'94%'},
+    {r:2,name:'Evelyn Vetsch',years:'2022-23',v:'85%'},
+    {r:3,name:'Aini Anderson',years:'2024-25',v:'84.6%'},
+    {r:4,name:'Kaytlynn Lambries',years:'2024-25',v:'83.3%'},
+    {r:5,name:'Nora Lee',years:'2022-23',v:'81%'}
+  ],
+  'Takedowns': [
+    {r:1,name:'Aini Anderson',years:'2025-26',v:'83'},
+    {r:2,name:'Peyton Kratochvill',years:'2025-26',v:'69'},
+    {r:3,name:'Kaytlynn Lambries',years:'2025-26',v:'49'},
+    {r:4,name:'Kaytlynn Lambries',years:'2022-23',v:'46'},
+    {r:5,name:'Avalee Euler',years:'2025-26',v:'44'},
+    {r:5,name:'Evelyn Vetsch',years:'2022-23',v:'44'}
+  ],
+  'Falls': [
+    {r:1,name:'Kaytlynn Lambries',years:'2025-26',v:'37'},
+    {r:2,name:'Aini Anderson',years:'2025-26',v:'29'},
+    {r:4,name:'Kaytlynn Lambries',years:'2023-24',v:'27'},
+    {r:4,name:'Haley Dezelske',years:'2024-25',v:'26'},
+    {r:5,name:'Peyton Kratochvill',years:'2025-26',v:'25'}
+  ],
+  'Tech Falls': [
+    {r:1,name:'Aini Anderson',years:'2025-26',v:'3'},
+    {r:1,name:'Avalee Euler',years:'2025-26',v:'3'},
+    {r:1,name:'Aini Anderson',years:'2024-25',v:'3'},
+    {r:4,name:'Haley Dezelske',years:'2024-25',v:'2'},
+    {r:5,name:'Kaytlynn Lambries',years:'2025-26',v:'1'},
+    {r:5,name:'Peyton Kratochvill',years:'2025-26',v:'1'},
+    {r:5,name:'Allison Weiss',years:'2024-25',v:'1'}
+  ],
+  'Team Points': [
+    {r:1,name:'Kaytlynn Lambries',years:'2025-26',v:'227'},
+    {r:2,name:'Aini Anderson',years:'2025-26',v:'202'},
+    {r:3,name:'Evelyn Vetsch',years:'2022-23',v:'197'},
+    {r:4,name:'Peyton Kratochvill',years:'2025-26',v:'183'},
+    {r:5,name:'Kaytlynn Lambries',years:'2023-24',v:'180'}
+  ],
+  'Nearfall Points': [
+    {r:1,name:'Avalee Euler',years:'2025-26',v:'66'},
+    {r:2,name:'Peyton Kratochvill',years:'2025-26',v:'56'},
+    {r:3,name:'Ruby Gustafson',years:'2025-26',v:'56'},
+    {r:5,name:'Peyton Kratochvill',years:'2024-25',v:'50'},
+    {r:5,name:'Evelyn Vetsch',years:'2022-23',v:'49'}
+  ]
+};
+
+const FASTEST_PINS = [
+  {r:1,name:'Kaytlynn Lambries',year:'2026',t:'0:07'},
+  {r:2,name:'Kaytlynn Lambries',year:'2024',t:'0:08'},
+  {r:2,name:'Kaytlynn Lambries',year:'2024',t:'0:08'},
+  {r:4,name:'Kaytlynn Lambries',year:'2026',t:'0:09'},
+  {r:4,name:'Maddie Hall',year:'2024',t:'0:09'},
+  {r:6,name:'Aini Anderson',year:'2026',t:'0:10'},
+  {r:6,name:'Haley Dezelske',year:'2025',t:'0:10'},
+  {r:6,name:'Carissa Ceresa',year:'2025',t:'0:10'},
+  {r:6,name:'Keionna Noel',year:'2024',t:'0:10'},
+  {r:6,name:'Aubrey Hauser',year:'2025',t:'0:10'}
+];
+
+const PILLAR_WINNERS = [
+  { season:'2025–2026', entries:[
+    {name:'Aini Anderson',pillar:'Ambition'},
+    {name:'Kaytlynn Lambries',pillar:'For Her'},
+    {name:'Avalee Euler',pillar:'Elite Mindset'},
+    {name:'Peyton Kratochvill',pillar:'Leadership'},
+    {name:'Kayleen Bazan',pillar:'Improvement'},
+    {name:'Ellie Adam',pillar:'Fun'}
+  ]},
+  { season:'2024–2025', entries:[
+    {name:'Kaytlynn Lambries',pillar:'Elite Mindset'},
+    {name:'Avalee Euler',pillar:'Fun'},
+    {name:'Haley Dezelske',pillar:'Improvement'},
+    {name:'Alexa Szak',pillar:'Leadership'},
+    {name:'Natalie Markos',pillar:'Ambition'},
+    {name:'Jozie Collins',pillar:'For Her'}
+  ]},
+  { season:'2023–2024', entries:[
+    {name:'Aini Anderson',pillar:'Elite Mindset'},
+    {name:'Peyton Kratochvill',pillar:'Technique'},
+    {name:'Ava Kelemen',pillar:'Leadership'},
+    {name:'Keionna Noel',pillar:'Unity'},
+    {name:'Freya Finn',pillar:'Fun'},
+    {name:'Lauren Barnett',pillar:'Anytime, Anywhere'}
+  ]},
+  { season:'2022–2023', entries:[
+    {name:'Anna Strasser',pillar:'Discipline'},
+    {name:'Alexa Szak',pillar:'Commitment'},
+    {name:'Maddie Hall',pillar:'Selflessness'},
+    {name:'Nora Lee',pillar:'Trustworthiness'},
+    {name:'Evelyn Vetsch',pillar:'Confidence'},
+    {name:'Ava Kelemen',pillar:'Work Ethic'},
+    {name:'Maddie Eggerichs',pillar:'Leadership'},
+    {name:'Adriana Vang',pillar:'Heart'},
+    {name:'Marci Jacobsson',pillar:'Scholar'},
+    {name:'Haley Hopkins',pillar:'Improvement'},
+    {name:'Addie Goodell',pillar:'Perseverance'}
+  ]},
+  { season:'2018–19 to 2021–22', entries:[
+    {name:'Jaida Harshman',pillar:'2021-22 · Heart'},
+    {name:'Lauren Barnett',pillar:'2021-22 · Trustworthiness'},
+    {name:'Evelyn Vetsch',pillar:'2020-2021 · Trustworthiness'},
+    {name:'Amber Eddy',pillar:'2020-2021 · Perseverance'},
+    {name:'Mallorie Schams',pillar:'2019-2020 · Scholar'},
+    {name:'Lynsey Anderson',pillar:'2018-19 · Trustworthiness'},
+    {name:'Gwenny Burrows',pillar:'2018-19 · Scholar'}
+  ]}
+];
+
+// ---- Build slide list ----
+const SLIDES = [];
+
+SLIDES.push({ type:'title', duration:8000, eyebrow:'Herstory', title:'Record Board', sub:'Career leaders, single-season leaders, fastest pins, and Pillar Award winners.' });
+
+// Career Leaders
+SLIDES.push({ type:'title', duration:5000, eyebrow:'Record Board', title:'Career Leaders', sub:'Beginning with the 2018–19 season.' });
+const careerCats = Object.keys(CAREER);
+for (let i=0; i<careerCats.length; i+=2){
+  const catA = careerCats[i], catB = careerCats[i+1];
+  if (catB){
+    SLIDES.push({ type:'lb-pair', duration:9000, catA, listA:CAREER[catA], catB, listB:CAREER[catB] });
+  } else {
+    SLIDES.push({ type:'leaderboard', duration:8000, cat:catA, list:CAREER[catA] });
+  }
+}
+
+// Single-Season Leaders
+SLIDES.push({ type:'title', duration:5000, eyebrow:'Record Board', title:'Single-Season Leaders', sub:'Top single-season performances.' });
+const singleCats = Object.keys(SINGLE_SEASON);
+for (let i=0; i<singleCats.length; i+=2){
+  const catA = singleCats[i], catB = singleCats[i+1];
+  if (catB){
+    SLIDES.push({ type:'lb-pair', duration:9000, catA, listA:SINGLE_SEASON[catA], catB, listB:SINGLE_SEASON[catB] });
+  } else {
+    SLIDES.push({ type:'leaderboard', duration:8000, cat:catA, list:SINGLE_SEASON[catA] });
+  }
+}
+
+// Fastest Pins
+SLIDES.push({ type:'title', duration:5000, eyebrow:'Record Board', title:'Fastest Pins', sub:'The ten fastest falls in program history.' });
+SLIDES.push({ type:'pins', duration:10000, list:FASTEST_PINS });
+
+// Pillar Award Winners
+SLIDES.push({ type:'title', duration:5000, eyebrow:'Record Board', title:'Pillar Award Winners', sub:'One wrestler embodies each pillar every season.' });
+PILLAR_WINNERS.forEach(group => {
+  SLIDES.push({ type:'pillar-winners', duration:9000, season:group.season, entries:group.entries });
+});
+
+// ---- Rendering ----
+function lbRowsHtml(list){
+  return list.map(row => `
+    <div class="tv-lb-row ${rankClass(row.r)}">
+      <div class="tv-lb-rank">${rankLabel(row.r)}</div>
+      <div class="tv-lb-name">${row.name}</div>
+      <div class="tv-lb-years">${row.years}</div>
+      <div class="tv-lb-value">${row.v}</div>
+    </div>`).join('');
+}
+
+function renderSlide(slide){
+  switch(slide.type){
+    case 'title':
+      return `<div class="slide-inner">
+        <div class="tv-eyebrow">${slide.eyebrow}</div>
+        <h1 class="tv-title-heading">${slide.title}</h1>
+        <p class="tv-title-sub">${slide.sub}</p>
+      </div>`;
+
+    case 'leaderboard':
+      return `<div class="slide-inner">
+        <div class="tv-lb-eyebrow">Career Leaders</div>
+        <h2 class="tv-lb-title">${slide.cat}</h2>
+        <div class="tv-lb-list">${lbRowsHtml(slide.list)}</div>
+      </div>`;
+
+    case 'lb-pair':
+      return `<div class="slide-inner">
+        <div class="tv-lb-pair">
+          <div>
+            <h2 class="tv-lb-title">${slide.catA}</h2>
+            <div class="tv-lb-list">${lbRowsHtml(slide.listA)}</div>
+          </div>
+          <div>
+            <h2 class="tv-lb-title">${slide.catB}</h2>
+            <div class="tv-lb-list">${lbRowsHtml(slide.listB)}</div>
+          </div>
+        </div>
+      </div>`;
+
+    case 'pins':
+      return `<div class="slide-inner">
+        <div class="tv-pins-list">
+          ${slide.list.map(row => `
+            <div class="tv-pins-row ${row.r===1?'r1':''}">
+              <div class="tv-pins-rank">${row.r}</div>
+              <div class="tv-pins-name">${row.name}</div>
+              <div class="tv-pins-year">${row.year}</div>
+              <div class="tv-pins-time">${row.t}</div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+
+    case 'pillar-winners':
+      return `<div class="slide-inner">
+        <div class="tv-pillar-season">${slide.season}</div>
+        <div class="tv-pillar-grid">
+          ${slide.entries.map(e => `
+            <div class="tv-pillar-entry">
+              <p class="name">${e.name}</p>
+              <p class="pillar">${e.pillar}</p>
+            </div>`).join('')}
+        </div>
+      </div>`;
+
+    default:
+      return '';
+  }
+}
+
+let current = 0;
+let showingA = true;
+
+function runProgressBar(duration){
+  const bar = document.getElementById('tv-progress-bar');
+  bar.classList.remove('animate');
+  bar.style.transition = 'none';
+  bar.style.width = '0%';
+  void bar.offsetWidth;
+  bar.classList.add('animate');
+  bar.style.transition = `width ${duration}ms linear`;
+  bar.style.width = '100%';
+}
+
+function showSlide(index){
+  const slide = SLIDES[index];
+  const layerA = document.getElementById('layerA');
+  const layerB = document.getElementById('layerB');
+  const incoming = showingA ? layerB : layerA;
+  const outgoing = showingA ? layerA : layerB;
+
+  incoming.innerHTML = renderSlide(slide);
+  incoming.classList.add('active');
+  outgoing.classList.remove('active');
+  showingA = !showingA;
+
+  runProgressBar(slide.duration);
+
+  clearTimeout(window.__tvTimer);
+  window.__tvTimer = setTimeout(() => {
+    current = (current + 1) % SLIDES.length;
+    showSlide(current);
+  }, slide.duration);
+}
+
+function updateClock(){
+  const now = new Date();
+  const timeEl = document.getElementById('tv-clock-time');
+  const dateEl = document.getElementById('tv-clock-date');
+  if (timeEl) timeEl.textContent = now.toLocaleTimeString([], { hour:'numeric', minute:'2-digit' });
+  if (dateEl) dateEl.textContent = now.toLocaleDateString([], { weekday:'short', month:'short', day:'numeric' });
+}
+updateClock();
+setInterval(updateClock, 1000 * 15);
+
+document.getElementById('tv-fs-btn').addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'f' || e.key === 'F') {
+    document.getElementById('tv-fs-btn').click();
+  }
+});
+
+showSlide(current);
+</script>
+</body>
+</html>
