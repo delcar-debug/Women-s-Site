@@ -74,10 +74,19 @@ html,body{
   pointer-events:none;
 }
 .tv-logo img{ height:92px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
-.tv-logo span{
+.tv-logo-text{ display:flex; flex-direction:column; gap:2px; }
+.tv-logo-title{
   font-weight:900;
-  font-size:1.8rem;
+  font-size:1.9rem;
   letter-spacing:-.02em;
+  line-height:1.1;
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
+}
+.tv-logo-sub{
+  font-weight:700;
+  font-size:1.05rem;
+  letter-spacing:-.01em;
+  opacity:.85;
   text-shadow:0 2px 8px rgba(0,0,0,.6);
 }
 
@@ -123,6 +132,31 @@ html,body{
 }
 
 /* ---- Leaderboard (single category) ---- */
+.tv-lb-content{ position:relative; z-index:1; }
+.tv-lb-bg-photo{
+  position:absolute;
+  inset:-40px -40px auto -40px;
+  height:60%;
+  background-size:cover;
+  background-position:center 12%;
+  opacity:.22;
+  -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,.95) 0%, rgba(0,0,0,.55) 55%, rgba(0,0,0,0) 92%);
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,.95) 0%, rgba(0,0,0,.55) 55%, rgba(0,0,0,0) 92%);
+  z-index:0;
+  pointer-events:none;
+  border-radius:24px;
+}
+.tv-lb-photo{
+  width:112px;
+  height:112px;
+  border-radius:50%;
+  background-size:cover;
+  background-position:center 14%;
+  margin:0 auto 14px;
+  border:3px solid var(--gold);
+  box-shadow:0 4px 18px rgba(0,0,0,.5);
+}
+.tv-lb-pair .tv-lb-photo{ width:88px; height:88px; margin-bottom:10px; border-width:2px; }
 .tv-lb-eyebrow{
   text-transform:uppercase;
   letter-spacing:.2em;
@@ -281,7 +315,8 @@ html,body{
 }
 @media(max-width:700px){
   .tv-logo img{ height:56px; }
-  .tv-logo span{ font-size:1.15rem; }
+  .tv-logo-title{ font-size:1.15rem; }
+  .tv-logo-sub{ font-size:.72rem; }
   .tv-pillar-grid{ grid-template-columns:1fr; }
   #tv-qr-box img{ width:70px; height:70px; }
   #tv-qr-box span{ font-size:.6rem; }
@@ -290,7 +325,7 @@ html,body{
 </head>
 <body>
 
-<div class="tv-logo"><img src="assets/images/logo.png" alt=""><span>Holmen Women's Wrestling</span></div>
+<div class="tv-logo"><img src="assets/images/logo.png" alt=""><div class="tv-logo-text"><span class="tv-logo-title">Record Board</span><span class="tv-logo-sub">Holmen Women's Wrestling</span></div></div>
 
 <div id="stage">
   <div class="slide-layer active" id="layerA"></div>
@@ -432,19 +467,19 @@ const FASTEST_PINS = [
 const PILLAR_WINNERS = [
   { season:'2025–2026', entries:[
     {name:'Aini Anderson',pillar:'Ambition'},
-    {name:'Kaytlynn Lambries',pillar:'For Her'},
     {name:'Avalee Euler',pillar:'Elite Mindset'},
-    {name:'Peyton Kratochvill',pillar:'Leadership'},
+    {name:'Kaytlynn Lambries',pillar:'For Her'},
+    {name:'Ellie Adam',pillar:'Fun'},
     {name:'Kayleen Bazan',pillar:'Improvement'},
-    {name:'Ellie Adam',pillar:'Fun'}
+    {name:'Peyton Kratochvill',pillar:'Leadership'}
   ]},
   { season:'2024–2025', entries:[
+    {name:'Natalie Markos',pillar:'Ambition'},
     {name:'Kaytlynn Lambries',pillar:'Elite Mindset'},
+    {name:'Jozie Collins',pillar:'For Her'},
     {name:'Avalee Euler',pillar:'Fun'},
     {name:'Haley Dezelske',pillar:'Improvement'},
-    {name:'Alexa Szak',pillar:'Leadership'},
-    {name:'Natalie Markos',pillar:'Ambition'},
-    {name:'Jozie Collins',pillar:'For Her'}
+    {name:'Alexa Szak',pillar:'Leadership'}
   ]},
   { season:'2023–2024', entries:[
     {name:'Aini Anderson',pillar:'Elite Mindset'},
@@ -518,6 +553,21 @@ PILLAR_SLIDE_GROUPS.forEach(groups => {
   SLIDES.push({ type:'pillar-winners', duration:9500, groups });
 });
 
+// ---- Leader photos ----
+const PHOTOS = {
+  'Alexa Szak': 'assets/images/season-finishers/2022-23-alexa-szak.jpg',
+  'Aini Anderson': 'assets/images/season-finishers/2025-26-aini-anderson.jpg',
+  'Evelyn Vetsch': 'assets/images/coaches/evelyn-vetsch.jpg',
+  'Peyton Kratochvill': 'assets/images/season-finishers/2025-26-peyton-kratochvill.jpg',
+  'Haley Dezelske': 'assets/images/season-finishers/2024-25-haley-dezelske.jpg',
+  'Kaytlynn Lambries': 'assets/images/season-finishers/2025-26-kaytlynn-lambries.jpg',
+  'Avalee Euler': 'assets/images/season-finishers/2025-26-avalee-euler.jpg'
+};
+function leaderPhoto(list){
+  const top = list.find(row => row.r === 1 && PHOTOS[row.name]);
+  return top ? PHOTOS[top.name] : null;
+}
+
 // ---- Rendering ----
 function lbRowsHtml(list){
   return list.map(row => `
@@ -538,27 +588,38 @@ function renderSlide(slide){
         <p class="tv-title-sub">${slide.sub}</p>
       </div>`;
 
-    case 'leaderboard':
+    case 'leaderboard': {
+      const photo = leaderPhoto(slide.list);
       return `<div class="slide-inner">
-        <div class="tv-lb-eyebrow">${slide.group}</div>
-        <h2 class="tv-lb-title">${slide.cat}</h2>
-        <div class="tv-lb-list">${lbRowsHtml(slide.list)}</div>
+        ${photo ? `<div class="tv-lb-bg-photo" style="background-image:url('${photo}')"></div>` : ''}
+        <div class="tv-lb-content">
+          <div class="tv-lb-eyebrow">${slide.group}</div>
+          ${photo ? `<div class="tv-lb-photo" style="background-image:url('${photo}')"></div>` : ''}
+          <h2 class="tv-lb-title">${slide.cat}</h2>
+          <div class="tv-lb-list">${lbRowsHtml(slide.list)}</div>
+        </div>
       </div>`;
+    }
 
-    case 'lb-pair':
+    case 'lb-pair': {
+      const photoA = leaderPhoto(slide.listA);
+      const photoB = leaderPhoto(slide.listB);
       return `<div class="slide-inner">
         <div class="tv-lb-eyebrow">${slide.group}</div>
         <div class="tv-lb-pair">
           <div>
+            ${photoA ? `<div class="tv-lb-photo" style="background-image:url('${photoA}')"></div>` : ''}
             <h2 class="tv-lb-title">${slide.catA}</h2>
             <div class="tv-lb-list">${lbRowsHtml(slide.listA)}</div>
           </div>
           <div>
+            ${photoB ? `<div class="tv-lb-photo" style="background-image:url('${photoB}')"></div>` : ''}
             <h2 class="tv-lb-title">${slide.catB}</h2>
             <div class="tv-lb-list">${lbRowsHtml(slide.listB)}</div>
           </div>
         </div>
       </div>`;
+    }
 
     case 'pins':
       return `<div class="slide-inner">
