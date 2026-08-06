@@ -74,6 +74,16 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 .tourney-bouts li{padding:4px 0;border-top:1px dashed var(--border)}
 .tourney-bouts li:first-child{border-top:0}
 @media(max-width:600px){.tourney-modal{padding:24px 16px 28px}.tourney-team-table{display:block;overflow-x:auto}}
+.dual-score-banner{display:flex;align-items:center;justify-content:center;gap:18px;background:#f5e3e8;border-radius:14px;padding:16px 20px;margin:6px 0 20px;text-align:center}
+.dual-score-banner .team{font-weight:850;font-size:1.05rem}
+.dual-score-banner .score{font-size:1.6rem;font-weight:900;color:var(--maroon)}
+.dual-score-banner .vs{color:var(--muted);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em}
+.dual-bout-table{width:100%;border-collapse:collapse;font-size:.9rem}
+.dual-bout-table th,.dual-bout-table td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--border)}
+.dual-bout-table th{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+.dual-bout-table tr.dual-win td{background:#f5e3e8}
+.dual-bout-table .pts-cell{text-align:center;font-weight:800;color:var(--maroon);white-space:nowrap}
+.dual-bout-table .extra-row td{opacity:.65;font-style:italic}
 </style>
 </head>
 <body>
@@ -122,7 +132,7 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 </div>
 <div class="panel" id="s2023">
 <div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>Eau Claire North Husky Invite — 1st place</li><li>Badger State Invitational — 1st place</li><li>Central Girls Invite — 5th place</li><li>Warrior Cup — 1st place</li><li>Wisconsin Multi-Duals Championship — 1st place</li></ul></div>
-<div class="result-card"><h3>Duals</h3><ul class="result-list"><li>Holmen 30 – <strong>Decorah 54</strong></li><li>Holmen 30 – <strong>Osage 51</strong></li><li><strong>Holmen 45</strong> – Eau Claire North 18</li><li><strong>Holmen 42</strong> – Kimberly/Menasha 6 (not an official dual)</li><li><strong>Holmen 33</strong> – Wausau West 29</li></ul><div class="record-badge">Dual Record: 2–2</div></div>
+<div class="result-card"><h3>Duals</h3><ul class="result-list"><li><span class="tourney-trigger" data-dual="decorah-2023">Holmen 30 – <strong>Decorah 54</strong></span></li><li><span class="tourney-trigger" data-dual="osage-2023">Holmen 30 – <strong>Osage 51</strong></span></li><li><span class="tourney-trigger" data-dual="ecn-2023"><strong>Holmen 45</strong> – Eau Claire North 18</span></li><li><strong>Holmen 42</strong> – Kimberly/Menasha 6 (not an official dual)</li><li><span class="tourney-trigger" data-dual="wausauwest-2023"><strong>Holmen 33</strong> – Wausau West 29</span></li></ul><div class="record-badge">Dual Record: 2–2</div></div>
 <div class="result-card"><h3>Postseason Results</h3><table class="result-table"><thead><tr><th>Wrestler</th><th>Weight</th><th>Regional Champion</th><th>Sectional Champion</th><th>State Result</th></tr></thead><tbody><tr><td>Nora Lee</td><td>100</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#8212;</td><td>5th</td></tr><tr><td>Evelyn Vetsch</td><td>145</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>3rd</td></tr><tr><td>Alexa Szak</td><td>152</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>Qualifier</td></tr><tr><td>Maddie Hall</td><td>165</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#10003;</td><td>Qualifier</td></tr></tbody></table></div>
 </div>
 <div class="panel" id="s2022">
@@ -130,7 +140,7 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 <div class="result-card"><h3>Postseason Results</h3><table class="result-table"><thead><tr><th>Wrestler</th><th>Weight</th><th>Regional Champion</th><th>Sectional Champion</th><th>State Result</th></tr></thead><tbody><tr><td>Evelyn Vetsch</td><td>152</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#8212;</td><td>4th</td></tr><tr><td>Emily Szak</td><td>165</td><td class="mark-cell">&#8212;</td><td class="mark-cell">&#8212;</td><td>5th</td></tr></tbody></table></div>
 </div>
 <div class="panel" id="s2020">
-<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>Wisconsin High School Girls Championship — 2nd place</li><li>Badger State Invitational — 2nd place</li></ul></div>
+<div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li>Wisconsin High School Girls Championship — 2nd place</li><li><span class="tourney-trigger" data-tourney="badger-2020">Badger State Invitational</span> — 2nd place</li></ul></div>
 </div>
 <div class="panel" id="s2019">
 <div class="result-card"><h3>Tournaments</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2019">Badger State Invitational</span> — 2nd place</li></ul></div>
@@ -145,7 +155,7 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 <div class="result-card"><h3>2023–2024</h3><ul class="result-list"><li>Eau Claire North Husky Invite: 1st place</li><li>Bi-State Classic: 1st Place</li><li>The Clash National Duals: 4th place</li><li>Wisconsin Multi-Duals Championship: 1st place</li><li>Wisconsin Challenge Series: 1st place</li></ul></div>
 <div class="result-card"><h3>2022–2023</h3><ul class="result-list"><li>Eau Claire North Husky Invite: 1st place</li><li>Badger State Invitational: 1st place</li><li>Central Girls Invite: 5th place</li><li>Warrior Cup: 1st place</li><li>Wisconsin Multi-Duals Championship: 1st place</li></ul></div>
 <div class="result-card"><h3>2021–2022</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2022">Badger State Invitational</span>: 2nd place</li><li>Central Girls Wrestling Invitational: 3rd place</li><li>Wisconsin High School Girls Championship: 1st place</li></ul></div>
-<div class="result-card"><h3>2019–2020</h3><ul class="result-list"><li>Wisconsin High School Girls Championship: 2nd place</li><li>Badger State Invitational: 2nd place</li></ul></div>
+<div class="result-card"><h3>2019–2020</h3><ul class="result-list"><li>Wisconsin High School Girls Championship: 2nd place</li><li><span class="tourney-trigger" data-tourney="badger-2020">Badger State Invitational</span>: 2nd place</li></ul></div>
 <div class="result-card"><h3>2018–2019</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2019">Badger State Invitational</span>: 2nd place</li></ul></div>
 <div class="result-card"><h3>2017–2018</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2018">Badger State Invitational</span>: 24th place</li></ul></div>
 <h2 class="results-subtitle" style="margin-top:8px">Dual Results by Season</h2>
@@ -153,7 +163,7 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 <div class="result-card"><h3>2025–2026</h3><ul class="result-list"><li>Holmen JV 35 – <strong>Kickapoo La Farge Youth Initiative 36</strong> (JV, not in overall record)</li><li><strong>Holmen 42</strong> – Tomahawk 21</li><li><strong>Holmen 42</strong> – Badger 28</li><li><strong>Holmen 39</strong> – Neenah 29</li><li>Holmen 30 – <strong>Bayport 42</strong></li><li><strong>Holmen 36</strong> – Saint Croix Falls 30</li><li><strong>Holmen 40</strong> – Stillwater, MN 28</li><li><strong>Holmen 48</strong> – Unity 11</li><li><strong>Holmen 57</strong> – Tomah 6</li></ul><div class="record-badge">Dual Record: 7–1</div></div>
 <div class="result-card"><h3>2024–2025</h3><ul class="result-list"><li><strong>Holmen 42</strong> – Kickapoo La Farge Youth Initiative 24</li><li>Holmen 21 – <strong>Hastings, MN 47</strong></li><li>Holmen 21 – <strong>Apple Valley, MN 48</strong></li><li><strong>Holmen 51</strong> – St. Croix Falls 16</li><li><strong>Holmen 48</strong> – Mukwonago 21</li><li>Holmen 30 – <strong>Andrew, IL 39</strong></li><li><strong>Holmen 36</strong> – Hastings, MN 35</li><li>Holmen 34 – <strong>Central Cass, ND 42</strong></li><li><strong>Holmen 42</strong> – STMA, MN 36</li><li><strong>Holmen 47</strong> – Crestwood, IA 33</li><li>Holmen 24 – <strong>Decorah, IA 54</strong></li><li><strong>Holmen 54</strong> – Chilton-Hilbert 18</li><li><strong>Holmen 36</strong> – Bayport 30</li><li>Holmen 30 – <strong>Menasha 39</strong></li><li><strong>Holmen 39</strong> – Neenah 23</li><li>Holmen JV 0 – <strong>Badger 72</strong> (JV, not in overall record)</li><li>Holmen JV 10 – <strong>Shawano Community 48</strong> (JV, not in overall record)</li><li>Holmen JV 18 – <strong>Kickapoo La Farge Youth Initiative 42</strong> (JV, not in overall record)</li><li>Holmen JV 24 – <strong>Chilton-Hilbert 39</strong> (JV, not in overall record)</li></ul><div class="record-badge">Dual Record: 9–6</div></div>
 <div class="result-card"><h3>2023–2024</h3><ul class="result-list"><li><strong>Holmen 54</strong> – Eau Claire North 18</li><li><strong>Holmen 45</strong> – Nekoosa/Assumption/Port Edwards 21</li><li>Holmen 33 – <strong>Decorah, IA 40</strong></li><li>Holmen 12 – <strong>Osage, IA 69</strong></li><li><strong>Holmen 72</strong> – Mora, MN 6</li><li>Holmen 30 – <strong>Apple Valley, MN 45</strong></li><li><strong>Holmen 46</strong> – Batavia, IL 28</li><li><strong>Holmen 48</strong> – Minooka, IL 27</li><li>Holmen 33 – <strong>St. Michael-Albertville, MN 39</strong></li><li><strong>Holmen 60</strong> – Kimberly 6</li><li><strong>Holmen 42</strong> – Pulaski 27</li><li><strong>Holmen 48</strong> – Wausau West 24</li><li><strong>Holmen 48</strong> – Coulee Region 15 (not an official dual)</li></ul><div class="record-badge">Dual Record: 8–4</div></div>
-<div class="result-card"><h3>2022–2023</h3><ul class="result-list"><li>Holmen 30 – <strong>Decorah, IA 54</strong></li><li>Holmen 30 – <strong>Osage, IA 51</strong></li><li><strong>Holmen 45</strong> – Eau Claire North 18</li><li><strong>Holmen 42</strong> – Kimberly/Menasha 6 (not an official dual)</li><li><strong>Holmen 33</strong> – Wausau West 29</li></ul><div class="record-badge">Dual Record: 2–2</div></div>
+<div class="result-card"><h3>2022–2023</h3><ul class="result-list"><li><span class="tourney-trigger" data-dual="decorah-2023">Holmen 30 – <strong>Decorah, IA 54</strong></span></li><li><span class="tourney-trigger" data-dual="osage-2023">Holmen 30 – <strong>Osage, IA 51</strong></span></li><li><span class="tourney-trigger" data-dual="ecn-2023"><strong>Holmen 45</strong> – Eau Claire North 18</span></li><li><strong>Holmen 42</strong> – Kimberly/Menasha 6 (not an official dual)</li><li><span class="tourney-trigger" data-dual="wausauwest-2023"><strong>Holmen 33</strong> – Wausau West 29</span></li></ul><div class="record-badge">Dual Record: 2–2</div></div>
 <p class="result-note">Scramble meets structured like a dual are marked as unofficial and are not part of the team's dual record. JV duals are also shown but not included in the varsity record.</p>
 </div>
 <div class="panel" id="allpostseason">
@@ -372,8 +382,232 @@ const TOURNEY_DATA = {
         '7th Place Match — Lost by fall to Gwenny Burrows (Holmen), 2:59'
       ]}
     ]
+  },
+  'badger-2020': {
+    title: 'Badger State Invitational',
+    sub: '2019–20 Season — Team scores and Holmen match results',
+    teams: [
+      {r:1,name:'Milwaukee Ronald Reagan',score:'106.0'},
+      {r:2,name:'Holmen',score:'60.0',holmen:true},
+      {r:3,name:'Beloit Memorial',score:'53.0'},
+      {r:4,name:'Wisconsin Dells',score:'43.0'},
+      {r:5,name:'Whitnall',score:'39.0'},
+      {r:6,name:'Marientte',score:'37.0'},
+      {r:7,name:'Waukesha South',score:'33.0'},
+      {r:8,name:'Stoughton',score:'28.5'},
+      {r:9,name:'Hudson',score:'28.0'},
+      {r:10,name:'Mineral Point',score:'26.0'},
+      {r:11,name:'Mount Horeb',score:'26.0'},
+      {r:12,name:'Cambridge',score:'25.0'},
+      {r:13,name:'Poynette',score:'23.5'},
+      {r:14,name:'Johnson Creek',score:'22.0'},
+      {r:15,name:'Oregon',score:'21.0'},
+      {r:16,name:'Clintonville',score:'20.0'},
+      {r:17,name:'Fort Atkinson',score:'19.0'},
+      {r:18,name:'Brookfield East',score:'17.0'},
+      {r:19,name:'Antigo',score:'15.0'},
+      {r:20,name:'Florence',score:'15.0'},
+      {r:21,name:'Marathon',score:'15.0'},
+      {r:22,name:'Wabeno/Laona',score:'14.0'},
+      {r:23,name:'Sheboygan North',score:'13.0'},
+      {r:24,name:'Lacrosse Logan/Central',score:'11.0'},
+      {r:25,name:'Oconomowoc',score:'9.0'},
+      {r:26,name:'Jefferson',score:'8.0'},
+      {r:27,name:'Peshtigo',score:'8.0'},
+      {r:28,name:'Two Rivers',score:'8.0'},
+      {r:29,name:'Xavier',score:'7.0'},
+      {r:30,name:'Madison LaFollette',score:'4.0'},
+      {r:31,name:'Neenah',score:'0.0'},
+      {r:32,name:'Racine St. Catherine',score:'0.0'}
+    ],
+    wrestlers: [
+      {name:'Jaida Harshman', weight:'113', place:'7th', pts:'4.0', bouts:[
+        'Champ. Round 1 — Bye',
+        'Quarterfinal — Lost by tech fall to Rose Ann Marshall (Stoughton), 16-0',
+        'Cons. Round 2 — Bye',
+        'Cons. Semifinal — Lost by fall to Brooke Crawley (Brookfield East), 2:12',
+        '7th Place Match — Won by fall over Jaelee Messman (Two Rivers), 0:30'
+      ]},
+      {name:'Jasmine Gabbard', weight:'113', place:'—', pts:'0.0', bouts:[
+        'Champ. Round 1 — Lost by tech fall to Gwen Golueke (Poynette), 15-0',
+        'Cons. Round 1 — Bye',
+        'Cons. Round 2 — Lost by fall to Brooke Crawley (Brookfield East), 2:22'
+      ]},
+      {name:'Kassandra Mueller', weight:'120', place:'5th', pts:'6.0', bouts:[
+        'Quarterfinal — Lost by major decision to Angela Unate (Fort Atkinson), 12-2',
+        'Cons. Semifinal — Bye',
+        '5th Place Match — Won by decision over Natalia Ramirez-Vang (Milwaukee Ronald Reagan), 5-1'
+      ]},
+      {name:'Hope Steinhoff', weight:'126', place:'4th', pts:'11.0', bouts:[
+        'Quarterfinal — Won by fall over Khaidynce James (Two Rivers), 1:59',
+        'Semifinal — Lost by fall to Kylie Rule (Mineral Point), 0:31',
+        '3rd Place Match — Lost by fall to Shayla Diaz (Marientte), 2:02'
+      ]},
+      {name:'Evelyn Vetsch', weight:'132', place:'7th', pts:'2.0', bouts:[
+        'Quarterfinal — Lost by fall to Aevri Ciha (Cambridge), 1:19',
+        'Cons. Semifinal — Lost by fall to Alex Vokovitch (Waukesha South), 2:14',
+        '7th Place Match — Bye'
+      ]},
+      {name:'Amelia LaFleur', weight:'132', place:'4th', pts:'7.0', bouts:[
+        'Quarterfinal — Bye',
+        'Semifinal — Lost by fall to Kaylee Mcfadden (Marientte), 1:43',
+        '3rd Place Match — Lost by fall to Aevri Ciha (Cambridge), 0:35'
+      ]},
+      {name:'Emily Szak', weight:'138', place:'6th', pts:'6.0', bouts:[
+        'Quarterfinal — Lost by fall to Hanna Errthum (Mount Horeb), 0:31',
+        'Cons. Semifinal — Won by fall over Alejandra Lopez (Milwaukee Ronald Reagan), 1:54',
+        '5th Place Match — Lost by fall to Abigail Moreno (Jefferson), 2:09'
+      ]},
+      {name:'Abigail Bramwell', weight:'145', place:'—', pts:'0.0', bouts:[
+        'Champ. Round 1 — Bye',
+        'Quarterfinal — Lost by fall to Vanessa Gutierrez (Beloit Memorial), 0:51',
+        'Cons. Round 2 — Lost by fall to Erin Loeschmann (Waukesha South), 2:48'
+      ]},
+      {name:'Camden Lindsey', weight:'145', place:'4th', pts:'11.0', bouts:[
+        'Champ. Round 1 — Bye',
+        'Quarterfinal — Won by decision over Alex Hofrichter (Antigo), 5-4',
+        'Semifinal — Lost by fall to Karina Munoz (Beloit Memorial), 3:25',
+        '3rd Place Match — Lost by forfeit to Vanessa Gutierrez (Beloit Memorial)'
+      ]},
+      {name:'Gwenny Burrows', weight:'160', place:'6th', pts:'7.0', bouts:[
+        'Champ. Round 1 — Bye',
+        'Quarterfinal — Lost by decision to Deyana Jaraba (Milwaukee Ronald Reagan), 5-2',
+        'Cons. Round 2 — Bye',
+        'Cons. Semifinal — Won by fall over Claire Myers (Two Rivers), 0:25',
+        '5th Place Match — Lost by decision to Diana Sandoval (Beloit Memorial), 7-3'
+      ]},
+      {name:'Erin Bringe', weight:'160', place:'7th', pts:'6.0', bouts:[
+        'Champ. Round 1 — Bye',
+        'Quarterfinal — Lost by fall to Kelly Janssens (Oregon), 0:54',
+        'Cons. Round 2 — Won by major decision over Katherine Cobos (Beloit Memorial), 11-2',
+        'Cons. Semifinal — Lost by fall to Diana Sandoval (Beloit Memorial), 1:53',
+        '7th Place Match — Won by fall over Claire Myers (Two Rivers), 0:27'
+      ]}
+    ]
   }
 };
+
+const DUAL_DATA = {
+  'ecn-2023': {
+    title: 'Holmen vs. Eau Claire North',
+    sub: '2022–23 Season — 02/03/2023',
+    opponent: 'Eau Claire North',
+    holmenScore: 45,
+    oppScore: 18,
+    bouts: [
+      {weight:'100', desc:'Adriana Vang (Holmen) won by forfeit', hPts:6, oPts:0},
+      {weight:'107', desc:'Nora Lee (Holmen) def. Tatum Carey (Eau Claire North), Fall 1:53', hPts:6, oPts:0},
+      {weight:'114', desc:'Addie Goodell (Holmen) def. Grace Fuerst (Eau Claire North), Fall 1:59', hPts:6, oPts:0},
+      {weight:'120', desc:'Allison Weiss (Holmen) def. Leah Luedtke (Eau Claire North), Fall 3:41', hPts:6, oPts:0},
+      {weight:'126', desc:'Anna Strasser (Holmen) def. Sydni Schindler (Eau Claire North), Dec 6-5', hPts:3, oPts:0},
+      {weight:'132', desc:'Makenna Vance (Eau Claire North) def. Madeline Eggerichs (Holmen), Fall 3:56', hPts:0, oPts:6},
+      {weight:'138', desc:'Shelly Bullman (Eau Claire North) def. Maddie Hall (Holmen), Fall 5:26', hPts:0, oPts:6},
+      {weight:'145', desc:'Evelyn Vetsch (Holmen) def. Hollis Barnhardt (Eau Claire North), Fall 1:42', hPts:6, oPts:0},
+      {weight:'152', desc:'Alexa Szak (Holmen) def. Darien Jensen (Eau Claire North), Fall 1:17', hPts:6, oPts:0},
+      {weight:'165', desc:'Alexis Maier (Holmen) def. Madison Myers (Eau Claire North), Fall 2:49', hPts:6, oPts:0},
+      {weight:'185', desc:'Cambree Lokken (Eau Claire North) def. Marci Jacobsson (Holmen), Fall 5:03', hPts:0, oPts:6},
+      {weight:'235', desc:'Double forfeit', hPts:0, oPts:0}
+    ]
+  },
+  'decorah-2023': {
+    title: 'Decorah vs. Holmen',
+    sub: '2022–23 Season — 01/03/2023',
+    opponent: 'Decorah',
+    holmenScore: 30,
+    oppScore: 54,
+    bouts: [
+      {weight:'100', desc:'Adriana Vang (Holmen) won by forfeit', hPts:6, oPts:0},
+      {weight:'105', desc:'Chloe Sheffield (Decorah) def. Nora Lee (Holmen), Fall 4:18', hPts:0, oPts:6},
+      {weight:'110', desc:'Bella Xiong (Holmen) won by forfeit', hPts:6, oPts:0},
+      {weight:'115', desc:'Kaitlyn Bjork (Decorah) def. Haley Hopkins (Holmen), Fall 0:56', hPts:0, oPts:6},
+      {weight:'120', desc:'Allison Weiss (Holmen) def. Rorie Weidow (Decorah), Fall 3:41', hPts:6, oPts:0},
+      {weight:'125', desc:'Josye Olson (Holmen) won by forfeit', hPts:6, oPts:0},
+      {weight:'130', desc:'Ashley Bjork (Decorah) def. Anna Strasser (Holmen), Fall 1:40', hPts:0, oPts:6},
+      {weight:'135', desc:'Anastasia Simon (Decorah) def. Kassidy Ochs (Holmen), Fall 0:45', hPts:0, oPts:6},
+      {weight:'140', desc:'McKenzie Tollefson (Decorah) def. Kaitlyn Weiss (Holmen), Fall 1:26', hPts:0, oPts:6},
+      {weight:'145', desc:'Evelyn Vetsch (Holmen) def. Lauren Luzum (Decorah), Fall 4:56', hPts:6, oPts:0},
+      {weight:'155', desc:'Mairi Sessions (Decorah) def. Alexa Szak (Holmen), Fall 1:03', hPts:0, oPts:6},
+      {weight:'170', desc:'Naomi Simon (Decorah) def. Maddie Hall (Holmen), Fall 0:27', hPts:0, oPts:6},
+      {weight:'190', desc:'Skyla Jevne (Decorah) won by forfeit', hPts:0, oPts:6},
+      {weight:'235', desc:'Madysen Lippe (Decorah) won by forfeit', hPts:0, oPts:6}
+    ]
+  },
+  'osage-2023': {
+    title: 'Holmen vs. Osage',
+    sub: '2022–23 Season — 01/03/2023',
+    opponent: 'Osage',
+    holmenScore: 30,
+    oppScore: 51,
+    bouts: [
+      {weight:'100', desc:'Gable Hemann (Osage) def. Adriana Vang (Holmen), Fall 0:53', hPts:0, oPts:6},
+      {weight:'105', desc:'Nora Lee (Holmen) def. Alexis Kolbet (Osage), Fall 5:00', hPts:6, oPts:0},
+      {weight:'110', desc:'Haley Hopkins (Holmen) def. Emma Evens (Osage), Fall 3:01', hPts:6, oPts:0},
+      {weight:'115', desc:'Maddie Swenson (Osage) won by forfeit', hPts:0, oPts:6},
+      {weight:'120', desc:'Zoey Johnson (Osage) def. Allison Weiss (Holmen), Dec 5-2', hPts:0, oPts:3},
+      {weight:'125', desc:'Melanie Bruesewitz (Osage) def. Josye Olson (Holmen), Fall 3:16', hPts:0, oPts:6},
+      {weight:'130', desc:'Anna Strasser (Holmen) def. Jazzmine Olsen (Osage), Fall 1:02', hPts:6, oPts:0},
+      {weight:'135', desc:'Annaliese Arciniega (Osage) def. Madeline Eggerichs (Holmen), Fall 1:14', hPts:0, oPts:6},
+      {weight:'140', desc:'Katelynn Huebsch (Osage) def. Kassidy Ochs (Holmen), Fall 0:52', hPts:0, oPts:6},
+      {weight:'145', desc:'Evelyn Vetsch (Holmen) def. Aubrey Chapman (Osage), Fall 3:20', hPts:6, oPts:0},
+      {weight:'155', desc:'Alexa Szak (Holmen) def. Erika Power (Osage), Fall 1:14', hPts:6, oPts:0},
+      {weight:'170', desc:'Addison Schenker (Osage) def. Maddie Hall (Holmen), Fall 4:53', hPts:0, oPts:6},
+      {weight:'190', desc:'Leah Grimm (Osage) won by forfeit', hPts:0, oPts:6},
+      {weight:'235', desc:'Emma Schipper (Osage) won by forfeit', hPts:0, oPts:6},
+      {weight:'105', desc:'Extra: Miley Loften (Osage) def. Gabbie Hopkins (Holmen), MD 14-2', hPts:0, oPts:0, extra:true},
+      {weight:'125', desc:'Extra: Kaylie Havig (Osage) def. Natalie Johnson (Holmen), Fall 3:49', hPts:0, oPts:0, extra:true},
+      {weight:'125', desc:'Extra: Lia Wagner (Osage) def. Jozie Collins (Holmen), Fall 0:32', hPts:0, oPts:0, extra:true},
+      {weight:'125', desc:'Extra: Kaylie Havig (Osage) def. Ava Kelemen (Holmen), Fall 3:19', hPts:0, oPts:0, extra:true}
+    ]
+  },
+  'wausauwest-2023': {
+    title: 'Holmen vs. Wausau West',
+    sub: '2022–23 Season — 02/09/2023',
+    opponent: 'Wausau West',
+    holmenScore: 33,
+    oppScore: 29,
+    bouts: [
+      {weight:'100', desc:'Adriana Vang (Holmen) won by forfeit', hPts:6, oPts:0},
+      {weight:'107', desc:'Savannah Danielson (Wausau West) def. Nora Lee (Holmen), MD 15-3', hPts:0, oPts:4},
+      {weight:'114', desc:'Bella Xiong (Holmen) def. Briana Leigh Gutowski (Wausau West), Fall 1:25', hPts:6, oPts:0},
+      {weight:'120', desc:'Ashley Danielson (Wausau West) def. Allison Weiss (Holmen), MD 11-0', hPts:0, oPts:4},
+      {weight:'126', desc:'Anna Strasser (Holmen) def. Addisyn Rutzen (Wausau West), Dec 3-0', hPts:3, oPts:0},
+      {weight:'132', desc:'Rycene Yang (Wausau West) def. Ava Kelemen (Holmen), Dec 8-6', hPts:0, oPts:3},
+      {weight:'138', desc:'Madelynn Lee (Wausau West) def. Madeline Eggerichs (Holmen), Fall 1:14', hPts:0, oPts:6},
+      {weight:'145', desc:'Evelyn Vetsch (Holmen) won by forfeit', hPts:6, oPts:0},
+      {weight:'152', desc:'Alexa Szak (Holmen) def. Anya Mueller (Wausau West), Fall 1:36', hPts:6, oPts:0},
+      {weight:'165', desc:'Alexis Maier (Holmen) won by forfeit', hPts:6, oPts:0},
+      {weight:'185', desc:'Christiana Nordstrom (Wausau West) won by forfeit', hPts:0, oPts:6},
+      {weight:'235', desc:'Sage Penny (Wausau West) won by forfeit', hPts:0, oPts:6}
+    ]
+  }
+};
+
+function openDualModal(id){
+  const data = DUAL_DATA[id];
+  if(!data) return;
+  const body = document.getElementById('tourneyModalBody');
+  const rows = data.bouts.map(b => `
+    <tr class="${b.extra ? 'extra-row' : (b.hPts > b.oPts ? 'dual-win' : '')}">
+      <td>${b.weight}</td>
+      <td>${b.desc}${b.extra ? ' (non-scoring)' : ''}</td>
+      <td class="pts-cell">${b.hPts}</td>
+      <td class="pts-cell">${b.oPts}</td>
+    </tr>`).join('');
+  body.innerHTML = `
+    <h2>${data.title}</h2>
+    <p class="tourney-sub">${data.sub}</p>
+    <div class="dual-score-banner">
+      <div class="team">Holmen</div>
+      <div class="score">${data.holmenScore}</div>
+      <div class="vs">vs</div>
+      <div class="score">${data.oppScore}</div>
+      <div class="team">${data.opponent}</div>
+    </div>
+    <h3>Match Results</h3>
+    <table class="dual-bout-table"><thead><tr><th>Weight</th><th>Result</th><th>Holmen Pts</th><th>${data.opponent} Pts</th></tr></thead><tbody>${rows}</tbody></table>
+  `;
+  document.getElementById('tourneyOverlay').classList.add('open');
+}
 
 function openTourneyModal(id){
   const data = TOURNEY_DATA[id];
@@ -402,7 +636,10 @@ function openTourneyModal(id){
 }
 
 document.querySelectorAll('.tourney-trigger').forEach(el=>{
-  el.addEventListener('click', () => openTourneyModal(el.dataset.tourney));
+  el.addEventListener('click', () => {
+    if(el.dataset.dual) openDualModal(el.dataset.dual);
+    else openTourneyModal(el.dataset.tourney);
+  });
 });
 document.getElementById('tourneyClose').addEventListener('click', () => {
   document.getElementById('tourneyOverlay').classList.remove('open');
