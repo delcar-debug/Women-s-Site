@@ -47,7 +47,7 @@ html,body{
   display:flex;
   align-items:center;
   justify-content:center;
-  background:linear-gradient(135deg,var(--maroon),var(--dark));
+  background:linear-gradient(135deg,#000 0%,var(--dark) 35%,var(--maroon) 65%,#000 100%);
 }
 .slide-layer.active{ opacity:1; z-index:2; }
 
@@ -185,6 +185,7 @@ html,body{
   gap:44px;
   width:100%;
   align-items:start;
+  margin-top:18px;
 }
 .tv-lb-pair .tv-lb-list{ margin:0; max-width:none; }
 .tv-lb-pair .tv-lb-row{ padding:10px 16px; grid-template-columns:48px minmax(0,1fr) auto auto; gap:10px; }
@@ -462,26 +463,24 @@ const SLIDES = [];
 SLIDES.push({ type:'title', duration:8000, eyebrow:'Herstory', title:'Record Board', sub:'Career leaders, single-season leaders, fastest pins, and Pillar Award winners.' });
 
 // Career Leaders
-SLIDES.push({ type:'title', duration:5000, eyebrow:'Record Board', title:'Career Leaders', sub:'Beginning with the 2018–19 season.' });
 const careerCats = Object.keys(CAREER);
 for (let i=0; i<careerCats.length; i+=2){
   const catA = careerCats[i], catB = careerCats[i+1];
   if (catB){
-    SLIDES.push({ type:'lb-pair', duration:9000, catA, listA:CAREER[catA], catB, listB:CAREER[catB] });
+    SLIDES.push({ type:'lb-pair', duration:9000, group:'Career Leaders', catA, listA:CAREER[catA], catB, listB:CAREER[catB] });
   } else {
-    SLIDES.push({ type:'leaderboard', duration:8000, cat:catA, list:CAREER[catA] });
+    SLIDES.push({ type:'leaderboard', duration:8000, group:'Career Leaders', cat:catA, list:CAREER[catA] });
   }
 }
 
 // Single-Season Leaders
-SLIDES.push({ type:'title', duration:5000, eyebrow:'Record Board', title:'Single-Season Leaders', sub:'Top single-season performances.' });
 const singleCats = Object.keys(SINGLE_SEASON);
 for (let i=0; i<singleCats.length; i+=2){
   const catA = singleCats[i], catB = singleCats[i+1];
   if (catB){
-    SLIDES.push({ type:'lb-pair', duration:9000, catA, listA:SINGLE_SEASON[catA], catB, listB:SINGLE_SEASON[catB] });
+    SLIDES.push({ type:'lb-pair', duration:9000, group:'Single-Season Leaders', catA, listA:SINGLE_SEASON[catA], catB, listB:SINGLE_SEASON[catB] });
   } else {
-    SLIDES.push({ type:'leaderboard', duration:8000, cat:catA, list:SINGLE_SEASON[catA] });
+    SLIDES.push({ type:'leaderboard', duration:8000, group:'Single-Season Leaders', cat:catA, list:SINGLE_SEASON[catA] });
   }
 }
 
@@ -517,13 +516,14 @@ function renderSlide(slide){
 
     case 'leaderboard':
       return `<div class="slide-inner">
-        <div class="tv-lb-eyebrow">Career Leaders</div>
+        <div class="tv-lb-eyebrow">${slide.group}</div>
         <h2 class="tv-lb-title">${slide.cat}</h2>
         <div class="tv-lb-list">${lbRowsHtml(slide.list)}</div>
       </div>`;
 
     case 'lb-pair':
       return `<div class="slide-inner">
+        <div class="tv-lb-eyebrow">${slide.group}</div>
         <div class="tv-lb-pair">
           <div>
             <h2 class="tv-lb-title">${slide.catA}</h2>
