@@ -986,9 +986,48 @@ const TOURNEY_DATA = {
     sub: '2023–24 Season — 01/16/2024 — Guaranteed 1st place',
     teams: [],
     duals: [
-      {round:'Quarterfinal', opponent:'Kimberly', holmenScore:60, oppScore:6},
-      {round:'Semifinal', opponent:'Pulaski', holmenScore:42, oppScore:27},
-      {round:'1st Place Match', opponent:'Wausau West', holmenScore:48, oppScore:24}
+      {round:'Quarterfinal', opponent:'Kimberly', holmenScore:60, oppScore:6, bouts:[
+        {weight:'100', desc:'Aini Anderson (Holmen) won by forfeit', hPts:6, oPts:0},
+        {weight:'107', desc:'Kaytlynn Lambries (Holmen) def. Madelyn Yang (Kimberly), Fall 0:26', hPts:6, oPts:0},
+        {weight:'114', desc:'Haley Dezelske (Holmen) won by forfeit', hPts:6, oPts:0},
+        {weight:'120', desc:'Allison Weiss (Holmen) won by forfeit', hPts:6, oPts:0},
+        {weight:'126', desc:'Anna Strasser (Holmen) won by forfeit', hPts:6, oPts:0},
+        {weight:'132', desc:'Peyton Kratochvill (Holmen) def. Lauren Warner (Kimberly), Dec 7-1', hPts:3, oPts:0},
+        {weight:'138', desc:'Natalie Markos (Holmen) def. Sarah McCarthy (Kimberly), Dec 9-8', hPts:3, oPts:0},
+        {weight:'145', desc:'Alexa Szak (Holmen) won by forfeit', hPts:6, oPts:0},
+        {weight:'152', desc:'Sarah Cambell (Kimberly) def. Abby Molling (Holmen), Fall 4:45', hPts:0, oPts:6},
+        {weight:'165', desc:'Maddie Hall (Holmen) won by forfeit', hPts:6, oPts:0},
+        {weight:'185', desc:'Keionna Noel (Holmen) def. Allison Klein (Kimberly), Fall 0:33', hPts:6, oPts:0},
+        {weight:'235', desc:'Sophia Walter (Holmen) won by forfeit', hPts:6, oPts:0}
+      ]},
+      {round:'Semifinal', opponent:'Pulaski', holmenScore:42, oppScore:27, bouts:[
+        {weight:'100', desc:'Aini Anderson (Holmen) won by forfeit', hPts:6, oPts:0},
+        {weight:'107', desc:'Ava Peters (Pulaski) def. Kaytlynn Lambries (Holmen), Fall 1:32', hPts:0, oPts:6},
+        {weight:'114', desc:'Haley Dezelske (Holmen) def. Olivia Wojkiewicz (Pulaski), Fall 5:44', hPts:6, oPts:0},
+        {weight:'120', desc:'Jozie Collins (Holmen) def. Reese Burich (Pulaski), Fall 1:00', hPts:6, oPts:0},
+        {weight:'126', desc:'Allison Weiss (Holmen) won by forfeit', hPts:6, oPts:0},
+        {weight:'132', desc:'Leah Kapla (Pulaski) def. Anna Strasser (Holmen), Dec 1-0', hPts:0, oPts:3},
+        {weight:'138', desc:'Alexa Szak (Holmen) def. Elliana Maroszek (Pulaski), Fall 1:03', hPts:6, oPts:0},
+        {weight:'145', desc:'Harlow Skenandore (Pulaski) def. Natalie Markos (Holmen), Fall 0:34', hPts:0, oPts:6},
+        {weight:'152', desc:'Savannah Pratt (Pulaski) def. Abby Molling (Holmen), Fall 2:15', hPts:0, oPts:6},
+        {weight:'165', desc:'Maddie Hall (Holmen) def. Ellie Neosh (Pulaski), Fall 2:25', hPts:6, oPts:0},
+        {weight:'185', desc:'Marna Andre (Pulaski) def. Keionna Noel (Holmen), Fall 4:29', hPts:0, oPts:6},
+        {weight:'235', desc:'Sophia Walter (Holmen) won by forfeit', hPts:6, oPts:0}
+      ]},
+      {round:'1st Place Match', opponent:'Wausau West', holmenScore:48, oppScore:24, bouts:[
+        {weight:'100', desc:'Aini Anderson (Holmen) def. Isabelle Whited (Wausau West), Fall 0:34', hPts:6, oPts:0},
+        {weight:'107', desc:'Kaytlynn Lambries (Holmen) def. Ella Fabry (Wausau West), Fall 0:30', hPts:6, oPts:0},
+        {weight:'114', desc:'Haley Dezelske (Holmen) def. Ella Fabry (Wausau West), Fall 0:00', hPts:6, oPts:0},
+        {weight:'120', desc:'Savannah Danielson (Wausau West) def. Allison Weiss (Holmen), Fall 1:29', hPts:0, oPts:6},
+        {weight:'126', desc:'Peyton Kratochvill (Holmen) def. Lillian Laden (Wausau West), Fall 2:50', hPts:6, oPts:0},
+        {weight:'132', desc:'Anna Strasser (Holmen) def. Carmen Ghidorzi (Wausau West), Fall 4:55', hPts:6, oPts:0},
+        {weight:'138', desc:'Rycene Yang (Wausau West) def. Ava Kelemen (Holmen), Fall 4:41', hPts:0, oPts:6},
+        {weight:'145', desc:'Alexa Szak (Holmen) def. Lana Borchardt (Wausau West), Fall 0:23', hPts:6, oPts:0},
+        {weight:'152', desc:'Emma Huggenvik (Wausau West) def. Abby Molling (Holmen), Fall 3:27', hPts:0, oPts:6},
+        {weight:'165', desc:'Maddie Hall (Holmen) def. Kambria Heisler (Wausau West), Fall 1:22', hPts:6, oPts:0},
+        {weight:'185', desc:'Anya Mueller (Wausau West) def. Keionna Noel (Holmen), Fall 1:29', hPts:0, oPts:6},
+        {weight:'235', desc:'Sophia Walter (Holmen) def. Phoebe Steele (Wausau West), Fall 2:29', hPts:6, oPts:0}
+      ]}
     ],
     wrestlers: [
       {name:'Aini Anderson', weight:'100', bouts:[
@@ -1221,10 +1260,26 @@ function openTourneyModal(id){
   }
   const hasDuals = Array.isArray(data.duals) && data.duals.length > 0;
   if(hasDuals){
-    const dualRows = data.duals.map(d => `<tr><td>${d.round}</td><td>Holmen def. ${d.opponent}</td><td><strong>${d.holmenScore}</strong> – ${d.oppScore}</td></tr>`).join('');
-    teamSection += `
-    <h3>Dual Results</h3>
-    <table class="tourney-team-table"><thead><tr><th>Round</th><th>Result</th><th>Score</th></tr></thead><tbody>${dualRows}</tbody></table>`;
+    const dualBlocks = data.duals.map(d => {
+      const boutRows = (d.bouts || []).map(b => `
+        <tr class="${b.hPts > b.oPts ? 'dual-win' : ''}">
+          <td>${b.weight}</td>
+          <td>${b.desc}</td>
+          <td class="pts-cell">${b.hPts}</td>
+          <td class="pts-cell">${b.oPts}</td>
+        </tr>`).join('');
+      return `
+      <h3>${d.round} — Holmen vs. ${d.opponent}</h3>
+      <div class="dual-score-banner">
+        <div class="team">Holmen</div>
+        <div class="score">${d.holmenScore}</div>
+        <div class="vs">vs</div>
+        <div class="score">${d.oppScore}</div>
+        <div class="team">${d.opponent}</div>
+      </div>
+      <table class="dual-bout-table"><thead><tr><th>Weight</th><th>Result</th><th>Holmen Pts</th><th>${d.opponent} Pts</th></tr></thead><tbody>${boutRows}</tbody></table>`;
+    }).join('');
+    teamSection += dualBlocks;
   }
   const wrestlerCards = data.wrestlers.map(w => `
     <div class="tourney-wrestler">
