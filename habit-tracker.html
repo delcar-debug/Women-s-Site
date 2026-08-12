@@ -262,7 +262,7 @@
 </section>
 
 <footer>
-  <span class="muted">Data is saved in this browser. Export a backup before clearing it.</span>
+  <span class="muted" id="syncStatus">Syncing across your devices. Export a backup anytime.</span>
   <button class="icon-btn danger" id="resetBtn">Reset all data</button>
 </footer>
 
@@ -680,6 +680,13 @@ function renderAll() {
   renderPerHabit();
 }
 
+/* Re-reads state from localStorage (used after a cloud sync writes fresh
+   data into storage) and re-renders. Exposed for the sync module below. */
+window.__loadStateFromStorage = function () {
+  state = load();
+  renderAll();
+};
+
 /* ------------------------------------------------------------------ */
 /*  Events                                                             */
 /* ------------------------------------------------------------------ */
@@ -770,6 +777,107 @@ $("#resetBtn").addEventListener("click", () => {
 window.addEventListener("resize", () => { clearTimeout(window.__rz); window.__rz = setTimeout(renderTrend, 150); });
 
 renderAll();
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAC48XQb09XVyqCmmxRtX3Pox1BPVruf70",
+  authDomain: "holmen-women-s-wrestling.firebaseapp.com",
+  projectId: "holmen-women-s-wrestling",
+  storageBucket: "holmen-women-s-wrestling.firebasestorage.app",
+  messagingSenderId: "283572750466",
+  appId: "1:283572750466:web:566708849a7cd57afd4c9b"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = getFirestore(fbApp);
+const COACH_EMAIL = 'coach@holmenwrestling.app';
+const COACH_PASSCODE = 'illhaveanother';
+const HABIT_DOC = doc(db, 'habitTracker', 'data');
+const HABIT_STORAGE_KEY = "habitTracker.v1";
+
+const syncStatusEl = document.getElementById('syncStatus');
+function setSyncStatus(text) { if (syncStatusEl) syncStatusEl.textContent = text; }
+
+let suppressSnapshot = false;
+let pushTimer = null;
+
+function schedulePush() {
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(pushToCloud, 800);
+}
+
+async function pushToCloud() {
+  try {
+    const raw = localStorage.getItem(HABIT_STORAGE_KEY);
+    if (!raw) return;
+    suppressSnapshot = true;
+    await setDoc(HABIT_DOC, { data: JSON.parse(raw), updatedAt: serverTimestamp() });
+  } catch (e) {
+    console.warn('Habit tracker cloud sync failed', e);
+    setSyncStatus('Could not sync — saved on this device only for now.');
+  }
+}
+
+function isEditingHabits() {
+  const active = document.activeElement;
+  if (!active) return false;
+  const tag = active.tagName;
+  return tag === 'INPUT' || tag === 'TEXTAREA';
+}
+
+async function pullFromCloud() {
+  try {
+    const snap = await getDoc(HABIT_DOC);
+    if (snap.exists() && snap.data() && snap.data().data) {
+      localStorage.setItem(HABIT_STORAGE_KEY, JSON.stringify(snap.data().data));
+    } else {
+      // Nothing in the cloud yet — push whatever's already on this device.
+      await pushToCloud();
+    }
+  } catch (e) {
+    console.warn('Could not load habit data from cloud', e);
+    setSyncStatus('Could not sync — saved on this device only for now.');
+    return;
+  }
+  window.__loadStateFromStorage();
+}
+
+function startSync() {
+  const originalSave = window.save;
+  window.save = function (...args) {
+    const result = originalSave.apply(this, args);
+    schedulePush();
+    return result;
+  };
+
+  pullFromCloud().then(() => {
+    setSyncStatus('Synced across your devices. Export a backup anytime.');
+    onSnapshot(HABIT_DOC, (snap) => {
+      if (suppressSnapshot) { suppressSnapshot = false; return; }
+      if (!snap.exists()) return;
+      const data = snap.data();
+      if (!data || !data.data) return;
+      if (isEditingHabits()) return;
+      localStorage.setItem(HABIT_STORAGE_KEY, JSON.stringify(data.data));
+      window.__loadStateFromStorage();
+    });
+  });
+}
+
+onAuthStateChanged(auth, (user) => {
+  if (user) startSync();
+});
+
+signInWithEmailAndPassword(auth, COACH_EMAIL, COACH_PASSCODE).catch((e) => {
+  console.warn('Habit tracker cloud sign-in failed, staying local-only', e);
+  setSyncStatus('Could not sync — saved on this device only for now.');
+});
 </script>
 </body>
 </html>
