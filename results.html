@@ -2337,6 +2337,18 @@ tabs.forEach(t=>{
     document.getElementById(t.dataset.panel).classList.add('active');
   });
 });
+
+(function activateFromHash(){
+  const hashId = location.hash.slice(1);
+  if(!hashId) return;
+  const targetTab = document.querySelector('.tab[data-panel="'+hashId+'"]');
+  if(!targetTab) return;
+  tabs.forEach(x=>x.classList.remove('active'));
+  panels.forEach(x=>x.classList.remove('active'));
+  targetTab.classList.add('active');
+  document.getElementById(hashId).classList.add('active');
+  targetTab.scrollIntoView({block:'nearest', inline:'nearest'});
+})();
 </script>
 </body>
 </html>
