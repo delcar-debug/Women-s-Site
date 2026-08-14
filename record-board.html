@@ -87,7 +87,7 @@ html,body{
 }
 .tv-logo-sub{
   font-weight:700;
-  font-size:1.3rem;
+  font-size:1.7rem;
   letter-spacing:-.01em;
   opacity:.85;
   text-shadow:0 2px 8px rgba(0,0,0,.6);
@@ -112,10 +112,10 @@ html,body{
 .tv-eyebrow{
   text-transform:uppercase;
   letter-spacing:.24em;
-  font-size:clamp(1.05rem,1.7vw,1.5rem);
+  font-size:clamp(2rem,3.6vw,3.4rem);
   font-weight:900;
   color:var(--gold);
-  margin:0 0 14px;
+  margin:0 0 18px;
 }
 .tv-title-heading{
   font-size:clamp(3.6rem,9vw,8.5rem);
@@ -138,10 +138,10 @@ html,body{
 .tv-lb-eyebrow{
   text-transform:uppercase;
   letter-spacing:.2em;
-  font-size:clamp(1rem,1.6vw,1.4rem);
+  font-size:clamp(1.3rem,2.2vw,1.9rem);
   font-weight:900;
   color:var(--gold);
-  margin:0 0 8px;
+  margin:0 0 10px;
 }
 .tv-lb-title{
   font-size:clamp(2.6rem,5.6vw,5.2rem);
@@ -576,7 +576,6 @@ function renderSlide(slide){
 
     case 'pins':
       return `<div class="slide-inner">
-        <div class="tv-lb-eyebrow">Record Board</div>
         <h2 class="tv-lb-title">${slide.title}</h2>
         <div class="tv-pins-list">
           ${slide.list.map(row => `
@@ -591,7 +590,6 @@ function renderSlide(slide){
 
     case 'pillar-winners':
       return `<div class="slide-inner">
-        <div class="tv-lb-eyebrow">Record Board</div>
         <h2 class="tv-lb-title">Pillar Award Winners</h2>
         <div class="tv-pillar-groups">
           ${slide.groups.map(g => `
