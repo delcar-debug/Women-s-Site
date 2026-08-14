@@ -57,11 +57,11 @@ html,body{
 .slide-inner{
   position:relative;
   z-index:2;
-  width:min(1600px,94vw);
-  max-height:88vh;
+  width:min(1900px,97vw);
+  max-height:95vh;
   margin:auto;
   text-align:center;
-  padding:40px;
+  padding:24px;
 }
 
 /* Logo watermark, persistent corner */
@@ -76,18 +76,18 @@ html,body{
   opacity:.92;
   pointer-events:none;
 }
-.tv-logo img{ height:92px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
+.tv-logo img{ height:104px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
 .tv-logo-text{ display:flex; flex-direction:column; gap:2px; }
 .tv-logo-title{
   font-weight:900;
-  font-size:1.9rem;
+  font-size:2.3rem;
   letter-spacing:-.02em;
   line-height:1.1;
   text-shadow:0 2px 8px rgba(0,0,0,.6);
 }
 .tv-logo-sub{
   font-weight:700;
-  font-size:1.05rem;
+  font-size:1.3rem;
   letter-spacing:-.01em;
   opacity:.85;
   text-shadow:0 2px 8px rgba(0,0,0,.6);
@@ -112,13 +112,13 @@ html,body{
 .tv-eyebrow{
   text-transform:uppercase;
   letter-spacing:.24em;
-  font-size:clamp(.85rem,1.3vw,1.15rem);
+  font-size:clamp(1.05rem,1.7vw,1.5rem);
   font-weight:900;
   color:var(--gold);
   margin:0 0 14px;
 }
 .tv-title-heading{
-  font-size:clamp(3rem,7.5vw,7rem);
+  font-size:clamp(3.6rem,9vw,8.5rem);
   font-weight:900;
   letter-spacing:-.03em;
   margin:0 0 20px;
@@ -126,9 +126,9 @@ html,body{
   text-shadow:0 4px 20px rgba(0,0,0,.5);
 }
 .tv-title-sub{
-  font-size:clamp(1.1rem,2.1vw,1.8rem);
+  font-size:clamp(1.4rem,2.7vw,2.3rem);
   font-weight:600;
-  max-width:900px;
+  max-width:1000px;
   margin:0 auto;
   line-height:1.5;
   opacity:.96;
@@ -138,107 +138,107 @@ html,body{
 .tv-lb-eyebrow{
   text-transform:uppercase;
   letter-spacing:.2em;
-  font-size:clamp(.8rem,1.2vw,1.05rem);
+  font-size:clamp(1rem,1.6vw,1.4rem);
   font-weight:900;
   color:var(--gold);
-  margin:0 0 6px;
+  margin:0 0 8px;
 }
 .tv-lb-title{
-  font-size:clamp(2rem,4.4vw,4rem);
+  font-size:clamp(2.6rem,5.6vw,5.2rem);
   font-weight:900;
   letter-spacing:-.02em;
-  margin:0 0 26px;
+  margin:0 0 30px;
 }
 .tv-lb-list{
   display:grid;
-  gap:10px;
-  max-width:1000px;
+  gap:14px;
+  max-width:1200px;
   margin:0 auto;
   text-align:left;
 }
 .tv-lb-row{
   display:grid;
-  grid-template-columns:64px minmax(0,1fr) auto auto;
+  grid-template-columns:84px minmax(0,1fr) auto auto;
   align-items:center;
-  gap:18px;
+  gap:22px;
   background:rgba(255,255,255,.07);
   border:1px solid rgba(255,255,255,.16);
-  border-radius:14px;
-  padding:12px 22px;
+  border-radius:16px;
+  padding:16px 28px;
 }
 .tv-lb-row.r1{ background:rgba(232,195,122,.16); border-color:rgba(232,195,122,.45); }
 .tv-lb-row.r2{ background:rgba(215,221,227,.14); border-color:rgba(215,221,227,.4); }
 .tv-lb-row.r3{ background:rgba(215,154,106,.14); border-color:rgba(215,154,106,.4); }
-.tv-lb-rank{ font-size:clamp(1.3rem,2vw,1.8rem); font-weight:900; text-align:center; opacity:.85; }
-.tv-lb-name{ font-size:clamp(1.1rem,1.9vw,1.6rem); font-weight:800; letter-spacing:-.01em; }
-.tv-lb-years{ font-size:clamp(.8rem,1.1vw,1rem); font-weight:600; opacity:.75; text-align:right; white-space:nowrap; }
-.tv-lb-value{ font-size:clamp(1.3rem,2.2vw,1.9rem); font-weight:900; color:var(--gold); text-align:right; min-width:70px; }
+.tv-lb-rank{ font-size:clamp(1.7rem,2.7vw,2.4rem); font-weight:900; text-align:center; opacity:.85; }
+.tv-lb-name{ font-size:clamp(1.5rem,2.5vw,2.2rem); font-weight:800; letter-spacing:-.01em; }
+.tv-lb-years{ font-size:clamp(1rem,1.5vw,1.35rem); font-weight:600; opacity:.75; text-align:right; white-space:nowrap; }
+.tv-lb-value{ font-size:clamp(1.7rem,2.9vw,2.6rem); font-weight:900; color:var(--gold); text-align:right; min-width:90px; }
 
 /* ---- Leaderboard pair (two categories side by side) ---- */
 .tv-lb-pair{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:44px;
+  gap:56px;
   width:100%;
   align-items:start;
-  margin-top:18px;
+  margin-top:22px;
 }
 .tv-lb-pair .tv-lb-list{ margin:0; max-width:none; }
-.tv-lb-pair .tv-lb-row{ padding:10px 16px; grid-template-columns:48px minmax(0,1fr) auto auto; gap:10px; }
+.tv-lb-pair .tv-lb-row{ padding:14px 20px; grid-template-columns:60px minmax(0,1fr) auto auto; gap:14px; }
 
 /* ---- Fastest pins slide ---- */
 .tv-pins-list{
   display:grid;
-  gap:8px;
-  max-width:920px;
+  gap:12px;
+  max-width:1080px;
   margin:0 auto;
   text-align:left;
 }
 .tv-pins-row{
   display:grid;
-  grid-template-columns:56px minmax(0,1fr) auto auto;
+  grid-template-columns:70px minmax(0,1fr) auto auto;
   align-items:center;
-  gap:16px;
+  gap:20px;
   background:rgba(255,255,255,.07);
   border:1px solid rgba(255,255,255,.16);
-  border-radius:12px;
-  padding:9px 20px;
+  border-radius:14px;
+  padding:13px 24px;
 }
 .tv-pins-row.r1{ background:rgba(232,195,122,.16); border-color:rgba(232,195,122,.45); }
-.tv-pins-rank{ font-size:1.2rem; font-weight:900; text-align:center; opacity:.85; }
-.tv-pins-name{ font-size:clamp(1rem,1.6vw,1.35rem); font-weight:800; }
-.tv-pins-year{ font-size:.85rem; font-weight:600; opacity:.7; text-align:right; }
-.tv-pins-time{ font-size:clamp(1.15rem,1.9vw,1.6rem); font-weight:900; color:var(--gold); text-align:right; min-width:70px; }
+.tv-pins-rank{ font-size:1.6rem; font-weight:900; text-align:center; opacity:.85; }
+.tv-pins-name{ font-size:clamp(1.3rem,2.1vw,1.75rem); font-weight:800; }
+.tv-pins-year{ font-size:1.1rem; font-weight:600; opacity:.7; text-align:right; }
+.tv-pins-time{ font-size:clamp(1.5rem,2.4vw,2.1rem); font-weight:900; color:var(--gold); text-align:right; min-width:90px; }
 
 /* ---- Pillar winners slide ---- */
 .tv-pillar-groups{
   display:grid;
-  gap:26px;
+  gap:30px;
 }
 .tv-pillar-season{
-  font-size:clamp(1.05rem,1.8vw,1.5rem);
+  font-size:clamp(1.35rem,2.3vw,1.95rem);
   font-weight:900;
-  margin:0 0 12px;
+  margin:0 0 14px;
   letter-spacing:.06em;
   text-transform:uppercase;
   color:var(--gold);
 }
 .tv-pillar-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-  gap:10px;
-  max-width:1400px;
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:14px;
+  max-width:1600px;
   margin:0 auto;
 }
 .tv-pillar-entry{
   background:rgba(255,255,255,.08);
   border:1px solid rgba(255,255,255,.2);
-  border-radius:12px;
-  padding:10px 15px;
+  border-radius:14px;
+  padding:14px 18px;
   text-align:left;
 }
-.tv-pillar-entry .name{ font-size:clamp(.88rem,1.35vw,1.1rem); font-weight:800; margin:0 0 2px; }
-.tv-pillar-entry .pillar{ font-size:clamp(.7rem,1.05vw,.88rem); font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:.05em; margin:0; }
+.tv-pillar-entry .name{ font-size:clamp(1.15rem,1.8vw,1.5rem); font-weight:800; margin:0 0 4px; }
+.tv-pillar-entry .pillar{ font-size:clamp(.92rem,1.35vw,1.15rem); font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:.05em; margin:0; }
 
 /* Fullscreen helper button */
 #tv-fs-btn{
@@ -250,13 +250,14 @@ html,body{
   border:1px solid rgba(255,255,255,.35);
   color:#fff;
   font-weight:800;
-  font-size:.85rem;
+  font-size:1.05rem;
   border-radius:999px;
   padding:10px 18px;
   cursor:pointer;
   opacity:.55;
 }
 #tv-fs-btn:hover{ opacity:1; }
+body.is-fullscreen #tv-fs-btn{ display:none; }
 
 /* QR code, persistent corner */
 #tv-qr-box{
@@ -280,7 +281,7 @@ html,body{
   box-shadow:0 4px 16px rgba(0,0,0,.45);
 }
 #tv-qr-box span{
-  font-size:.72rem;
+  font-size:.9rem;
   font-weight:800;
   text-transform:uppercase;
   letter-spacing:.08em;
@@ -653,6 +654,10 @@ document.getElementById('tv-fs-btn').addEventListener('click', () => {
   } else {
     document.exitFullscreen().catch(() => {});
   }
+});
+
+document.addEventListener('fullscreenchange', () => {
+  document.body.classList.toggle('is-fullscreen', !!document.fullscreenElement);
 });
 
 function goToSlide(index){
