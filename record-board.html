@@ -183,8 +183,12 @@ html,body{
   align-items:start;
   margin-top:22px;
 }
-.tv-lb-pair .tv-lb-list{ margin:0; max-width:none; }
-.tv-lb-pair .tv-lb-row{ padding:14px 20px; grid-template-columns:60px minmax(0,1fr) auto auto; gap:14px; }
+.tv-lb-pair .tv-lb-list{ margin:0; max-width:none; gap:10px; }
+.tv-lb-pair .tv-lb-row{ padding:11px 18px; grid-template-columns:60px minmax(0,1fr) auto auto; gap:14px; }
+.tv-lb-pair .tv-lb-rank{ font-size:clamp(1.45rem,2.3vw,2.05rem); }
+.tv-lb-pair .tv-lb-name{ font-size:clamp(1.3rem,2.1vw,1.9rem); }
+.tv-lb-pair .tv-lb-years{ font-size:clamp(.88rem,1.3vw,1.15rem); }
+.tv-lb-pair .tv-lb-value{ font-size:clamp(1.45rem,2.5vw,2.2rem); }
 
 /* ---- Fastest pins slide ---- */
 .tv-pins-list{
@@ -519,8 +523,10 @@ for (let i=0; i<singleCats.length; i+=2){
   }
 }
 
-// Fastest Pins
-SLIDES.push({ type:'pins', duration:10000, title:'Fastest Pins', list:FASTEST_PINS });
+// Fastest Pins (split across two slides so more wrestlers can be shown)
+const pinsHalf = Math.ceil(FASTEST_PINS.length/2);
+SLIDES.push({ type:'pins', duration:9000, title:'Fastest Pins', list:FASTEST_PINS.slice(0,pinsHalf) });
+SLIDES.push({ type:'pins', duration:9000, title:'Fastest Pins', list:FASTEST_PINS.slice(pinsHalf) });
 
 // Pillar Award Winners
 const PILLAR_SLIDE_GROUPS = [
