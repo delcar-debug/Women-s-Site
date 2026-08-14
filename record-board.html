@@ -444,7 +444,17 @@ const FASTEST_PINS = [
   {r:6,name:'Haley Dezelske',year:'2025',t:'0:10'},
   {r:6,name:'Carissa Ceresa',year:'2025',t:'0:10'},
   {r:6,name:'Keionna Noel',year:'2024',t:'0:10'},
-  {r:6,name:'Aubrey Hauser',year:'2025',t:'0:10'}
+  {r:6,name:'Aubrey Hauser',year:'2025',t:'0:10'},
+  {r:11,name:'Haley Dezelske',year:'2024',t:'0:11'},
+  {r:12,name:'Kaytlynn Lambries',year:'2024',t:'0:12'},
+  {r:12,name:'Celia Drogseth',year:'2025',t:'0:12'},
+  {r:12,name:'Maddie Hall',year:'2024',t:'0:12'},
+  {r:12,name:'Nora Lee',year:'2023',t:'0:12'},
+  {r:16,name:'Ruby Gustafson',year:'2026',t:'0:13'},
+  {r:16,name:'Kaytlynn Lambries',year:'2026',t:'0:13'},
+  {r:16,name:'Kaytlynn Lambries',year:'2024',t:'0:13'},
+  {r:19,name:'Haley Dezelske',year:'2025',t:'0:14'},
+  {r:19,name:'Nora Lee',year:'2023',t:'0:14'}
 ];
 
 const PILLAR_WINNERS = [
@@ -523,10 +533,9 @@ for (let i=0; i<singleCats.length; i+=2){
   }
 }
 
-// Fastest Pins (split across two slides so more wrestlers can be shown)
-const pinsHalf = Math.ceil(FASTEST_PINS.length/2);
-SLIDES.push({ type:'pins', duration:9000, title:'Fastest Pins', list:FASTEST_PINS.slice(0,pinsHalf) });
-SLIDES.push({ type:'pins', duration:9000, title:'Fastest Pins', list:FASTEST_PINS.slice(pinsHalf) });
+// Fastest Pins (top 20, 10 per slide)
+SLIDES.push({ type:'pins', duration:9000, title:'Fastest Pins', list:FASTEST_PINS.slice(0,10) });
+SLIDES.push({ type:'pins', duration:9000, title:'Fastest Pins', list:FASTEST_PINS.slice(10,20) });
 
 // Pillar Award Winners
 const PILLAR_SLIDE_GROUPS = [
