@@ -168,7 +168,7 @@ html,body{
   border-radius:14px;
   padding:13px 24px;
 }
-.tv-qual-row.champ{ background:rgba(232,195,122,.13); border-color:rgba(232,195,122,.4); }
+.tv-qual-row.champ{ background:rgba(232,195,122,.13); border-color:rgba(232,195,122,.4); grid-template-columns:110px minmax(0,1fr) 110px; }
 .tv-qual-year{ font-size:clamp(1.3rem,2.1vw,1.75rem); font-weight:900; opacity:.8; }
 .tv-qual-name{ font-size:clamp(1.35rem,2.15vw,1.85rem); font-weight:800; letter-spacing:-.01em; }
 .tv-qual-weight{ font-size:clamp(1.1rem,1.7vw,1.45rem); font-weight:700; opacity:.75; text-align:center; }
@@ -260,13 +260,13 @@ const STATE_QUALIFIERS_RECENT = [
   {year:'2024',name:'Aini Anderson',weight:'100',result:'Qualifier'},
   {year:'2024',name:'Kaytlynn Lambries',weight:'107',result:'6th'},
   {year:'2024',name:'Allison Weiss',weight:'114',result:'Qualifier'},
-  {year:'2024',name:'Anna Strasser',weight:'126',result:'Qualifier'},
-  {year:'2024',name:'Alexa Szak',weight:'145',result:'2x Qualifier'},
-  {year:'2024',name:'Maddie Hall',weight:'165',result:'Qualifier'},
-  {year:'2024',name:'Sophia Walter',weight:'185',result:'Qualifier'}
+  {year:'2024',name:'Anna Strasser',weight:'126',result:'Qualifier'}
 ];
 
 const STATE_QUALIFIERS_EARLY = [
+  {year:'2024',name:'Alexa Szak',weight:'145',result:'2x Qualifier'},
+  {year:'2024',name:'Maddie Hall',weight:'165',result:'Qualifier'},
+  {year:'2024',name:'Sophia Walter',weight:'185',result:'Qualifier'},
   {year:'2023',name:'Nora Lee',weight:'100',result:'5th'},
   {year:'2023',name:'Evelyn Vetsch',weight:'145',result:'3rd'},
   {year:'2023',name:'Alexa Szak',weight:'152',result:'Qualifier'},
@@ -293,13 +293,13 @@ const SECTIONAL_CHAMPIONS_RECENT = [
   {year:'2025',name:'Haley Dezelske',weight:'114',result:'Champion'},
   {year:'2024',name:'Aini Anderson',weight:'100',result:'Champion'},
   {year:'2024',name:'Kaytlynn Lambries',weight:'107',result:'Champion'},
-  {year:'2024',name:'Allison Weiss',weight:'114',result:'Champion'},
-  {year:'2024',name:'Anna Strasser',weight:'126',result:'Champion'},
-  {year:'2024',name:'Alexa Szak',weight:'145',result:'Champion'},
-  {year:'2024',name:'Maddie Hall',weight:'165',result:'Champion'}
+  {year:'2024',name:'Allison Weiss',weight:'114',result:'Champion'}
 ];
 
 const SECTIONAL_CHAMPIONS_EARLY = [
+  {year:'2024',name:'Anna Strasser',weight:'126',result:'Champion'},
+  {year:'2024',name:'Alexa Szak',weight:'145',result:'Champion'},
+  {year:'2024',name:'Maddie Hall',weight:'165',result:'Champion'},
   {year:'2023',name:'Evelyn Vetsch',weight:'145',result:'Champion'},
   {year:'2023',name:'Alexa Szak',weight:'152',result:'Champion'},
   {year:'2023',name:'Maddie Hall',weight:'165',result:'Champion'}
@@ -325,7 +325,7 @@ function qualRowsHtml(rows, champ){
       <div class="tv-qual-year">${r.year}</div>
       <div class="tv-qual-name">${r.name}</div>
       <div class="tv-qual-weight">${r.weight}</div>
-      <div class="tv-qual-result">${r.result}</div>
+      ${champ ? '' : `<div class="tv-qual-result">${r.result}</div>`}
     </div>`).join('');
 }
 
