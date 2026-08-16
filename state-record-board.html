@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Holmen Women's Wrestling — State Qualifiers &amp; Place Winners</title>
+<title>Holmen Women's Wrestling — State Place Winners &amp; Qualifiers</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/png" href="assets/images/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/images/icon-180.png">
@@ -311,12 +311,12 @@ const SECTIONAL_CHAMPIONS_EARLY = [
 // ---- Build slide list ----
 const SLIDES = [];
 
-SLIDES.push({ type:'title', duration:8000, eyebrow:'Herstory', title:'State Qualifiers & Place Winners', sub:'Every state qualifier and placewinner, plus every regional and sectional champion, in program history.' });
+SLIDES.push({ type:'title', duration:8000, eyebrow:'Herstory', title:'State Place Winners & Qualifiers', sub:'Every state placewinner and qualifier, plus every regional and sectional champion, in program history.' });
+
+SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Placewinners', rows:STATE_PLACEWINNERS, note:'Girls state wrestling began in 2022.' });
 
 SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Qualifiers', rows:STATE_QUALIFIERS_A });
 SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Qualifiers', rows:STATE_QUALIFIERS_B });
-
-SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Placewinners', rows:STATE_PLACEWINNERS, note:'Girls state wrestling began in 2022.' });
 
 SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'Regional Champions', rows:REGIONAL_CHAMPIONS, note:'Girls regionals began in 2025.', champ:true });
 
