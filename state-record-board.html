@@ -285,28 +285,25 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
 // ---- Data (from results.html — State Tournament Qualifiers & Placewinners, Regional Champions, Sectional Champions) ----
 
 const STATE_QUALIFIERS_A = [
+  {year:'2026',name:'Aini Anderson',weight:'100',result:'2nd'},
   {year:'2026',name:'Kaytlynn Lambries',weight:'126',result:'2x Qualifier'},
   {year:'2026',name:'Avalee Euler',weight:'185',result:'Qualifier'},
   {year:'2025',name:'Haley Dezelske',weight:'114',result:'Qualifier'},
   {year:'2025',name:'Allison Weiss',weight:'120',result:'2x Qualifier'},
   {year:'2024',name:'Aini Anderson',weight:'100',result:'Qualifier'},
-  {year:'2024',name:'Allison Weiss',weight:'114',result:'Qualifier'}
+  {year:'2024',name:'Kaytlynn Lambries',weight:'107',result:'6th'},
+  {year:'2024',name:'Allison Weiss',weight:'114',result:'Qualifier'},
+  {year:'2024',name:'Anna Strasser',weight:'126',result:'Qualifier'}
 ];
 
 const STATE_QUALIFIERS_B = [
-  {year:'2024',name:'Anna Strasser',weight:'126',result:'Qualifier'},
   {year:'2024',name:'Alexa Szak',weight:'145',result:'2x Qualifier'},
   {year:'2024',name:'Maddie Hall',weight:'165',result:'Qualifier'},
   {year:'2024',name:'Sophia Walter',weight:'185',result:'Qualifier'},
-  {year:'2023',name:'Alexa Szak',weight:'152',result:'Qualifier'},
-  {year:'2023',name:'Maddie Hall',weight:'165',result:'Qualifier'}
-];
-
-const STATE_PLACEWINNERS = [
-  {year:'2026',name:'Aini Anderson',weight:'100',result:'2nd'},
-  {year:'2024',name:'Kaytlynn Lambries',weight:'107',result:'6th'},
   {year:'2023',name:'Nora Lee',weight:'100',result:'5th'},
   {year:'2023',name:'Evelyn Vetsch',weight:'145',result:'3rd'},
+  {year:'2023',name:'Alexa Szak',weight:'152',result:'Qualifier'},
+  {year:'2023',name:'Maddie Hall',weight:'165',result:'Qualifier'},
   {year:'2022',name:'Evelyn Vetsch',weight:'152',result:'4th'},
   {year:'2022',name:'Emily Szak',weight:'165',result:'5th'}
 ];
@@ -351,10 +348,8 @@ const SLIDES = [];
 
 SLIDES.push({ type:'team-accomplishments', duration:8500, eyebrow:'Postseason Herstory', title:'Team Accomplishments', groups:TEAM_ACCOMPLISHMENTS, note:'Girls team regionals and sectionals began in 2024–25.' });
 
-SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Placewinners', rows:STATE_PLACEWINNERS, note:'Girls state wrestling began in 2022.' });
-
-SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Qualifiers', rows:STATE_QUALIFIERS_A });
-SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Qualifiers', rows:STATE_QUALIFIERS_B });
+SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Qualifiers & Placewinners', rows:STATE_QUALIFIERS_A });
+SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Qualifiers & Placewinners', rows:STATE_QUALIFIERS_B, note:'Girls state wrestling began in 2022.' });
 
 SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'Regional Champions', rows:REGIONAL_CHAMPIONS, note:'Girls regionals began in 2025.', champ:true });
 
