@@ -311,6 +311,13 @@ const STATE_QUALIFIERS_C = [
   {year:'2022',name:'Emily Szak',weight:'165',result:'5th'}
 ];
 
+const FARGO_QUALIFIERS = [
+  {year:'2026',name:'Ruby Gustafson',weight:'',result:'Qualifier'},
+  {year:'2025',name:'Haley Dezelske',weight:'',result:'Qualifier'},
+  {year:'2025',name:'Sophia Walter',weight:'',result:'Qualifier'},
+  {year:'2025',name:'Aini Anderson',weight:'',result:'Qualifier'}
+];
+
 const REGIONAL_CHAMPIONS = [
   {year:'2026',name:'Aini Anderson',weight:'100',result:'Champion'},
   {year:'2026',name:'Peyton Kratochvill',weight:'114',result:'Champion'},
@@ -342,8 +349,8 @@ const SECTIONAL_CHAMPIONS_EARLY = [
 ];
 
 const TEAM_ACCOMPLISHMENTS = [
-  { label:'Team Regional Champions', years:['2024–25','2025–26'] },
-  { label:'Team Sectional Champions', years:['2024–25','2025–26'] }
+  { label:'Team Regional Champions', years:['2025','2026'] },
+  { label:'Team Sectional Champions', years:['2025','2026'] }
 ];
 
 // ---- Build slide list ----
@@ -354,6 +361,8 @@ SLIDES.push({ type:'team-accomplishments', duration:8500, eyebrow:'Postseason He
 SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Qualifiers & Placewinners', rows:STATE_QUALIFIERS_A });
 SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Qualifiers & Placewinners', rows:STATE_QUALIFIERS_B });
 SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Qualifiers & Placewinners', rows:STATE_QUALIFIERS_C, note:'Girls state wrestling began in 2022.' });
+
+SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'Fargo Nationals Qualifiers', rows:FARGO_QUALIFIERS });
 
 SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'Regional Champions', rows:REGIONAL_CHAMPIONS, note:'Girls regionals began in 2025.', champ:true });
 

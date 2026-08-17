@@ -284,34 +284,6 @@ html,body{
 .tv-coach-card .awards{ font-size:clamp(.72rem,1vw,.85rem); line-height:1.45; opacity:.9; margin:0; padding-left:16px; }
 .tv-coach-card .awards li{ margin-bottom:3px; }
 
-/* ---- Slide type: fargo ---- */
-.tv-fargo-list{
-  display:grid;
-  gap:14px;
-  max-width:700px;
-  margin:0 auto;
-  text-align:left;
-}
-.tv-fargo-row{
-  display:flex;
-  align-items:center;
-  gap:20px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.22);
-  border-radius:14px;
-  padding:16px 24px;
-}
-.tv-fargo-year{
-  font-size:clamp(1.1rem,1.8vw,1.5rem);
-  font-weight:900;
-  color:var(--gold);
-  min-width:70px;
-}
-.tv-fargo-name{
-  font-size:clamp(1.2rem,2vw,1.7rem);
-  font-weight:800;
-}
-
 /* ---- Slide type: bullets ---- */
 .tv-bullets-title{
   font-size:clamp(1.8rem,3.6vw,3.4rem);
@@ -526,13 +498,6 @@ const SLIDES = [
   { type:'stat-photo', duration:8000, image:'assets/images/recap-ruby-fargo.jpg',
     title:'Fargo Nationals', text:'Ruby Gustafson represented Holmen at Fargo Nationals — the largest wrestling tournament in the world!' },
 
-  { type:'fargo', duration:9000, title:'Fargo Nationals Qualifiers', qualifiers:[
-      {year:'2026', name:'Ruby Gustafson'},
-      {year:'2025', name:'Haley Dezelske'},
-      {year:'2025', name:'Sophia Walter'},
-      {year:'2025', name:'Aini Anderson'}
-    ] },
-
   { type:'quote', duration:6500, quote:QUOTES[4].quote, source:QUOTES[4].source },
 
   { type:'bullets', duration:10000, title:'Why Holmen Women’s Wrestling?', items:[
@@ -622,19 +587,6 @@ function renderSlide(slide){
                 <p class="role">${c.role}</p>
                 ${c.awards.length ? `<ul class="awards">${c.awards.map(a => `<li>${a}</li>`).join('')}</ul>` : ''}
               </div>
-            </div>`).join('')}
-        </div>
-      </div>`;
-
-    case 'fargo':
-      return `<div class="slide-inner">
-        <div class="tv-eyebrow">🏆 National Qualifiers</div>
-        <div class="tv-bullets-title">${slide.title}</div>
-        <div class="tv-fargo-list">
-          ${slide.qualifiers.map(q => `
-            <div class="tv-fargo-row">
-              <span class="tv-fargo-year">${q.year}</span>
-              <span class="tv-fargo-name">${q.name}</span>
             </div>`).join('')}
         </div>
       </div>`;
