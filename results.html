@@ -74,11 +74,6 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 .tourney-wrestler-head strong{font-size:1rem}
 .tourney-wrestler-head .wt{color:var(--muted);font-size:.82rem;font-weight:600}
 .tourney-place{font-weight:850;color:var(--maroon);font-size:.85rem;white-space:nowrap}
-.fargo-badge{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;background:var(--maroon);color:#fff;font-size:.7rem;font-weight:800;letter-spacing:.03em;vertical-align:middle}
-.fargo-callout{display:flex;align-items:center;gap:12px;margin:10px 0 16px;padding:12px 16px;border-radius:10px;background:linear-gradient(135deg,var(--maroon),#8a1f3f);color:#fff}
-.fargo-callout-icon{font-size:1.6rem;line-height:1}
-.fargo-callout-title{font-weight:850;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;opacity:.85;margin-bottom:2px}
-.fargo-callout-names{font-weight:700;font-size:1rem}
 .tourney-bouts{list-style:none;margin:0;padding:0;font-size:.86rem;color:#3b3d43}
 .tourney-bouts li{padding:4px 0;border-top:1px dashed var(--border)}
 .tourney-bouts li:first-child{border-top:0}
@@ -3540,7 +3535,7 @@ const TOURNEY_DATA = {
         '3rd Place Match — Won by decision over Mikaela Dixon (Gale-Ett.-Tremp/Melrose-Min), 1-0',
         '2nd Place Match — Won by fall over Sofia Whitacre (West Salem/Bangor), 0:32'
       ]},
-      {name:'Ruby Gustafson', weight:'138', place:'2nd', pts:'24.0', fargo:true, bouts:[
+      {name:'Ruby Gustafson', weight:'138', place:'2nd', pts:'24.0', bouts:[
         'Semifinal — Won by fall over Taylor Fennigkoh (Cashton), 1:56',
         '1st Place Match — Lost by tech fall to Rachael Hang (La Crosse Logan/Central), 18-0 (3:07)'
       ]},
@@ -3609,7 +3604,7 @@ const TOURNEY_DATA = {
         '1st Place Match — Lost by fall to Lydia Hutter (Adams-Friendship), 2:46',
         '2nd Place Match — Lost by tech fall to Veda Lepley (Sparta), 19-2 (2:57)'
       ]},
-      {name:'Ruby Gustafson', weight:'138', place:'DNP', pts:'0.0', fargo:true, bouts:[
+      {name:'Ruby Gustafson', weight:'138', place:'DNP', pts:'0.0', bouts:[
         'Quarterfinal — Lost by fall to Erika Sleznikow (Marshfield), 0:35'
       ]},
       {name:'Celia Drogseth', weight:'145', place:'DNP', pts:'0.0', bouts:[
@@ -4475,24 +4470,14 @@ function openTourneyModal(id){
   const wrestlerCards = data.wrestlers.map(w => `
     <div class="tourney-wrestler">
       <div class="tourney-wrestler-head">
-        <div><strong>${w.name}</strong> <span class="wt">${w.weight}</span>${w.fargo ? '<span class="fargo-badge">Fargo Qualifier</span>' : ''}</div>
+        <div><strong>${w.name}</strong> <span class="wt">${w.weight}</span></div>
         ${(w.place || w.pts !== undefined) ? `<div class="tourney-place">${w.place ? w.place + ' place' : ''}${w.place && w.pts !== undefined ? ' · ' : ''}${w.pts !== undefined ? w.pts + ' team pts' : ''}</div>` : ''}
       </div>
       <ul class="tourney-bouts">${w.bouts.map(b => `<li>${b}</li>`).join('')}</ul>
     </div>`).join('');
-  const fargoNames = data.wrestlers.filter(w => w.fargo).map(w => w.name);
-  const fargoSlide = fargoNames.length ? `
-    <div class="fargo-callout">
-      <div class="fargo-callout-icon">🏆</div>
-      <div>
-        <div class="fargo-callout-title">Fargo Qualifier${fargoNames.length > 1 ? 's' : ''}</div>
-        <div class="fargo-callout-names">${fargoNames.join(', ')}</div>
-      </div>
-    </div>` : '';
   body.innerHTML = `
     <h2>${data.title}</h2>
     <p class="tourney-sub">${data.sub}</p>
-    ${fargoSlide}
     ${teamSection}
     <h3>Holmen Match Results</h3>
     ${wrestlerCards}
