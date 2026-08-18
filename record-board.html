@@ -244,6 +244,24 @@ html,body{
 .tv-pillar-entry .name{ font-size:clamp(1.15rem,1.8vw,1.5rem); font-weight:800; margin:0 0 4px; }
 .tv-pillar-entry .pillar{ font-size:clamp(.92rem,1.35vw,1.15rem); font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:.05em; margin:0; }
 
+/* ---- Perfect Practice Club slide ---- */
+.tv-club-chips{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+}
+.tv-club-chip{
+  font-size:clamp(1rem,1.6vw,1.35rem);
+  font-weight:800;
+  background:rgba(232,195,122,.14);
+  border:1px solid rgba(232,195,122,.4);
+  border-radius:999px;
+  padding:10px 22px;
+  color:#fff;
+}
+.tv-rb-note{ margin:26px 0 0; font-size:clamp(1.05rem,1.5vw,1.35rem); font-weight:600; opacity:.72; }
+
 /* Fullscreen helper button */
 #tv-fs-btn{
   position:fixed;
@@ -506,6 +524,13 @@ const PILLAR_WINNERS = [
   ]}
 ];
 
+const PERFECT_PRACTICE = [
+  { season:'2026', names:['Sophia Walter','Celia Drogseth','Kaina Westlie','Peyton Kratochvill'] },
+  { season:'2025', names:['Sophia Walter','Haley Dezelske'] },
+  { season:'2024', names:['Alexa Szak','Allison Weiss','Anna Strasser','Haley Dezelske','Maddie Hall','Maddie Eggerichs'] },
+  { season:'2023', names:['Allison Weiss','Adriana Vang','Alexa Szak'] }
+];
+
 // ---- Build slide list ----
 const SLIDES = [];
 
@@ -546,6 +571,9 @@ const PILLAR_SLIDE_GROUPS = [
 PILLAR_SLIDE_GROUPS.forEach(groups => {
   SLIDES.push({ type:'pillar-winners', duration:9500, groups });
 });
+
+// Perfect Practice Club
+SLIDES.push({ type:'perfect-practice', duration:9000, title:'Perfect Practice Club', groups:PERFECT_PRACTICE, note:'Awarded to wrestlers who don’t miss a practice all season.' });
 
 // ---- Rendering ----
 function lbRowsHtml(list){
@@ -619,6 +647,21 @@ function renderSlide(slide){
               </div>
             </div>`).join('')}
         </div>
+      </div>`;
+
+    case 'perfect-practice':
+      return `<div class="slide-inner">
+        <h2 class="tv-lb-title">${slide.title}</h2>
+        <div class="tv-pillar-groups">
+          ${slide.groups.map(g => `
+            <div class="tv-pillar-group">
+              <div class="tv-pillar-season">${g.season}</div>
+              <div class="tv-club-chips">
+                ${g.names.map(n => `<span class="tv-club-chip">${n}</span>`).join('')}
+              </div>
+            </div>`).join('')}
+        </div>
+        ${slide.note ? `<p class="tv-rb-note">${slide.note}</p>` : ''}
       </div>`;
 
     default:
