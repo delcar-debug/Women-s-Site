@@ -367,7 +367,7 @@ SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', ti
 SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'Sectional Champions', rows:SECTIONAL_CHAMPIONS_RECENT, champ:true });
 SLIDES.push({ type:'qual-list', duration:8500, eyebrow:'Postseason Herstory', title:'Sectional Champions', rows:SECTIONAL_CHAMPIONS_EARLY, note:'Girls sectionals began in 2023.', champ:true });
 
-SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'Fargo Nationals Qualifiers', rows:FARGO_QUALIFIERS });
+SLIDES.push({ type:'qual-list', duration:9000, title:'Fargo Nationals Qualifiers', rows:FARGO_QUALIFIERS });
 
 // ---- Rendering ----
 function qualRowsHtml(rows, champ){
@@ -391,7 +391,7 @@ function renderSlide(slide){
 
     case 'qual-list':
       return `<div class="slide-inner">
-        <div class="tv-lb-eyebrow">${slide.eyebrow}</div>
+        ${slide.eyebrow ? `<div class="tv-lb-eyebrow">${slide.eyebrow}</div>` : ''}
         <h2 class="tv-lb-title">${slide.title}</h2>
         <div class="tv-qual-list">${qualRowsHtml(slide.rows, slide.champ)}</div>
         ${slide.note ? `<p class="tv-qual-note">${slide.note}</p>` : ''}
