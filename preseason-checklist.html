@@ -359,6 +359,26 @@
           </label>
         </article>
 
+
+        <article class="task-card" style="margin-top:16px">
+          <div class="task-head">
+            <div class="task-number">5</div>
+            <div>
+              <h2>Complete SafeSport Training (Seniors)</h2>
+              <p>Required to become a USA Wrestling member if you're turning 18 before August 31, 2027. Membership includes secondary insurance, which can cover hundreds of dollars if a wrestler is injured.</p>
+            </div>
+          </div>
+
+          <div class="task-actions">
+            <a class="button" href="https://www.usawmembership.com/" target="_blank" rel="noopener">Complete SafeSport Training</a>
+          </div>
+
+          <label class="complete-row">
+            <input id="safeSportComplete" type="checkbox">
+            <span>I have completed SafeSport Training (if applicable).</span>
+          </label>
+        </article>
+
       </div>
     </section>
   </main>
@@ -369,11 +389,12 @@
     const usaBracketing = document.getElementById("usaBracketingComplete");
     const districtRegistration = document.getElementById("districtRegistrationComplete");
     const calendarTask = document.getElementById("calendarComplete");
+    const safeSport = document.getElementById("safeSportComplete");
     const progressText = document.getElementById("progressText");
     const progressFill = document.getElementById("progressFill");
     const copyStatus = document.getElementById("copyStatus");
 
-    const taskBoxes = [sportsYou, usaBracketing, districtRegistration, calendarTask];
+    const taskBoxes = [sportsYou, usaBracketing, districtRegistration, calendarTask, safeSport];
 
     function updateProgress() {
       const completed = taskBoxes.filter(box => box && box.checked).length;
@@ -384,7 +405,8 @@
         sportsYou: sportsYou.checked,
         usaBracketing: usaBracketing.checked,
         districtRegistration: districtRegistration.checked,
-        calendar: calendarTask.checked
+        calendar: calendarTask.checked,
+        safeSport: safeSport.checked
       }));
     }
 
@@ -393,6 +415,7 @@
     usaBracketing.checked = Boolean(saved.usaBracketing);
     districtRegistration.checked = Boolean(saved.districtRegistration);
     calendarTask.checked = Boolean(saved.calendar);
+    safeSport.checked = Boolean(saved.safeSport);
 
     taskBoxes.forEach(box => box.addEventListener("change", updateProgress));
     updateProgress();
