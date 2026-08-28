@@ -927,7 +927,58 @@ function watchTeamBoardFocus(){
   setTimeout(fitTeamBoardFocus,500);
 }
 function stopWatchingTeamBoardFocus(){if(teamBoardFocusResizeObserver){teamBoardFocusResizeObserver.disconnect();teamBoardFocusResizeObserver=null}}
-function renderTeamBoard(){if(!el.teamBoardList)return;const goal=(el.practiceGoal?.value||'').trim();el.teamBoardGoal.querySelector('span').textContent=goal||'No daily goal entered';const date=el.practiceDate?.value?new Date(el.practiceDate.value+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'}):'Date not set';el.teamBoardDate.textContent=date;const shell=document.querySelector('.team-board-shell');const focusBlock=teamBoardFocusId?state.blocks.find(b=>b.id===teamBoardFocusId&&Array.isArray(b.circuit)&&b.circuit.length)||null:null;if(shell)shell.classList.toggle('focus-mode',!!focusBlock);if(focusBlock){el.teamBoardList.innerHTML=`<div class="team-board-focus"><button type="button" class="team-board-focus-exit" id="teamBoardFocusExit">← Back to Practice Board</button><div class="team-board-focus-name">${esc(focusBlock.name)}</div><div class="team-board-focus-list">${focusBlock.circuit.map((x,i)=>`<div class="team-board-focus-row"><span class="tbf-num">${i+1}</span><span class="tbf-name">${esc(x.name)}</span>${x.reps?`<span class="tbf-reps">${esc(x.reps)}</span>`:''}</div>`).join('')}</div></div>`;document.getElementById('teamBoardFocusExit')?.addEventListener('click',()=>{teamBoardFocusId=null;renderTeamBoard()});watchTeamBoardFocus();return}stopWatchingTeamBoardFocus();let running=0;el.teamBoardList.innerHTML=state.blocks.length?state.blocks.map((b,i)=>{const start=clock(startMins()+running);running+=Number(b.minutes)||0;const hasCircuit=Array.isArray(b.circuit)&&b.circuit.length>0;const repsBadge=b.reps?` · ${esc(b.reps)}`:'';const circuitToggle=hasCircuit?`<button type="button" class="team-board-circuit-toggle" data-id="${b.id}">▼ Show exercises (${b.circuit.length})</button>`:'';return `<article class="team-board-item ${i===state.currentIndex&&state.practiceActive?'current':''}"><div class="team-board-item-head"><div class="team-board-num">${i+1}</div><div><div class="team-board-item-name">${esc(b.name)}</div><div class="team-board-meta">${esc(categoryInfo(b.category).label)} · ${b.minutes} min${repsBadge}</div></div><div class="team-board-time">${start}</div></div>${circuitToggle}</article>`}).join(''):'<div class="team-board-empty">Add practice blocks in Practice Builder to display the plan here.</div>';el.teamBoardList.querySelectorAll('.team-board-circuit-toggle').forEach(btn=>btn.addEventListener('click',()=>{teamBoardFocusId=btn.dataset.id;renderTeamBoard()}))}
+function renderTeamBoardLive(){if(!el.teamBoardList)return;const goal=(el.practiceGoal?.value||'').trim();el.teamBoardGoal.querySelector('span').textContent=goal||'No daily goal entered';const date=el.practiceDate?.value?new Date(el.practiceDate.value+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'}):'Date not set';el.teamBoardDate.textContent=date;const shell=document.querySelector('.team-board-shell');const focusBlock=teamBoardFocusId?state.blocks.find(b=>b.id===teamBoardFocusId&&Array.isArray(b.circuit)&&b.circuit.length)||null:null;if(shell)shell.classList.toggle('focus-mode',!!focusBlock);if(focusBlock){el.teamBoardList.innerHTML=`<div class="team-board-focus"><button type="button" class="team-board-focus-exit" id="teamBoardFocusExit">← Back to Practice Board</button><div class="team-board-focus-name">${esc(focusBlock.name)}</div><div class="team-board-focus-list">${focusBlock.circuit.map((x,i)=>`<div class="team-board-focus-row"><span class="tbf-num">${i+1}</span><span class="tbf-name">${esc(x.name)}</span>${x.reps?`<span class="tbf-reps">${esc(x.reps)}</span>`:''}</div>`).join('')}</div></div>`;document.getElementById('teamBoardFocusExit')?.addEventListener('click',()=>{teamBoardFocusId=null;renderTeamBoardLive()});watchTeamBoardFocus();return}stopWatchingTeamBoardFocus();let running=0;el.teamBoardList.innerHTML=state.blocks.length?state.blocks.map((b,i)=>{const start=clock(startMins()+running);running+=Number(b.minutes)||0;const hasCircuit=Array.isArray(b.circuit)&&b.circuit.length>0;const repsBadge=b.reps?` · ${esc(b.reps)}`:'';const circuitToggle=hasCircuit?`<button type="button" class="team-board-circuit-toggle" data-id="${b.id}">▼ Show exercises (${b.circuit.length})</button>`:'';return `<article class="team-board-item ${i===state.currentIndex&&state.practiceActive?'current':''}"><div class="team-board-item-head"><div class="team-board-num">${i+1}</div><div><div class="team-board-item-name">${esc(b.name)}</div><div class="team-board-meta">${esc(categoryInfo(b.category).label)} · ${b.minutes} min${repsBadge}</div></div><div class="team-board-time">${start}</div></div>${circuitToggle}</article>`}).join(''):'<div class="team-board-empty">Add practice blocks in Practice Builder to display the plan here.</div>';el.teamBoardList.querySelectorAll('.team-board-circuit-toggle').forEach(btn=>btn.addEventListener('click',()=>{teamBoardFocusId=btn.dataset.id;renderTeamBoardLive()}))}
+
+function teamBoardArchiveOptions(){
+  return state.archives.filter(a=>Array.isArray(a.blocks)&&a.blocks.length&&a.date).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+}
+function populateTeamBoardDaySelect(){
+  const sel=document.getElementById('teamBoardDaySelect');
+  if(!sel)return;
+  const current=sel.value;
+  const opts=teamBoardArchiveOptions();
+  sel.innerHTML='<option value="">Today\u2019s Plan</option>'+opts.map(a=>{
+    const label=a.date?new Date(a.date+'T12:00:00').toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'}):'Undated';
+    return `<option value="${esc(a.id)}">${esc(label)}${a.goal?' \u2014 '+esc(a.goal):''}</option>`;
+  }).join('');
+  if(Array.from(sel.options).some(o=>o.value===current))sel.value=current;
+}
+function renderTeamBoardArchived(archive){
+  if(!el.teamBoardList)return;
+  const shell=document.querySelector('.team-board-shell');
+  if(shell)shell.classList.remove('focus-mode');
+  stopWatchingTeamBoardFocus();
+  const goal=(archive.goal||'').trim();
+  el.teamBoardGoal.querySelector('span').textContent=goal||'No daily goal entered';
+  const date=archive.date?new Date(archive.date+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'}):'Date not set';
+  el.teamBoardDate.textContent=date;
+  const blocks=Array.isArray(archive.blocks)?archive.blocks:[];
+  const [sh,sm]=(archive.start||'15:30').split(':').map(Number);
+  let running=(sh||0)*60+(sm||0);
+  el.teamBoardList.innerHTML=blocks.length?blocks.map((b,i)=>{
+    const start=clock(running);
+    running+=Number(b.minutes)||0;
+    const hasCircuit=Array.isArray(b.circuit)&&b.circuit.length>0;
+    const repsBadge=b.reps?` \u00b7 ${esc(b.reps)}`:'';
+    const circuitList=hasCircuit?`<div class="block-circuit-preview">${b.circuit.map(x=>`<span class="circuit-chip">${esc(x.name)}${x.reps?' \u00b7 '+esc(x.reps):''}</span>`).join('')}</div>`:'';
+    return `<article class="team-board-item"><div class="team-board-item-head"><div class="team-board-num">${i+1}</div><div><div class="team-board-item-name">${esc(b.name)}</div><div class="team-board-meta">${esc(categoryInfo(b.category).label)} \u00b7 ${b.minutes} min${repsBadge}</div></div><div class="team-board-time">${start}</div></div>${circuitList}</article>`;
+  }).join(''):'<div class="team-board-empty">No blocks saved for this day.</div>';
+}
+function renderTeamBoard(){
+  populateTeamBoardDaySelect();
+  const sel=document.getElementById('teamBoardDaySelect');
+  const selectedId=sel?sel.value:'';
+  if(selectedId){
+    const archive=state.archives.find(a=>a.id===selectedId);
+    if(archive){renderTeamBoardArchived(archive);return}
+  }
+  renderTeamBoardLive();
+}
+(function(){
+  const sel=document.getElementById('teamBoardDaySelect');
+  if(sel)sel.addEventListener('change',renderTeamBoard);
+})();
+
 window.addEventListener('resize',()=>{if(document.querySelector('.team-board-shell.focus-mode'))fitTeamBoardFocus()});
 
 
