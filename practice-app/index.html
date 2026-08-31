@@ -181,7 +181,7 @@ body.pp-authed .pp-login{display:none}
 </div>
 </div>
 <div class="dash-grid">
-<section class="panel practice-panel mobile-active" data-panel="practice"><details class="qr-box coach-panel-card" id="qrBox"><summary class="qr-head"><span class="panel-drag-handle" title="Drag to move">⠿</span><h2>QR</h2><span class="qr-summary-hint" id="qrSummaryHint">Tap to show</span></summary><div class="qr-body"><div class="qr-canvas-wrap"><img alt="TV view QR code" height="176" id="practiceQrCanvas" width="176"/></div><div class="qr-link-row"><input class="qr-link-input" id="qrLinkInput" readonly type="text"/><button class="secondary" id="qrCopyBtn" type="button">Copy Link</button></div></div></details><details class="next-practice-notes coach-next-notes inbox-box coach-panel-card" id="nextPracticeNotesCoach">
+<section class="panel practice-panel mobile-active" data-panel="practice"><a class="secondary open-practice-plan-btn" href="#" id="openPracticePlanBtn" rel="noopener" target="_blank">📋 Open Practice Plan</a><details class="qr-box coach-panel-card" id="qrBox"><summary class="qr-head"><span class="panel-drag-handle" title="Drag to move">⠿</span><h2>QR</h2><span class="qr-summary-hint" id="qrSummaryHint">Tap to show</span></summary><div class="qr-body"><div class="qr-canvas-wrap"><img alt="TV view QR code" height="176" id="practiceQrCanvas" width="176"/></div><div class="qr-link-row"><input class="qr-link-input" id="qrLinkInput" readonly type="text"/><button class="secondary" id="qrCopyBtn" type="button">Copy Link</button></div></div></details><details class="next-practice-notes coach-next-notes inbox-box coach-panel-card" id="nextPracticeNotesCoach">
 <summary class="inbox-head"><span class="panel-drag-handle" title="Drag to move">⠿</span><h2>Next Practice Notes</h2><span class="inbox-summary-hint" id="inboxSummaryHint">Tap to show</span></summary>
 <div class="inbox-body">
 <p class="inbox-subtext">Capture something to address at the next practice.</p>
@@ -248,7 +248,7 @@ ppLoginForm.addEventListener('submit', (e) => {
 // The TV/Team Board view is meant for wrestlers and parents to see without a
 // coach passcode, so it signs in silently instead of showing the login form.
 // If this browser already unlocked Coach Hub this session, also sign in silently.
-const isTvView = ['1', 'team-board'].includes(new URLSearchParams(location.search).get('tv'));
+const isTvView = ['1', 'team-board', 'plan'].includes(new URLSearchParams(location.search).get('tv'));
 if (isTvView) {
   ppLoginScreen.style.display = 'none';
 }

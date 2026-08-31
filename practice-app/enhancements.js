@@ -684,7 +684,7 @@
     const linkInput = document.getElementById('qrLinkInput');
     const hint = document.getElementById('qrSummaryHint');
     if (!img) return;
-    const url = typeof window.currentPracticeTvUrl === 'function' ? window.currentPracticeTvUrl() : '';
+    const url = typeof window.currentPracticePlanUrl === 'function' ? window.currentPracticePlanUrl() : '';
     if (!url) { if (hint) hint.textContent = 'Could not build a link.'; return; }
     if (linkInput) linkInput.value = url;
     if (hint) hint.textContent = 'Loading QR code…';
@@ -696,6 +696,11 @@
     const box = document.getElementById('qrBox');
     if (!box || box.dataset.qrWired === '1') return;
     box.dataset.qrWired = '1';
+    const openBtn = document.getElementById('openPracticePlanBtn');
+    if (openBtn) {
+      const planUrl = typeof window.currentPracticePlanUrl === 'function' ? window.currentPracticePlanUrl() : '';
+      if (planUrl) openBtn.href = planUrl;
+    }
     box.addEventListener('toggle', () => { if (box.open) renderQr(); });
     const copyBtn = document.getElementById('qrCopyBtn');
     if (copyBtn) copyBtn.addEventListener('click', async () => {
