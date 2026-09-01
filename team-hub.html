@@ -298,8 +298,9 @@ blockquote cite { display:block; margin-top:10px; font-style:normal; font-weight
     <div class="eyebrow" style="color:var(--maroon)">Private team access</div>
     <h1>Team Hub</h1>
     <p>Enter the team passcode to access the Team Handbook &amp; Program Guide.</p>
-    <label for="passcode" style="display:block;text-align:left;font-weight:850">Team Passcode</label>
-    <input id="passcode" type="password" required>
+    <label for="team-passcode" style="display:block;text-align:left;font-weight:850">Team Passcode</label>
+    <input type="text" name="username" id="team-hub-username" value="Team Hub" autocomplete="username" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none" tabindex="-1" aria-hidden="true">
+    <input id="team-passcode" name="team-hub-passcode" type="password" autocomplete="current-password" required>
     <button class="primary-button" type="submit">Enter Team Hub</button>
     <div id="error" class="error">That passcode is incorrect.</div>
   </form>
@@ -1319,7 +1320,7 @@ const login = document.getElementById("login");
 const app = document.getElementById("app");
 const logout = document.getElementById("logout");
 const form = document.getElementById("loginForm");
-const input = document.getElementById("passcode");
+const input = document.getElementById("team-passcode");
 const error = document.getElementById("error");
 const mainHandbookLayout = document.getElementById("mainHandbookLayout");
 const tocLinks = [...mainHandbookLayout.querySelectorAll(".toc-link")];
