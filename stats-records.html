@@ -134,7 +134,7 @@ function seasonMatchesHtml(name, label){
     }).join('');
     return `<div class="match-event-group">${header}<ul class="match-list">${items}</ul></div>`;
   }).join('');
-  return `<section class="stat-group match-log-group"><h4>Match Log (${totalLines})</h4>${body}</section>`;
+  return `<section class="stat-group match-log-group"><h4>Matches</h4>${body}</section>`;
 }
 function openWrestler(name){
   const w=wrestlerData[name];if(!w)return;
