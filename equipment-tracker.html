@@ -740,7 +740,7 @@ const SIMPLE_TABLES = {
 
 const ORIGINAL_GEAR = {
   newBlack: [
-    {size:'Extra Small (one needs to be fixed)', max:4},
+    {size:'Extra Small', max:3},
     {size:'Small', max:14},
     {size:'Medium', max:10},
     {size:'Large', max:5},
@@ -823,12 +823,28 @@ const ORIGINAL_GEAR = {
   ]
 };
 
+function migrateGear(data){
+  let changed = false;
+  if(data && Array.isArray(data.newBlack)){
+    const xs = data.newBlack.find(g => g.size && g.size.indexOf('Extra Small') === 0);
+    if(xs && (xs.size !== 'Extra Small' || xs.max !== 3)){
+      xs.size = 'Extra Small';
+      xs.max = 3;
+      changed = true;
+    }
+  }
+  return changed;
+}
 function loadGear(){
   const saved = localStorage.getItem(GEAR_STORAGE_KEY);
+  let data;
   if(saved){
-    try { return JSON.parse(saved); } catch(e) { return JSON.parse(JSON.stringify(ORIGINAL_GEAR)); }
+    try { data = JSON.parse(saved); } catch(e) { data = JSON.parse(JSON.stringify(ORIGINAL_GEAR)); }
+  } else {
+    data = JSON.parse(JSON.stringify(ORIGINAL_GEAR));
   }
-  return JSON.parse(JSON.stringify(ORIGINAL_GEAR));
+  migrateGear(data);
+  return data;
 }
 
 let gearPushTimer = null;
@@ -1047,7 +1063,9 @@ async function initEquipmentSync(){
     const gearSnap = await getDoc(GEAR_DOC);
     if (gearSnap.exists() && gearSnap.data() && gearSnap.data().data) {
       currentGear = gearSnap.data().data;
+      const gearFixed = migrateGear(currentGear);
       localStorage.setItem(GEAR_STORAGE_KEY, JSON.stringify(currentGear));
+      if (gearFixed) saveGear();
     } else {
       await pushGearToCloud();
     }
@@ -1078,7 +1096,9 @@ async function initEquipmentSync(){
     if (!data || !data.data) return;
     if (isEditingTracker()) return;
     currentGear = data.data;
+    const gearFixed = migrateGear(currentGear);
     localStorage.setItem(GEAR_STORAGE_KEY, JSON.stringify(currentGear));
+    if (gearFixed) saveGear();
     renderAllGearTables();
     renderSimpleTable('tanktops');
     renderSimpleTable('ordering');
