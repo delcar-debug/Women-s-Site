@@ -191,6 +191,23 @@ html,body{
 .tv-lb-pair .tv-lb-years{ font-size:clamp(.75rem,1.1vw,.95rem); }
 .tv-lb-pair .tv-lb-value{ font-size:clamp(1.2rem,2vw,1.8rem); }
 
+/* ---- Leaderboard trio (three categories side by side) ---- */
+.tv-lb-trio{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:30px;
+  width:100%;
+  align-items:start;
+  margin-top:18px;
+}
+.tv-lb-trio .tv-lb-title{ font-size:clamp(1.5rem,2.6vw,2.2rem); margin:0 0 12px; }
+.tv-lb-trio .tv-lb-list{ margin:0; max-width:none; gap:6px; }
+.tv-lb-trio .tv-lb-row{ padding:6px 10px; grid-template-columns:38px minmax(0,1fr) auto auto; gap:7px; border-radius:10px; }
+.tv-lb-trio .tv-lb-rank{ font-size:clamp(1rem,1.5vw,1.3rem); }
+.tv-lb-trio .tv-lb-name{ font-size:clamp(.88rem,1.3vw,1.15rem); }
+.tv-lb-trio .tv-lb-years{ font-size:clamp(.62rem,.9vw,.78rem); }
+.tv-lb-trio .tv-lb-value{ font-size:clamp(1rem,1.6vw,1.4rem); }
+
 /* ---- Fastest pins slide ---- */
 .tv-pins-list{
   column-count:2;
@@ -292,6 +309,24 @@ html,body{
 .tv-qual-result{ font-size:clamp(1rem,1.5vw,1.3rem); font-weight:900; color:var(--gold); text-align:right; white-space:nowrap; }
 .tv-qual-note{ margin:18px 0 0; font-size:clamp(.9rem,1.2vw,1.1rem); font-weight:600; opacity:.72; }
 
+/* ---- Qualifiers pair (two lists side by side, e.g. Regional Champions + Fargo Qualifiers) ---- */
+.tv-qual-pair{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:40px;
+  width:100%;
+  align-items:start;
+  margin-top:14px;
+}
+.tv-qual-pair-title{
+  font-size:clamp(1.3rem,2.1vw,1.75rem);
+  font-weight:900;
+  margin:0 0 14px;
+  color:var(--gold);
+}
+.tv-qual-list.single{ column-count:1; max-width:none; margin:0; }
+.tv-qual-list.single .tv-qual-row{ margin-bottom:8px; }
+
 /* ---- Team accomplishments (from State Board) ---- */
 .tv-team-accom{
   display:grid;
@@ -375,9 +410,11 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
 
 @media(max-width:1100px){
   .tv-lb-pair{ grid-template-columns:1fr; gap:20px; }
+  .tv-lb-trio{ grid-template-columns:1fr; gap:20px; }
   .tv-pillar-grid{ grid-template-columns:1fr 1fr; }
   .tv-qual-list{ column-count:1; }
   .tv-pins-list{ column-count:1; }
+  .tv-qual-pair{ grid-template-columns:1fr; gap:24px; }
 }
 @media(max-width:700px){
   .tv-logo img{ height:56px; }
@@ -663,36 +700,37 @@ const SLIDES = [];
 
 SLIDES.push({ type:'title', duration:8000, eyebrow:'Herstory', title:'Record Board', sub:'Career leaders, single-season leaders, fastest pins, Pillar Award winners, and postseason herstory.' });
 
-// Career Leaders
-const careerCats = Object.keys(CAREER);
-for (let i=0; i<careerCats.length; i+=2){
-  const catA = careerCats[i], catB = careerCats[i+1];
-  if (catB){
-    SLIDES.push({ type:'lb-pair', duration:9000, group:'Career Leaders', catA, listA:CAREER[catA], catB, listB:CAREER[catB] });
-  } else {
-    SLIDES.push({ type:'leaderboard', duration:8000, group:'Career Leaders', cat:catA, list:CAREER[catA] });
+// Leaderboard builder — packs 3 categories per slide, falls back to a pair or single for remainders
+function pushLeaderboardSlides(groupName, data){
+  const cats = Object.keys(data);
+  for (let i=0; i<cats.length; i+=3){
+    const chunk = cats.slice(i, i+3);
+    if (chunk.length === 3){
+      const [catA, catB, catC] = chunk;
+      SLIDES.push({ type:'lb-trio', duration:10000, group:groupName, catA, listA:data[catA], catB, listB:data[catB], catC, listC:data[catC] });
+    } else if (chunk.length === 2){
+      const [catA, catB] = chunk;
+      SLIDES.push({ type:'lb-pair', duration:9000, group:groupName, catA, listA:data[catA], catB, listB:data[catB] });
+    } else {
+      const [catA] = chunk;
+      SLIDES.push({ type:'leaderboard', duration:8000, group:groupName, cat:catA, list:data[catA] });
+    }
   }
 }
 
+// Career Leaders
+pushLeaderboardSlides('Career Leaders', CAREER);
+
 // Single-Season Leaders
-const singleCats = Object.keys(SINGLE_SEASON);
-for (let i=0; i<singleCats.length; i+=2){
-  const catA = singleCats[i], catB = singleCats[i+1];
-  if (catB){
-    SLIDES.push({ type:'lb-pair', duration:9000, group:'Single-Season Leaders', catA, listA:SINGLE_SEASON[catA], catB, listB:SINGLE_SEASON[catB] });
-  } else {
-    SLIDES.push({ type:'leaderboard', duration:8000, group:'Single-Season Leaders', cat:catA, list:SINGLE_SEASON[catA] });
-  }
-}
+pushLeaderboardSlides('Single-Season Leaders', SINGLE_SEASON);
 
 // Fastest Pins (top 20, one condensed two-column slide)
 SLIDES.push({ type:'pins', duration:10000, title:'Fastest Pins', list:FASTEST_PINS });
 
 // Pillar Award Winners
 const PILLAR_SLIDE_GROUPS = [
-  [PILLAR_WINNERS[0], PILLAR_WINNERS[1]],
-  [PILLAR_WINNERS[2], PILLAR_WINNERS[4]],
-  [PILLAR_WINNERS[3]]
+  [PILLAR_WINNERS[0], PILLAR_WINNERS[1], PILLAR_WINNERS[2]],
+  [PILLAR_WINNERS[3], PILLAR_WINNERS[4]]
 ];
 PILLAR_SLIDE_GROUPS.forEach(groups => {
   SLIDES.push({ type:'pillar-winners', duration:9500, groups });
@@ -708,11 +746,11 @@ SLIDES.push({ type:'team-accomplishments', duration:8500, eyebrow:'Postseason He
 
 SLIDES.push({ type:'qual-list', duration:11000, eyebrow:'Postseason Herstory', title:'State Qualifiers & Placewinners', rows:STATE_QUALIFIERS, note:'Girls state wrestling began in 2022.' });
 
-SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'Regional Champions', rows:REGIONAL_CHAMPIONS, note:'Girls regionals began in 2025.', champ:true });
-
 SLIDES.push({ type:'qual-list', duration:10000, eyebrow:'Postseason Herstory', title:'Sectional Champions', rows:SECTIONAL_CHAMPIONS, note:'Girls sectionals began in 2023.', champ:true });
 
-SLIDES.push({ type:'qual-list', duration:9000, title:'Fargo Nationals Qualifiers', rows:FARGO_QUALIFIERS });
+SLIDES.push({ type:'qual-pair', duration:10000, eyebrow:'Postseason Herstory',
+  titleA:'Regional Champions', rowsA:REGIONAL_CHAMPIONS, champA:true, noteA:'Girls regionals began in 2025.',
+  titleB:'Fargo Nationals Qualifiers', rowsB:FARGO_QUALIFIERS });
 
 // ---- Rendering ----
 function lbRowsHtml(list){
@@ -762,6 +800,25 @@ function renderSlide(slide){
           <div>
             <h2 class="tv-lb-title">${slide.catB}</h2>
             <div class="tv-lb-list">${lbRowsHtml(slide.listB)}</div>
+          </div>
+        </div>
+      </div>`;
+
+    case 'lb-trio':
+      return `<div class="slide-inner">
+        <div class="tv-lb-eyebrow">${slide.group}</div>
+        <div class="tv-lb-trio">
+          <div>
+            <h2 class="tv-lb-title">${slide.catA}</h2>
+            <div class="tv-lb-list">${lbRowsHtml(slide.listA)}</div>
+          </div>
+          <div>
+            <h2 class="tv-lb-title">${slide.catB}</h2>
+            <div class="tv-lb-list">${lbRowsHtml(slide.listB)}</div>
+          </div>
+          <div>
+            <h2 class="tv-lb-title">${slide.catC}</h2>
+            <div class="tv-lb-list">${lbRowsHtml(slide.listC)}</div>
           </div>
         </div>
       </div>`;
@@ -819,6 +876,23 @@ function renderSlide(slide){
         <h2 class="tv-lb-title">${slide.title}</h2>
         <div class="tv-qual-list">${qualRowsHtml(slide.rows, slide.champ)}</div>
         ${slide.note ? `<p class="tv-qual-note">${slide.note}</p>` : ''}
+      </div>`;
+
+    case 'qual-pair':
+      return `<div class="slide-inner">
+        ${slide.eyebrow ? `<div class="tv-lb-eyebrow">${slide.eyebrow}</div>` : ''}
+        <div class="tv-qual-pair">
+          <div>
+            <h2 class="tv-qual-pair-title">${slide.titleA}</h2>
+            <div class="tv-qual-list single">${qualRowsHtml(slide.rowsA, slide.champA)}</div>
+            ${slide.noteA ? `<p class="tv-qual-note">${slide.noteA}</p>` : ''}
+          </div>
+          <div>
+            <h2 class="tv-qual-pair-title">${slide.titleB}</h2>
+            <div class="tv-qual-list single">${qualRowsHtml(slide.rowsB, slide.champB)}</div>
+            ${slide.noteB ? `<p class="tv-qual-note">${slide.noteB}</p>` : ''}
+          </div>
+        </div>
       </div>`;
 
     case 'team-accomplishments':
