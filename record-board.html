@@ -700,7 +700,7 @@ const TEAM_ACCOMPLISHMENTS = [
 // ---- Build slide list ----
 const SLIDES = [];
 
-SLIDES.push({ type:'title', duration:8000, eyebrow:'Herstory', title:'Record Board', sub:'Career leaders, single-season leaders, fastest pins, Pillar Award winners, and postseason herstory.' });
+SLIDES.push({ type:'title', duration:8500, eyebrow:'Herstory', title:'Record Board & Postseason Herstory', sub:'Career leaders, single-season leaders, fastest pins, Pillar Award winners, state qualifiers and placewinners, regional and sectional champions, and team accomplishments.' });
 
 // Leaderboard builder — every category for a group on one slide
 function pushLeaderboardGridSlide(groupName, data){
@@ -730,8 +730,6 @@ PILLAR_SLIDE_GROUPS.forEach(groups => {
 SLIDES.push({ type:'perfect-practice', duration:9000, title:'Perfect Practice Club', groups:PERFECT_PRACTICE, note:'Awarded to wrestlers who don’t miss a practice all season.' });
 
 // Postseason Herstory
-SLIDES.push({ type:'title', duration:7000, eyebrow:'Herstory', title:'Postseason Herstory', sub:'State qualifiers, placewinners, regional and sectional champions, and team accomplishments.' });
-
 SLIDES.push({ type:'team-accomplishments', duration:8500, eyebrow:'Postseason Herstory', title:'Team Accomplishments', groups:TEAM_ACCOMPLISHMENTS, note:'Girls team regionals and sectionals began in 2024–25.' });
 
 SLIDES.push({ type:'qual-list', duration:11000, eyebrow:'Postseason Herstory', title:'State Qualifiers & Placewinners', rows:STATE_QUALIFIERS, note:'Girls state wrestling began in 2022.' });
