@@ -191,22 +191,22 @@ html,body{
 .tv-lb-pair .tv-lb-years{ font-size:clamp(.75rem,1.1vw,.95rem); }
 .tv-lb-pair .tv-lb-value{ font-size:clamp(1.2rem,2vw,1.8rem); }
 
-/* ---- Leaderboard trio (three categories side by side) ---- */
-.tv-lb-trio{
+/* ---- Leaderboard grid (all categories for a group on one slide) ---- */
+.tv-lb-grid{
   display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:30px;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px 24px;
   width:100%;
   align-items:start;
-  margin-top:18px;
+  margin-top:14px;
 }
-.tv-lb-trio .tv-lb-title{ font-size:clamp(1.5rem,2.6vw,2.2rem); margin:0 0 12px; }
-.tv-lb-trio .tv-lb-list{ margin:0; max-width:none; gap:6px; }
-.tv-lb-trio .tv-lb-row{ padding:6px 10px; grid-template-columns:38px minmax(0,1fr) auto auto; gap:7px; border-radius:10px; }
-.tv-lb-trio .tv-lb-rank{ font-size:clamp(1rem,1.5vw,1.3rem); }
-.tv-lb-trio .tv-lb-name{ font-size:clamp(.88rem,1.3vw,1.15rem); }
-.tv-lb-trio .tv-lb-years{ font-size:clamp(.62rem,.9vw,.78rem); }
-.tv-lb-trio .tv-lb-value{ font-size:clamp(1rem,1.6vw,1.4rem); }
+.tv-lb-grid .tv-lb-title{ font-size:clamp(1.05rem,1.8vw,1.45rem); margin:0 0 8px; }
+.tv-lb-grid .tv-lb-list{ margin:0; max-width:none; gap:5px; }
+.tv-lb-grid .tv-lb-row{ padding:5px 9px; grid-template-columns:30px minmax(0,1fr) auto auto; gap:6px; border-radius:9px; }
+.tv-lb-grid .tv-lb-rank{ font-size:clamp(.82rem,1.25vw,1.05rem); }
+.tv-lb-grid .tv-lb-name{ font-size:clamp(.7rem,1.05vw,.9rem); }
+.tv-lb-grid .tv-lb-years{ font-size:clamp(.52rem,.75vw,.64rem); }
+.tv-lb-grid .tv-lb-value{ font-size:clamp(.82rem,1.3vw,1.1rem); min-width:0; }
 
 /* ---- Fastest pins slide ---- */
 .tv-pins-list{
@@ -410,7 +410,7 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
 
 @media(max-width:1100px){
   .tv-lb-pair{ grid-template-columns:1fr; gap:20px; }
-  .tv-lb-trio{ grid-template-columns:1fr; gap:20px; }
+  .tv-lb-grid{ grid-template-columns:1fr 1fr; gap:16px; }
   .tv-pillar-grid{ grid-template-columns:1fr 1fr; }
   .tv-qual-list{ column-count:1; }
   .tv-pins-list{ column-count:1; }
@@ -421,6 +421,7 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
   .tv-logo-title{ font-size:1.15rem; }
   .tv-logo-sub{ font-size:.72rem; }
   .tv-pillar-grid{ grid-template-columns:1fr; }
+  .tv-lb-grid{ grid-template-columns:1fr; }
   #tv-qr-box img{ width:70px; height:70px; }
   #tv-qr-box span{ font-size:.6rem; }
 }
@@ -700,29 +701,17 @@ const SLIDES = [];
 
 SLIDES.push({ type:'title', duration:8000, eyebrow:'Herstory', title:'Record Board', sub:'Career leaders, single-season leaders, fastest pins, Pillar Award winners, and postseason herstory.' });
 
-// Leaderboard builder — packs 3 categories per slide, falls back to a pair or single for remainders
-function pushLeaderboardSlides(groupName, data){
-  const cats = Object.keys(data);
-  for (let i=0; i<cats.length; i+=3){
-    const chunk = cats.slice(i, i+3);
-    if (chunk.length === 3){
-      const [catA, catB, catC] = chunk;
-      SLIDES.push({ type:'lb-trio', duration:10000, group:groupName, catA, listA:data[catA], catB, listB:data[catB], catC, listC:data[catC] });
-    } else if (chunk.length === 2){
-      const [catA, catB] = chunk;
-      SLIDES.push({ type:'lb-pair', duration:9000, group:groupName, catA, listA:data[catA], catB, listB:data[catB] });
-    } else {
-      const [catA] = chunk;
-      SLIDES.push({ type:'leaderboard', duration:8000, group:groupName, cat:catA, list:data[catA] });
-    }
-  }
+// Leaderboard builder — every category for a group on one slide
+function pushLeaderboardGridSlide(groupName, data){
+  const cats = Object.keys(data).map(name => ({ name, list: data[name] }));
+  SLIDES.push({ type:'lb-grid', duration:13000, group:groupName, cats });
 }
 
 // Career Leaders
-pushLeaderboardSlides('Career Leaders', CAREER);
+pushLeaderboardGridSlide('Career Leaders', CAREER);
 
 // Single-Season Leaders
-pushLeaderboardSlides('Single-Season Leaders', SINGLE_SEASON);
+pushLeaderboardGridSlide('Single-Season Leaders', SINGLE_SEASON);
 
 // Fastest Pins (top 20, one condensed two-column slide)
 SLIDES.push({ type:'pins', duration:10000, title:'Fastest Pins', list:FASTEST_PINS });
@@ -782,44 +771,15 @@ function renderSlide(slide){
         <p class="tv-title-sub">${slide.sub}</p>
       </div>`;
 
-    case 'leaderboard':
+    case 'lb-grid':
       return `<div class="slide-inner">
         <div class="tv-lb-eyebrow">${slide.group}</div>
-        <h2 class="tv-lb-title">${slide.cat}</h2>
-        <div class="tv-lb-list">${lbRowsHtml(slide.list)}</div>
-      </div>`;
-
-    case 'lb-pair':
-      return `<div class="slide-inner">
-        <div class="tv-lb-eyebrow">${slide.group}</div>
-        <div class="tv-lb-pair">
-          <div>
-            <h2 class="tv-lb-title">${slide.catA}</h2>
-            <div class="tv-lb-list">${lbRowsHtml(slide.listA)}</div>
-          </div>
-          <div>
-            <h2 class="tv-lb-title">${slide.catB}</h2>
-            <div class="tv-lb-list">${lbRowsHtml(slide.listB)}</div>
-          </div>
-        </div>
-      </div>`;
-
-    case 'lb-trio':
-      return `<div class="slide-inner">
-        <div class="tv-lb-eyebrow">${slide.group}</div>
-        <div class="tv-lb-trio">
-          <div>
-            <h2 class="tv-lb-title">${slide.catA}</h2>
-            <div class="tv-lb-list">${lbRowsHtml(slide.listA)}</div>
-          </div>
-          <div>
-            <h2 class="tv-lb-title">${slide.catB}</h2>
-            <div class="tv-lb-list">${lbRowsHtml(slide.listB)}</div>
-          </div>
-          <div>
-            <h2 class="tv-lb-title">${slide.catC}</h2>
-            <div class="tv-lb-list">${lbRowsHtml(slide.listC)}</div>
-          </div>
+        <div class="tv-lb-grid">
+          ${slide.cats.map(c => `
+            <div>
+              <h2 class="tv-lb-title">${c.name}</h2>
+              <div class="tv-lb-list">${lbRowsHtml(c.list)}</div>
+            </div>`).join('')}
         </div>
       </div>`;
 
