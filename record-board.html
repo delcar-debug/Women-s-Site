@@ -200,13 +200,13 @@ html,body{
   align-items:start;
   margin-top:14px;
 }
-.tv-lb-grid .tv-lb-title{ font-size:clamp(1.05rem,1.8vw,1.45rem); margin:0 0 8px; }
-.tv-lb-grid .tv-lb-list{ margin:0; max-width:none; gap:5px; }
-.tv-lb-grid .tv-lb-row{ padding:5px 9px; grid-template-columns:30px minmax(0,1fr) auto auto; gap:6px; border-radius:9px; }
-.tv-lb-grid .tv-lb-rank{ font-size:clamp(.82rem,1.25vw,1.05rem); }
-.tv-lb-grid .tv-lb-name{ font-size:clamp(.7rem,1.05vw,.9rem); }
-.tv-lb-grid .tv-lb-years{ font-size:clamp(.52rem,.75vw,.64rem); }
-.tv-lb-grid .tv-lb-value{ font-size:clamp(.82rem,1.3vw,1.1rem); min-width:0; }
+.tv-lb-grid .tv-lb-title{ font-size:clamp(1.3rem,2.2vw,1.8rem); margin:0 0 10px; }
+.tv-lb-grid .tv-lb-list{ margin:0; max-width:none; gap:7px; }
+.tv-lb-grid .tv-lb-row{ padding:7px 11px; grid-template-columns:34px minmax(0,1fr) auto auto; gap:8px; border-radius:10px; }
+.tv-lb-grid .tv-lb-rank{ font-size:clamp(1rem,1.55vw,1.3rem); }
+.tv-lb-grid .tv-lb-name{ font-size:clamp(.88rem,1.3vw,1.15rem); }
+.tv-lb-grid .tv-lb-years{ font-size:clamp(.66rem,.95vw,.82rem); }
+.tv-lb-grid .tv-lb-value{ font-size:clamp(1.02rem,1.6vw,1.35rem); min-width:0; }
 
 /* ---- Fastest pins slide ---- */
 .tv-pins-list{
@@ -379,24 +379,24 @@ html,body{
 #tv-fs-btn:hover{ opacity:1; }
 body.is-fullscreen #tv-fs-btn{ display:none; }
 
-/* QR code, persistent corner */
+/* QR code, top-right, same row as the logo/title */
 #tv-qr-box{
   position:fixed;
-  bottom:20px;
-  left:20px;
+  top:24px;
+  right:32px;
   z-index:50;
   display:flex;
-  flex-direction:column;
+  flex-direction:row;
   align-items:center;
-  gap:6px;
+  gap:10px;
   opacity:.92;
 }
 #tv-qr-box img{
-  width:100px;
-  height:100px;
+  width:84px;
+  height:84px;
   border-radius:10px;
   background:#fff;
-  padding:6px;
+  padding:5px;
   display:block;
   box-shadow:0 4px 16px rgba(0,0,0,.45);
 }
@@ -422,8 +422,9 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
   .tv-logo-sub{ font-size:.72rem; }
   .tv-pillar-grid{ grid-template-columns:1fr; }
   .tv-lb-grid{ grid-template-columns:1fr; }
-  #tv-qr-box img{ width:70px; height:70px; }
-  #tv-qr-box span{ font-size:.6rem; }
+  #tv-qr-box{ top:14px; right:14px; gap:0; }
+  #tv-qr-box img{ width:46px; height:46px; }
+  #tv-qr-box span{ display:none; }
 }
 </style>
 </head>
