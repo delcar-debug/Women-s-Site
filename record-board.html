@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Holmen Women's Wrestling — Record Board</title>
+<!-- Combined presentation: career/season records, fastest pins, pillar awards, perfect practice club, and postseason herstory (state qualifiers, regional/sectional champions, Fargo qualifiers, team accomplishments). -->
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/png" href="assets/images/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/images/icon-180.png">
@@ -262,6 +263,64 @@ html,body{
 }
 .tv-rb-note{ margin:26px 0 0; font-size:clamp(1.05rem,1.5vw,1.35rem); font-weight:600; opacity:.72; }
 
+/* ---- Qualifiers / Champions list (from State Board) ---- */
+.tv-qual-list{
+  display:grid;
+  gap:12px;
+  max-width:1300px;
+  margin:0 auto;
+  text-align:left;
+}
+.tv-qual-row{
+  display:grid;
+  grid-template-columns:110px minmax(0,1fr) 110px auto;
+  align-items:center;
+  gap:20px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:14px;
+  padding:13px 24px;
+}
+.tv-qual-row.champ{ background:rgba(232,195,122,.13); border-color:rgba(232,195,122,.4); grid-template-columns:110px minmax(0,1fr) 110px; }
+.tv-qual-year{ font-size:clamp(1.3rem,2.1vw,1.75rem); font-weight:900; opacity:.8; }
+.tv-qual-name{ font-size:clamp(1.35rem,2.15vw,1.85rem); font-weight:800; letter-spacing:-.01em; }
+.tv-qual-weight{ font-size:clamp(1.1rem,1.7vw,1.45rem); font-weight:700; opacity:.75; text-align:center; }
+.tv-qual-result{ font-size:clamp(1.3rem,2.1vw,1.75rem); font-weight:900; color:var(--gold); text-align:right; white-space:nowrap; }
+.tv-qual-note{ margin:22px 0 0; font-size:clamp(1rem,1.4vw,1.25rem); font-weight:600; opacity:.72; }
+
+/* ---- Team accomplishments (from State Board) ---- */
+.tv-team-accom{
+  display:grid;
+  gap:48px;
+  max-width:1400px;
+  margin:0 auto;
+}
+.tv-team-group-label{
+  font-size:clamp(1.9rem,3.2vw,2.8rem);
+  font-weight:900;
+  letter-spacing:-.01em;
+  margin:0 0 20px;
+}
+.tv-team-years{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:18px;
+}
+.tv-team-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:clamp(1.8rem,2.9vw,2.5rem);
+  font-weight:900;
+  color:var(--gold);
+  background:rgba(232,195,122,.14);
+  border:1px solid rgba(232,195,122,.45);
+  border-radius:999px;
+  padding:16px 36px;
+}
+.tv-team-note{ margin:26px 0 0; font-size:clamp(1.05rem,1.5vw,1.35rem); font-weight:600; opacity:.72; }
+
 /* Fullscreen helper button */
 #tv-fs-btn{
   position:fixed;
@@ -313,6 +372,7 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
 @media(max-width:1100px){
   .tv-lb-pair{ grid-template-columns:1fr; gap:20px; }
   .tv-pillar-grid{ grid-template-columns:1fr 1fr; }
+  .tv-qual-row{ grid-template-columns:80px minmax(0,1fr) 90px auto; gap:12px; padding:11px 16px; }
 }
 @media(max-width:700px){
   .tv-logo img{ height:56px; }
@@ -531,10 +591,81 @@ const PERFECT_PRACTICE = [
   { season:'2023', names:['Allison Weiss','Adriana Vang','Alexa Szak'] }
 ];
 
+// ---- Postseason herstory data (from results.html — State Tournament Qualifiers & Placewinners, Regional Champions, Sectional Champions) ----
+
+const STATE_QUALIFIERS_A = [
+  {year:'2026',name:'Aini Anderson',weight:'100',result:'2nd'},
+  {year:'2026',name:'Kaytlynn Lambries',weight:'126',result:'2x Qualifier'},
+  {year:'2026',name:'Avalee Euler',weight:'185',result:'Qualifier'},
+  {year:'2025',name:'Haley Dezelske',weight:'114',result:'Qualifier'},
+  {year:'2025',name:'Allison Weiss',weight:'120',result:'2x Qualifier'},
+  {year:'2024',name:'Aini Anderson',weight:'100',result:'Qualifier'}
+];
+
+const STATE_QUALIFIERS_B = [
+  {year:'2024',name:'Kaytlynn Lambries',weight:'107',result:'6th'},
+  {year:'2024',name:'Allison Weiss',weight:'114',result:'Qualifier'},
+  {year:'2024',name:'Anna Strasser',weight:'126',result:'Qualifier'},
+  {year:'2024',name:'Alexa Szak',weight:'145',result:'2x Qualifier'},
+  {year:'2024',name:'Maddie Hall',weight:'165',result:'Qualifier'},
+  {year:'2024',name:'Sophia Walter',weight:'185',result:'Qualifier'}
+];
+
+const STATE_QUALIFIERS_C = [
+  {year:'2023',name:'Nora Lee',weight:'100',result:'5th'},
+  {year:'2023',name:'Evelyn Vetsch',weight:'145',result:'3rd'},
+  {year:'2023',name:'Alexa Szak',weight:'152',result:'Qualifier'},
+  {year:'2023',name:'Maddie Hall',weight:'165',result:'Qualifier'},
+  {year:'2022',name:'Evelyn Vetsch',weight:'152',result:'4th'},
+  {year:'2022',name:'Emily Szak',weight:'165',result:'5th'}
+];
+
+const FARGO_QUALIFIERS = [
+  {year:'2026',name:'Ruby Gustafson',weight:'',result:'Qualifier'},
+  {year:'2025',name:'Haley Dezelske',weight:'',result:'Qualifier'},
+  {year:'2025',name:'Sophia Walter',weight:'',result:'Qualifier'},
+  {year:'2025',name:'Aini Anderson',weight:'',result:'Qualifier'}
+];
+
+const REGIONAL_CHAMPIONS = [
+  {year:'2026',name:'Aini Anderson',weight:'100',result:'Champion'},
+  {year:'2026',name:'Peyton Kratochvill',weight:'114',result:'Champion'},
+  {year:'2026',name:'Kaytlynn Lambries',weight:'126',result:'Champion'},
+  {year:'2026',name:'Avalee Euler',weight:'185',result:'Champion'},
+  {year:'2025',name:'Kaytlynn Lambries',weight:'107',result:'Champion'},
+  {year:'2025',name:'Haley Dezelske',weight:'114',result:'Champion'},
+  {year:'2025',name:'Allison Weiss',weight:'120',result:'Champion'},
+  {year:'2025',name:'Alexa Szak',weight:'138',result:'Champion'},
+  {year:'2025',name:'Avalee Euler',weight:'165',result:'Champion'}
+];
+
+const SECTIONAL_CHAMPIONS_RECENT = [
+  {year:'2026',name:'Aini Anderson',weight:'100',result:'Champion'},
+  {year:'2026',name:'Kaytlynn Lambries',weight:'126',result:'Champion'},
+  {year:'2025',name:'Haley Dezelske',weight:'114',result:'Champion'},
+  {year:'2024',name:'Aini Anderson',weight:'100',result:'Champion'},
+  {year:'2024',name:'Kaytlynn Lambries',weight:'107',result:'Champion'},
+  {year:'2024',name:'Allison Weiss',weight:'114',result:'Champion'}
+];
+
+const SECTIONAL_CHAMPIONS_EARLY = [
+  {year:'2024',name:'Anna Strasser',weight:'126',result:'Champion'},
+  {year:'2024',name:'Alexa Szak',weight:'145',result:'Champion'},
+  {year:'2024',name:'Maddie Hall',weight:'165',result:'Champion'},
+  {year:'2023',name:'Evelyn Vetsch',weight:'145',result:'Champion'},
+  {year:'2023',name:'Alexa Szak',weight:'152',result:'Champion'},
+  {year:'2023',name:'Maddie Hall',weight:'165',result:'Champion'}
+];
+
+const TEAM_ACCOMPLISHMENTS = [
+  { label:'Team Regional Champions', years:['2025','2026'] },
+  { label:'Team Sectional Champions', years:['2025','2026'] }
+];
+
 // ---- Build slide list ----
 const SLIDES = [];
 
-SLIDES.push({ type:'title', duration:8000, eyebrow:'Herstory', title:'Record Board', sub:'Career leaders, single-season leaders, fastest pins, and Pillar Award winners.' });
+SLIDES.push({ type:'title', duration:8000, eyebrow:'Herstory', title:'Record Board', sub:'Career leaders, single-season leaders, fastest pins, Pillar Award winners, and postseason herstory.' });
 
 // Career Leaders
 const careerCats = Object.keys(CAREER);
@@ -575,6 +706,22 @@ PILLAR_SLIDE_GROUPS.forEach(groups => {
 // Perfect Practice Club
 SLIDES.push({ type:'perfect-practice', duration:9000, title:'Perfect Practice Club', groups:PERFECT_PRACTICE, note:'Awarded to wrestlers who don’t miss a practice all season.' });
 
+// Postseason Herstory
+SLIDES.push({ type:'title', duration:7000, eyebrow:'Herstory', title:'Postseason Herstory', sub:'State qualifiers, placewinners, regional and sectional champions, and team accomplishments.' });
+
+SLIDES.push({ type:'team-accomplishments', duration:8500, eyebrow:'Postseason Herstory', title:'Team Accomplishments', groups:TEAM_ACCOMPLISHMENTS, note:'Girls team regionals and sectionals began in 2024–25.' });
+
+SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Qualifiers & Placewinners', rows:STATE_QUALIFIERS_A });
+SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Qualifiers & Placewinners', rows:STATE_QUALIFIERS_B });
+SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'State Qualifiers & Placewinners', rows:STATE_QUALIFIERS_C, note:'Girls state wrestling began in 2022.' });
+
+SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'Regional Champions', rows:REGIONAL_CHAMPIONS, note:'Girls regionals began in 2025.', champ:true });
+
+SLIDES.push({ type:'qual-list', duration:9000, eyebrow:'Postseason Herstory', title:'Sectional Champions', rows:SECTIONAL_CHAMPIONS_RECENT, champ:true });
+SLIDES.push({ type:'qual-list', duration:8500, eyebrow:'Postseason Herstory', title:'Sectional Champions', rows:SECTIONAL_CHAMPIONS_EARLY, note:'Girls sectionals began in 2023.', champ:true });
+
+SLIDES.push({ type:'qual-list', duration:9000, title:'Fargo Nationals Qualifiers', rows:FARGO_QUALIFIERS });
+
 // ---- Rendering ----
 function lbRowsHtml(list){
   return list.map(row => `
@@ -583,6 +730,16 @@ function lbRowsHtml(list){
       <div class="tv-lb-name">${row.name}</div>
       <div class="tv-lb-years">${row.years}</div>
       <div class="tv-lb-value">${row.v}</div>
+    </div>`).join('');
+}
+
+function qualRowsHtml(rows, champ){
+  return rows.map(r => `
+    <div class="tv-qual-row ${champ?'champ':''}">
+      <div class="tv-qual-year">${r.year}</div>
+      <div class="tv-qual-name">${r.name}</div>
+      <div class="tv-qual-weight">${r.weight}</div>
+      ${champ ? '' : `<div class="tv-qual-result">${r.result}</div>`}
     </div>`).join('');
 }
 
@@ -662,6 +819,28 @@ function renderSlide(slide){
             </div>`).join('')}
         </div>
         ${slide.note ? `<p class="tv-rb-note">${slide.note}</p>` : ''}
+      </div>`;
+
+    case 'qual-list':
+      return `<div class="slide-inner">
+        ${slide.eyebrow ? `<div class="tv-lb-eyebrow">${slide.eyebrow}</div>` : ''}
+        <h2 class="tv-lb-title">${slide.title}</h2>
+        <div class="tv-qual-list">${qualRowsHtml(slide.rows, slide.champ)}</div>
+        ${slide.note ? `<p class="tv-qual-note">${slide.note}</p>` : ''}
+      </div>`;
+
+    case 'team-accomplishments':
+      return `<div class="slide-inner">
+        <div class="tv-lb-eyebrow">${slide.eyebrow}</div>
+        <h2 class="tv-lb-title">${slide.title}</h2>
+        <div class="tv-team-accom">
+          ${slide.groups.map(g => `
+            <div class="tv-team-group">
+              <div class="tv-team-group-label">${g.label}</div>
+              <div class="tv-team-years">${g.years.map(y => `<span class="tv-team-chip">${y}</span>`).join('')}</div>
+            </div>`).join('')}
+        </div>
+        ${slide.note ? `<p class="tv-team-note">${slide.note}</p>` : ''}
       </div>`;
 
     default:
