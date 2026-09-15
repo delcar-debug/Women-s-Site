@@ -1,6 +1,16 @@
 [build]
   publish = "."
 
+[build.environment]
+  # This is the Firebase web app's client-side API key (used in equipment-tracker.html,
+  # roster-manager.html, habit-tracker.html, newsletter.html, practice-app/index.html). It's
+  # meant to be public — Firebase's actual access control comes from Firestore security rules,
+  # not from hiding this value — but Netlify's secret scanner flags it as "likely secret" by
+  # pattern anyway. This tells the scanner to ignore this known-safe value without disabling
+  # detection for anything else (like the real Brevo/Firebase-admin secrets, which only ever
+  # live in Netlify env vars and never appear in a repo file).
+  SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES = "AIzaSyAC48XQb09XVyqCmmxRtX3Pox1BPVruf70"
+
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
