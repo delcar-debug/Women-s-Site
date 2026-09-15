@@ -40,10 +40,13 @@ textarea:focus,input:focus{outline:2px solid var(--maroon);outline-offset:-1px}
 .hint{font-size:.78rem;color:var(--muted);margin-top:6px}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .count-badge{display:inline-flex;align-items:center;background:#f5e3e8;color:var(--maroon);font-weight:900;border-radius:999px;padding:4px 14px;font-size:.85rem}
-.subscriber-list{max-height:280px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;margin-top:14px}
-.subscriber-row{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid var(--border);font-size:.85rem}
+.subscriber-list{max-height:340px;overflow-y:auto;overflow-x:auto;border:1px solid var(--border);border-radius:10px;margin-top:14px}
+.subscriber-row{display:grid;grid-template-columns:1.1fr 1.6fr 1fr .8fr auto;gap:10px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--border);font-size:.82rem;min-width:600px}
 .subscriber-row:last-child{border-bottom:0}
-.subscriber-row .remove-btn{border:0;background:none;color:#b3261e;font-weight:900;cursor:pointer;font-size:.95rem;padding:2px 6px}
+.subscriber-row.head{background:#f7eef1;color:var(--maroon);font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;font-weight:800;position:sticky;top:0}
+.subscriber-row .cell-name{font-weight:700}
+.subscriber-row .cell-muted{color:var(--muted)}
+.subscriber-row .remove-btn{border:0;background:none;color:#b3261e;font-weight:900;cursor:pointer;font-size:.95rem;padding:2px 6px;justify-self:end}
 .empty-note{color:var(--muted);font-size:.85rem;padding:14px;text-align:center}
 .history-row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid var(--border);font-size:.85rem}
 .history-row:last-child{border-bottom:0}
@@ -105,14 +108,15 @@ textarea:focus,input:focus{outline:2px solid var(--maroon);outline-offset:-1px}
 <div class="container">
 
 <h2 class="section-title">Subscribers</h2>
-<p class="section-sub">Paste emails to add them — one per line, or separated by commas/semicolons. Duplicates are skipped automatically.</p>
+<p class="section-sub">Copy the columns straight out of your spreadsheet and paste them below — <strong>Email Address, First Name, Last Name, Connection to Program, Graduation Year</strong> (in that order). A header row is fine, it's skipped automatically. Pasting just an email address by itself also works. Duplicates are matched by email and updated in place.</p>
 <div class="card">
 <div class="field">
 <label for="importBox">Add subscribers</label>
-<textarea id="importBox" placeholder="jane@example.com&#10;john@example.com, sam@example.com"></textarea>
+<textarea id="importBox" style="min-height:140px" placeholder="jane@example.com&#9;Jane&#9;Smith&#9;Alumni&#9;2019&#10;john@example.com&#9;John&#9;Doe&#9;Parent&#9;"></textarea>
+<p class="hint">Tab-separated (straight from Excel/Sheets) or comma-separated both work.</p>
 </div>
 <div class="row">
-<button class="btn primary" id="importBtn" type="button">Import Emails</button>
+<button class="btn primary" id="importBtn" type="button">Import Subscribers</button>
 <span class="count-badge" id="subscriberCount">0 subscribers</span>
 </div>
 <div class="import-result" id="importResult"></div>
@@ -234,6 +238,28 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+// Splits pasted spreadsheet rows into [email, firstName, lastName, connection, gradYear].
+// Accepts tab-separated (a straight paste from Excel/Sheets) or comma-separated rows, and also
+// a bare email with no other columns. Skips a header row if the first cell isn't an email.
+function parseSubscriberRows(raw) {
+  const lines = (raw || '').split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  const rows = [];
+  let skipped = 0;
+  for (const line of lines) {
+    const cells = (line.includes('\t') ? line.split('\t') : line.split(',')).map((c) => c.trim());
+    const [email, firstName, lastName, connection, gradYear] = cells;
+    if (!email || !isValidEmail(email)) { skipped++; continue; } // also catches header rows
+    rows.push({
+      email: email.toLowerCase(),
+      firstName: firstName || '',
+      lastName: lastName || '',
+      connection: connection || '',
+      gradYear: gradYear || '',
+    });
+  }
+  return { rows, skipped };
+}
+
 let initialized = false;
 function initNewsletter() {
   if (initialized) return;
@@ -257,8 +283,23 @@ function initNewsletter() {
 
   let currentSubscribers = [];
 
+  const HEADER_ROW = `
+    <div class="subscriber-row head">
+      <span>Name</span><span>Email</span><span>Connection</span><span>Grad Year</span><span></span>
+    </div>`;
+
   onSnapshot(subscribersCol, (snap) => {
-    currentSubscribers = snap.docs.map((d) => ({ id: d.id, email: d.data().email || d.id }));
+    currentSubscribers = snap.docs.map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        email: data.email || d.id,
+        firstName: data.firstName || '',
+        lastName: data.lastName || '',
+        connection: data.connection || '',
+        gradYear: data.gradYear || '',
+      };
+    });
     currentSubscribers.sort((a, b) => a.email.localeCompare(b.email));
     subscriberCountEl.textContent = `${currentSubscribers.length} subscriber${currentSubscribers.length === 1 ? '' : 's'}`;
 
@@ -266,11 +307,17 @@ function initNewsletter() {
       subscriberListEl.innerHTML = '<div class="empty-note">No subscribers yet.</div>';
       return;
     }
-    subscriberListEl.innerHTML = currentSubscribers.map((s) => `
+    subscriberListEl.innerHTML = HEADER_ROW + currentSubscribers.map((s) => {
+      const name = [s.firstName, s.lastName].filter(Boolean).join(' ');
+      return `
       <div class="subscriber-row">
+        <span class="cell-name">${name ? escapeHtml(name) : '<span class="cell-muted">&mdash;</span>'}</span>
         <span>${escapeHtml(s.email)}</span>
+        <span class="cell-muted">${escapeHtml(s.connection) || '&mdash;'}</span>
+        <span class="cell-muted">${escapeHtml(s.gradYear) || '&mdash;'}</span>
         <button class="remove-btn" data-id="${escapeHtml(s.id)}" title="Remove">&times;</button>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   });
 
   subscriberListEl.addEventListener('click', (e) => {
@@ -280,14 +327,15 @@ function initNewsletter() {
   });
 
   importBtn.addEventListener('click', async () => {
-    const raw = importBox.value || '';
-    const candidates = raw.split(/[\n,;]+/).map((s) => s.trim().toLowerCase()).filter(Boolean);
-    const unique = [...new Set(candidates)];
-    const valid = unique.filter(isValidEmail);
-    const invalidCount = unique.length - valid.length;
+    const { rows, skipped } = parseSubscriberRows(importBox.value);
 
-    if (!valid.length) {
-      importResult.textContent = invalidCount ? `No valid emails found (${invalidCount} skipped).` : 'Paste at least one email address first.';
+    // De-dupe within this paste itself (last occurrence of a given email wins).
+    const byEmail = new Map();
+    rows.forEach((r) => byEmail.set(r.email, r));
+    const unique = [...byEmail.values()];
+
+    if (!unique.length) {
+      importResult.textContent = skipped ? `No valid rows found (${skipped} skipped).` : 'Paste at least one row first.';
       return;
     }
 
@@ -295,18 +343,25 @@ function initNewsletter() {
     importBtn.textContent = 'Importing...';
     try {
       const batch = writeBatch(db);
-      valid.forEach((email) => {
-        const safeId = email.replace(/[^a-z0-9@._-]/g, '_');
-        batch.set(doc(db, 'newsletterSubscribers', safeId), { email, addedAt: new Date().toISOString() }, { merge: true });
+      unique.forEach((r) => {
+        const safeId = r.email.replace(/[^a-z0-9@._-]/g, '_');
+        batch.set(doc(db, 'newsletterSubscribers', safeId), {
+          email: r.email,
+          firstName: r.firstName,
+          lastName: r.lastName,
+          connection: r.connection,
+          gradYear: r.gradYear,
+          addedAt: new Date().toISOString(),
+        }, { merge: true });
       });
       await batch.commit();
-      importResult.textContent = `Imported ${valid.length} email${valid.length === 1 ? '' : 's'}${invalidCount ? ` (${invalidCount} skipped as invalid)` : ''}.`;
+      importResult.textContent = `Imported ${unique.length} subscriber${unique.length === 1 ? '' : 's'}${skipped ? ` (${skipped} row${skipped === 1 ? '' : 's'} skipped)` : ''}.`;
       importBox.value = '';
     } catch (e) {
       importResult.textContent = 'Import failed: ' + e.message;
     } finally {
       importBtn.disabled = false;
-      importBtn.textContent = 'Import Emails';
+      importBtn.textContent = 'Import Subscribers';
     }
   });
 
