@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Newsletter | Holmen Women's Wrestling</title>
+<link rel="icon" type="image/png" href="assets/images/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/images/icon-180.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#6d1730">
+<style>
+:root{--maroon:#6d1730;--dark:#3f0b1a;--light:#f5f5f7;--ink:#19191d;--muted:#676b73;--border:#e1e2e5}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--light);color:var(--ink)}
+a{color:inherit}
+.header{height:74px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:20}
+.brand,.back{font-weight:900;color:var(--maroon);text-decoration:none}
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--maroon),var(--dark));color:#fff;padding:50px 20px}
+.hero-watermark{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;z-index:0;pointer-events:none;overflow:hidden}
+.hero-watermark img{width:min(700px,70%);opacity:.12;object-fit:contain;transform:translateY(45%)}
+.hero .container{position:relative;z-index:1}
+.container{width:min(1000px,calc(100% - 28px));margin:auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;font-weight:900;color:#efc8d4}
+h1{font-size:clamp(2.2rem,5vw,3.6rem);letter-spacing:-.05em;margin:8px 0}
+.hero p{max-width:760px;line-height:1.65;color:#f0dde3}
+.content{padding:32px 0 70px}
+h2.section-title{font-size:1.4rem;letter-spacing:-.02em;margin:36px 0 6px;color:var(--maroon)}
+.section-sub{font-size:.88rem;color:var(--muted);margin:0 0 14px;line-height:1.55}
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px 22px;box-shadow:0 8px 22px rgba(20,12,15,.05);margin-bottom:20px}
+.btn{border:1px solid var(--border);background:#fff;border-radius:10px;padding:9px 16px;font-weight:800;font-size:.88rem;cursor:pointer;color:var(--ink)}
+.btn.primary{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.btn.danger{color:#b3261e;border-color:#f1c9c5}
+.btn.small{padding:6px 12px;font-size:.78rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+label{display:block;font-weight:850;font-size:.85rem;margin-bottom:6px}
+textarea,input[type="text"],input[type="email"]{width:100%;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font:inherit;font-size:.92rem;color:var(--ink);background:#fff}
+textarea{resize:vertical;min-height:110px}
+textarea:focus,input:focus{outline:2px solid var(--maroon);outline-offset:-1px}
+.field{margin-bottom:16px}
+.hint{font-size:.78rem;color:var(--muted);margin-top:6px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.count-badge{display:inline-flex;align-items:center;background:#f5e3e8;color:var(--maroon);font-weight:900;border-radius:999px;padding:4px 14px;font-size:.85rem}
+.subscriber-list{max-height:280px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;margin-top:14px}
+.subscriber-row{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid var(--border);font-size:.85rem}
+.subscriber-row:last-child{border-bottom:0}
+.subscriber-row .remove-btn{border:0;background:none;color:#b3261e;font-weight:900;cursor:pointer;font-size:.95rem;padding:2px 6px}
+.empty-note{color:var(--muted);font-size:.85rem;padding:14px;text-align:center}
+.history-row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid var(--border);font-size:.85rem}
+.history-row:last-child{border-bottom:0}
+.history-row .subj{font-weight:800;color:var(--maroon)}
+.history-row .meta{color:var(--muted);white-space:nowrap}
+.send-status{margin-top:14px;padding:12px 14px;border-radius:10px;font-size:.88rem;font-weight:700;display:none}
+.send-status.show{display:block}
+.send-status.ok{background:#eaf6ee;color:#1c7a3c}
+.send-status.err{background:#fdecec;color:#982323}
+.import-result{font-size:.85rem;color:var(--muted);margin-top:8px}
+.login{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(rgba(55,5,20,.91),rgba(55,5,20,.91)),radial-gradient(circle at top right,#a94461,#3d0918 65%)}
+.login-card{width:min(440px,100%);background:#fff;border-radius:22px;padding:32px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.3)}
+.login-card h1{margin:6px 0;font-size:2rem;letter-spacing:-.04em}
+.login-card p{color:var(--muted);line-height:1.55}
+.login-card input{width:100%;min-height:48px;padding:0 14px;border:1px solid #d4d6da;border-radius:10px;outline:none;margin-top:8px;font-size:1rem}
+.login-card input:focus{border-color:var(--maroon);box-shadow:0 0 0 3px rgba(109,23,48,.12)}
+.login-card .btn.primary{width:100%;margin-top:14px;min-height:46px}
+.login-error{display:none;color:#982323;background:#fff0f0;border-radius:10px;margin-top:12px;padding:10px;font-weight:750;font-size:.88rem}
+#appWrap{display:none}
+.logout-btn{background:none;border:1px solid #d8bcc5;color:var(--maroon);border-radius:999px;padding:8px 16px;font-weight:800;font-size:.82rem;cursor:pointer}
+@media(max-width:600px){.header{padding:0 14px}.history-row{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<section id="loginScreen" class="login">
+<div class="login-card">
+<img src="assets/images/logo.png" alt="Holmen Women's Wrestling logo" style="width:90px;height:90px;object-fit:contain">
+<h1>Newsletter</h1>
+<p>Enter the coach passcode to manage subscribers and send the newsletter.</p>
+<form id="loginForm">
+<label for="passcode" style="display:block;text-align:left;font-weight:850;font-size:.85rem">Coach Passcode</label>
+<input id="passcode" type="password" required autocomplete="current-password">
+<button class="btn primary" type="submit">Log In</button>
+</form>
+<div id="loginError" class="login-error">That passcode is incorrect.</div>
+</div>
+</section>
+
+<div id="appWrap">
+<header class="header">
+<a class="brand" href="coach-hub.html">Holmen Women's Wrestling</a>
+<div style="display:flex;gap:10px;align-items:center">
+<a class="back" href="coach-hub.html">Back to Coach Hub</a>
+<button class="logout-btn" id="logoutBtn">Log Out</button>
+</div>
+</header>
+
+<section class="hero">
+<div class="hero-watermark"><img src="assets/images/logo.png" alt=""></div>
+<div class="container">
+<div class="eyebrow">Coach Hub</div>
+<h1>Newsletter</h1>
+<p>Manage the subscriber list, write an issue, and send it out. Everything here syncs with the same account used across the site.</p>
+</div>
+</section>
+
+<main class="content">
+<div class="container">
+
+<h2 class="section-title">Subscribers</h2>
+<p class="section-sub">Paste emails to add them — one per line, or separated by commas/semicolons. Duplicates are skipped automatically.</p>
+<div class="card">
+<div class="field">
+<label for="importBox">Add subscribers</label>
+<textarea id="importBox" placeholder="jane@example.com&#10;john@example.com, sam@example.com"></textarea>
+</div>
+<div class="row">
+<button class="btn primary" id="importBtn" type="button">Import Emails</button>
+<span class="count-badge" id="subscriberCount">0 subscribers</span>
+</div>
+<div class="import-result" id="importResult"></div>
+<div class="subscriber-list" id="subscriberList">
+<div class="empty-note">No subscribers yet.</div>
+</div>
+</div>
+
+<h2 class="section-title">Compose</h2>
+<p class="section-sub">Plain text is fine — a blank line between lines starts a new paragraph in the email.</p>
+<div class="card">
+<div class="field">
+<label for="subjectInput">Subject</label>
+<input id="subjectInput" type="text" placeholder="This week from Holmen Women's Wrestling">
+</div>
+<div class="field">
+<label for="bodyInput">Message</label>
+<textarea id="bodyInput" style="min-height:220px" placeholder="Hi everyone,&#10;&#10;Here's what's coming up this week..."></textarea>
+</div>
+</div>
+
+<h2 class="section-title">Send</h2>
+<p class="section-sub">Always send yourself a test first. Sending to all subscribers can't be undone.</p>
+<div class="card">
+<div class="field">
+<label for="testEmailInput">Test send address</label>
+<input id="testEmailInput" type="email" placeholder="coach@holmenwrestling.app" value="coach@holmenwrestling.app">
+</div>
+<div class="row">
+<button class="btn" id="testSendBtn" type="button">Send Test to Myself</button>
+<button class="btn danger" id="sendAllBtn" type="button">Send to All Subscribers</button>
+</div>
+<div class="send-status" id="sendStatus"></div>
+</div>
+
+<h2 class="section-title">Send History</h2>
+<p class="section-sub">The last 10 newsletters sent from this page.</p>
+<div class="card">
+<div id="historyList"><div class="empty-note">No newsletters sent yet.</div></div>
+</div>
+
+</div>
+</main>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy, limit, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAC48XQb09XVyqCmmxRtX3Pox1BPVruf70",
+  authDomain: "holmen-women-s-wrestling.firebaseapp.com",
+  projectId: "holmen-women-s-wrestling",
+  storageBucket: "holmen-women-s-wrestling.firebasestorage.app",
+  messagingSenderId: "283572750466",
+  appId: "1:283572750466:web:566708849a7cd57afd4c9b"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = getFirestore(fbApp);
+const COACH_EMAIL = 'coach@holmenwrestling.app';
+const COACH_PASSCODE = 'illhaveanother';
+const COACH_SESSION_KEY = 'holmenCoachHubAccess';
+
+const loginScreen = document.getElementById('loginScreen');
+const appWrap = document.getElementById('appWrap');
+const loginForm = document.getElementById('loginForm');
+const passcodeInput = document.getElementById('passcode');
+const loginError = document.getElementById('loginError');
+const logoutBtn = document.getElementById('logoutBtn');
+
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  loginError.style.display = 'none';
+  signInWithEmailAndPassword(auth, COACH_EMAIL, passcodeInput.value)
+    .then(() => sessionStorage.setItem(COACH_SESSION_KEY, 'granted'))
+    .catch(() => {
+      loginError.style.display = 'block';
+      passcodeInput.select();
+    });
+});
+
+logoutBtn.addEventListener('click', () => signOut(auth));
+
+let autoSignInPending = sessionStorage.getItem(COACH_SESSION_KEY) === 'granted';
+if (autoSignInPending) {
+  signInWithEmailAndPassword(auth, COACH_EMAIL, COACH_PASSCODE)
+    .catch(() => {
+      autoSignInPending = false;
+      loginScreen.style.display = 'grid';
+      appWrap.style.display = 'none';
+    });
+}
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    loginScreen.style.display = 'none';
+    appWrap.style.display = 'block';
+    passcodeInput.value = '';
+    initNewsletter();
+  } else if (!autoSignInPending) {
+    loginScreen.style.display = 'grid';
+    appWrap.style.display = 'none';
+  }
+});
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+let initialized = false;
+function initNewsletter() {
+  if (initialized) return;
+  initialized = true;
+
+  const subscribersCol = collection(db, 'newsletterSubscribers');
+  const sendsCol = collection(db, 'newsletterSends');
+
+  const subscriberCountEl = document.getElementById('subscriberCount');
+  const subscriberListEl = document.getElementById('subscriberList');
+  const importBox = document.getElementById('importBox');
+  const importBtn = document.getElementById('importBtn');
+  const importResult = document.getElementById('importResult');
+  const subjectInput = document.getElementById('subjectInput');
+  const bodyInput = document.getElementById('bodyInput');
+  const testEmailInput = document.getElementById('testEmailInput');
+  const testSendBtn = document.getElementById('testSendBtn');
+  const sendAllBtn = document.getElementById('sendAllBtn');
+  const sendStatus = document.getElementById('sendStatus');
+  const historyList = document.getElementById('historyList');
+
+  let currentSubscribers = [];
+
+  onSnapshot(subscribersCol, (snap) => {
+    currentSubscribers = snap.docs.map((d) => ({ id: d.id, email: d.data().email || d.id }));
+    currentSubscribers.sort((a, b) => a.email.localeCompare(b.email));
+    subscriberCountEl.textContent = `${currentSubscribers.length} subscriber${currentSubscribers.length === 1 ? '' : 's'}`;
+
+    if (!currentSubscribers.length) {
+      subscriberListEl.innerHTML = '<div class="empty-note">No subscribers yet.</div>';
+      return;
+    }
+    subscriberListEl.innerHTML = currentSubscribers.map((s) => `
+      <div class="subscriber-row">
+        <span>${escapeHtml(s.email)}</span>
+        <button class="remove-btn" data-id="${escapeHtml(s.id)}" title="Remove">&times;</button>
+      </div>`).join('');
+  });
+
+  subscriberListEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('.remove-btn');
+    if (!btn) return;
+    deleteDoc(doc(db, 'newsletterSubscribers', btn.dataset.id)).catch(() => {});
+  });
+
+  importBtn.addEventListener('click', async () => {
+    const raw = importBox.value || '';
+    const candidates = raw.split(/[\n,;]+/).map((s) => s.trim().toLowerCase()).filter(Boolean);
+    const unique = [...new Set(candidates)];
+    const valid = unique.filter(isValidEmail);
+    const invalidCount = unique.length - valid.length;
+
+    if (!valid.length) {
+      importResult.textContent = invalidCount ? `No valid emails found (${invalidCount} skipped).` : 'Paste at least one email address first.';
+      return;
+    }
+
+    importBtn.disabled = true;
+    importBtn.textContent = 'Importing...';
+    try {
+      const batch = writeBatch(db);
+      valid.forEach((email) => {
+        const safeId = email.replace(/[^a-z0-9@._-]/g, '_');
+        batch.set(doc(db, 'newsletterSubscribers', safeId), { email, addedAt: new Date().toISOString() }, { merge: true });
+      });
+      await batch.commit();
+      importResult.textContent = `Imported ${valid.length} email${valid.length === 1 ? '' : 's'}${invalidCount ? ` (${invalidCount} skipped as invalid)` : ''}.`;
+      importBox.value = '';
+    } catch (e) {
+      importResult.textContent = 'Import failed: ' + e.message;
+    } finally {
+      importBtn.disabled = false;
+      importBtn.textContent = 'Import Emails';
+    }
+  });
+
+  onSnapshot(query(sendsCol, orderBy('createdAt', 'desc'), limit(10)), (snap) => {
+    if (snap.empty) {
+      historyList.innerHTML = '<div class="empty-note">No newsletters sent yet.</div>';
+      return;
+    }
+    historyList.innerHTML = snap.docs.map((d) => {
+      const data = d.data();
+      const when = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : '';
+      const progress = data.status === 'complete'
+        ? `sent to ${data.sentSoFar || 0}${data.failed ? `, ${data.failed} failed` : ''}`
+        : `${data.sentSoFar || 0} of ${data.totalRecipients || 0} sent so far &mdash; in progress`;
+      return `<div class="history-row">
+        <span class="subj">${escapeHtml(data.subject || '(no subject)')}</span>
+        <span class="meta">${when} &middot; ${progress}</span>
+      </div>`;
+    }).join('');
+  });
+
+  function showStatus(message, ok) {
+    sendStatus.textContent = message;
+    sendStatus.className = 'send-status show ' + (ok ? 'ok' : 'err');
+  }
+
+  async function callSendFunction(testEmail) {
+    const subject = subjectInput.value.trim();
+    const body = bodyInput.value.trim();
+    if (!subject || !body) {
+      showStatus('Write a subject and message before sending.', false);
+      return;
+    }
+    const idToken = await auth.currentUser.getIdToken();
+    const res = await fetch('/.netlify/functions/send-newsletter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${idToken}` },
+      body: JSON.stringify({ subject, body, testEmail: testEmail || undefined }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.success) {
+      showStatus('Send failed: ' + (data.error || (data.errors && data.errors[0]) || `HTTP ${res.status}`), false);
+      return;
+    }
+    if (testEmail) {
+      showStatus(`Test email sent to ${testEmail}.`, true);
+    } else {
+      const failedNote = data.failed ? ` (${data.failed} failed)` : '';
+      const queuedNote = data.queued ? ` ${data.queued} more will go out automatically over the next day(s).` : '';
+      showStatus(`Sent to ${data.sent} subscriber${data.sent === 1 ? '' : 's'}${failedNote}.${queuedNote}`, true);
+    }
+  }
+
+  testSendBtn.addEventListener('click', async () => {
+    const testEmail = testEmailInput.value.trim();
+    if (!testEmail) { showStatus('Enter an email address to send the test to.', false); return; }
+    testSendBtn.disabled = true;
+    testSendBtn.textContent = 'Sending...';
+    try {
+      await callSendFunction(testEmail);
+    } catch (e) {
+      showStatus('Send failed: ' + e.message, false);
+    } finally {
+      testSendBtn.disabled = false;
+      testSendBtn.textContent = 'Send Test to Myself';
+    }
+  });
+
+  sendAllBtn.addEventListener('click', async () => {
+    if (!currentSubscribers.length) { showStatus('There are no subscribers to send to yet.', false); return; }
+    const overCap = currentSubscribers.length > 300;
+    const capNote = overCap ? ` The first 300 will go out now and the remaining ${currentSubscribers.length - 300} will send automatically over the next day(s).` : '';
+    const confirmed = window.confirm(`Send this newsletter to all ${currentSubscribers.length} subscribers? This can't be undone.${capNote}`);
+    if (!confirmed) return;
+    sendAllBtn.disabled = true;
+    sendAllBtn.textContent = 'Sending...';
+    try {
+      await callSendFunction(null);
+    } catch (e) {
+      showStatus('Send failed: ' + e.message, false);
+    } finally {
+      sendAllBtn.disabled = false;
+      sendAllBtn.textContent = 'Send to All Subscribers';
+    }
+  });
+}
+</script>
+</body>
+</html>

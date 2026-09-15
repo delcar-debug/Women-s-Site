@@ -1,0 +1,11 @@
+{
+  "name": "holmen-womens-wrestling-site",
+  "private": true,
+  "description": "Static site for Holmen Women's Wrestling, plus a Netlify function that sends the team newsletter.",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.6.0"
+  }
+}

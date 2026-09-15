@@ -1,0 +1,11 @@
+[build]
+  publish = "."
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Runs once a day. Only does anything if a newsletter had more than 300 recipients (Brevo's
+# free-plan daily cap) and still has a queued remainder to send.
+[functions."send-newsletter-batch"]
+  schedule = "@daily"
