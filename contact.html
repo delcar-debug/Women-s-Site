@@ -88,49 +88,13 @@ textarea{min-height:130px;resize:vertical}
 </div></div>
 
 <div class="card">
-<form id="contactForm">
-<div class="field">
-<label>Your Name *</label>
-<input name="name" required>
-</div>
-<div class="field">
-<label>Your Email *</label>
-<input name="email" type="email" required>
-</div>
-<div class="field">
-<label>Phone (optional)</label>
-<input name="phone" type="tel">
-</div>
-<div class="field">
-<label>Message *</label>
-<textarea name="message" required placeholder="How can we help?"></textarea>
-</div>
-<button class="button" type="submit">Send Message</button>
-<p class="note">Clicking send will open your email app with this message addressed to Coach Carl at delcar@holmen.k12.wi.us.</p>
-</form>
+<h2>Send a Message</h2>
+<p>Have a question about joining, schedules, or anything else? Fill out the form below and Coach Carl will get back to you.</p>
+<a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLSeyQXTXvQPPWFNu05ZH95eMdMDdhJQjGwFBUuZbdd1suzBwCA/viewform" target="_blank" rel="noopener">Open Contact Form</a>
 </div>
 
 </div>
 </div>
 </main>
-
-<script>
-const form=document.getElementById('contactForm');
-form.addEventListener('submit',e=>{
-  e.preventDefault();
-  if(!form.checkValidity()){form.reportValidity();return;}
-  const data=Object.fromEntries(new FormData(form).entries());
-  const subject=encodeURIComponent('Website Contact Form - '+data.name);
-  const bodyLines=[
-    'Name: '+data.name,
-    'Email: '+data.email,
-    data.phone?('Phone: '+data.phone):null,
-    '',
-    data.message
-  ].filter(l=>l!==null);
-  const body=encodeURIComponent(bodyLines.join('\n'));
-  window.location.href='mailto:delcar@holmen.k12.wi.us?subject='+subject+'&body='+body;
-});
-</script>
 </body>
 </html>
