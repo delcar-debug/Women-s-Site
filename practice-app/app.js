@@ -993,11 +993,10 @@ function renderTeamBoardPlan(archive){
     const hasCircuit=Array.isArray(b.circuit)&&b.circuit.length>0;
     const repsBadge=b.reps?` · ${esc(b.reps)}`:'';
     const circuitList=hasCircuit?`<div class="block-circuit-preview">${b.circuit.map(x=>`<span class="circuit-chip">${esc(x.name)}${x.reps?' · '+esc(x.reps):''}</span>`).join('')}</div>`:'';
-    const isCurrent=isLive&&i===state.currentIndex&&state.practiceActive;
     const hasNotes=!!(b.details&&b.details.trim())&&!b.notesHidden;
     const noteLines=hasNotes?b.details.split(/\r?\n/).map(l=>l.trim()).filter(Boolean):[];
     const notesBlock=noteLines.length?`<div class="team-board-details"><ul class="team-board-details-list">${noteLines.map(l=>`<li>${esc(l)}</li>`).join('')}</ul></div>`:'';
-    return `<article class="team-board-item ${isCurrent?'current':''}"><div class="team-board-item-head"><div class="team-board-num">${i+1}</div><div><div class="team-board-item-name">${esc(b.name)}</div><div class="team-board-meta">${esc(categoryInfo(b.category).label)} · ${b.minutes} min${repsBadge}</div></div><div class="team-board-time">${start}</div></div>${circuitList}${notesBlock}</article>`;
+    return `<article class="team-board-item"><div class="team-board-item-head"><div class="team-board-num">${i+1}</div><div><div class="team-board-item-name">${esc(b.name)}</div><div class="team-board-meta">${esc(categoryInfo(b.category).label)} · ${b.minutes} min${repsBadge}</div></div><div class="team-board-time">${start}</div></div>${circuitList}${notesBlock}</article>`;
   }).join(''):'<div class="team-board-empty">No blocks saved for this day.</div>';
 }
 function renderTeamBoard(){
