@@ -944,6 +944,9 @@ if (qrImg) {
 }
 
 showSlide(current);
+
+// Auto-refresh so TVs pick up new records/stats without anyone touching the display.
+setTimeout(() => { location.reload(); }, 10 * 60 * 1000);
 </script>
 </body>
 </html>
