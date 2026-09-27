@@ -136,16 +136,39 @@ function seasonMatchesHtml(name, label){
   }).join('');
   return `<section class="stat-group match-log-group"><h4>Matches</h4>${body}</section>`;
 }
+function placementsBlockHtml(name){
+  const seasons=wrestlerMatches[name];
+  if(!seasons)return'';
+  const seasonOrder=(wrestlerData[name]&&wrestlerData[name].seasons||[]).map(s=>s.label);
+  const labels=seasonOrder.length?seasonOrder:Object.keys(seasons);
+  const rows=[];
+  labels.forEach(label=>{
+    const groups=seasons[label];
+    if(!groups)return;
+    groups.forEach(g=>{
+      if(g.place && g.place!=='—' && g.place!=='DNP'){
+        rows.push({season:label, event:g.event, place:g.place, weight:g.weight});
+      }
+    });
+  });
+  if(!rows.length)return'';
+  const lines=rows.map(r=>{
+    const wt=(r.weight&&r.weight!=='—')?` — ${r.weight} lbs`:'';
+    return `<div class="stat-line"><span>${r.event}${wt} (${r.season})</span><strong>${placeLabel(r.place)}</strong></div>`;
+  }).join('');
+  return `<section class="stat-group placements-group"><h4>Tournament Placements</h4>${lines}</section>`;
+}
 function openWrestler(name){
   const w=wrestlerData[name];if(!w)return;
   let blocks='';
   w.seasons.forEach(s=>{blocks+=seasonBlockHtml(s, s.label+(s.grade?' · Grade '+s.grade:''), seasonMatchesHtml(name, s.label));});
   if(w.career){blocks+=seasonBlockHtml(w.career, 'Career Totals ('+(w.career.label||'')+')');}
   const noteHtml=w.career?'':'<p class="modal-note">Career totals are not yet compiled for this wrestler.</p>';
+  const placementsHtml=placementsBlockHtml(name);
   const awardsHtml=awardsBlockHtml(name);
   const pinsHtml=fastPinsHtml(name);
   const xmasHtml=christmasHtml(name);
-  modalContent.innerHTML=`<h3>${name}</h3><p class="note">Complete season-by-season statistics, career totals, and awards.</p>${noteHtml}${blocks}${awardsHtml}${pinsHtml}${xmasHtml}`;
+  modalContent.innerHTML=`<h3>${name}</h3><p class="note">Complete season-by-season statistics, career totals, and awards.</p>${noteHtml}${placementsHtml}${blocks}${awardsHtml}${pinsHtml}${xmasHtml}`;
   modalOverlay.classList.add('open');
 }
 function closeModal(){modalOverlay.classList.remove('open');}
