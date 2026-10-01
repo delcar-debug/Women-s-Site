@@ -262,7 +262,7 @@
         <div class="progress-card">
           <div class="progress-row">
             <strong>Preseason Progress</strong>
-            <span id="progressText">0 of 4 tasks completed</span>
+            <span id="progressText">0 of 6 tasks completed</span>
           </div>
           <div class="progress-track">
             <div id="progressFill" class="progress-fill"></div>
@@ -379,6 +379,27 @@
           </label>
         </article>
 
+        <article class="task-card" style="margin-top:16px">
+          <div class="task-head">
+            <div class="task-number">6</div>
+            <div>
+              <h2>Follow Us on Social Media</h2>
+              <p>Stay up to date with team news, results, and photos by following us on Instagram, Facebook, and TikTok.</p>
+            </div>
+          </div>
+
+          <div class="task-actions">
+            <a class="button" href="https://www.instagram.com/holmen.womens.wrestling/" target="_blank" rel="noopener">Instagram</a>
+            <a class="button" href="https://www.facebook.com/groups/1502174103389461" target="_blank" rel="noopener">Facebook</a>
+            <a class="button" href="https://www.tiktok.com/@holmen_womens_wrestling?lang=en" target="_blank" rel="noopener">TikTok</a>
+          </div>
+
+          <label class="complete-row">
+            <input id="socialMediaComplete" type="checkbox">
+            <span>I am following Holmen Women's Wrestling on social media.</span>
+          </label>
+        </article>
+
       </div>
     </section>
   </main>
@@ -390,11 +411,12 @@
     const districtRegistration = document.getElementById("districtRegistrationComplete");
     const calendarTask = document.getElementById("calendarComplete");
     const safeSport = document.getElementById("safeSportComplete");
+    const socialMedia = document.getElementById("socialMediaComplete");
     const progressText = document.getElementById("progressText");
     const progressFill = document.getElementById("progressFill");
     const copyStatus = document.getElementById("copyStatus");
 
-    const taskBoxes = [sportsYou, usaBracketing, districtRegistration, calendarTask, safeSport];
+    const taskBoxes = [sportsYou, usaBracketing, districtRegistration, calendarTask, safeSport, socialMedia];
 
     function updateProgress() {
       const completed = taskBoxes.filter(box => box && box.checked).length;
@@ -406,7 +428,8 @@
         usaBracketing: usaBracketing.checked,
         districtRegistration: districtRegistration.checked,
         calendar: calendarTask.checked,
-        safeSport: safeSport.checked
+        safeSport: safeSport.checked,
+        socialMedia: socialMedia.checked
       }));
     }
 
@@ -416,6 +439,7 @@
     districtRegistration.checked = Boolean(saved.districtRegistration);
     calendarTask.checked = Boolean(saved.calendar);
     safeSport.checked = Boolean(saved.safeSport);
+    socialMedia.checked = Boolean(saved.socialMedia);
 
     taskBoxes.forEach(box => box.addEventListener("change", updateProgress));
     updateProgress();
