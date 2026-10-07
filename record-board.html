@@ -893,6 +893,21 @@ function runProgressBar(duration){
   bar.style.width = '100%';
 }
 
+// Shrink a slide's content to fit the screen (handles fullscreen / TV size differences)
+function fitSlide(layer){
+  const el = layer && layer.querySelector('.slide-inner');
+  if(!el) return;
+  el.style.transform = '';
+  el.style.maxHeight = 'none';
+  const availH = window.innerHeight * 0.94, availW = window.innerWidth * 0.97;
+  const h = el.scrollHeight, w = Math.max(el.scrollWidth, el.offsetWidth);
+  const s = Math.min(1, availH / h, availW / w);
+  if(s < 1){ el.style.transform = 'scale(' + s.toFixed(3) + ')'; el.style.transformOrigin = 'center center'; }
+}
+function fitAll(){ ['layerA','layerB'].forEach(id => fitSlide(document.getElementById(id))); }
+window.addEventListener('resize', fitAll);
+document.addEventListener('fullscreenchange', () => setTimeout(fitAll, 150));
+
 function showSlide(index){
   const slide = SLIDES[index];
   const layerA = document.getElementById('layerA');
@@ -901,6 +916,7 @@ function showSlide(index){
   const outgoing = showingA ? layerA : layerB;
 
   incoming.innerHTML = renderSlide(slide);
+  fitSlide(incoming);
   incoming.classList.add('active');
   outgoing.classList.remove('active');
   showingA = !showingA;
