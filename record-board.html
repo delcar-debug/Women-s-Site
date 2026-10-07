@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>/* Fire TV / smart TV browsers report a small (~960px) viewport; force a 1920px layout so the TV matches the desktop design */
+if(/AFT|Silk|SmartTV|Tizen|Web0S|BRAVIA|Roku/i.test(navigator.userAgent)&&!/Mobile/i.test(navigator.userAgent)){var m=document.querySelector('meta[name=viewport]');if(m)m.setAttribute('content','width=1920, initial-scale='+(Math.min(screen.width||1920,1920)/1920));}</script>
 <title>Holmen Women's Wrestling — Record Board</title>
 <!-- Combined presentation: career/season records, fastest pins, pillar awards, perfect practice club, and postseason herstory (state qualifiers, regional/sectional champions, Fargo qualifiers, team accomplishments). -->
 <meta name="robots" content="noindex, nofollow">
