@@ -366,6 +366,16 @@ html,body{
 }
 .tv-team-note{ margin:26px 0 0; font-size:clamp(1.05rem,1.5vw,1.35rem); font-weight:600; opacity:.72; }
 
+
+/* Team Accomplishments slide: larger text (lots of room) */
+.team-slide .tv-lb-eyebrow{ font-size:clamp(1.8rem,3vw,2.8rem); margin-bottom:14px; }
+.team-slide .tv-lb-title{ font-size:clamp(3.4rem,7vw,6.5rem); margin-bottom:40px; }
+.team-slide .tv-team-accom{ gap:70px; max-width:1700px; }
+.team-slide .tv-team-group-label{ font-size:clamp(2.6rem,4.8vw,4.4rem); margin-bottom:26px; }
+.team-slide .tv-team-years{ gap:28px; }
+.team-slide .tv-team-chip{ font-size:clamp(2.6rem,4.8vw,4.4rem); padding:18px 54px; }
+.team-slide .tv-team-note{ font-size:clamp(1.6rem,2.7vw,2.4rem); margin-top:44px; }
+
 /* Fullscreen helper button */
 #tv-fs-btn{
   position:fixed;
@@ -862,7 +872,7 @@ function renderSlide(slide){
       </div>`;
 
     case 'team-accomplishments':
-      return `<div class="slide-inner">
+      return `<div class="slide-inner team-slide">
         <div class="tv-lb-eyebrow">${slide.eyebrow}</div>
         <h2 class="tv-lb-title">${slide.title}</h2>
         <div class="tv-team-accom">
@@ -940,6 +950,18 @@ setTimeout(function(){ location.replace(location.pathname + '?r=' + Date.now());
 
 // Click / tap anywhere (or remote Select) to jump to the next slide
 document.addEventListener('click', function(){ goToSlide(current + 1); });
+
+// Anti burn-in: slowly drift the static logo + QR code a few pixels every couple of minutes
+(function(){
+  var els = [document.querySelector('.tv-logo'), document.getElementById('tv-qr-box')];
+  els.forEach(function(e){ if(e) e.style.transition = 'transform 4s ease-in-out'; });
+  function shift(){
+    var x = Math.round((Math.random()*2-1)*14), y = Math.round((Math.random()*2-1)*14);
+    els.forEach(function(e){ if(e) e.style.transform = 'translate(' + x + 'px,' + y + 'px)'; });
+  }
+  shift();
+  setInterval(shift, 2 * 60 * 1000);
+})();
 
 function goToSlide(index){
   current = (index + SLIDES.length) % SLIDES.length;
