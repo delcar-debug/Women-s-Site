@@ -394,20 +394,20 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
   display:flex;
   flex-direction:row;
   align-items:center;
-  gap:10px;
+  gap:16px;
   opacity:.92;
 }
 #tv-qr-box img{
-  width:84px;
-  height:84px;
-  border-radius:10px;
+  width:150px;
+  height:150px;
+  border-radius:14px;
   background:#fff;
-  padding:5px;
+  padding:8px;
   display:block;
   box-shadow:0 4px 16px rgba(0,0,0,.45);
 }
 #tv-qr-box span{
-  font-size:.9rem;
+  font-size:1.6rem;
   font-weight:800;
   text-transform:uppercase;
   letter-spacing:.08em;
@@ -444,7 +444,6 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
 </div>
 
 <div id="tv-progress-wrap"><div id="tv-progress-bar"></div></div>
-<button id="tv-fs-btn" type="button">⛶ Fullscreen</button>
 <div id="tv-qr-box"><img id="tv-qr-img" alt="QR code linking to full stats and records"><span>Full Stats</span></div>
 
 <script>
@@ -635,7 +634,7 @@ const PILLAR_WINNERS = [
 ];
 
 const PERFECT_PRACTICE = [
-  { season:'2026', names:['Sophia Walter','Celia Drogseth','Kaina Westlie','Peyton Kratochvill'] },
+  { season:'2026', names:['Sophia Walter','Celia Drogseth','Kaina Westlie','Peyton Kratochvill','Kaytlynn Lambries'] },
   { season:'2025', names:['Sophia Walter','Haley Dezelske'] },
   { season:'2024', names:['Alexa Szak','Allison Weiss','Anna Strasser','Haley Dezelske','Maddie Hall','Maddie Eggerichs'] },
   { season:'2023', names:['Allison Weiss','Adriana Vang','Alexa Szak'] }
@@ -706,7 +705,7 @@ const TEAM_ACCOMPLISHMENTS = [
 // ---- Build slide list ----
 const SLIDES = [];
 
-SLIDES.push({ type:'title', duration:8500, eyebrow:'Herstory', title:'Record Board & Postseason Herstory', sub:'Career leaders, single-season leaders, fastest pins, Pillar Award winners, state qualifiers and placewinners, regional and sectional champions, and team accomplishments.' });
+SLIDES.push({ type:'title', duration:8500, eyebrow:'Herstory', title:'Record Board & Postseason Herstory', sub:'Career leaders, single-season leaders, fastest pins, state qualifiers and placewinners, regional and sectional champions, and team accomplishments.' });
 
 // Leaderboard builder — every category for a group on one slide
 function pushLeaderboardGridSlide(groupName, data){
@@ -728,9 +727,7 @@ const PILLAR_SLIDE_GROUPS = [
   [PILLAR_WINNERS[0], PILLAR_WINNERS[1], PILLAR_WINNERS[2]],
   [PILLAR_WINNERS[3], PILLAR_WINNERS[4]]
 ];
-PILLAR_SLIDE_GROUPS.forEach(groups => {
-  SLIDES.push({ type:'pillar-winners', duration:9500, groups });
-});
+// Pillar slides removed from the rotation (PILLAR_SLIDE_GROUPS kept in case they return).
 
 // Perfect Practice Club
 SLIDES.push({ type:'perfect-practice', duration:9000, title:'Perfect Practice Club', groups:PERFECT_PRACTICE, note:'Awarded to wrestlers who don’t miss a practice all season.' });
@@ -930,14 +927,6 @@ function showSlide(index){
   }, slide.duration);
 }
 
-document.getElementById('tv-fs-btn').addEventListener('click', () => {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  } else {
-    document.exitFullscreen().catch(() => {});
-  }
-});
-
 document.addEventListener('fullscreenchange', () => {
   document.body.classList.toggle('is-fullscreen', !!document.fullscreenElement);
 });
@@ -949,7 +938,7 @@ function goToSlide(index){
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'f' || e.key === 'F') {
-    document.getElementById('tv-fs-btn').click();
+    if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(() => {}); } else { document.exitFullscreen().catch(() => {}); }
   } else if (e.key === 'ArrowRight' || e.key === ' ') {
     e.preventDefault();
     goToSlide(current + 1);
