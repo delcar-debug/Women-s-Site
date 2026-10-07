@@ -202,9 +202,13 @@ html,body{
 }
 .tv-lb-grid .tv-lb-title{ font-size:clamp(1.3rem,2.2vw,1.8rem); margin:0 0 10px; }
 .tv-lb-grid .tv-lb-list{ margin:0; max-width:none; gap:7px; }
-.tv-lb-grid .tv-lb-row{ padding:7px 11px; grid-template-columns:34px minmax(0,1fr) auto auto; gap:8px; border-radius:10px; }
+.tv-lb-grid .tv-lb-row{ padding:7px 11px; grid-template-columns:34px minmax(0,1fr) auto; grid-template-areas:'rank name value' 'rank years value'; column-gap:8px; row-gap:0; border-radius:10px; }
+.tv-lb-grid .tv-lb-rank{ grid-area:rank; }
+.tv-lb-grid .tv-lb-name{ grid-area:name; line-height:1.15; }
+.tv-lb-grid .tv-lb-years{ grid-area:years; text-align:left; line-height:1.15; }
+.tv-lb-grid .tv-lb-value{ grid-area:value; }
 .tv-lb-grid .tv-lb-rank{ font-size:clamp(1rem,1.55vw,1.3rem); }
-.tv-lb-grid .tv-lb-name{ font-size:clamp(.88rem,1.3vw,1.15rem); }
+.tv-lb-grid .tv-lb-name{ font-size:clamp(.95rem,1.45vw,1.3rem); }
 .tv-lb-grid .tv-lb-years{ font-size:clamp(.66rem,.95vw,.82rem); }
 .tv-lb-grid .tv-lb-value{ font-size:clamp(1.02rem,1.6vw,1.35rem); min-width:0; }
 
@@ -430,7 +434,7 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
 </head>
 <body>
 
-<div class="tv-logo"><img src="assets/images/logo.png" alt=""><div class="tv-logo-text"><span class="tv-logo-title">Record Board</span><span class="tv-logo-sub">Holmen Women's Wrestling</span></div></div>
+<div class="tv-logo"><img src="assets/images/logo.png" alt=""><div class="tv-logo-text"><span class="tv-logo-sub">Holmen Women's Wrestling</span></div></div>
 
 <div id="stage">
   <div class="slide-layer active" id="layerA"></div>
