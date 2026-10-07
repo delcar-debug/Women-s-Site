@@ -392,9 +392,10 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
   right:32px;
   z-index:50;
   display:flex;
-  flex-direction:row;
+  flex-direction:column-reverse;
   align-items:center;
-  gap:16px;
+  gap:6px;
+  width:150px;
   opacity:.92;
 }
 #tv-qr-box img{
@@ -407,10 +408,13 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
   box-shadow:0 4px 16px rgba(0,0,0,.45);
 }
 #tv-qr-box span{
-  font-size:1.6rem;
+  width:100%;
+  text-align:center;
+  white-space:nowrap;
+  font-size:1.3rem;
   font-weight:800;
   text-transform:uppercase;
-  letter-spacing:.08em;
+  letter-spacing:.04em;
   text-shadow:0 2px 8px rgba(0,0,0,.6);
 }
 
@@ -933,6 +937,9 @@ document.addEventListener('fullscreenchange', () => {
 
 // Auto-refresh hourly so TV picks up site updates (cache-busted reload)
 setTimeout(function(){ location.replace(location.pathname + '?r=' + Date.now()); }, 60 * 60 * 1000);
+
+// Click / tap anywhere (or remote Select) to jump to the next slide
+document.addEventListener('click', function(){ goToSlide(current + 1); });
 
 function goToSlide(index){
   current = (index + SLIDES.length) % SLIDES.length;
