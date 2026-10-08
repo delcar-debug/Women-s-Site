@@ -963,6 +963,33 @@ document.addEventListener('click', function(){ goToSlide(current + 1); });
   setInterval(shift, 2 * 60 * 1000);
 })();
 
+// Keep the TV awake: Screen Wake Lock (where supported) + a tiny silent looping video as a fallback
+(function(){
+  var lock=null;
+  function getLock(){
+    if(!('wakeLock' in navigator)) return;
+    navigator.wakeLock.request('screen').then(function(l){ lock=l; l.addEventListener('release',function(){ lock=null; }); }).catch(function(){});
+  }
+  getLock();
+  document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='visible' && !lock) getLock(); });
+  document.addEventListener('click', function(){ if(!lock) getLock(); playKeepAwake(); });
+  var vid=null;
+  function playKeepAwake(){ if(vid){ var p=vid.play(); if(p&&p.catch) p.catch(function(){}); } }
+  try{
+    var cv=document.createElement('canvas'); cv.width=16; cv.height=16;
+    var ctx=cv.getContext('2d'), n=0;
+    setInterval(function(){ n=(n+1)%2; ctx.fillStyle=n?'#010101':'#000'; ctx.fillRect(0,0,16,16); }, 1000);
+    if(cv.captureStream){
+      vid=document.createElement('video');
+      vid.muted=true; vid.loop=true; vid.playsInline=true; vid.setAttribute('muted',''); vid.setAttribute('playsinline','');
+      vid.srcObject=cv.captureStream(1);
+      vid.style.cssText='position:fixed;left:0;bottom:0;width:2px;height:2px;opacity:.02;pointer-events:none;z-index:-1;';
+      document.body.appendChild(vid);
+      playKeepAwake();
+    }
+  }catch(e){}
+})();
+
 function goToSlide(index){
   current = (index + SLIDES.length) % SLIDES.length;
   showSlide(current);
