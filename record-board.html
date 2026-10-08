@@ -991,5 +991,48 @@ showSlide(current);
 // Auto-refresh so TVs pick up new records/stats without anyone touching the display.
 setTimeout(() => { location.reload(); }, 10 * 60 * 1000);
 </script>
+
+<script>
+/* Seasonal fall theme: auto-applies Oct 12 – Oct 20 each year (add ?theme=fall to preview any time, ?theme=off to disable) */
+(function(){
+  var q=location.search.match(/theme=(\w+)/), now=new Date(), m=now.getMonth()+1, d=now.getDate();
+  var inSeason=(m===10&&d>=12&&d<=20);
+  var on=q?q[1]==='fall':inSeason;
+  if(!on) return;
+  var st=document.querySelector('style');
+  var map=[['--maroon:#6d1730','--maroon:#8a3a14'],['--dark:#3f0b1a','--dark:#2a160d'],['--gold:#e8c37a','--gold:#f2a93b'],['--silver:#d7dde3','--silver:#e6d5b8'],['--bronze:#d79a6a','--bronze:#c8693a'],['rgba(232,195,122','rgba(242,169,59']];
+  var t=st.textContent; map.forEach(function(p){ t=t.split(p[0]).join(p[1]); });
+  st.textContent=t+`
+#stage{ background:radial-gradient(ellipse at 20% 15%,rgba(242,169,59,.22),transparent 55%),radial-gradient(ellipse at 85% 90%,rgba(168,67,26,.35),transparent 55%),linear-gradient(135deg,#1c0d07 0%,#2a160d 35%,#6e2c10 70%,#1c0d07 100%) !important; background-size:140% 140%,140% 140%,100% 100% !important; animation:fallGlow 24s ease-in-out infinite alternate; }
+.slide-layer{ background:transparent !important; animation:none !important; }
+.slide-layer::before,.slide-layer::after{ content:"🍂"; position:absolute; font-size:7rem; opacity:.13; pointer-events:none; }
+.slide-layer::before{ left:3%; bottom:6%; transform:rotate(-20deg); }
+.slide-layer::after{ right:4%; top:14%; font-size:5rem; transform:rotate(25deg); content:"🍁"; }
+
+/* Fall motion */
+@keyframes fallGlow{ 0%{ background-position:0% 0%,100% 100%,0 0; } 100%{ background-position:30% 20%,70% 80%,0 0; } }
+.slide-layer::before,.slide-layer::after{ animation:leafSway 7s ease-in-out infinite alternate; }
+.slide-layer::after{ animation-duration:9s; }
+@keyframes leafSway{ from{ margin-top:0; rotate:-8deg; } to{ margin-top:18px; rotate:10deg; } }
+#leaf-field{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+.leaf{ position:absolute; top:-12vh; will-change:transform; opacity:.8; filter:drop-shadow(0 3px 4px rgba(0,0,0,.35)); animation-name:leafFall,leafDrift; animation-timing-function:linear,ease-in-out; animation-iteration-count:infinite,infinite; animation-direction:normal,alternate; }
+@keyframes leafFall{ from{ top:-12vh; } to{ top:112vh; } }
+@keyframes leafDrift{ from{ transform:translateX(-5vw) rotate(-40deg); } to{ transform:translateX(7vw) rotate(320deg); } }
+`;
+  function go(){
+    var stage=document.getElementById('stage'); if(!stage) return;
+    var f=document.createElement('div'); f.id='leaf-field'; stage.insertBefore(f,stage.firstChild);
+    var icons=['🍂','🍁','🍂','🍃','🍁'];
+    for(var i=0;i<26;i++){
+      var l=document.createElement('span'); l.className='leaf'; l.textContent=icons[i%icons.length];
+      var fall=14+Math.random()*16, drift=3+Math.random()*4;
+      l.style.left=(Math.random()*100)+'vw'; l.style.fontSize=(1.4+Math.random()*2.2)+'rem';
+      l.style.animationDuration=fall+'s,'+drift+'s'; l.style.animationDelay=(-Math.random()*fall)+'s,'+(-Math.random()*drift)+'s';
+      f.appendChild(l);
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
+})();
+</script>
 </body>
 </html>
