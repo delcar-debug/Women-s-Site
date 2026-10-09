@@ -1019,7 +1019,7 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
 </script>
 
 <script>
-/* Seasonal fall theme: auto-applies Oct 12 – Oct 20 each year (add ?theme=fall to preview any time, ?theme=off to disable) */
+/* Seasonal fall theme: auto-applies Oct 12 – Oct 20 (fall) and Oct 27 – Nov 1 (Halloween) each year (add ?theme=fall to preview any time, ?theme=off to disable) */
 (function(){
   var q=location.search.match(/theme=(\w+)/), now=new Date(), m=now.getMonth()+1, d=now.getDate();
   var inSeason=(m===10&&d>=12&&d<=20);
@@ -1031,7 +1031,8 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
     if(!hs){ hs=String(Date.now()); localStorage.setItem(hk,hs); }
     hwOn=(Date.now()-Number(hs))<5*60*1000;
   }catch(e){}
-  if(q? q[1]==='halloween' : hwOn){
+  var hwSeason=(m===10&&d>=27)||(m===11&&d<=1);
+  if(q? q[1]==='halloween' : (hwSeason||hwOn)){
     var hst=document.querySelector('style');
     var hmap=[['--maroon:#6d1730','--maroon:#3b1560'],['--dark:#3f0b1a','--dark:#0b0614'],['--gold:#e8c37a','--gold:#ff8a1f'],['--silver:#d7dde3','--silver:#d7c8ff'],['--bronze:#d79a6a','--bronze:#a56bff'],['rgba(232,195,122','rgba(255,138,31']];
     var ht=hst.textContent; hmap.forEach(function(p){ ht=ht.split(p[0]).join(p[1]); });
