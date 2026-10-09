@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Daily Journal Prompt | Holmen Women's Wrestling</title>
+<style>
+:root{ --maroon:#6d1730; --dark:#3f0b1a; --gold:#e8c37a; }
+*{ box-sizing:border-box; }
+html,body{ margin:0; min-height:100%; }
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  color:#fff; text-align:center; min-height:100vh;
+  background:radial-gradient(ellipse at 70% 80%, var(--maroon) 0%, var(--dark) 55%, #1a0409 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; padding:5vh 6vw;
+}
+.logo{ height:clamp(70px,13vh,150px); width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); margin-bottom:2vh; }
+.team{ font-weight:800; letter-spacing:.14em; text-transform:uppercase; font-size:clamp(.85rem,1.6vw,1.5rem); opacity:.85; }
+.date{ margin-top:3vh; color:var(--gold); font-weight:800; letter-spacing:.12em; text-transform:uppercase; font-size:clamp(1.1rem,2.4vw,2.4rem); }
+.greet{ margin-top:3vh; color:#fff; font-weight:900; font-size:clamp(1.6rem,4vw,4rem); }
+.label{ margin-top:4vh; font-weight:800; letter-spacing:.18em; text-transform:uppercase; font-size:clamp(.9rem,1.8vw,1.8rem); opacity:.8; }
+.prompt{ margin:2vh auto 0; max-width:1400px; font-weight:800; line-height:1.2; font-size:clamp(1.8rem,5.2vw,5.4rem); text-shadow:0 4px 20px rgba(0,0,0,.5); }
+.foot{ margin-top:6vh; font-size:clamp(.9rem,1.4vw,1.4rem); opacity:.65; }
+</style>
+</head>
+<body>
+<img class="logo" src="assets/images/logo.png" alt="">
+<div class="team">Holmen Women's Wrestling</div>
+<div class="date" id="date"></div>
+<div class="greet" id="greet"></div>
+<div class="label">Journal Prompt</div>
+<div class="prompt" id="prompt"></div>
+<div class="foot">Write for 3–5 minutes. There are no wrong answers.</div>
+<script>
+// Add a new prompt by adding a line: { date: 'YYYY-MM-DD', title: 'optional greeting', text: '...' }
+// The page shows the most recent prompt whose date is today or earlier.
+var PROMPTS = [
+  { date: '2026-11-16', title: 'Happy First Day of Season', text: 'What are you most looking forward to this season?' }
+];
+
+(function(){
+  var now = new Date();
+  var today = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+  var pick = PROMPTS[0];
+  PROMPTS.forEach(function(p){ if(p.date <= today && p.date >= pick.date) pick = p; });
+  if(today < pick.date){
+    document.getElementById('greet').textContent = 'Journal prompts start Nov. 16';
+    document.querySelector('.label').style.display = 'none';
+    document.querySelector('.foot').style.display = 'none';
+  } else {
+    document.getElementById('greet').textContent = pick.title || '';
+    document.getElementById('prompt').textContent = pick.text;
+  }
+  function setDate(){ document.getElementById('date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}); }
+  setDate();
+  // Refresh each hour so a room screen picks up new prompts and the new date
+  setInterval(function(){ location.reload(); }, 60*60*1000);
+})();
+</script>
+</body>
+</html>
