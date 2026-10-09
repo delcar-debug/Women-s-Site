@@ -1023,12 +1023,27 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
 (function(){
   var q=location.search.match(/theme=(\w+)/), now=new Date(), m=now.getMonth()+1, d=now.getDate();
   var inSeason=(m===10&&d>=12&&d<=20);
-  var on=q?q[1]==='fall':inSeason;
+  // TEMP 5-minute test: starts the first time this page loads on a browser after publishing (test id rbFallTest2), then expires.
+  var testOn=false;
+  try{
+    var k='rbFallTest2', st=localStorage.getItem(k);
+    if(!st){ st=String(Date.now()); localStorage.setItem(k,st); }
+    testOn=(Date.now()-Number(st))<5*60*1000;
+  }catch(e){}
+  var on=q?q[1]==='fall':(inSeason||testOn);
   if(!on) return;
   var st=document.querySelector('style');
   var map=[['--maroon:#6d1730','--maroon:#8a3a14'],['--dark:#3f0b1a','--dark:#2a160d'],['--gold:#e8c37a','--gold:#f2a93b'],['--silver:#d7dde3','--silver:#e6d5b8'],['--bronze:#d79a6a','--bronze:#c8693a'],['rgba(232,195,122','rgba(242,169,59']];
   var t=st.textContent; map.forEach(function(p){ t=t.split(p[0]).join(p[1]); });
   st.textContent=t+`
+/* Pumpkins */
+.pumpkin{ position:absolute; pointer-events:none; z-index:0; }
+.pumpkin.big{ width:min(46vw,760px); left:-6vw; bottom:-12vh; opacity:.13; transform:rotate(-8deg); }
+.pumpkin.big2{ width:min(30vw,520px); right:-5vw; top:-6vh; opacity:.10; transform:rotate(12deg); }
+.pumpkin.small{ width:clamp(54px,6vw,100px); opacity:.55; filter:drop-shadow(0 3px 5px rgba(0,0,0,.4)); }
+.pumpkin.s1{ left:4vw; bottom:3vh; transform:rotate(-10deg); }
+.pumpkin.s2{ left:11vw; bottom:2vh; transform:rotate(8deg) scale(.8); }
+
 #stage{ background:radial-gradient(ellipse at 20% 15%,rgba(242,169,59,.22),transparent 55%),radial-gradient(ellipse at 85% 90%,rgba(168,67,26,.35),transparent 55%),linear-gradient(135deg,#1c0d07 0%,#2a160d 35%,#6e2c10 70%,#1c0d07 100%) !important; background-size:140% 140%,140% 140%,100% 100% !important; animation:fallGlow 24s ease-in-out infinite alternate; }
 .slide-layer{ background:transparent !important; animation:none !important; }
 .slide-layer::before,.slide-layer::after{ content:"🍂"; position:absolute; font-size:7rem; opacity:.13; pointer-events:none; }
@@ -1048,6 +1063,10 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
   function go(){
     var stage=document.getElementById('stage'); if(!stage) return;
     var f=document.createElement('div'); f.id='leaf-field'; stage.insertBefore(f,stage.firstChild);
+    var PK="<svg viewBox='0 0 200 180' xmlns='http://www.w3.org/2000/svg'><ellipse cx='100' cy='105' rx='88' ry='66' fill='#f08a24'/><ellipse cx='58' cy='105' rx='44' ry='66' fill='#e0721a'/><ellipse cx='142' cy='105' rx='44' ry='66' fill='#e0721a'/><ellipse cx='100' cy='105' rx='36' ry='68' fill='#f5a03a'/><path d='M96 42 Q92 18 112 10 Q108 30 108 42 Z' fill='#5a7a2a'/><path d='M108 40 Q130 30 138 40 Q122 44 108 46 Z' fill='#6f9a30'/></svg>";
+    [['big'],['big2'],['small s1'],['small s2']].forEach(function(c){
+      var d=document.createElement('div'); d.className='pumpkin '+c[0]; d.innerHTML=PK; stage.insertBefore(d,stage.firstChild);
+    });
     var icons=['🍂','🍁','🍂','🍃','🍁'];
     for(var i=0;i<26;i++){
       var l=document.createElement('span'); l.className='leaf'; l.textContent=icons[i%icons.length];
