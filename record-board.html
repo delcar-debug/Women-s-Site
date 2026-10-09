@@ -1078,6 +1078,8 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
   var map=[['--maroon:#6d1730','--maroon:#8a3a14'],['--dark:#3f0b1a','--dark:#2a160d'],['--gold:#e8c37a','--gold:#f2a93b'],['--silver:#d7dde3','--silver:#e6d5b8'],['--bronze:#d79a6a','--bronze:#c8693a'],['rgba(232,195,122','rgba(242,169,59']];
   var t=st.textContent; map.forEach(function(p){ t=t.split(p[0]).join(p[1]); });
   st.textContent=t+`
+/* Fall logo recolor: maroon -> warm amber */
+.tv-logo img{ filter:hue-rotate(48deg) saturate(1.9) brightness(1.18) drop-shadow(0 0 14px rgba(242,169,59,.7)) !important; }
 /* Pumpkins */
 .pumpkin{ position:absolute; pointer-events:none; z-index:0; }
 .pumpkin.big{ width:min(46vw,760px); left:-6vw; bottom:-12vh; opacity:.13; transform:rotate(-8deg); }
