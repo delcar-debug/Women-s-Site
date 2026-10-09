@@ -1023,14 +1023,7 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
 (function(){
   var q=location.search.match(/theme=(\w+)/), now=new Date(), m=now.getMonth()+1, d=now.getDate();
   var inSeason=(m===10&&d>=12&&d<=20);
-  // One-time 1-hour test: starts the first time this page loads after publishing (test id rbFallTest1), then expires.
-  var testOn=false;
-  try{
-    var k='rbFallTest1', st=localStorage.getItem(k);
-    if(!st){ st=String(Date.now()); localStorage.setItem(k,st); }
-    testOn=(Date.now()-Number(st))<60*60*1000;
-  }catch(e){}
-  var on=q?q[1]==='fall':(inSeason||testOn);
+  var on=q?q[1]==='fall':inSeason;
   if(!on) return;
   var st=document.querySelector('style');
   var map=[['--maroon:#6d1730','--maroon:#8a3a14'],['--dark:#3f0b1a','--dark:#2a160d'],['--gold:#e8c37a','--gold:#f2a93b'],['--silver:#d7dde3','--silver:#e6d5b8'],['--bronze:#d79a6a','--bronze:#c8693a'],['rgba(232,195,122','rgba(242,169,59']];
