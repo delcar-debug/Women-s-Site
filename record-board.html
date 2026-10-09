@@ -1049,6 +1049,8 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
 #fog{ position:absolute; inset:auto 0 0 0; height:34vh; z-index:0; pointer-events:none; background:linear-gradient(to top,rgba(190,170,255,.16),transparent); animation:fog 14s ease-in-out infinite alternate; }
 @keyframes fog{ from{ opacity:.5; transform:translateX(-2vw); } to{ opacity:1; transform:translateX(2vw); } }
 #fly-field{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+/* Halloween logo recolor */
+.tv-logo img{ filter:hue-rotate(60deg) saturate(2.2) brightness(1.25) drop-shadow(0 0 16px rgba(255,150,40,.75)) !important; }
 .fly{ position:absolute; will-change:transform; filter:drop-shadow(0 3px 6px rgba(0,0,0,.6)); animation-timing-function:linear; animation-iteration-count:infinite; }
 .bat{ animation-name:batFly; } .ghost{ animation-name:ghostFloat; opacity:.85; }
 @keyframes batFly{ 0%{ transform:translate(-12vw,0) scaleX(1); } 25%{ transform:translate(20vw,-6vh) scaleX(-1); } 50%{ transform:translate(55vw,4vh) scaleX(1); } 75%{ transform:translate(85vw,-5vh) scaleX(-1); } 100%{ transform:translate(115vw,2vh) scaleX(1); } }
