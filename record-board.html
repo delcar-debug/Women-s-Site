@@ -1023,15 +1023,14 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
 (function(){
   var q=location.search.match(/theme=(\w+)/), now=new Date(), m=now.getMonth()+1, d=now.getDate();
   var inSeason=(m===10&&d>=12&&d<=20);
-  // TEMP 2-minute fall test (starts on first load after publishing, test id rbFallTest2). ?theme=fall forces it.
-  var fallTest=false;
-  try{
-    var fk='rbFallTest2', fs=localStorage.getItem(fk);
-    if(!fs){ fs=String(Date.now()); localStorage.setItem(fk,fs); }
-    fallTest=(Date.now()-Number(fs))<2*60*1000;
-  }catch(e){}
-  var on=q?q[1]==='fall':(inSeason||fallTest);
+  var on=q?q[1]==='fall':inSeason;
+  // TEMP 20-minute Halloween test (starts on first load after publishing, test id rbHwTest2). ?theme=halloween forces it.
   var hwOn=false;
+  try{
+    var hk='rbHwTest2', hs=localStorage.getItem(hk);
+    if(!hs){ hs=String(Date.now()); localStorage.setItem(hk,hs); }
+    hwOn=(Date.now()-Number(hs))<20*60*1000;
+  }catch(e){}
   var hwSeason=(m===10&&d>=27)||(m===11&&d<=1);
   if(q? q[1]==='halloween' : (hwSeason||hwOn)){
     var hst=document.querySelector('style');
