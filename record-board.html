@@ -1050,18 +1050,12 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
 </script>
 
 <script>
-/* Seasonal fall theme: auto-applies Oct 12 – Oct 20 (fall) and Oct 27 – Nov 1 (Halloween) each year (add ?theme=fall to preview any time, ?theme=off to disable) */
+/* Seasonal fall theme: auto-applies Oct 11 – Oct 20 (fall) and Oct 27 – Nov 1 (Halloween) each year (add ?theme=fall to preview any time, ?theme=off to disable) */
 (function(){
   var q=location.search.match(/theme=(\w+)/), now=new Date(), m=now.getMonth()+1, d=now.getDate();
-  var inSeason=(m===10&&d>=12&&d<=20);
+  var inSeason=(m===10&&d>=11&&d<=20);
   var on=q?q[1]==='fall':inSeason;
-  // TEMP 20-minute Halloween test (starts on first load after publishing, test id rbHwTest2). ?theme=halloween forces it.
   var hwOn=false;
-  try{
-    var hk='rbHwTest2', hs=localStorage.getItem(hk);
-    if(!hs){ hs=String(Date.now()); localStorage.setItem(hk,hs); }
-    hwOn=(Date.now()-Number(hs))<20*60*1000;
-  }catch(e){}
   var hwSeason=(m===10&&d>=27)||(m===11&&d<=1);
   if(q? q[1]==='halloween' : (hwSeason||hwOn)){
     var hst=document.querySelector('style');
