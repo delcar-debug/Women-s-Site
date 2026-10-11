@@ -35,7 +35,7 @@ h2.section-title{font-size:1.4rem;letter-spacing:-.02em;margin:0 0 6px;color:var
 .save-note{font-size:.82rem;color:var(--muted)}
 .save-note strong{color:var(--maroon)}
 .table-scroll{overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 22px rgba(20,12,15,.05)}
-table{border-collapse:collapse;width:100%;font-size:.74rem;min-width:1950px}
+table{border-collapse:collapse;width:100%;font-size:.74rem;min-width:1980px}
 th,td{border:1px solid var(--border);padding:4px 6px;text-align:center;white-space:nowrap}
 thead th{background:#f7eef1;color:var(--maroon);font-size:.62rem;text-transform:uppercase;letter-spacing:.03em;position:sticky;top:0}
 td[contenteditable="true"]{cursor:text;min-width:68px}
@@ -171,6 +171,7 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 <table id="rosterTable">
 <thead>
 <tr>
+<th></th>
 <th>#</th>
 <th>Name</th>
 <th>Group</th>
@@ -192,7 +193,6 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 <th>Parent 2 Email</th>
 <th>USA Wrestling #</th>
 <th>Status</th>
-<th></th>
 </tr>
 </thead>
 <tbody id="rosterBody"></tbody>
@@ -519,6 +519,21 @@ function buildRow(idx){
   nameTd.appendChild(nameBtn);
   tr.appendChild(nameTd);
 
+  const removeTd = document.createElement('td');
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'row-remove';
+  removeBtn.innerHTML = '&times;';
+  removeBtn.title = 'Remove wrestler';
+  removeBtn.addEventListener('click', () => {
+    if(confirm('Remove ' + (fullName || 'this wrestler') + ' from the roster?')){
+      currentRoster.splice(idx, 1);
+      saveRoster();
+      renderRoster();
+    }
+  });
+  removeTd.appendChild(removeBtn);
+  tr.insertBefore(removeTd, tr.firstChild);
+
   const groupTd = document.createElement('td');
   const groupSelect = document.createElement('select');
   Object.keys(GROUPS).forEach(k => {
@@ -583,20 +598,6 @@ function buildRow(idx){
   statusTd.appendChild(buildStatusPill(entry));
   tr.appendChild(statusTd);
 
-  const removeTd = document.createElement('td');
-  const removeBtn = document.createElement('button');
-  removeBtn.className = 'row-remove';
-  removeBtn.innerHTML = '&times;';
-  removeBtn.title = 'Remove wrestler';
-  removeBtn.addEventListener('click', () => {
-    if(confirm('Remove ' + (fullName || 'this wrestler') + ' from the roster?')){
-      currentRoster.splice(idx, 1);
-      saveRoster();
-      renderRoster();
-    }
-  });
-  removeTd.appendChild(removeBtn);
-  tr.appendChild(removeTd);
 
   return tr;
 }
