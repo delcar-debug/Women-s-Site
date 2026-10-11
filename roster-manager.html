@@ -35,7 +35,7 @@ h2.section-title{font-size:1.4rem;letter-spacing:-.02em;margin:0 0 6px;color:var
 .save-note{font-size:.82rem;color:var(--muted)}
 .save-note strong{color:var(--maroon)}
 .table-scroll{overflow-x:auto;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 22px rgba(20,12,15,.05)}
-table{border-collapse:collapse;width:100%;font-size:.74rem;min-width:1850px}
+table{border-collapse:collapse;width:100%;font-size:.74rem;min-width:1950px}
 th,td{border:1px solid var(--border);padding:4px 6px;text-align:center;white-space:nowrap}
 thead th{background:#f7eef1;color:var(--maroon);font-size:.62rem;text-transform:uppercase;letter-spacing:.03em;position:sticky;top:0}
 td[contenteditable="true"]{cursor:text;min-width:68px}
@@ -50,6 +50,18 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 .status-pill{display:inline-block;padding:1px 7px;border-radius:999px;font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.02em}
 .status-pill.complete{background:#eaf6ee;color:#1c7a3c}
 .status-pill.incomplete{background:#fbeeee;color:#b3261e}
+.status-pill.alumni{background:#eef0fb;color:#3a4aa8}
+.status-pill.supporter{background:#f3f0e6;color:#7a6320}
+.email-panel{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px 18px;margin:0 0 18px;box-shadow:0 8px 22px rgba(20,12,15,.05)}
+.email-panel h3{margin:0 0 4px;font-size:1.05rem;color:var(--maroon)}
+.email-panel .hint{margin:0 0 12px;font-size:.82rem;color:var(--muted)}
+.email-row{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;margin-bottom:10px}
+.email-row .lbl{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);min-width:70px}
+.email-row label{font-size:.88rem;font-weight:700;display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.email-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.email-count{font-size:.85rem;font-weight:800;color:var(--maroon)}
+.email-preview{width:100%;margin-top:10px;min-height:54px;border:1px solid var(--border);border-radius:10px;padding:8px 10px;font:inherit;font-size:.78rem;color:var(--ink);resize:vertical}
+.missing-box{margin-top:10px;font-size:.82rem;color:#b3261e;line-height:1.5}
 .result-note{font-size:.85rem;color:var(--muted);margin:14px 0 0;line-height:1.6}
 @media(max-width:600px){.header{padding:0 14px}}
 .modal-overlay{position:fixed;inset:0;background:rgba(20,12,15,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
@@ -123,11 +135,34 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 <div class="save-note">Changes sync automatically to <strong>all devices</strong>. <span id="syncStatus" class="sync-note"></span> Use Export CSV to back up or share a copy.</div>
 <div class="toolbar-actions">
 <button class="btn" id="addRowBtn">+ Add Wrestler</button>
+<button class="btn" id="addContactBtn">+ Add Alumni / Supporter</button>
 <button class="btn" id="importBtn">Import from Athlete Form</button>
 <button class="btn" id="exportBtn">Export CSV</button>
 <button class="btn" id="exportUsaBtn">Export USA Card CSV</button>
 <button class="btn danger" id="resetBtn">Reset to Roster Names Only</button>
 </div>
+</div>
+
+<div class="email-panel" id="emailPanel">
+<h3>Email Lists</h3>
+<p class="hint">Pick who to include, then copy the addresses and paste them into the <strong>BCC</strong> line of a new email. Duplicates and blanks are removed automatically.</p>
+<div class="email-row"><span class="lbl">Groups</span>
+<label><input type="checkbox" id="grpCurrent" checked> <span id="lblCurrent">Current families</span></label>
+<label><input type="checkbox" id="grpAlumni"> <span id="lblAlumni">Alumni families</span></label>
+<label><input type="checkbox" id="grpSupporter"> <span id="lblSupporter">Supporters</span></label>
+</div>
+<div class="email-row"><span class="lbl">Include</span>
+<label><input type="checkbox" id="incParents" checked> Parents / guardians</label>
+<label><input type="checkbox" id="incWrestlers"> Wrestlers</label>
+</div>
+<div class="email-actions">
+<button class="btn primary" id="copyEmailsBtn">Copy Emails</button>
+<button class="btn" id="showEmailsBtn">Show List</button>
+<button class="btn" id="missingBtn">Who&rsquo;s Missing Emails?</button>
+<span class="email-count" id="emailCount"></span>
+</div>
+<textarea class="email-preview" id="emailPreview" readonly style="display:none"></textarea>
+<div class="missing-box" id="missingBox" style="display:none"></div>
 </div>
 
 <div class="table-scroll" id="rosterScroll">
@@ -136,6 +171,7 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 <tr>
 <th>#</th>
 <th>Name</th>
+<th>Group</th>
 <th>Birthday</th>
 <th>T-Shirt Size</th>
 <th>Min. Weight Class</th>
@@ -174,6 +210,13 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 <div class="modal-section">
 <h4>Athlete Information</h4>
 <div class="modal-grid">
+<div class="modal-field full"><label>Group</label>
+<select id="modal_group" data-field="group">
+<option value="current">Current family</option>
+<option value="alumni">Alumni family</option>
+<option value="supporter">Supporter</option>
+</select>
+</div>
 <div class="modal-field"><label>First Name</label><input id="modal_firstName" data-field="firstName"></div>
 <div class="modal-field"><label>Last Name</label><input id="modal_lastName" data-field="lastName"></div>
 <div class="modal-field"><label>Birthday</label><input type="date" id="modal_birthday" data-field="birthday"></div>
@@ -316,6 +359,7 @@ function blankEntry(firstName, lastName){
   entry.firstName = firstName || '';
   entry.lastName = lastName || '';
   entry.state = 'WI';
+  entry.group = 'current';
   return entry;
 }
 
@@ -394,6 +438,9 @@ async function initRoster(){
   }
 }
 
+const GROUPS = {current:'Current family', alumni:'Alumni family', supporter:'Supporter'};
+function groupOf(entry){ return (entry && GROUPS[entry.group]) ? entry.group : 'current'; }
+
 function isComplete(entry){
   return REQUIRED_FIELDS.every(f => (entry[f] || '').toString().trim() !== '');
 }
@@ -434,6 +481,7 @@ function saveModal(){
   });
   saveRoster();
   sortAndRerender();
+  updateEmailCounts();
   closeModal();
 }
 
@@ -466,6 +514,23 @@ function buildRow(idx){
   nameBtn.addEventListener('click', () => openModal(idx));
   nameTd.appendChild(nameBtn);
   tr.appendChild(nameTd);
+
+  const groupTd = document.createElement('td');
+  const groupSelect = document.createElement('select');
+  Object.keys(GROUPS).forEach(k => {
+    const o = document.createElement('option');
+    o.value = k; o.textContent = GROUPS[k];
+    groupSelect.appendChild(o);
+  });
+  groupSelect.value = groupOf(entry);
+  groupSelect.addEventListener('change', () => {
+    currentRoster[idx].group = groupSelect.value;
+    saveRoster();
+    refreshStatus(idx);
+    updateEmailCounts();
+  });
+  groupTd.appendChild(groupSelect);
+  tr.appendChild(groupTd);
 
   const birthdayTd = document.createElement('td');
   const birthdayInput = document.createElement('input');
@@ -504,6 +569,7 @@ function buildRow(idx){
       currentRoster[idx][field] = td.textContent.trim();
       saveRoster();
       refreshStatus(idx);
+      updateEmailCounts();
     });
     tr.appendChild(td);
   });
@@ -533,6 +599,12 @@ function buildRow(idx){
 
 function buildStatusPill(entry){
   const span = document.createElement('span');
+  const g = groupOf(entry);
+  if(g !== 'current'){
+    span.className = 'status-pill ' + g;
+    span.textContent = GROUPS[g];
+    return span;
+  }
   const complete = isComplete(entry);
   span.className = 'status-pill ' + (complete ? 'complete' : 'incomplete');
   span.textContent = complete ? 'Complete' : 'Incomplete';
@@ -553,6 +625,7 @@ function renderRoster(){
   const body = document.getElementById('rosterBody');
   body.innerHTML = '';
   currentRoster.forEach((entry, idx) => body.appendChild(buildRow(idx)));
+  updateEmailCounts();
 }
 
 function sortAndRerender(){
@@ -572,7 +645,7 @@ document.getElementById('addRowBtn').addEventListener('click', () => {
 });
 
 document.getElementById('resetBtn').addEventListener('click', () => {
-  if(confirm('Reset the roster back to just the known wrestler names? All other saved info in this browser will be lost.')){
+  if(confirm('Reset the roster back to just the known wrestler names? ALL other saved info — including alumni and supporter contacts — will be lost.')){
     currentRoster = sortByName(JSON.parse(JSON.stringify(ORIGINAL_ROSTER)));
     saveRoster();
     renderRoster();
@@ -656,10 +729,10 @@ document.getElementById('importBtn').addEventListener('click', () => {
 });
 
 function exportCSV(){
-  const headers = ['First Name','Last Name','Birthday','T-Shirt Size','Min. Weight Class','Weight Class','Wrestler Phone','Wrestler Email','Street','City','State','ZIP','Parent 1 Name','Parent 1 Phone','Parent 1 Email','Parent 2 Name','Parent 2 Phone','Parent 2 Email','USA Wrestling #'];
+  const headers = ['First Name','Last Name','Birthday','T-Shirt Size','Min. Weight Class','Weight Class','Wrestler Phone','Wrestler Email','Street','City','State','ZIP','Parent 1 Name','Parent 1 Phone','Parent 1 Email','Parent 2 Name','Parent 2 Phone','Parent 2 Email','USA Wrestling #','Group'];
   const lines = [headers.join(',')];
   currentRoster.forEach(e => {
-    const row = FIELDS.map(f => e[f] || '');
+    const row = FIELDS.map(f => e[f] || '').concat([GROUPS[groupOf(e)]]);
     lines.push(row.map(v => '"' + String(v).replace(/"/g,'""') + '"').join(','));
   });
   const blob = new Blob([lines.join('\n')], {type:'text/csv'});
@@ -697,7 +770,7 @@ function formatDobUSA(iso){
 function exportUSACardCSV(){
   const headers = ['usaw_id','email','first_name','last_name','dob','cell_phone','phone','gender','address_1','address_2','city','state','zip','parent_first_name','parent_last_name','parent_email','parent2_first_name','parent2_last_name','parent2_email','remove'];
   const lines = [headers.join(',')];
-  currentRoster.forEach(e => {
+  currentRoster.filter(e => groupOf(e) === 'current').forEach(e => {
     const parent1 = splitName(e.parent1Name);
     const parent2 = splitName(e.parent2Name);
     const row = [
@@ -734,6 +807,106 @@ function exportUSACardCSV(){
 }
 
 document.getElementById('exportUsaBtn').addEventListener('click', exportUSACardCSV);
+
+/* ----- Alumni / supporter contacts ----- */
+document.getElementById('addContactBtn').addEventListener('click', () => {
+  const name = prompt('Contact name (e.g. Jane Smith):', '');
+  if(name === null || name.trim() === '') return;
+  const email = prompt('Email address:', '');
+  if(email === null || email.trim() === '') return;
+  const kind = prompt('Type 1 for Alumni family, or 2 for Supporter:', '1');
+  const parts = name.trim().split(/\s+/);
+  const entry = blankEntry(parts[0], parts.slice(1).join(' '));
+  entry.parent1Email = email.trim();
+  entry.group = (kind && kind.trim() === '2') ? 'supporter' : 'alumni';
+  currentRoster.push(entry);
+  sortAndRerender();
+});
+
+/* ----- Email lists ----- */
+function splitEmails(str){
+  return String(str || '').split(/[,;\s]+/).map(x => x.trim().toLowerCase()).filter(x => x.indexOf('@') > 0);
+}
+
+function selectedGroups(){
+  const g = [];
+  if(document.getElementById('grpCurrent').checked) g.push('current');
+  if(document.getElementById('grpAlumni').checked) g.push('alumni');
+  if(document.getElementById('grpSupporter').checked) g.push('supporter');
+  return g;
+}
+
+function collectEmails(){
+  const groups = selectedGroups();
+  const parents = document.getElementById('incParents').checked;
+  const wrestlers = document.getElementById('incWrestlers').checked;
+  const seen = new Set(), out = [];
+  currentRoster.forEach(e => {
+    if(groups.indexOf(groupOf(e)) === -1) return;
+    const list = [];
+    if(parents){ list.push(...splitEmails(e.parent1Email), ...splitEmails(e.parent2Email)); }
+    if(wrestlers){ list.push(...splitEmails(e.wrestlerEmail)); }
+    list.forEach(a => { if(!seen.has(a)){ seen.add(a); out.push(a); } });
+  });
+  return out;
+}
+
+function updateEmailCounts(){
+  const c = {current:0, alumni:0, supporter:0};
+  currentRoster.forEach(e => { c[groupOf(e)]++; });
+  const set = (id, label, n) => { const el = document.getElementById(id); if(el) el.textContent = label + ' (' + n + ')'; };
+  set('lblCurrent','Current families',c.current);
+  set('lblAlumni','Alumni families',c.alumni);
+  set('lblSupporter','Supporters',c.supporter);
+  const countEl = document.getElementById('emailCount');
+  if(countEl) countEl.textContent = collectEmails().length + ' address(es) selected';
+  const prev = document.getElementById('emailPreview');
+  if(prev && prev.style.display !== 'none') prev.value = collectEmails().join(', ');
+}
+
+['grpCurrent','grpAlumni','grpSupporter','incParents','incWrestlers'].forEach(id => {
+  document.getElementById(id).addEventListener('change', updateEmailCounts);
+});
+
+document.getElementById('copyEmailsBtn').addEventListener('click', () => {
+  const list = collectEmails();
+  if(!list.length){ alert('No email addresses match your selection.'); return; }
+  const text = list.join(', ');
+  const done = () => { document.getElementById('emailCount').textContent = 'Copied ' + list.length + ' address(es) — paste into BCC.'; };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+});
+
+function fallbackCopy(text, done){
+  const prev = document.getElementById('emailPreview');
+  prev.style.display = 'block';
+  prev.value = text;
+  prev.select();
+  try { document.execCommand('copy'); done(); } catch(e) { alert('Copy didn\'t work automatically — the list is shown below. Select it and copy it.'); }
+}
+
+document.getElementById('showEmailsBtn').addEventListener('click', () => {
+  const prev = document.getElementById('emailPreview');
+  if(prev.style.display === 'none'){ prev.style.display = 'block'; prev.value = collectEmails().join(', '); }
+  else { prev.style.display = 'none'; }
+});
+
+document.getElementById('missingBtn').addEventListener('click', () => {
+  const box = document.getElementById('missingBox');
+  const noParent = [], noParent2 = [];
+  currentRoster.forEach(e => {
+    if(groupOf(e) !== 'current') return;
+    const name = ((e.firstName||'') + ' ' + (e.lastName||'')).trim() || '(unnamed)';
+    if(!splitEmails(e.parent1Email).length && !splitEmails(e.parent2Email).length) noParent.push(name);
+  });
+  box.style.display = 'block';
+  box.innerHTML = noParent.length
+    ? '<strong>No parent email on file (' + noParent.length + '):</strong> ' + noParent.map(escapeAttr).join(', ')
+    : 'Every current wrestler has at least one parent email on file.';
+});
 </script>
 </body>
 </html>
