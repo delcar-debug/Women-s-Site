@@ -217,6 +217,7 @@ table.contact-table td.wk-name{text-align:left;min-width:150px}
 <div class="toolbar-actions">
 <button class="btn" id="addWeeklyBtn">+ Add Contact</button>
 <button class="btn" id="cleanWeeklyBtn">Remove Anyone on the Roster</button>
+<button class="btn" id="addRosterToOldBtn">Add Current Roster Here</button>
 <button class="btn" id="importWeeklyBtn">Import Contacts CSV</button>
 <input type="file" id="importWeeklyFile" accept=".csv,text/csv" style="display:none">
 <button class="btn" id="exportWeeklyBtn">Export CSV</button>
@@ -1237,6 +1238,33 @@ Object.keys(CONTACT_LISTS).forEach(k => {
     a.href = url; a.download = (cfg.pfx === 'coaches' ? 'coaches' : 'old-weekly') + '.csv'; a.click();
     URL.revokeObjectURL(url);
   });
+});
+
+/* ----- Copy the current roster (wrestlers + parents) into Old Weekly ----- */
+document.getElementById('addRosterToOldBtn').addEventListener('click', () => {
+  const have = new Set();
+  currentWeekly.forEach(w => splitEmails(w.email1).concat(splitEmails(w.email2)).forEach(a => have.add(a)));
+  const toAdd = [];
+  const consider = (name, type, email, phone, note) => {
+    const emails = splitEmails(email);
+    if(!emails.length) return;
+    if(emails.every(a => have.has(a))) return;
+    emails.forEach(a => have.add(a));
+    toAdd.push({name: name || emails[0], type, email1: email.trim(), email2: '', phone: phone || '', notes: note});
+  };
+  currentRoster.forEach(e => {
+    const wname = ((e.firstName || '') + ' ' + (e.lastName || '')).trim();
+    consider(wname, 'Wrestler', e.wrestlerEmail || '', e.wrestlerPhone, '');
+    consider(e.parent1Name, 'Parent', e.parent1Email || '', e.parent1Phone, wname ? 'Parent of ' + wname : '');
+    consider(e.parent2Name, 'Parent', e.parent2Email || '', e.parent2Phone, wname ? 'Parent of ' + wname : '');
+  });
+  if(!toAdd.length){ alert('Everyone on the roster with an email is already on this list.'); return; }
+  const wr = toAdd.filter(x => x.type === 'Wrestler').length, pa = toAdd.length - wr;
+  if(!confirm('Add ' + toAdd.length + ' contact(s) from the current roster to Old Weekly (' + wr + ' wrestlers, ' + pa + ' parents/guardians)?\n\nPeople already on this list are skipped, and the roster itself is not changed.')) return;
+  currentWeekly.push(...toAdd);
+  sortContacts(currentWeekly);
+  saveRoster(); renderContacts();
+  alert('Added ' + toAdd.length + ' contact(s) to Old Weekly.');
 });
 </script>
 </body>
