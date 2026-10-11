@@ -62,8 +62,8 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 .tabs{display:flex;gap:8px;margin:0 0 16px}
 .tab{border:1px solid var(--border);background:#fff;border-radius:10px 10px 0 0;padding:10px 20px;font-weight:900;font-size:.9rem;cursor:pointer;color:var(--muted)}
 .tab.active{background:var(--maroon);border-color:var(--maroon);color:#fff}
-#weeklyTable{min-width:1100px}
-#weeklyTable td.wk-name{text-align:left;min-width:150px}
+table.contact-table{min-width:1100px}
+table.contact-table td.wk-name{text-align:left;min-width:150px}
 .btn .cnt{font-weight:600;opacity:.85}
 .email-count{font-size:.85rem;font-weight:800;color:var(--maroon)}
 .email-preview{width:100%;margin-top:10px;min-height:54px;border:1px solid var(--border);border-radius:10px;padding:8px 10px;font:inherit;font-size:.78rem;color:var(--ink);resize:vertical}
@@ -138,6 +138,7 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 <div class="tabs">
 <button class="tab active" id="tabRoster" type="button">Roster</button>
 <button class="tab" id="tabWeekly" type="button">Old Weekly</button>
+<button class="tab" id="tabCoaches" type="button">Coaches</button>
 </div>
 
 <div class="email-panel" id="emailPanel">
@@ -222,11 +223,33 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 </div>
 </div>
 <div class="table-scroll">
-<table id="weeklyTable">
+<table class="contact-table" id="weeklyTable">
 <thead><tr>
 <th></th><th>#</th><th>Name</th><th>Type</th><th>Email 1</th><th>Email 2</th><th>Phone</th><th>Notes</th>
 </tr></thead>
 <tbody id="weeklyBody"></tbody>
+</table>
+</div>
+</div>
+
+<div id="coachesView" style="display:none">
+<h2 class="section-title">Coaches</h2>
+<p class="section-sub">Every coach on this list is automatically included in <strong>all four</strong> email buttons above, so they get every group email. Duplicates are removed automatically.</p>
+<div class="toolbar">
+<div class="save-note"><span id="coachesCount"></span></div>
+<div class="toolbar-actions">
+<button class="btn" id="addCoachesBtn">+ Add Coach</button>
+<button class="btn" id="importCoachesBtn">Import Contacts CSV</button>
+<input type="file" id="importCoachesFile" accept=".csv,text/csv" style="display:none">
+<button class="btn" id="exportCoachesBtn">Export CSV</button>
+</div>
+</div>
+<div class="table-scroll">
+<table class="contact-table" id="coachesTable" style="min-width:900px">
+<thead><tr>
+<th></th><th>#</th><th>Name</th><th>Email 1</th><th>Email 2</th><th>Phone</th><th>Notes</th>
+</tr></thead>
+<tbody id="coachesBody"></tbody>
 </table>
 </div>
 </div>
@@ -374,6 +397,7 @@ onAuthStateChanged(auth, (user) => {
 
 const STORAGE_KEY = 'holmenWWRosterManager';
 const WEEKLY_KEY = 'holmenWWWeeklyList';
+const COACHES_KEY = 'holmenWWCoachesList';
 const ATHLETE_FORM_KEY = 'holmenAthleteInformation';
 // Same Apps Script Web app URL pasted into athlete-information.html — see AthleteFormSync.gs.
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDy2Nf8EFSF3rPdhkk16K6z4J90a8z5QSaCHABHbZwM9teZynnqOYUxxjOk-UT-McA/exec';
@@ -404,6 +428,10 @@ function loadWeeklyLocal(){
   try { const v = JSON.parse(localStorage.getItem(WEEKLY_KEY) || '[]'); return Array.isArray(v) ? v : []; } catch(e) { return []; }
 }
 
+function loadCoachesLocal(){
+  try { const v = JSON.parse(localStorage.getItem(COACHES_KEY) || '[]'); return Array.isArray(v) ? v : []; } catch(e) { return []; }
+}
+
 function loadRoster(){
   const saved = localStorage.getItem(STORAGE_KEY);
   if(saved){
@@ -419,6 +447,7 @@ let rosterListenerAttached = false;
 function saveRoster(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(currentRoster));
   localStorage.setItem(WEEKLY_KEY, JSON.stringify(currentWeekly));
+  localStorage.setItem(COACHES_KEY, JSON.stringify(currentCoaches));
   if(syncStatus) syncStatus.textContent = 'Saving…';
   clearTimeout(cloudSaveTimer);
   cloudSaveTimer = setTimeout(pushRosterToCloud, 700);
@@ -428,7 +457,7 @@ async function pushRosterToCloud(){
   if(!auth.currentUser) return;
   try {
     suppressNextSnapshot = true;
-    await setDoc(ROSTER_DOC, { entries: currentRoster, weekly: currentWeekly, updatedAt: serverTimestamp() });
+    await setDoc(ROSTER_DOC, { entries: currentRoster, weekly: currentWeekly, coaches: currentCoaches, updatedAt: serverTimestamp() });
     if(syncStatus) syncStatus.textContent = 'Synced just now.';
   } catch(e) {
     if(syncStatus) syncStatus.textContent = 'Sync failed — check connection.';
@@ -442,22 +471,25 @@ async function initRoster(){
     if(snap.exists() && Array.isArray(snap.data().entries) && snap.data().entries.length){
       currentRoster = sortByName(snap.data().entries);
       currentWeekly = Array.isArray(snap.data().weekly) ? snap.data().weekly : loadWeeklyLocal();
+      currentCoaches = Array.isArray(snap.data().coaches) ? snap.data().coaches : loadCoachesLocal();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(currentRoster));
       localStorage.setItem(WEEKLY_KEY, JSON.stringify(currentWeekly));
     } else {
       currentWeekly = loadWeeklyLocal();
+      currentCoaches = loadCoachesLocal();
       currentRoster = sortByName(loadRoster());
       suppressNextSnapshot = true;
-      await setDoc(ROSTER_DOC, { entries: currentRoster, weekly: currentWeekly, updatedAt: serverTimestamp() });
+      await setDoc(ROSTER_DOC, { entries: currentRoster, weekly: currentWeekly, coaches: currentCoaches, updatedAt: serverTimestamp() });
     }
     if(syncStatus) syncStatus.textContent = 'Synced.';
   } catch(e) {
     currentWeekly = loadWeeklyLocal();
+    currentCoaches = loadCoachesLocal();
     currentRoster = sortByName(loadRoster());
     if(syncStatus) syncStatus.textContent = 'Offline — showing last saved copy.';
   }
   renderRoster();
-  renderWeekly();
+  renderContacts();
   if(!rosterListenerAttached){
     rosterListenerAttached = true;
     onSnapshot(ROSTER_DOC, (snap) => {
@@ -470,10 +502,12 @@ async function initRoster(){
       if(activeInRoster) return;
       currentRoster = sortByName(data.entries);
       if(Array.isArray(data.weekly)) currentWeekly = data.weekly;
+      if(Array.isArray(data.coaches)) currentCoaches = data.coaches;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(currentRoster));
       localStorage.setItem(WEEKLY_KEY, JSON.stringify(currentWeekly));
+      localStorage.setItem(COACHES_KEY, JSON.stringify(currentCoaches));
       renderRoster();
-      renderWeekly();
+      renderContacts();
       if(syncStatus) syncStatus.textContent = 'Updated from another device.';
     });
   }
@@ -661,6 +695,7 @@ function sortAndRerender(){
 
 let currentRoster = [];
 let currentWeekly = [];
+let currentCoaches = [];
 
 document.getElementById('addRowBtn').addEventListener('click', () => {
   const firstName = prompt('Wrestler first name:', '');
@@ -853,7 +888,10 @@ function collectEmails(kind){
     list.forEach(a => { if(!seen.has(a)){ seen.add(a); out.push(a); } });
   });
   currentWeekly.forEach(w => {
-    if(kind !== 'weekly') return; // Weekly List contacts only go into the Weekly copy
+    if(kind !== 'weekly') return; // Old Weekly contacts only go into the Weekly (everyone) copy
+    [...splitEmails(w.email1), ...splitEmails(w.email2)].forEach(a => { if(!seen.has(a)){ seen.add(a); out.push(a); } });
+  });
+  currentCoaches.forEach(w => {
     [...splitEmails(w.email1), ...splitEmails(w.email2)].forEach(a => { if(!seen.has(a)){ seen.add(a); out.push(a); } });
   });
   return out;
@@ -1027,24 +1065,37 @@ document.getElementById('importCsvFile').addEventListener('change', (e) => {
   reader.readAsText(file);
 });
 
-/* ----- Weekly List tab ----- */
-const WEEKLY_TYPES = ['Parent','Wrestler','Coach','Manager','Other'];
+/* ----- Old Weekly + Coaches tabs ----- */
+const CONTACT_TYPES = ['Parent','Wrestler','Coach','Manager','Other'];
+const CONTACT_LISTS = {
+  weekly:  {pfx:'weekly',  P:'Weekly',  label:'Old Weekly', hasType:true,  roster:true,  get: () => currentWeekly,  set: v => { currentWeekly = v; }},
+  coaches: {pfx:'coaches', P:'Coaches', label:'Coaches',    hasType:false, roster:false, get: () => currentCoaches, set: v => { currentCoaches = v; }}
+};
 
-function sortWeekly(){
-  currentWeekly.sort((a, b) => (a.name || '').toLowerCase().localeCompare((b.name || '').toLowerCase()));
+function sortContacts(list){
+  list.sort((a, b) => (a.name || '').toLowerCase().localeCompare((b.name || '').toLowerCase()));
 }
 
-function buildWeeklyRow(idx){
-  const w = currentWeekly[idx];
+function rosterEmailSet(){
+  const set = new Set();
+  currentRoster.forEach(e => {
+    splitEmails(e.parent1Email).concat(splitEmails(e.parent2Email), splitEmails(e.wrestlerEmail)).forEach(a => set.add(a));
+  });
+  return set;
+}
+
+function buildContactRow(cfg, idx){
+  const list = cfg.get();
+  const w = list[idx];
   const tr = document.createElement('tr');
 
   const rm = document.createElement('td');
   const rmBtn = document.createElement('button');
   rmBtn.className = 'row-remove'; rmBtn.innerHTML = '&times;'; rmBtn.title = 'Remove contact';
   rmBtn.addEventListener('click', () => {
-    if(confirm('Remove ' + (w.name || 'this contact') + ' from the weekly list?')){
-      currentWeekly.splice(idx, 1);
-      saveRoster(); renderWeekly(); updateEmailCounts();
+    if(confirm('Remove ' + (w.name || 'this contact') + '?')){
+      list.splice(idx, 1);
+      saveRoster(); renderContacts();
     }
   });
   rm.appendChild(rmBtn); tr.appendChild(rm);
@@ -1058,76 +1109,50 @@ function buildWeeklyRow(idx){
     if(cls) td.className = cls;
     td.textContent = w[field] || '';
     td.addEventListener('input', () => {
-      currentWeekly[idx][field] = td.textContent.trim();
+      list[idx][field] = td.textContent.trim();
       saveRoster(); updateEmailCounts();
     });
     return td;
   };
   tr.appendChild(cell('name','wk-name'));
 
-  const typeTd = document.createElement('td');
-  const sel = document.createElement('select');
-  WEEKLY_TYPES.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; sel.appendChild(o); });
-  sel.value = WEEKLY_TYPES.indexOf(w.type) >= 0 ? w.type : 'Other';
-  sel.addEventListener('change', () => { currentWeekly[idx].type = sel.value; saveRoster(); updateEmailCounts(); });
-  typeTd.appendChild(sel); tr.appendChild(typeTd);
+  if(cfg.hasType){
+    const typeTd = document.createElement('td');
+    const sel = document.createElement('select');
+    CONTACT_TYPES.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; sel.appendChild(o); });
+    sel.value = CONTACT_TYPES.indexOf(w.type) >= 0 ? w.type : 'Other';
+    sel.addEventListener('change', () => { list[idx].type = sel.value; saveRoster(); });
+    typeTd.appendChild(sel); tr.appendChild(typeTd);
+  }
 
   tr.appendChild(cell('email1')); tr.appendChild(cell('email2')); tr.appendChild(cell('phone')); tr.appendChild(cell('notes'));
   return tr;
 }
 
-function renderWeekly(){
-  const body = document.getElementById('weeklyBody');
-  if(!body) return;
-  body.innerHTML = '';
-  currentWeekly.forEach((w, idx) => body.appendChild(buildWeeklyRow(idx)));
-  const n = currentWeekly.length;
-  const c = {Parent:0, Wrestler:0};
-  currentWeekly.forEach(w => { if(c[w.type] !== undefined) c[w.type]++; });
-  document.getElementById('weeklyCount').textContent = n + ' old contact(s) — ' + c.Parent + ' parents, ' + c.Wrestler + ' wrestlers.';
+function renderContacts(){
+  Object.keys(CONTACT_LISTS).forEach(k => {
+    const cfg = CONTACT_LISTS[k];
+    const body = document.getElementById(cfg.pfx + 'Body');
+    if(!body) return;
+    body.innerHTML = '';
+    const list = cfg.get();
+    list.forEach((w, idx) => body.appendChild(buildContactRow(cfg, idx)));
+    document.getElementById(cfg.pfx + 'Count').textContent = list.length + ' contact(s).';
+  });
   updateEmailCounts();
 }
 
 function showTab(which){
-  const weekly = which === 'weekly';
-  document.getElementById('rosterView').style.display = weekly ? 'none' : 'block';
-  document.getElementById('weeklyView').style.display = weekly ? 'block' : 'none';
-  document.getElementById('tabRoster').classList.toggle('active', !weekly);
-  document.getElementById('tabWeekly').classList.toggle('active', weekly);
+  ['roster','weekly','coaches'].forEach(k => {
+    const view = document.getElementById(k + 'View');
+    if(view) view.style.display = (k === which) ? 'block' : 'none';
+    const tab = document.getElementById(k === 'roster' ? 'tabRoster' : k === 'weekly' ? 'tabWeekly' : 'tabCoaches');
+    if(tab) tab.classList.toggle('active', k === which);
+  });
 }
 document.getElementById('tabRoster').addEventListener('click', () => showTab('roster'));
 document.getElementById('tabWeekly').addEventListener('click', () => showTab('weekly'));
-
-document.getElementById('addWeeklyBtn').addEventListener('click', () => {
-  const name = prompt('Name:', '');
-  if(name === null || name.trim() === '') return;
-  const email = prompt('Email address:', '');
-  if(email === null) return;
-  const t = prompt('Type: 1 Parent, 2 Wrestler, 3 Coach, 4 Manager, 5 Other', '1');
-  const type = WEEKLY_TYPES[(parseInt(t, 10) || 1) - 1] || 'Other';
-  currentWeekly.push({name: name.trim(), type, email1: email.trim(), email2: '', phone: '', notes: ''});
-  sortWeekly(); saveRoster(); renderWeekly();
-});
-
-function rosterEmailSet(){
-  const set = new Set();
-  currentRoster.forEach(e => {
-    splitEmails(e.parent1Email).concat(splitEmails(e.parent2Email), splitEmails(e.wrestlerEmail)).forEach(a => set.add(a));
-  });
-  return set;
-}
-
-document.getElementById('cleanWeeklyBtn').addEventListener('click', () => {
-  const onRoster = rosterEmailSet();
-  const dupes = currentWeekly.filter(w => {
-    const em = splitEmails(w.email1).concat(splitEmails(w.email2));
-    return em.length > 0 && em.every(a => onRoster.has(a));
-  });
-  if(!dupes.length){ alert('Nobody on this list shares an email with the current roster.'); return; }
-  if(!confirm('Remove ' + dupes.length + ' contact(s) whose email is already on the Roster tab?\n\n' + dupes.map(w => w.name).join(', '))) return;
-  currentWeekly = currentWeekly.filter(w => dupes.indexOf(w) === -1);
-  saveRoster(); renderWeekly(); updateEmailCounts();
-});
+document.getElementById('tabCoaches').addEventListener('click', () => showTab('coaches'));
 
 function weeklyTypeFromLabels(labels){
   const l = String(labels || '').toLowerCase();
@@ -1138,7 +1163,7 @@ function weeklyTypeFromLabels(labels){
   return 'Other';
 }
 
-function importWeeklyCSV(text){
+function importContactsCSV(cfg, text){
   const rows = parseCSV(text.replace(/^﻿/, ''));
   if(rows.length < 2){ alert('That file looks empty.'); return; }
   const head = rows[0].map(h => h.trim());
@@ -1147,8 +1172,9 @@ function importWeeklyCSV(text){
     alert('This doesn\'t look like a Google Contacts export — I couldn\'t find the name and email columns.'); return;
   }
   const g = (r, name) => { const i = ci(name); return i < 0 ? '' : String(r[i] || '').trim(); };
-  const have = rosterEmailSet();
-  currentWeekly.forEach(w => { splitEmails(w.email1).concat(splitEmails(w.email2)).forEach(a => have.add(a)); });
+  const have = cfg.roster ? rosterEmailSet() : new Set();
+  Object.keys(CONTACT_LISTS).forEach(k => CONTACT_LISTS[k].get().forEach(w => { splitEmails(w.email1).concat(splitEmails(w.email2)).forEach(a => have.add(a)); }));
+  const list = cfg.get();
   let added = 0, skipped = 0;
   rows.slice(1).forEach(r => {
     const name = [g(r,'First Name'), g(r,'Middle Name'), g(r,'Last Name')].filter(Boolean).join(' ');
@@ -1157,35 +1183,66 @@ function importWeeklyCSV(text){
     const emails = splitEmails(e1).concat(splitEmails(e2));
     if(emails.length && emails.every(a => have.has(a))){ skipped++; return; }
     emails.forEach(a => have.add(a));
-    currentWeekly.push({
-      name: name || e1, type: weeklyTypeFromLabels(g(r,'Labels')),
-      email1: e1, email2: e2, phone: g(r,'Phone 1 - Value') || g(r,'Phone 2 - Value'), notes: ''
-    });
+    const entry = {name: name || e1, email1: e1, email2: e2, phone: g(r,'Phone 1 - Value') || g(r,'Phone 2 - Value'), notes: ''};
+    if(cfg.hasType) entry.type = weeklyTypeFromLabels(g(r,'Labels'));
+    list.push(entry);
     added++;
   });
-  sortWeekly(); saveRoster(); renderWeekly();
-  alert('Import complete: ' + added + ' contact(s) added' + (skipped ? ', ' + skipped + ' skipped (already on the roster or this list)' : '') + '.');
+  sortContacts(list); saveRoster(); renderContacts();
+  alert('Import complete: ' + added + ' contact(s) added to ' + cfg.label + (skipped ? ', ' + skipped + ' skipped (already on the roster or another list)' : '') + '.');
 }
 
-document.getElementById('importWeeklyBtn').addEventListener('click', () => document.getElementById('importWeeklyFile').click());
-document.getElementById('importWeeklyFile').addEventListener('change', (e) => {
-  const file = e.target.files && e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = () => { importWeeklyCSV(String(reader.result || '')); e.target.value = ''; };
-  reader.readAsText(file);
-});
-
-document.getElementById('exportWeeklyBtn').addEventListener('click', () => {
-  const lines = ['Name,Type,Email 1,Email 2,Phone,Notes'];
-  currentWeekly.forEach(w => {
-    lines.push([w.name, w.type, w.email1, w.email2, w.phone, w.notes].map(v => '"' + String(v || '').replace(/"/g,'""') + '"').join(','));
+Object.keys(CONTACT_LISTS).forEach(k => {
+  const cfg = CONTACT_LISTS[k];
+  document.getElementById('add' + cfg.P + 'Btn').addEventListener('click', () => {
+    const name = prompt('Name:', '');
+    if(name === null || name.trim() === '') return;
+    const email = prompt('Email address:', '');
+    if(email === null) return;
+    const entry = {name: name.trim(), email1: email.trim(), email2: '', phone: '', notes: ''};
+    if(cfg.hasType){
+      const t = prompt('Type: 1 Parent, 2 Wrestler, 3 Coach, 4 Manager, 5 Other', '1');
+      entry.type = CONTACT_TYPES[(parseInt(t, 10) || 1) - 1] || 'Other';
+    }
+    const list = cfg.get();
+    list.push(entry);
+    sortContacts(list); saveRoster(); renderContacts();
   });
-  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'weekly-list.csv'; a.click();
-  URL.revokeObjectURL(url);
+
+  const cleanBtn = document.getElementById('clean' + cfg.P + 'Btn');
+  if(cleanBtn) cleanBtn.addEventListener('click', () => {
+    const onRoster = rosterEmailSet();
+    const list = cfg.get();
+    const dupes = list.filter(w => {
+      const em = splitEmails(w.email1).concat(splitEmails(w.email2));
+      return em.length > 0 && em.every(a => onRoster.has(a));
+    });
+    if(!dupes.length){ alert('Nobody on this list shares an email with the current roster.'); return; }
+    if(!confirm('Remove ' + dupes.length + ' contact(s) whose email is already on the Roster tab?\n\n' + dupes.map(w => w.name).join(', '))) return;
+    cfg.set(list.filter(w => dupes.indexOf(w) === -1));
+    saveRoster(); renderContacts();
+  });
+
+  document.getElementById('import' + cfg.P + 'Btn').addEventListener('click', () => document.getElementById('import' + cfg.P + 'File').click());
+  document.getElementById('import' + cfg.P + 'File').addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { importContactsCSV(cfg, String(reader.result || '')); e.target.value = ''; };
+    reader.readAsText(file);
+  });
+
+  document.getElementById('export' + cfg.P + 'Btn').addEventListener('click', () => {
+    const lines = ['Name,Type,Email 1,Email 2,Phone,Notes'];
+    cfg.get().forEach(w => {
+      lines.push([w.name, w.type || '', w.email1, w.email2, w.phone, w.notes].map(v => '"' + String(v || '').replace(/"/g,'""') + '"').join(','));
+    });
+    const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = (cfg.pfx === 'coaches' ? 'coaches' : 'old-weekly') + '.csv'; a.click();
+    URL.revokeObjectURL(url);
+  });
 });
 </script>
 </body>
