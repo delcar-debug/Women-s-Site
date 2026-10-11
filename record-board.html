@@ -1050,10 +1050,10 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
 </script>
 
 <script>
-/* Seasonal fall theme: auto-applies Oct 11 – Oct 20 (fall) and Oct 27 – Nov 1 (Halloween) each year (add ?theme=fall to preview any time, ?theme=off to disable) */
+/* Seasonal fall theme: auto-applies Oct 13 – Oct 20 (fall) and Oct 27 – Nov 1 (Halloween) each year (add ?theme=fall to preview any time, ?theme=off to disable) */
 (function(){
   var q=location.search.match(/theme=(\w+)/), now=new Date(), m=now.getMonth()+1, d=now.getDate();
-  var inSeason=(m===10&&d>=11&&d<=20);
+  var inSeason=(m===10&&d>=13&&d<=20);
   var on=q?q[1]==='fall':inSeason;
   var hwOn=false;
   var hwSeason=(m===10&&d>=27)||(m===11&&d<=1);
