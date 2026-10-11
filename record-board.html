@@ -447,12 +447,29 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
   #tv-qr-box img{ width:46px; height:46px; }
   #tv-qr-box span{ display:none; }
 }
+/* ---- Corner countdown (every slide) ---- */
+#tv-countdown{ position:fixed; top:24px; right:32px; z-index:50; text-align:center; opacity:.95; pointer-events:none; }
+#tv-countdown .cd-label{ font-size:.85rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; text-shadow:0 2px 8px rgba(0,0,0,.6); }
+#tv-countdown .cd-row{ display:flex; gap:8px; }
+#tv-countdown .cd-box{ min-width:62px; padding:8px 6px 6px; background:rgba(255,255,255,.1); border:1px solid rgba(232,195,122,.5); border-radius:12px; }
+#tv-countdown .cd-num{ font-size:1.6rem; font-weight:900; line-height:1; color:#fff; font-variant-numeric:tabular-nums; }
+#tv-countdown .cd-unit{ font-size:.62rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; opacity:.8; margin-top:3px; }
+@media(max-width:1100px){ #tv-countdown{ top:10px; right:10px; transform:scale(.7); transform-origin:top right; } }
 </style>
 </head>
 <body>
 
 <div class="tv-logo"><img src="assets/images/logo.png" alt=""><div class="tv-logo-text"><span class="tv-logo-sub">Holmen Women's Wrestling</span></div></div>
 
+<div id="tv-countdown" data-start="2026-11-16T15:00:00">
+  <div class="cd-label">Season Opens In</div>
+  <div class="cd-row">
+    <div class="cd-box"><div class="cd-num" data-u="d">--</div><div class="cd-unit">Days</div></div>
+    <div class="cd-box"><div class="cd-num" data-u="h">--</div><div class="cd-unit">Hrs</div></div>
+    <div class="cd-box"><div class="cd-num" data-u="m">--</div><div class="cd-unit">Min</div></div>
+    <div class="cd-box"><div class="cd-num" data-u="s">--</div><div class="cd-unit">Sec</div></div>
+  </div>
+</div>
 <div id="stage">
   <div class="slide-layer active" id="layerA"></div>
   <div class="slide-layer" id="layerB"></div>
@@ -952,7 +969,7 @@ document.addEventListener('click', function(){ goToSlide(current + 1); });
 
 // Anti burn-in: slowly drift the static logo + QR code a few pixels every couple of minutes
 (function(){
-  var els = [document.querySelector('.tv-logo'), document.getElementById('tv-qr-box')];
+  var els = [document.querySelector('.tv-logo'), document.getElementById('tv-qr-box'), document.getElementById('tv-countdown')];
   els.forEach(function(e){ if(e) e.style.transition = 'transform 4s ease-in-out'; });
   function shift(){
     var x = Math.round((Math.random()*2-1)*14), y = Math.round((Math.random()*2-1)*14);
@@ -989,6 +1006,16 @@ document.addEventListener('click', function(){ goToSlide(current + 1); });
   }catch(e){}
 })();
 
+
+// Season countdown (top-right corner). Change data-start on #tv-countdown to move the date; it hides itself once the season starts.
+function tickCountdown(){
+  var w=document.getElementById('tv-countdown'); if(!w) return;
+  var diff=new Date(w.getAttribute('data-start'))-new Date();
+  if(diff<=0){ w.style.display='none'; return; }
+  var sec=Math.floor(diff/1000), v={d:Math.floor(sec/86400),h:Math.floor(sec%86400/3600),m:Math.floor(sec%3600/60),s:sec%60};
+  for(var u in v){ var el=w.querySelector('[data-u="'+u+'"]'); if(el) el.textContent=(u==='d')?v[u]:String(v[u]).padStart(2,'0'); }
+}
+setInterval(tickCountdown,1000); tickCountdown();
 function goToSlide(index){
   current = (index + SLIDES.length) % SLIDES.length;
   showSlide(current);
