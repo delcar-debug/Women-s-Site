@@ -210,11 +210,12 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 
 <div id="weeklyView" style="display:none">
 <h2 class="section-title">Weekly Email List</h2>
-<p class="section-sub">Everyone who gets the weekly email. These addresses are added only to <strong>Weekly &ndash; Everyone (incl. old)</strong> above, along with the roster's wrestlers and parents. Duplicates are removed automatically. The other three buttons use only the Roster tab.</p>
+<p class="section-sub">Past families and anyone not on the current roster who still gets your weekly email (graduates' parents, alumni, coaches, managers, supporters). They're included only in <strong>Weekly &ndash; Everyone (incl. old)</strong> above. Duplicates are removed automatically.</p>
 <div class="toolbar">
 <div class="save-note"><span id="weeklyCount"></span></div>
 <div class="toolbar-actions">
 <button class="btn" id="addWeeklyBtn">+ Add Contact</button>
+<button class="btn" id="cleanWeeklyBtn">Remove Anyone on the Roster</button>
 <button class="btn" id="importWeeklyBtn">Import Contacts CSV</button>
 <input type="file" id="importWeeklyFile" accept=".csv,text/csv" style="display:none">
 <button class="btn" id="exportWeeklyBtn">Export CSV</button>
@@ -838,7 +839,7 @@ function splitEmails(str){
   return String(str || '').split(/[,;\s]+/).map(x => x.trim().toLowerCase()).filter(x => x.indexOf('@') > 0);
 }
 
-const LIST_LABELS = {wrestlers:'current wrestler', parents:'current parent', current:'weekly (current only)', weekly:'weekly (everyone)'};
+const LIST_LABELS = {wrestlers:'current wrestler', parents:'current parent', current:'weekly (current only)', weekly:'weekly (everyone incl. old)'};
 let lastList = 'weekly';
 
 function collectEmails(kind){
@@ -1073,7 +1074,7 @@ function renderWeekly(){
   const n = currentWeekly.length;
   const c = {Parent:0, Wrestler:0};
   currentWeekly.forEach(w => { if(c[w.type] !== undefined) c[w.type]++; });
-  document.getElementById('weeklyCount').textContent = n + ' contact(s) — ' + c.Parent + ' parents, ' + c.Wrestler + ' wrestlers.';
+  document.getElementById('weeklyCount').textContent = n + ' old contact(s) — ' + c.Parent + ' parents, ' + c.Wrestler + ' wrestlers.';
   updateEmailCounts();
 }
 
@@ -1098,6 +1099,26 @@ document.getElementById('addWeeklyBtn').addEventListener('click', () => {
   sortWeekly(); saveRoster(); renderWeekly();
 });
 
+function rosterEmailSet(){
+  const set = new Set();
+  currentRoster.forEach(e => {
+    splitEmails(e.parent1Email).concat(splitEmails(e.parent2Email), splitEmails(e.wrestlerEmail)).forEach(a => set.add(a));
+  });
+  return set;
+}
+
+document.getElementById('cleanWeeklyBtn').addEventListener('click', () => {
+  const onRoster = rosterEmailSet();
+  const dupes = currentWeekly.filter(w => {
+    const em = splitEmails(w.email1).concat(splitEmails(w.email2));
+    return em.length > 0 && em.every(a => onRoster.has(a));
+  });
+  if(!dupes.length){ alert('Nobody on this list shares an email with the current roster.'); return; }
+  if(!confirm('Remove ' + dupes.length + ' contact(s) whose email is already on the Roster tab?\n\n' + dupes.map(w => w.name).join(', '))) return;
+  currentWeekly = currentWeekly.filter(w => dupes.indexOf(w) === -1);
+  saveRoster(); renderWeekly(); updateEmailCounts();
+});
+
 function weeklyTypeFromLabels(labels){
   const l = String(labels || '').toLowerCase();
   if(l.indexOf('current parent') >= 0) return 'Parent';
@@ -1116,7 +1137,7 @@ function importWeeklyCSV(text){
     alert('This doesn\'t look like a Google Contacts export — I couldn\'t find the name and email columns.'); return;
   }
   const g = (r, name) => { const i = ci(name); return i < 0 ? '' : String(r[i] || '').trim(); };
-  const have = new Set();
+  const have = rosterEmailSet();
   currentWeekly.forEach(w => { splitEmails(w.email1).concat(splitEmails(w.email2)).forEach(a => have.add(a)); });
   let added = 0, skipped = 0;
   rows.slice(1).forEach(r => {
@@ -1133,7 +1154,7 @@ function importWeeklyCSV(text){
     added++;
   });
   sortWeekly(); saveRoster(); renderWeekly();
-  alert('Import complete: ' + added + ' contact(s) added' + (skipped ? ', ' + skipped + ' skipped (already on the list)' : '') + '.');
+  alert('Import complete: ' + added + ' contact(s) added' + (skipped ? ', ' + skipped + ' skipped (already on the roster or this list)' : '') + '.');
 }
 
 document.getElementById('importWeeklyBtn').addEventListener('click', () => document.getElementById('importWeeklyFile').click());
