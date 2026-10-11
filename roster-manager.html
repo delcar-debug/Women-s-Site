@@ -143,7 +143,7 @@ table.contact-table td.wk-name{text-align:left;min-width:150px}
 
 <div class="email-panel" id="emailPanel">
 <h3>Email Lists</h3>
-<p class="hint">Click a list to open a new Gmail message with everyone already in the <strong>BCC</strong> line (the addresses are also copied in case you need to paste them). Duplicates and blanks are removed automatically.</p>
+<p class="hint">Click a list to open a new Gmail message and copy the addresses &mdash; click <strong>Bcc</strong> in Gmail and paste. Duplicates and blanks are removed automatically.</p>
 <div class="email-actions">
 <button class="btn primary" data-list="wrestlers">Current Wrestlers <span class="cnt" id="cntWrestlers"></span></button>
 <button class="btn primary" data-list="parents">Current Parents <span class="cnt" id="cntParents"></span></button>
@@ -153,6 +153,7 @@ table.contact-table td.wk-name{text-align:left;min-width:150px}
 <div class="email-actions" style="margin-top:10px">
 <button class="btn" id="showEmailsBtn">Show Last List</button>
 <button class="btn" id="missingBtn">Who&rsquo;s Missing Emails?</button>
+<label style="font-size:.8rem;font-weight:700;display:inline-flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" id="fillBccBox"> Fill BCC automatically (long lists can push the message off-screen)</label>
 <span class="email-count" id="emailCount"></span>
 </div>
 <textarea class="email-preview" id="emailPreview" readonly style="display:none"></textarea>
@@ -876,6 +877,7 @@ function splitEmails(str){
 
 const LIST_LABELS = {wrestlers:'current wrestler', parents:'current parent', current:'weekly (current only)', weekly:'weekly (everyone incl. old)'};
 let lastList = 'weekly';
+(function(){ const b = document.getElementById('fillBccBox'); try { b.checked = localStorage.getItem('rmFillBcc') === '1'; } catch(e) {} b.addEventListener('change', () => { try { localStorage.setItem('rmFillBcc', b.checked ? '1' : '0'); } catch(e) {} }); })();
 
 function collectEmails(kind){
   const parents = (kind === 'parents' || kind === 'current' || kind === 'weekly');
@@ -911,16 +913,20 @@ document.querySelectorAll('#emailPanel [data-list]').forEach(btn => {
     const list = collectEmails(kind);
     if(!list.length){ alert('No email addresses found for the ' + LIST_LABELS[kind] + ' list.'); return; }
     const text = list.join(', ');
-    // Open a Gmail compose window with everyone in BCC (done first so the browser doesn't block the pop-up).
-    const url = 'https://mail.google.com/mail/?view=cm&fs=1&tf=1&bcc=' + encodeURIComponent(list.join(','));
-    const tooLong = url.length > 7000;
-    let opened = null;
-    if(!tooLong) opened = window.open(url, '_blank');
+    // Open a Gmail compose window. Default: blank message + addresses copied (paste into BCC, then click away and Gmail collapses the list).
+    // Optional: fill BCC automatically through the link.
+    const fill = document.getElementById('fillBccBox').checked;
+    const baseUrl = 'https://mail.google.com/mail/?view=cm&fs=1&tf=1';
+    const url = fill ? baseUrl + '&bcc=' + encodeURIComponent(list.join(',')) : baseUrl;
+    const tooLong = fill && url.length > 7000;
+    const openUrl = tooLong ? baseUrl : url;
+    const opened = window.open(openUrl, '_blank');
     const msgBase = list.length + ' ' + LIST_LABELS[kind] + ' address(es)';
     const done = () => {
-      document.getElementById('emailCount').textContent = tooLong
-        ? 'Copied ' + msgBase + ' — too many for Gmail to fill in automatically. Paste into BCC.'
-        : (opened ? 'Opened Gmail with ' + msgBase + ' in BCC (also copied).' : 'Copied ' + msgBase + ' — your browser blocked the Gmail pop-up. Paste into BCC.');
+      const el = document.getElementById('emailCount');
+      if(!opened) el.textContent = 'Copied ' + msgBase + ' — your browser blocked the Gmail pop-up. Open Gmail and paste into BCC.';
+      else if(fill && !tooLong) el.textContent = 'Opened Gmail with ' + msgBase + ' in BCC (also copied).';
+      else el.textContent = 'Copied ' + msgBase + '. In the Gmail window click "Bcc" and press Cmd+V (Ctrl+V on Windows) to paste.';
     };
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
