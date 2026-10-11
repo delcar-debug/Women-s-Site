@@ -137,6 +137,8 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 <button class="btn" id="addRowBtn">+ Add Wrestler</button>
 <button class="btn" id="addContactBtn">+ Add Alumni / Supporter</button>
 <button class="btn" id="importBtn">Import from Athlete Form</button>
+<button class="btn" id="importCsvBtn">Import Registration CSV</button>
+<input type="file" id="importCsvFile" accept=".csv,text/csv" style="display:none">
 <button class="btn" id="exportBtn">Export CSV</button>
 <button class="btn" id="exportUsaBtn">Export USA Card CSV</button>
 <button class="btn danger" id="resetBtn">Reset to Roster Names Only</button>
@@ -906,6 +908,114 @@ document.getElementById('missingBtn').addEventListener('click', () => {
   box.innerHTML = noParent.length
     ? '<strong>No parent email on file (' + noParent.length + '):</strong> ' + noParent.map(escapeAttr).join(', ')
     : 'Every current wrestler has at least one parent email on file.';
+});
+
+/* ----- Import the school registration report (CSV) -----
+   Runs entirely in this browser; the file is never uploaded anywhere except into the roster you already sync. */
+function parseCSV(text){
+  const rows = []; let row = [], field = '', inQ = false;
+  for(let i = 0; i < text.length; i++){
+    const c = text[i];
+    if(inQ){
+      if(c === '"'){ if(text[i+1] === '"'){ field += '"'; i++; } else inQ = false; }
+      else field += c;
+    } else if(c === '"'){ inQ = true; }
+    else if(c === ','){ row.push(field); field = ''; }
+    else if(c === '\n' || c === '\r'){
+      if(c === '\r' && text[i+1] === '\n') i++;
+      row.push(field); field = '';
+      if(row.some(v => v.trim() !== '')) rows.push(row);
+      row = [];
+    } else field += c;
+  }
+  row.push(field);
+  if(row.some(v => v.trim() !== '')) rows.push(row);
+  return rows;
+}
+
+function csvClean(v){
+  v = (v == null ? '' : String(v)).trim();
+  return (v === '-' || v === '0' || v === '0.0') ? '' : v;
+}
+
+function csvDateToISO(v){
+  const m = String(v || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  return m ? m[3] + '-' + m[1].padStart(2,'0') + '-' + m[2].padStart(2,'0') : '';
+}
+
+function csvShirt(v){
+  v = csvClean(v).toLowerCase();
+  if(!v) return '';
+  const hit = SHIRT_SIZES.find(sz => sz && sz.toLowerCase() === v);
+  return hit || '';
+}
+
+function sameStudent(entry, first, last){
+  const ef = (entry.firstName || '').trim().toLowerCase();
+  const el = (entry.lastName || '').trim().toLowerCase();
+  if(ef !== first) return false;
+  if(!el || !last) return true;
+  return el === last || el.startsWith(last) || last.startsWith(el);
+}
+
+function importRegistrationCSV(text){
+  const rows = parseCSV(text.replace(/^﻿/, ''));
+  if(rows.length < 2){ alert('That file looks empty.'); return; }
+  const head = rows[0].map(h => h.trim());
+  const col = name => head.indexOf(name);
+  if(col('FirstName') < 0 || col('LastName') < 0){ alert('This doesn\'t look like the registration report — I couldn\'t find FirstName and LastName columns.'); return; }
+  const get = (r, name) => { const i = col(name); return i < 0 ? '' : csvClean(r[i]); };
+
+  const records = rows.slice(1).map(r => {
+    const rec = {
+      firstName: get(r,'FirstName'), lastName: get(r,'LastName'),
+      birthday: csvDateToISO(get(r,'BirthDate')), shirtSize: csvShirt(r[col('ShirtSize')]),
+      wrestlerPhone: get(r,'Student Phone'), wrestlerEmail: get(r,'Student Email'),
+      street: get(r,'Address'), city: get(r,'City'), state: get(r,'State'), zip: get(r,'Zipcode'),
+      parent1Name: get(r,'Guardian1Name'), parent1Phone: get(r,'Guardian1Phone'), parent1Email: get(r,'Guardian1Email'),
+      parent2Name: get(r,'Guardian2Name'), parent2Phone: get(r,'Guardian2Phone'), parent2Email: get(r,'Guardian2Email')
+    };
+    // Some families list the student's own school email as a guardian email — don't treat that as a parent address.
+    if(rec.parent1Email && rec.parent1Email.toLowerCase() === rec.wrestlerEmail.toLowerCase()) rec.parent1Email = '';
+    if(rec.parent2Email && rec.parent2Email.toLowerCase() === rec.wrestlerEmail.toLowerCase()) rec.parent2Email = '';
+    return rec;
+  }).filter(rec => rec.firstName || rec.lastName);
+
+  const plan = records.map(rec => {
+    const first = rec.firstName.toLowerCase(), last = rec.lastName.toLowerCase();
+    const match = currentRoster.find(e => groupOf(e) === 'current' && sameStudent(e, first, last));
+    return {rec, match};
+  });
+  const matched = plan.filter(x => x.match), fresh = plan.filter(x => !x.match);
+
+  const msg = records.length + ' wrestlers found in the file.\n\n' +
+    'Match existing roster rows: ' + matched.length + '\n' +
+    'New rows to add: ' + fresh.length + (fresh.length ? '\n   ' + fresh.map(x => x.rec.firstName + ' ' + x.rec.lastName).join(', ') : '') + '\n\n' +
+    'Existing rows only get blanks filled in (nothing you typed is overwritten), and last names are updated to the official spelling.\n\nContinue?';
+  if(!confirm(msg)) return;
+
+  const FILL = ['birthday','shirtSize','wrestlerPhone','wrestlerEmail','street','city','state','zip','parent1Name','parent1Phone','parent1Email','parent2Name','parent2Phone','parent2Email'];
+  matched.forEach(({rec, match}) => {
+    if(rec.lastName) match.lastName = rec.lastName;
+    if(rec.firstName) match.firstName = rec.firstName;
+    FILL.forEach(f => { if(rec[f] && !(match[f] || '').toString().trim()) match[f] = rec[f]; });
+  });
+  fresh.forEach(({rec}) => {
+    const entry = blankEntry(rec.firstName, rec.lastName);
+    FILL.forEach(f => { if(rec[f]) entry[f] = rec[f]; });
+    currentRoster.push(entry);
+  });
+  sortAndRerender();
+  alert('Import complete: ' + matched.length + ' updated, ' + fresh.length + ' added.');
+}
+
+document.getElementById('importCsvBtn').addEventListener('click', () => document.getElementById('importCsvFile').click());
+document.getElementById('importCsvFile').addEventListener('change', (e) => {
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => { importRegistrationCSV(String(reader.result || '')); e.target.value = ''; };
+  reader.readAsText(file);
 });
 </script>
 </body>
