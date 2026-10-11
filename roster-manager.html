@@ -59,6 +59,11 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 .email-row .lbl{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);min-width:70px}
 .email-row label{font-size:.88rem;font-weight:700;display:inline-flex;gap:6px;align-items:center;cursor:pointer}
 .email-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.tabs{display:flex;gap:8px;margin:0 0 16px}
+.tab{border:1px solid var(--border);background:#fff;border-radius:10px 10px 0 0;padding:10px 20px;font-weight:900;font-size:.9rem;cursor:pointer;color:var(--muted)}
+.tab.active{background:var(--maroon);border-color:var(--maroon);color:#fff}
+#weeklyTable{min-width:1100px}
+#weeklyTable td.wk-name{text-align:left;min-width:150px}
 .btn .cnt{font-weight:600;opacity:.85}
 .email-count{font-size:.85rem;font-weight:800;color:var(--maroon)}
 .email-preview{width:100%;margin-top:10px;min-height:54px;border:1px solid var(--border);border-radius:10px;padding:8px 10px;font:inherit;font-size:.78rem;color:var(--ink);resize:vertical}
@@ -130,6 +135,30 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 <main class="content">
 <div class="container">
 
+<div class="tabs">
+<button class="tab active" id="tabRoster" type="button">Roster</button>
+<button class="tab" id="tabWeekly" type="button">Weekly List</button>
+</div>
+
+<div class="email-panel" id="emailPanel">
+<h3>Email Lists</h3>
+<p class="hint">Click a list to copy it, then paste into the <strong>BCC</strong> line of a new email. Duplicates and blanks are removed automatically.</p>
+<div class="email-actions">
+<button class="btn primary" data-list="wrestlers">Current Wrestlers <span class="cnt" id="cntWrestlers"></span></button>
+<button class="btn primary" data-list="parents">Current Parents <span class="cnt" id="cntParents"></span></button>
+<button class="btn primary" data-list="current">Weekly &ndash; Current Only <span class="cnt" id="cntCurrent"></span></button>
+<button class="btn primary" data-list="weekly">Weekly &ndash; Everyone (incl. old) <span class="cnt" id="cntWeekly"></span></button>
+</div>
+<div class="email-actions" style="margin-top:10px">
+<button class="btn" id="showEmailsBtn">Show Last List</button>
+<button class="btn" id="missingBtn">Who&rsquo;s Missing Emails?</button>
+<span class="email-count" id="emailCount"></span>
+</div>
+<textarea class="email-preview" id="emailPreview" readonly style="display:none"></textarea>
+<div class="missing-box" id="missingBox" style="display:none"></div>
+</div>
+
+<div id="rosterView">
 <h2 class="section-title">Team Roster</h2>
 <p class="section-sub">Click "Import from Athlete Form" to pull in any submissions saved on this device, or add and edit wrestlers directly.</p>
 <div class="toolbar">
@@ -143,23 +172,6 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 <button class="btn" id="exportUsaBtn">Export USA Card CSV</button>
 <button class="btn danger" id="resetBtn">Reset to Roster Names Only</button>
 </div>
-</div>
-
-<div class="email-panel" id="emailPanel">
-<h3>Email Lists</h3>
-<p class="hint">Click a list to copy it, then paste into the <strong>BCC</strong> line of a new email. Duplicates and blanks are removed automatically.</p>
-<div class="email-actions">
-<button class="btn primary" data-list="wrestlers">Copy Wrestlers <span class="cnt" id="cntWrestlers"></span></button>
-<button class="btn primary" data-list="parents">Copy Parents / Guardians <span class="cnt" id="cntParents"></span></button>
-<button class="btn primary" data-list="weekly">Copy Weekly (Everyone) <span class="cnt" id="cntWeekly"></span></button>
-</div>
-<div class="email-actions" style="margin-top:10px">
-<button class="btn" id="showEmailsBtn">Show Last List</button>
-<button class="btn" id="missingBtn">Who&rsquo;s Missing Emails?</button>
-<span class="email-count" id="emailCount"></span>
-</div>
-<textarea class="email-preview" id="emailPreview" readonly style="display:none"></textarea>
-<div class="missing-box" id="missingBox" style="display:none"></div>
 </div>
 
 <div class="table-scroll" id="rosterScroll">
@@ -194,6 +206,29 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 </div>
 
 <p class="result-note">This roster started from our known wrestler list. "Import from Athlete Form" pulls in any submissions saved in this browser from the <a href="athlete-information.html">Athlete Information Form</a> and matches them to existing wrestlers by name (or adds a new row). Click a wrestler's name for their full profile — birthday, sizing, address, both parents/guardians, and USA Wrestling number.</p>
+</div>
+
+<div id="weeklyView" style="display:none">
+<h2 class="section-title">Weekly Email List</h2>
+<p class="section-sub">Everyone who gets the weekly email. These addresses are added only to <strong>Weekly &ndash; Everyone (incl. old)</strong> above, along with the roster's wrestlers and parents. Duplicates are removed automatically. The other three buttons use only the Roster tab.</p>
+<div class="toolbar">
+<div class="save-note"><span id="weeklyCount"></span></div>
+<div class="toolbar-actions">
+<button class="btn" id="addWeeklyBtn">+ Add Contact</button>
+<button class="btn" id="importWeeklyBtn">Import Contacts CSV</button>
+<input type="file" id="importWeeklyFile" accept=".csv,text/csv" style="display:none">
+<button class="btn" id="exportWeeklyBtn">Export CSV</button>
+</div>
+</div>
+<div class="table-scroll">
+<table id="weeklyTable">
+<thead><tr>
+<th></th><th>#</th><th>Name</th><th>Type</th><th>Email 1</th><th>Email 2</th><th>Phone</th><th>Notes</th>
+</tr></thead>
+<tbody id="weeklyBody"></tbody>
+</table>
+</div>
+</div>
 
 </div>
 </main>
@@ -337,6 +372,7 @@ onAuthStateChanged(auth, (user) => {
 });
 
 const STORAGE_KEY = 'holmenWWRosterManager';
+const WEEKLY_KEY = 'holmenWWWeeklyList';
 const ATHLETE_FORM_KEY = 'holmenAthleteInformation';
 // Same Apps Script Web app URL pasted into athlete-information.html — see AthleteFormSync.gs.
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDy2Nf8EFSF3rPdhkk16K6z4J90a8z5QSaCHABHbZwM9teZynnqOYUxxjOk-UT-McA/exec';
@@ -363,6 +399,10 @@ const ORIGINAL_ROSTER = ORIGINAL_NAMES.map(full => {
   return blankEntry(first, last);
 });
 
+function loadWeeklyLocal(){
+  try { const v = JSON.parse(localStorage.getItem(WEEKLY_KEY) || '[]'); return Array.isArray(v) ? v : []; } catch(e) { return []; }
+}
+
 function loadRoster(){
   const saved = localStorage.getItem(STORAGE_KEY);
   if(saved){
@@ -377,6 +417,7 @@ let rosterListenerAttached = false;
 
 function saveRoster(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(currentRoster));
+  localStorage.setItem(WEEKLY_KEY, JSON.stringify(currentWeekly));
   if(syncStatus) syncStatus.textContent = 'Saving…';
   clearTimeout(cloudSaveTimer);
   cloudSaveTimer = setTimeout(pushRosterToCloud, 700);
@@ -386,7 +427,7 @@ async function pushRosterToCloud(){
   if(!auth.currentUser) return;
   try {
     suppressNextSnapshot = true;
-    await setDoc(ROSTER_DOC, { entries: currentRoster, updatedAt: serverTimestamp() });
+    await setDoc(ROSTER_DOC, { entries: currentRoster, weekly: currentWeekly, updatedAt: serverTimestamp() });
     if(syncStatus) syncStatus.textContent = 'Synced just now.';
   } catch(e) {
     if(syncStatus) syncStatus.textContent = 'Sync failed — check connection.';
@@ -399,18 +440,23 @@ async function initRoster(){
     const snap = await getDoc(ROSTER_DOC);
     if(snap.exists() && Array.isArray(snap.data().entries) && snap.data().entries.length){
       currentRoster = sortByName(snap.data().entries);
+      currentWeekly = Array.isArray(snap.data().weekly) ? snap.data().weekly : loadWeeklyLocal();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(currentRoster));
+      localStorage.setItem(WEEKLY_KEY, JSON.stringify(currentWeekly));
     } else {
+      currentWeekly = loadWeeklyLocal();
       currentRoster = sortByName(loadRoster());
       suppressNextSnapshot = true;
-      await setDoc(ROSTER_DOC, { entries: currentRoster, updatedAt: serverTimestamp() });
+      await setDoc(ROSTER_DOC, { entries: currentRoster, weekly: currentWeekly, updatedAt: serverTimestamp() });
     }
     if(syncStatus) syncStatus.textContent = 'Synced.';
   } catch(e) {
+    currentWeekly = loadWeeklyLocal();
     currentRoster = sortByName(loadRoster());
     if(syncStatus) syncStatus.textContent = 'Offline — showing last saved copy.';
   }
   renderRoster();
+  renderWeekly();
   if(!rosterListenerAttached){
     rosterListenerAttached = true;
     onSnapshot(ROSTER_DOC, (snap) => {
@@ -422,8 +468,11 @@ async function initRoster(){
       const activeInRoster = document.activeElement && rosterScroll && rosterScroll.contains(document.activeElement);
       if(activeInRoster) return;
       currentRoster = sortByName(data.entries);
+      if(Array.isArray(data.weekly)) currentWeekly = data.weekly;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(currentRoster));
+      localStorage.setItem(WEEKLY_KEY, JSON.stringify(currentWeekly));
       renderRoster();
+      renderWeekly();
       if(syncStatus) syncStatus.textContent = 'Updated from another device.';
     });
   }
@@ -610,6 +659,7 @@ function sortAndRerender(){
 }
 
 let currentRoster = [];
+let currentWeekly = [];
 
 document.getElementById('addRowBtn').addEventListener('click', () => {
   const firstName = prompt('Wrestler first name:', '');
@@ -788,12 +838,12 @@ function splitEmails(str){
   return String(str || '').split(/[,;\s]+/).map(x => x.trim().toLowerCase()).filter(x => x.indexOf('@') > 0);
 }
 
-const LIST_LABELS = {wrestlers:'Wrestlers', parents:'Parents / Guardians', weekly:'Weekly (everyone)'};
+const LIST_LABELS = {wrestlers:'current wrestler', parents:'current parent', current:'weekly (current only)', weekly:'weekly (everyone)'};
 let lastList = 'weekly';
 
 function collectEmails(kind){
-  const parents = (kind === 'parents' || kind === 'weekly');
-  const wrestlers = (kind === 'wrestlers' || kind === 'weekly');
+  const parents = (kind === 'parents' || kind === 'current' || kind === 'weekly');
+  const wrestlers = (kind === 'wrestlers' || kind === 'current' || kind === 'weekly');
   const seen = new Set(), out = [];
   currentRoster.forEach(e => {
     const list = [];
@@ -801,12 +851,16 @@ function collectEmails(kind){
     if(wrestlers){ list.push(...splitEmails(e.wrestlerEmail)); }
     list.forEach(a => { if(!seen.has(a)){ seen.add(a); out.push(a); } });
   });
+  currentWeekly.forEach(w => {
+    if(kind !== 'weekly') return; // Weekly List contacts only go into the Weekly copy
+    [...splitEmails(w.email1), ...splitEmails(w.email2)].forEach(a => { if(!seen.has(a)){ seen.add(a); out.push(a); } });
+  });
   return out;
 }
 
 function updateEmailCounts(){
   const set = (id, kind) => { const el = document.getElementById(id); if(el) el.textContent = '(' + collectEmails(kind).length + ')'; };
-  set('cntWrestlers','wrestlers'); set('cntParents','parents'); set('cntWeekly','weekly');
+  set('cntWrestlers','wrestlers'); set('cntParents','parents'); set('cntCurrent','current'); set('cntWeekly','weekly');
   const prev = document.getElementById('emailPreview');
   if(prev && prev.style.display !== 'none') prev.value = collectEmails(lastList).join(', ');
 }
@@ -816,9 +870,9 @@ document.querySelectorAll('#emailPanel [data-list]').forEach(btn => {
     const kind = btn.dataset.list;
     lastList = kind;
     const list = collectEmails(kind);
-    if(!list.length){ alert('No email addresses found for ' + LIST_LABELS[kind] + '.'); return; }
+    if(!list.length){ alert('No email addresses found for the ' + LIST_LABELS[kind] + ' list.'); return; }
     const text = list.join(', ');
-    const done = () => { document.getElementById('emailCount').textContent = 'Copied ' + list.length + ' ' + LIST_LABELS[kind].toLowerCase() + ' address(es) — paste into BCC.'; };
+    const done = () => { document.getElementById('emailCount').textContent = 'Copied ' + list.length + ' ' + LIST_LABELS[kind] + ' address(es) — paste into BCC.'; };
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
     } else {
@@ -960,6 +1014,147 @@ document.getElementById('importCsvFile').addEventListener('change', (e) => {
   const reader = new FileReader();
   reader.onload = () => { importRegistrationCSV(String(reader.result || '')); e.target.value = ''; };
   reader.readAsText(file);
+});
+
+/* ----- Weekly List tab ----- */
+const WEEKLY_TYPES = ['Parent','Wrestler','Coach','Manager','Other'];
+
+function sortWeekly(){
+  currentWeekly.sort((a, b) => (a.name || '').toLowerCase().localeCompare((b.name || '').toLowerCase()));
+}
+
+function buildWeeklyRow(idx){
+  const w = currentWeekly[idx];
+  const tr = document.createElement('tr');
+
+  const rm = document.createElement('td');
+  const rmBtn = document.createElement('button');
+  rmBtn.className = 'row-remove'; rmBtn.innerHTML = '&times;'; rmBtn.title = 'Remove contact';
+  rmBtn.addEventListener('click', () => {
+    if(confirm('Remove ' + (w.name || 'this contact') + ' from the weekly list?')){
+      currentWeekly.splice(idx, 1);
+      saveRoster(); renderWeekly(); updateEmailCounts();
+    }
+  });
+  rm.appendChild(rmBtn); tr.appendChild(rm);
+
+  const num = document.createElement('td');
+  num.dataset.numCell = 'true'; num.textContent = String(idx + 1); tr.appendChild(num);
+
+  const cell = (field, cls) => {
+    const td = document.createElement('td');
+    td.contentEditable = 'true';
+    if(cls) td.className = cls;
+    td.textContent = w[field] || '';
+    td.addEventListener('input', () => {
+      currentWeekly[idx][field] = td.textContent.trim();
+      saveRoster(); updateEmailCounts();
+    });
+    return td;
+  };
+  tr.appendChild(cell('name','wk-name'));
+
+  const typeTd = document.createElement('td');
+  const sel = document.createElement('select');
+  WEEKLY_TYPES.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; sel.appendChild(o); });
+  sel.value = WEEKLY_TYPES.indexOf(w.type) >= 0 ? w.type : 'Other';
+  sel.addEventListener('change', () => { currentWeekly[idx].type = sel.value; saveRoster(); updateEmailCounts(); });
+  typeTd.appendChild(sel); tr.appendChild(typeTd);
+
+  tr.appendChild(cell('email1')); tr.appendChild(cell('email2')); tr.appendChild(cell('phone')); tr.appendChild(cell('notes'));
+  return tr;
+}
+
+function renderWeekly(){
+  const body = document.getElementById('weeklyBody');
+  if(!body) return;
+  body.innerHTML = '';
+  currentWeekly.forEach((w, idx) => body.appendChild(buildWeeklyRow(idx)));
+  const n = currentWeekly.length;
+  const c = {Parent:0, Wrestler:0};
+  currentWeekly.forEach(w => { if(c[w.type] !== undefined) c[w.type]++; });
+  document.getElementById('weeklyCount').textContent = n + ' contact(s) — ' + c.Parent + ' parents, ' + c.Wrestler + ' wrestlers.';
+  updateEmailCounts();
+}
+
+function showTab(which){
+  const weekly = which === 'weekly';
+  document.getElementById('rosterView').style.display = weekly ? 'none' : 'block';
+  document.getElementById('weeklyView').style.display = weekly ? 'block' : 'none';
+  document.getElementById('tabRoster').classList.toggle('active', !weekly);
+  document.getElementById('tabWeekly').classList.toggle('active', weekly);
+}
+document.getElementById('tabRoster').addEventListener('click', () => showTab('roster'));
+document.getElementById('tabWeekly').addEventListener('click', () => showTab('weekly'));
+
+document.getElementById('addWeeklyBtn').addEventListener('click', () => {
+  const name = prompt('Name:', '');
+  if(name === null || name.trim() === '') return;
+  const email = prompt('Email address:', '');
+  if(email === null) return;
+  const t = prompt('Type: 1 Parent, 2 Wrestler, 3 Coach, 4 Manager, 5 Other', '1');
+  const type = WEEKLY_TYPES[(parseInt(t, 10) || 1) - 1] || 'Other';
+  currentWeekly.push({name: name.trim(), type, email1: email.trim(), email2: '', phone: '', notes: ''});
+  sortWeekly(); saveRoster(); renderWeekly();
+});
+
+function weeklyTypeFromLabels(labels){
+  const l = String(labels || '').toLowerCase();
+  if(l.indexOf('current parent') >= 0) return 'Parent';
+  if(l.indexOf('current wrestler') >= 0) return 'Wrestler';
+  if(l.indexOf('coach') >= 0) return 'Coach';
+  if(l.indexOf('manager') >= 0) return 'Manager';
+  return 'Other';
+}
+
+function importWeeklyCSV(text){
+  const rows = parseCSV(text.replace(/^﻿/, ''));
+  if(rows.length < 2){ alert('That file looks empty.'); return; }
+  const head = rows[0].map(h => h.trim());
+  const ci = name => head.indexOf(name);
+  if(ci('First Name') < 0 && ci('Last Name') < 0 && ci('E-mail 1 - Value') < 0){
+    alert('This doesn\'t look like a Google Contacts export — I couldn\'t find the name and email columns.'); return;
+  }
+  const g = (r, name) => { const i = ci(name); return i < 0 ? '' : String(r[i] || '').trim(); };
+  const have = new Set();
+  currentWeekly.forEach(w => { splitEmails(w.email1).concat(splitEmails(w.email2)).forEach(a => have.add(a)); });
+  let added = 0, skipped = 0;
+  rows.slice(1).forEach(r => {
+    const name = [g(r,'First Name'), g(r,'Middle Name'), g(r,'Last Name')].filter(Boolean).join(' ');
+    const e1 = g(r,'E-mail 1 - Value'), e2 = g(r,'E-mail 2 - Value');
+    if(!name && !e1 && !e2) return;
+    const emails = splitEmails(e1).concat(splitEmails(e2));
+    if(emails.length && emails.every(a => have.has(a))){ skipped++; return; }
+    emails.forEach(a => have.add(a));
+    currentWeekly.push({
+      name: name || e1, type: weeklyTypeFromLabels(g(r,'Labels')),
+      email1: e1, email2: e2, phone: g(r,'Phone 1 - Value') || g(r,'Phone 2 - Value'), notes: ''
+    });
+    added++;
+  });
+  sortWeekly(); saveRoster(); renderWeekly();
+  alert('Import complete: ' + added + ' contact(s) added' + (skipped ? ', ' + skipped + ' skipped (already on the list)' : '') + '.');
+}
+
+document.getElementById('importWeeklyBtn').addEventListener('click', () => document.getElementById('importWeeklyFile').click());
+document.getElementById('importWeeklyFile').addEventListener('change', (e) => {
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => { importWeeklyCSV(String(reader.result || '')); e.target.value = ''; };
+  reader.readAsText(file);
+});
+
+document.getElementById('exportWeeklyBtn').addEventListener('click', () => {
+  const lines = ['Name,Type,Email 1,Email 2,Phone,Notes'];
+  currentWeekly.forEach(w => {
+    lines.push([w.name, w.type, w.email1, w.email2, w.phone, w.notes].map(v => '"' + String(v || '').replace(/"/g,'""') + '"').join(','));
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'weekly-list.csv'; a.click();
+  URL.revokeObjectURL(url);
 });
 </script>
 </body>
