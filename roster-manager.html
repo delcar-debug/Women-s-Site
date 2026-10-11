@@ -142,7 +142,7 @@ td[data-num-cell]{text-align:center;color:var(--muted);font-weight:800;min-width
 
 <div class="email-panel" id="emailPanel">
 <h3>Email Lists</h3>
-<p class="hint">Click a list to copy it, then paste into the <strong>BCC</strong> line of a new email. Duplicates and blanks are removed automatically.</p>
+<p class="hint">Click a list to open a new Gmail message with everyone already in the <strong>BCC</strong> line (the addresses are also copied in case you need to paste them). Duplicates and blanks are removed automatically.</p>
 <div class="email-actions">
 <button class="btn primary" data-list="wrestlers">Current Wrestlers <span class="cnt" id="cntWrestlers"></span></button>
 <button class="btn primary" data-list="parents">Current Parents <span class="cnt" id="cntParents"></span></button>
@@ -873,7 +873,17 @@ document.querySelectorAll('#emailPanel [data-list]').forEach(btn => {
     const list = collectEmails(kind);
     if(!list.length){ alert('No email addresses found for the ' + LIST_LABELS[kind] + ' list.'); return; }
     const text = list.join(', ');
-    const done = () => { document.getElementById('emailCount').textContent = 'Copied ' + list.length + ' ' + LIST_LABELS[kind] + ' address(es) — paste into BCC.'; };
+    // Open a Gmail compose window with everyone in BCC (done first so the browser doesn't block the pop-up).
+    const url = 'https://mail.google.com/mail/?view=cm&fs=1&tf=1&bcc=' + encodeURIComponent(list.join(','));
+    const tooLong = url.length > 7000;
+    let opened = null;
+    if(!tooLong) opened = window.open(url, '_blank');
+    const msgBase = list.length + ' ' + LIST_LABELS[kind] + ' address(es)';
+    const done = () => {
+      document.getElementById('emailCount').textContent = tooLong
+        ? 'Copied ' + msgBase + ' — too many for Gmail to fill in automatically. Paste into BCC.'
+        : (opened ? 'Opened Gmail with ' + msgBase + ' in BCC (also copied).' : 'Copied ' + msgBase + ' — your browser blocked the Gmail pop-up. Paste into BCC.');
+    };
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
     } else {
