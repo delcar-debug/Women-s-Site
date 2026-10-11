@@ -227,6 +227,8 @@ const auth = getAuth(fbApp);
 const db = getFirestore(fbApp);
 const COACH_EMAIL = 'coach@holmenwrestling.app';
 const COACH_PASSCODE = 'champs';
+// The shared cloud-sync account's actual password (separate from the passcode people type). Change both together in the Firebase console if you ever rotate it.
+const FB_PASSWORD = 'illhaveanother';
 const COACH_SESSION_KEY = 'holmenCoachHubAccess';
 const PLAN_DOC = doc(db, 'practicePlanner', 'active');
 const LIVE_DOC = doc(db, 'practicePlanner', 'liveSession');
@@ -239,7 +241,7 @@ const ppLoginError = document.getElementById('ppLoginError');
 ppLoginForm.addEventListener('submit', (e) => {
   e.preventDefault();
   ppLoginError.style.display = 'none';
-  signInWithEmailAndPassword(auth, COACH_EMAIL, ppPasscode.value)
+  (ppPasscode.value === COACH_PASSCODE ? signInWithEmailAndPassword(auth, COACH_EMAIL, FB_PASSWORD) : Promise.reject(new Error('bad passcode')))
     .catch(() => {
       ppLoginError.style.display = 'block';
       ppPasscode.select();
@@ -255,7 +257,7 @@ if (isTvView) {
 }
 let autoSignInPending = isTvView || sessionStorage.getItem(COACH_SESSION_KEY) === 'granted';
 if (autoSignInPending) {
-  signInWithEmailAndPassword(auth, COACH_EMAIL, COACH_PASSCODE).catch(() => {
+  signInWithEmailAndPassword(auth, COACH_EMAIL, FB_PASSWORD).catch(() => {
     autoSignInPending = false;
     if (isTvView) ppLoginScreen.style.display = '';
   });

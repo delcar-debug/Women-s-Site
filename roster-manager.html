@@ -299,6 +299,8 @@ const auth = getAuth(fbApp);
 const db = getFirestore(fbApp);
 const COACH_EMAIL = 'coach@holmenwrestling.app';
 const COACH_PASSCODE = 'champs';
+// The shared cloud-sync account's actual password (separate from the passcode people type). Change both together in the Firebase console if you ever rotate it.
+const FB_PASSWORD = 'illhaveanother';
 const COACH_SESSION_KEY = 'holmenCoachHubAccess';
 const ROSTER_DOC = doc(db, 'rosterManager', 'roster');
 
@@ -313,7 +315,7 @@ const syncStatus = document.getElementById('syncStatus');
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
   loginError.style.display = 'none';
-  signInWithEmailAndPassword(auth, COACH_EMAIL, passcodeInput.value)
+  (passcodeInput.value === COACH_PASSCODE ? signInWithEmailAndPassword(auth, COACH_EMAIL, FB_PASSWORD) : Promise.reject(new Error('bad passcode')))
     .catch(() => {
       loginError.style.display = 'block';
       passcodeInput.select();
@@ -326,7 +328,7 @@ logoutBtn.addEventListener('click', () => signOut(auth));
 // instead of asking for the same passcode a second time.
 let autoSignInPending = sessionStorage.getItem(COACH_SESSION_KEY) === 'granted';
 if (autoSignInPending) {
-  signInWithEmailAndPassword(auth, COACH_EMAIL, COACH_PASSCODE)
+  signInWithEmailAndPassword(auth, COACH_EMAIL, FB_PASSWORD)
     .catch(() => {
       // Shared passcode changed or sign-in failed — fall back to the visible form.
       autoSignInPending = false;
