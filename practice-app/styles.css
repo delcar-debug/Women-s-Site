@@ -865,3 +865,5 @@ body.detached-tv .tv-theme-btn{background:rgba(0,0,0,.32)}
 /* Archive: leave room at the bottom so the last practice can always be scrolled into view (phones, iPads, floating bars) */
 .library-page{padding-bottom:calc(140px + env(safe-area-inset-bottom,0px))}
 html,body{overflow-y:auto}
+
+.summary-inline{margin:2px 0 14px}
