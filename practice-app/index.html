@@ -47,19 +47,19 @@ body.pp-authed .pp-login{display:none}
 <div class="field"><label for="practiceDate">Practice date</label><input id="practiceDate" type="date"/></div>
 <div class="field"><label for="startTime">Start time</label><input id="startTime" type="time" value="15:30"/></div>
 <div class="field"><label for="practiceLength">Length (minutes)</label><input id="practiceLength" min="1" type="number" value="90"/></div><div class="field"><label for="practiceType">Practice type</label><select id="practiceType"><option value="">Select type…</option><option value="learning">Learning</option><option value="performance">Performance</option></select></div><div class="field practice-type-hint-field"><label>&nbsp;</label><div class="practice-type-hint" id="practiceTypeHintBuilder" aria-live="polite"></div></div><div class="field goal-field"><label for="practiceGoal">Daily practice goal</label><input id="practiceGoal" placeholder="What is today's main goal?" type="text"/></div><div class="field goal-field"><label for="practiceJournal">Start-of-practice journal prompt</label><input id="practiceJournal" placeholder="Prompt to start practice" type="text"/></div><div class="field goal-field"><label for="practiceJournalEnd">End-of-practice journal prompt</label><input id="practiceJournalEnd" placeholder="Prompt to end practice" type="text"/></div><div class="field"><label for="practiceLabel">Practice label (optional)</label><input id="practiceLabel" placeholder="e.g. Bi-State Prep, Takedown Focus" type="text"/></div></div>
-<div class="summary-inline"><div class="summary">
-<div class="stat"><span>Scheduled</span><strong id="scheduledValue">0 min</strong></div><div class="stat"><span>Ends</span><strong id="endValue">3:30 PM</strong></div><div class="stat"><span>Remaining</span><strong id="remainingValue">90 min</strong></div><div><div class="progress-track"><div class="progress" id="progressBar"></div></div><div class="status" id="statusText"></div></div></div></div>
-<div class="builder-section-head"><h3>Practice Blocks</h3></div><button class="primary add-block-large" id="addBtn" type="button">+ Add Practice Block</button>
-<button class="secondary last-practice-btn" id="duplicateLastBtn" type="button">Duplicate Last Practice</button>
-<div class="practice-list" id="practiceList"></div></section>
-<aside class="card"><section class="next-practice-notes builder-next-notes" id="nextPracticeNotesBuilder">
+<section class="next-practice-notes builder-next-notes" id="nextPracticeNotesBuilder">
 <div class="next-notes-head">
 <div><h2>Next Practice Notes</h2><p>These stay here until you delete them.</p></div>
 <button class="danger next-notes-clear" id="clearAllNextNotes" type="button">Delete all</button>
 </div>
 <div class="next-notes-list" id="nextPracticeNotesBuilderList"></div>
 </section>
-<div class="actions"><button class="primary" id="startBtn">Open Coach Mode</button><button class="danger" id="clearBtn">Clear</button></div><div class="share-actions"><button class="primary share-practice-btn" id="sharePracticeBtn" type="button">📤 Share Practice</button><button id="downloadPdfBtn" type="button" hidden aria-hidden="true"></button><button id="manageEmailsBtn" type="button" hidden aria-hidden="true"></button><button id="sharePdfBtn" type="button" hidden aria-hidden="true"></button><div class="email-list-summary" id="emailListSummary" hidden aria-hidden="true"></div></div></aside>
+<div class="summary-inline"><div class="summary">
+<div class="stat"><span>Scheduled</span><strong id="scheduledValue">0 min</strong></div><div class="stat"><span>Ends</span><strong id="endValue">3:30 PM</strong></div><div class="stat"><span>Remaining</span><strong id="remainingValue">90 min</strong></div><div><div class="progress-track"><div class="progress" id="progressBar"></div></div><div class="status" id="statusText"></div></div></div></div>
+<div class="builder-section-head"><h3>Practice Blocks</h3></div><button class="primary add-block-large" id="addBtn" type="button">+ Add Practice Block</button>
+<button class="secondary last-practice-btn" id="duplicateLastBtn" type="button">Duplicate Last Practice</button>
+<div class="practice-list" id="practiceList"></div></section>
+<aside class="card"><h2>Actions</h2><div class="actions"><button class="primary" id="startBtn">Open Coach Mode</button><button class="danger" id="clearBtn">Clear</button></div><div class="share-actions"><button class="primary share-practice-btn" id="sharePracticeBtn" type="button">📤 Share Practice</button><button id="downloadPdfBtn" type="button" hidden aria-hidden="true"></button><button id="manageEmailsBtn" type="button" hidden aria-hidden="true"></button><button id="sharePdfBtn" type="button" hidden aria-hidden="true"></button><div class="email-list-summary" id="emailListSummary" hidden aria-hidden="true"></div></div></aside>
 </div></div>
 <section class="library-page page-view" id="libraryPage">
 <div class="library-toolbar">
