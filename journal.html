@@ -24,6 +24,8 @@ body{
 .greet{ margin-top:3vh; color:#fff; font-weight:900; font-size:clamp(1.6rem,4vw,4rem); }
 .label{ margin-top:4vh; font-weight:800; letter-spacing:.18em; text-transform:uppercase; font-size:clamp(.9rem,1.8vw,1.8rem); opacity:.8; }
 .prompt{ margin:2vh auto 0; max-width:1400px; font-weight:800; line-height:1.2; font-size:clamp(1.8rem,5.2vw,5.4rem); text-shadow:0 4px 20px rgba(0,0,0,.5); }
+.end-label{ margin-top:5vh; }
+.end-prompt{ font-size:clamp(1.5rem,4.2vw,4.4rem); }
 .foot{ margin-top:6vh; font-size:clamp(.9rem,1.4vw,1.4rem); opacity:.65; }
 </style>
 </head>
@@ -34,12 +36,14 @@ body{
 <div class="greet" id="greet"></div>
 <div class="label">Journal Prompt</div>
 <div class="prompt" id="prompt"></div>
+<div class="label end-label" id="endLabel">End of Practice Prompt</div>
+<div class="prompt end-prompt" id="endPrompt"></div>
 <div class="foot">Write for 3–5 minutes. There are no wrong answers.</div>
 <script>
-// Add a new prompt by adding a line: { date: 'YYYY-MM-DD', title: 'optional greeting', text: '...' }
+// Add a new prompt by adding a line: { date: 'YYYY-MM-DD', title: 'optional greeting', text: '...', endText: 'optional end-of-practice prompt' }
 // The page shows the most recent prompt whose date is today or earlier.
 var PROMPTS = [
-  { date: '2026-11-16', title: 'Happy First Day of Season!', text: 'What are you most looking forward to this season?' }
+  { date: '2026-11-16', title: 'Happy First Day of Season!', text: 'What are you most looking forward to this season?', endText: 'What are 3 things that went well today?' }
 ];
 
 (function(){
@@ -50,10 +54,13 @@ var PROMPTS = [
   if(today < pick.date){
     document.getElementById('greet').textContent = 'Journal prompts start Nov. 16';
     document.querySelector('.label').style.display = 'none';
+    document.getElementById('endLabel').style.display = 'none';
     document.querySelector('.foot').style.display = 'none';
   } else {
     document.getElementById('greet').textContent = pick.title || '';
     document.getElementById('prompt').textContent = pick.text;
+    if(pick.endText){ document.getElementById('endPrompt').textContent = pick.endText; }
+    else { document.getElementById('endLabel').style.display = 'none'; }
   }
   function setDate(){ document.getElementById('date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}); }
   setDate();

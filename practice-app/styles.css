@@ -858,3 +858,6 @@ body.detached-tv .tv-theme-btn{background:rgba(0,0,0,.32)}
 .practice-type-hint-field label{visibility:hidden;height:0;margin:0;line-height:0}
 .practice-type-hint-field .practice-type-hint{margin-top:0;align-items:flex-start;align-content:flex-start}
 .practice-type-chip{white-space:normal;text-align:left;line-height:1.25}
+
+.all-note-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.all-note-actions button{margin-top:0}
