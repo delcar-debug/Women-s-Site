@@ -322,7 +322,7 @@ function loadSDK(){
 async function initPlayer(){
   let t=await token();if(!t)return;
   if(state.spotify.player)return;
-  state.spotify.player=new Spotify.Player({name:'Holmen Women’s Wrestling Practice Planner',getOAuthToken:async cb=>cb(await token()),volume:.7});
+  state.spotify.player=new Spotify.Player({name:'Kickapoo La Farge Youth Initiative Wrestling Practice Planner',getOAuthToken:async cb=>cb(await token()),volume:.7});
   state.spotify.player.addListener('ready',({device_id})=>{
     state.spotify.deviceId=device_id;
     el.spotifyStatus.textContent='Spotify player ready — tap Enable Player once.';
@@ -1067,13 +1067,13 @@ function closeEmailModal(){el.emailModal.classList.remove('open');el.emailModal.
 function saveCoachEmails(){let values=[...new Set(readEmailInputs())];let invalid=values.filter(x=>!validEmail(x));if(invalid.length)return alert('Check these email addresses: '+invalid.join(', '));state.coachEmails=values;localStorage.setItem('wpp-coach-emails',JSON.stringify(values));save();render();closeEmailModal()}
 function addEmailRow(){let values=readEmailInputs();state.coachEmails=[...values,''];renderEmailEntries();setTimeout(()=>el.emailEntryList.querySelector('input:last-of-type')?.focus(),0)}
 function formatPracticeDate(){if(!el.practiceDate.value)return 'Date not entered';let d=new Date(el.practiceDate.value+'T12:00:00');return d.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
-function pdfFileName(){let date=el.practiceDate.value||'undated';return `Holmen-Womens-Wrestling-Practice-${date}.pdf`}
+function pdfFileName(){let date=el.practiceDate.value||'undated';return `Kickapoo-La-Farge-Wrestling-Practice-${date}.pdf`}
 function splitPdfText(doc,text,width){return doc.splitTextToSize(String(text||''),width)}
 function buildPracticePdf(){
   if(!window.jspdf?.jsPDF)throw Error('PDF tools are still loading. Check your connection and try again.');
   const {jsPDF}=window.jspdf,doc=new jsPDF({unit:'pt',format:'letter'}),left=46,right=566,width=520;
   let y=48;
-  doc.setFillColor(122,31,43);doc.rect(0,0,612,92,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(20);doc.text("Holmen Women's Wrestling",left,38);doc.setFontSize(11);doc.text('FOR HER',left,58);doc.setFont('helvetica','normal');doc.text(formatPracticeDate(),left,76);
+  doc.setFillColor(214,51,132);doc.rect(0,0,612,92,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(20);doc.text("Kickapoo La Farge Youth Initiative Wrestling",left,38);doc.setFontSize(11);doc.text('FOR HER',left,58);doc.setFont('helvetica','normal');doc.text(formatPracticeDate(),left,76);
   y=116;doc.setTextColor(31,41,55);doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Daily Practice Goal',left,y);y+=18;doc.setFont('helvetica','normal');doc.setFontSize(10.5);let goal=splitPdfText(doc,el.practiceGoal.value.trim()||'No daily goal entered',width);doc.text(goal,left,y);y+=goal.length*13+12;
   doc.setDrawColor(210,214,220);doc.line(left,y,right,y);y+=18;doc.setFont('helvetica','bold');doc.text(`Start: ${clock(startMins())}`,left,y);doc.text(`Planned length: ${el.practiceLength.value||total()} min`,220,y);doc.text(`Scheduled: ${total()} min`,420,y);y+=22;
   let running=0,start=startMins();
@@ -1084,14 +1084,14 @@ function buildPracticePdf(){
     if(detailLines.length){doc.setTextColor(75,85,99);doc.setFontSize(9.5);doc.text(detailLines,left+11,y);y+=detailLines.length*12+9}else y+=5;
   });
   y+=8;if(y+160>746){doc.addPage();y=48}doc.setDrawColor(210,214,220);doc.line(left,y,right,y);y+=19;doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(31,41,55);doc.text('Overall Practice Breakdown',left,y);y+=17;doc.setFont('helvetica','normal');doc.setFontSize(9.5);const totalsByCategory=categoryTotals(),grandTotal=total(),techniqueTotal=TECHNIQUE_IDS.reduce((sum,id)=>sum+(totalsByCategory[id]||0),0);if(techniqueTotal){doc.text(`Technique: ${techniqueTotal} min (${grandTotal?Math.round(techniqueTotal/grandTotal*100):0}%)`,left+8,y);y+=13}CATEGORIES.filter(c=>!TECHNIQUE_IDS.includes(c.id)&&totalsByCategory[c.id]>0).forEach(c=>{const mins=totalsByCategory[c.id],pct=grandTotal?Math.round(mins/grandTotal*100):0;doc.text(`${c.label}: ${mins} min (${pct}%)`,left+8,y);y+=13});if(techniqueTotal){y+=7;doc.setFont('helvetica','bold');doc.setFontSize(11);doc.text('Technique Breakdown',left,y);y+=15;doc.setFont('helvetica','normal');doc.setFontSize(9.5);TECHNIQUE_IDS.filter(id=>totalsByCategory[id]>0).forEach(id=>{const mins=totalsByCategory[id],pct=Math.round(mins/techniqueTotal*100);doc.text(`${categoryInfo(id).label}: ${mins} min (${pct}%)`,left+8,y);y+=13})}
-  const pages=doc.getNumberOfPages();for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(120,128,140);doc.text(`Holmen Women's Wrestling - Practice Plan`,left,770);doc.text(`Page ${i} of ${pages}`,right,770,{align:'right'})}
+  const pages=doc.getNumberOfPages();for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(120,128,140);doc.text(`Kickapoo La Farge Youth Initiative Wrestling - Practice Plan`,left,770);doc.text(`Page ${i} of ${pages}`,right,770,{align:'right'})}
   return doc;
 }
 async function sharePracticePdf(){
   if(!state.blocks.length)return alert('Add at least one practice block before sharing.');
   try{
     el.shareProgress.textContent='Creating PDF…';
-    const doc=buildPracticePdf(),blob=doc.output('blob'),file=new File([blob],pdfFileName(),{type:'application/pdf'}),subject=`Holmen Women's Wrestling Practice Plan${el.practiceDate.value?' - '+formatPracticeDate():''}`,body=`Practice plan attached.\n\nGoal: ${el.practiceGoal.value.trim()||'Not entered'}`;
+    const doc=buildPracticePdf(),blob=doc.output('blob'),file=new File([blob],pdfFileName(),{type:'application/pdf'}),subject=`Kickapoo La Farge Youth Initiative Wrestling Practice Plan${el.practiceDate.value?' - '+formatPracticeDate():''}`,body=`Practice plan attached.\n\nGoal: ${el.practiceGoal.value.trim()||'Not entered'}`;
     if(navigator.share&&navigator.canShare?.({files:[file]})){
       await navigator.share({title:subject,text:body,files:[file]});setPdfStatus({sentAt:new Date().toISOString(),snoozeUntil:0});upsertAutoArchive({silent:true});el.shareProgress.textContent='Practice PDF shared.';return;
     }
@@ -1361,7 +1361,7 @@ apply(mq);
 mq.addEventListener('change',apply);
 }
 if(document.readyState==='complete'){initCoachPanels()}else{window.addEventListener('load',initCoachPanels)}
-if(el.overallCoachNotes)el.overallCoachNotes.addEventListener('input',()=>{state.overallCoachNotes=el.overallCoachNotes.value;save()});load();if(el.overallCoachNotes)el.overallCoachNotes.value=state.overallCoachNotes||'';render();renderLibrary();checkUnratedPractices();resetInterval();restoreLiveState();ensurePracticeTicker();bootSpotify();applyTvTheme(loadTvTheme());const tvParam=new URLSearchParams(location.search).get('tv');if(['1','team-board'].includes(tvParam)){document.body.classList.add('detached-tv');showAppPage('team');el.teamBoardPage.classList.add('tv-mode');document.title='Holmen Women’s Wrestling — TV View';refreshTeamBoardFromStorage();}else if(tvParam==='plan'){document.body.classList.add('detached-tv');showAppPage('team');el.teamBoardPage.classList.add('plan-mode');document.title='Holmen Women’s Wrestling — Practice Plan';refreshTeamBoardFromStorage();}document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.practiceActive)saveLiveState()});
+if(el.overallCoachNotes)el.overallCoachNotes.addEventListener('input',()=>{state.overallCoachNotes=el.overallCoachNotes.value;save()});load();if(el.overallCoachNotes)el.overallCoachNotes.value=state.overallCoachNotes||'';render();renderLibrary();checkUnratedPractices();resetInterval();restoreLiveState();ensurePracticeTicker();bootSpotify();applyTvTheme(loadTvTheme());const tvParam=new URLSearchParams(location.search).get('tv');if(['1','team-board'].includes(tvParam)){document.body.classList.add('detached-tv');showAppPage('team');el.teamBoardPage.classList.add('tv-mode');document.title='Kickapoo La Farge Youth Initiative Wrestling — TV View';refreshTeamBoardFromStorage();}else if(tvParam==='plan'){document.body.classList.add('detached-tv');showAppPage('team');el.teamBoardPage.classList.add('plan-mode');document.title='Kickapoo La Farge Youth Initiative Wrestling — Practice Plan';refreshTeamBoardFromStorage();}document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.practiceActive)saveLiveState()});
 document.querySelectorAll('#practiceRatingRow .rating-btn').forEach(b=>b.onclick=()=>{state.practiceRating=b.dataset.rating;renderRatingButtons();save()});
 document.querySelectorAll('#teamCultureRatingRow .rating-btn').forEach(b=>b.onclick=()=>{state.teamCultureRating=b.dataset.rating;renderCultureButtons();save()});
 if(el.practiceType)el.practiceType.onchange=()=>{renderPracticeTypeHints();save()};

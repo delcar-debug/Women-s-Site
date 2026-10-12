@@ -143,8 +143,8 @@
       <div class="home-hero">
         <section class="home-identity">
           <div class="home-eyebrow">Championship Standard</div>
-          <h1>Holmen Women's Wrestling</h1>
-          <div class="home-slogans"><span>For Her</span><span>Team State Champs</span></div>
+          <h1>Kickapoo La Farge Youth Initiative Wrestling</h1>
+          <div class="home-slogans"><span>The Pink Army</span></div>
         </section>
         <section class="home-today">
           <div><div class="home-today-label">Active Practice</div><div class="home-today-date" id="homePracticeDate">No date selected</div><div class="home-today-goal" id="homePracticeGoal">Set a goal in Practice Builder.</div></div>
@@ -730,15 +730,15 @@
 
   const DEFAULT_TEXT = {
     eyebrow: 'Championship Standard',
-    slogan1: 'For Her',
-    slogan2: 'Team State Champs'
+    slogan1: 'The Pink Army',
+    slogan2: ''
   };
   const TEXT_LABELS = {
     eyebrow: 'Eyebrow tag',
     slogan1: 'Slogan 1',
     slogan2: 'Slogan 2'
   };
-  const DEFAULT_PRIMARY = '#741d2a';
+  const DEFAULT_PRIMARY = '#d63384';
 
   function shade(hex, percent) {
     try {
@@ -758,7 +758,7 @@
     if (!home || q('homeSettingsBtn')) return false;
 
     const DEFAULT_LOGO = document.querySelector('.brand img')?.src || '';
-    const DEFAULT_NAME = document.querySelector('.brand h1')?.textContent?.trim() || "Holmen Women's Wrestling";
+    const DEFAULT_NAME = document.querySelector('.brand h1')?.textContent?.trim() || "Kickapoo La Farge Youth Initiative Wrestling";
 
     const defaults = () => ({ teamName: DEFAULT_NAME, logo: '', primary: DEFAULT_PRIMARY, text: { ...DEFAULT_TEXT } });
 
@@ -798,7 +798,7 @@
       setText('.home-eyebrow')(t.eyebrow);
       const slogans = home.querySelectorAll('.home-slogans span');
       if (slogans[0]) slogans[0].textContent = t.slogan1;
-      if (slogans[1]) slogans[1].textContent = t.slogan2;
+      if (slogans[1]) { slogans[1].textContent = t.slogan2; slogans[1].style.display = t.slogan2 ? '' : 'none'; }
     }
 
     let current = load();
