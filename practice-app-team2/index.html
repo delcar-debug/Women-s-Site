@@ -213,25 +213,24 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https:/
 import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCKoLy8J9iVGkMIPdvbwPsYkigWLSchzgk",
-  authDomain: "practiceapp2-kickapoo.firebaseapp.com",
-  projectId: "practiceapp2-kickapoo",
-  storageBucket: "practiceapp2-kickapoo.firebasestorage.app",
-  messagingSenderId: "131165254364",
-  appId: "1:131165254364:web:8ea8b541a82f6bf3b47a19",
-  measurementId: "G-FS0BWXVDHE"
+  apiKey: "AIzaSyAC48XQb09XVyqCmmxRtX3Pox1BPVruf70",
+  authDomain: "holmen-women-s-wrestling.firebaseapp.com",
+  projectId: "holmen-women-s-wrestling",
+  storageBucket: "holmen-women-s-wrestling.firebasestorage.app",
+  messagingSenderId: "283572750466",
+  appId: "1:283572750466:web:566708849a7cd57afd4c9b"
 };
 
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getFirestore(fbApp);
-const COACH_EMAIL = 'coach@team2practice.app';
+const COACH_EMAIL = 'coach@holmenwrestling.app';
 const COACH_PASSCODE = 'takedown2026';
 // The shared cloud-sync account's actual password (separate from the passcode people type). Change both together in the Firebase console if you ever rotate it.
-const FB_PASSWORD = 'lchubgkI4f9a3cSSbA5e';
+const FB_PASSWORD = 'illhaveanother';
 const COACH_SESSION_KEY = 'holmenCoachHubAccess';
-const PLAN_DOC = doc(db, 'practicePlanner', 'active');
-const LIVE_DOC = doc(db, 'practicePlanner', 'liveSession');
+const PLAN_DOC = doc(db, 'practicePlanner_team2', 'active');
+const LIVE_DOC = doc(db, 'practicePlanner_team2', 'liveSession');
 
 const ppLoginScreen = document.getElementById('ppLoginScreen');
 const ppLoginForm = document.getElementById('ppLoginForm');
@@ -423,12 +422,12 @@ function startPlannerSync(){
    write to a synced key — from anywhere — gets pushed to the cloud. */
 
 const SYNCED_KEYS = {
-  'wpp-practice-library': doc(db, 'practicePlanner', 'archives'),
-  'wpp-drill-library': doc(db, 'practicePlanner', 'drillLibrary'),
-  'wpp-practice-queue': doc(db, 'practicePlanner', 'practiceQueue'),
-  'wpp-whiteboard': doc(db, 'practicePlanner', 'whiteboard'),
-  'wpp-roster': doc(db, 'practicePlanner', 'attendanceRoster'),
-  'wpp-attendance': doc(db, 'practicePlanner', 'attendanceRecords')
+  'wpp-practice-library': doc(db, 'practicePlanner_team2', 'archives'),
+  'wpp-drill-library': doc(db, 'practicePlanner_team2', 'drillLibrary'),
+  'wpp-practice-queue': doc(db, 'practicePlanner_team2', 'practiceQueue'),
+  'wpp-whiteboard': doc(db, 'practicePlanner_team2', 'whiteboard'),
+  'wpp-roster': doc(db, 'practicePlanner_team2', 'attendanceRoster'),
+  'wpp-attendance': doc(db, 'practicePlanner_team2', 'attendanceRecords')
 };
 
 const keyPushTimers = {};
