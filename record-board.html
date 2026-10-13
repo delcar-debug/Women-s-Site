@@ -1056,6 +1056,34 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
   var inSeason=(m===10&&d>=13&&d<=20);
   var on=q?q[1]==='fall':inSeason;
   var hwOn=false;
+  var pkOn=true; /* Packer theme: set false to return to the normal/seasonal themes (or use ?theme=packers to preview) */
+  if(q? q[1]==='packers' : pkOn){
+    var pst=document.querySelector('style');
+    var pmap=[['--maroon:#6d1730','--maroon:#1f4a3a'],['--dark:#3f0b1a','--dark:#0c1f18'],['--gold:#e8c37a','--gold:#ffb612'],['--silver:#d7dde3','--silver:#e6ece9'],['--bronze:#d79a6a','--bronze:#c98f1a'],['rgba(232,195,122','rgba(255,182,18']];
+    var pt=pst.textContent; pmap.forEach(function(p){ pt=pt.split(p[0]).join(p[1]); });
+    pst.textContent=pt+`
+#stage{ background:repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 2px,transparent 2px 9vw),radial-gradient(ellipse at 50% 0%,rgba(255,182,18,.20),transparent 55%),linear-gradient(180deg,#0a1a14 0%,#12382b 55%,#1b4d3a 100%) !important; }
+.slide-layer{ background:transparent !important; }
+.gb{ position:absolute; pointer-events:none; z-index:0; }
+.gb.post{ width:min(22vw,340px); right:3vw; bottom:-2vh; opacity:.14; }
+#ball-field{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+.bf{ position:absolute; top:-12vh; will-change:transform; filter:drop-shadow(0 3px 6px rgba(0,0,0,.45)); animation-name:ballFall,ballSpin; animation-timing-function:linear,linear; animation-iteration-count:infinite,infinite; }
+@keyframes ballFall{ from{ top:-12vh; } to{ top:112vh; } }
+@keyframes ballSpin{ from{ transform:translateX(-3vw) rotate(0deg); } to{ transform:translateX(5vw) rotate(360deg); } }
+.tv-logo img{ filter:hue-rotate(75deg) saturate(1.7) brightness(1.2) drop-shadow(0 2px 6px rgba(0,0,0,.5)) !important; }
+`;
+    var runPk=function(){
+      var st=document.getElementById('stage'); if(!st) return;
+      var g=document.createElement('div'); g.className='gb post'; g.innerHTML="<svg viewBox='0 0 200 300' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='#ffb612' stroke-width='9' stroke-linecap='round'><path d='M30 10 L30 100 Q30 125 60 125 L140 125 Q170 125 170 100 L170 10'/><path d='M100 125 L100 295'/></svg>"; st.insertBefore(g,st.firstChild);
+      var f=document.createElement('div'); f.id='ball-field'; st.insertBefore(f,st.firstChild);
+      var ic=['🏈','🧀','🏈','🏈','🧀'];
+      for(var i=0;i<14;i++){ var b=document.createElement('span'); b.className='bf'; b.textContent=ic[i%ic.length];
+        var fall=14+Math.random()*14; b.style.left=(Math.random()*100)+'vw'; b.style.fontSize=(1.4+Math.random()*1.6)+'rem';
+        b.style.opacity=.6; b.style.animationDuration=fall+'s,'+(7+Math.random()*7)+'s'; b.style.animationDelay=(-Math.random()*fall)+'s,'+(-Math.random()*8)+'s'; f.appendChild(b); }
+    };
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',runPk); else runPk();
+    return;
+  }
   var hwSeason=(m===10&&d>=27)||(m===11&&d<=1);
   if(q? q[1]==='halloween' : (hwSeason||hwOn)){
     var hst=document.querySelector('style');
