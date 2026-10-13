@@ -1056,7 +1056,7 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
   var inSeason=(m===10&&d>=13&&d<=20);
   var on=q?q[1]==='fall':inSeason;
   var hwOn=false;
-  var pkOn=true; /* Packer theme: set false to return to the normal/seasonal themes (or use ?theme=packers to preview) */
+  var pkOn=false; /* Packer theme: set false to return to the normal/seasonal themes (or use ?theme=packers to preview) */
   if(q? q[1]==='packers' : pkOn){
     var pst=document.querySelector('style');
     var pmap=[['--maroon:#6d1730','--maroon:#1f4a3a'],['--dark:#3f0b1a','--dark:#0c1f18'],['--gold:#e8c37a','--gold:#ffb612'],['--silver:#d7dde3','--silver:#e6ece9'],['--bronze:#d79a6a','--bronze:#c98f1a'],['rgba(232,195,122','rgba(255,182,18']];
