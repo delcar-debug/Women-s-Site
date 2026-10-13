@@ -287,4 +287,6 @@
   window.addEventListener('storage',e=>{if(e.key===ARCHIVE_KEY||e.key===ACTIVE_KEY)renderArchive()});
 
 
+  // Deep link: practice-app/index.html#inbox opens the Inbox page
+  if(location.hash==='#inbox'){let n=0;const t=setInterval(()=>{const b=document.getElementById('navQueue');if(b&&b.offsetParent!==null){b.click();clearInterval(t)}else if(++n>40)clearInterval(t)},500)}
 })();
