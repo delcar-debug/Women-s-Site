@@ -1019,7 +1019,15 @@ function tickCountdown(){
 setInterval(tickCountdown,1000); tickCountdown();
 
 // Keep the mouse pointer hidden everywhere (re-applied on every mouse move)
-(function(){ function hide(){ document.documentElement.style.cursor='none'; document.body.style.cursor='none'; } hide(); document.addEventListener('mousemove', hide, true); })();
+(function(){
+  var st=document.createElement('style'); st.textContent='html,body,body *,#stage,#stage *{cursor:none !important}'; document.head.appendChild(st);
+  function hide(){
+    document.documentElement.style.setProperty('cursor','none','important'); document.body.style.setProperty('cursor','none','important');
+    var all=document.querySelectorAll('*'); for(var i=0;i<all.length;i++) all[i].style.setProperty('cursor','none','important');
+  }
+  hide(); ['mousemove','mouseover','mousedown','pointermove'].forEach(function(e){ document.addEventListener(e, function(ev){ if(ev.target&&ev.target.style) ev.target.style.setProperty('cursor','none','important'); document.documentElement.style.setProperty('cursor','none','important'); }, true); });
+  setInterval(hide, 5000);
+})();
 function goToSlide(index){
   current = (index + SLIDES.length) % SLIDES.length;
   showSlide(current);
