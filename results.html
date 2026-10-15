@@ -53,6 +53,10 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 .result-list{list-style:none;margin:0;padding:0}
 .result-list li{padding:7px 0;border-bottom:1px solid var(--border);font-size:.92rem}
 .result-list li:last-child{border-bottom:0}
+.result-list li.ev-row{display:flex;gap:12px;align-items:baseline}
+.ev-date{flex:0 0 74px;font-size:.74rem;font-weight:850;letter-spacing:.03em;text-transform:uppercase;color:#fff;background:var(--maroon);border-radius:999px;padding:3px 0;text-align:center;white-space:nowrap}
+.ev-date.empty{visibility:hidden}
+.ev-body{flex:1;min-width:0}
 .record-badge{display:inline-block;background:#f5e3e8;color:var(--maroon);font-weight:850;font-size:.85rem;padding:4px 12px;border-radius:999px;margin-top:10px}
 .result-note{font-size:.85rem;color:var(--muted);margin:0}
 @media(max-width:600px){.header{padding:0 14px}.result-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:.82rem}.result-table th,.result-table td{padding:7px 10px;white-space:nowrap}}
@@ -6983,6 +6987,41 @@ function openTourneyModal(id){
   `;
   document.getElementById('tourneyOverlay').classList.add('open');
 }
+
+/* Event/dual lists: add a date badge to each row and sort by date */
+(function(){
+  var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function parse(sub){
+    var m=(sub||'').match(/(\d{1,2})\/(\d{1,2})(?:\s*[–-]\s*(?:(\d{1,2})\/)?(\d{1,2}))?\/(\d{4})/);
+    if(!m) return null;
+    var m1=+m[1],d1=+m[2],y=+m[5],m2=m[3]?+m[3]:m1,d2=m[4]?+m[4]:d1;
+    var label=MON[m1-1]+' '+d1;
+    if(m[4]&&(m2!==m1||d2!==d1)) label+= (m2===m1)?('–'+d2):(' – '+MON[m2-1]+' '+d2);
+    return {t:new Date(y,m1-1,d1).getTime(),label:label};
+  }
+  function lookup(el){
+    var d=el.dataset.dual?DUAL_DATA[el.dataset.dual]:TOURNEY_DATA[el.dataset.tourney];
+    return d?parse(d.sub):null;
+  }
+  document.querySelectorAll('.result-list').forEach(function(ul){
+    var items=[].slice.call(ul.children).filter(function(li){return li.tagName==='LI';});
+    if(!items.length) return;
+    var info=items.map(function(li){
+      var tr=li.querySelector('.tourney-trigger'); return tr?lookup(tr):null;
+    });
+    if(!info.some(function(x){return x;})) return;
+    items.forEach(function(li,i){
+      var body=document.createElement('span'); body.className='ev-body';
+      while(li.firstChild) body.appendChild(li.firstChild);
+      var dt=document.createElement('span'); dt.className='ev-date'+(info[i]?'':' empty'); dt.textContent=info[i]?info[i].label:'—';
+      li.classList.add('ev-row'); li.appendChild(dt); li.appendChild(body);
+    });
+    if(info.every(function(x){return x;})){
+      var order=items.map(function(li,i){return {li:li,t:info[i].t,i:i};}).sort(function(a,b){return a.t-b.t||a.i-b.i;});
+      order.forEach(function(o){ul.appendChild(o.li);});
+    }
+  });
+})();
 
 document.querySelectorAll('.tourney-trigger').forEach(el=>{
   el.addEventListener('click', () => {
