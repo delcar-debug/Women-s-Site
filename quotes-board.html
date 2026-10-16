@@ -1,0 +1,1195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>/* Fire TV / smart TV browsers report a small (~960px) viewport; force a 1920px layout so the TV matches the desktop design */
+if(/AFT|Silk|SmartTV|Tizen|Web0S|BRAVIA|Roku/i.test(navigator.userAgent)&&!/Mobile/i.test(navigator.userAgent)){var m=document.querySelector('meta[name=viewport]');if(m)m.setAttribute('content','width=1920, initial-scale='+(Math.min(screen.width||1920,1920)/1920));}</script>
+<title>Holmen Women's Wrestling — In Their Words</title>
+<!-- Combined presentation: career/season records, fastest pins, pillar awards, perfect practice club, and postseason herstory (state qualifiers, regional/sectional champions, Fargo qualifiers, team accomplishments). -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="assets/images/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/images/icon-180.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#6d1730">
+<style>
+:root{
+  --maroon:#6d1730;
+  --dark:#3f0b1a;
+  --light:#f5f5f7;
+  --ink:#19191d;
+  --gold:#e8c37a;
+  --silver:#d7dde3;
+  --bronze:#d79a6a;
+}
+*{box-sizing:border-box}
+html,body,*{ cursor:none !important; } /* TV display: hide the mouse pointer */
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#000;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:#fff;
+}
+
+#stage{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+}
+
+.slide-layer{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  z-index:1;
+  transition:opacity 1.3s ease;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#000 0%,var(--dark) 35%,var(--maroon) 65%,#000 100%);
+}
+.slide-layer.active{ opacity:1; z-index:2; }
+
+.slide-inner{
+  position:relative;
+  z-index:2;
+  width:min(1900px,97vw);
+  max-height:95vh;
+  margin:auto;
+  text-align:center;
+  padding:24px;
+}
+
+/* Logo watermark, persistent corner */
+.tv-logo{
+  position:fixed;
+  top:28px;
+  left:32px;
+  z-index:50;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  opacity:.92;
+  pointer-events:none;
+}
+.tv-logo img{ height:104px; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
+.tv-logo-text{ display:flex; flex-direction:column; gap:2px; }
+.tv-logo-title{
+  font-weight:900;
+  font-size:2.3rem;
+  letter-spacing:-.02em;
+  line-height:1.1;
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
+}
+.tv-logo-sub{
+  font-weight:700;
+  font-size:1.7rem;
+  letter-spacing:-.01em;
+  opacity:.85;
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
+}
+
+/* Progress bar */
+#tv-progress-wrap{
+  position:fixed;
+  left:0; right:0; bottom:0;
+  height:6px;
+  background:rgba(255,255,255,.14);
+  z-index:60;
+}
+#tv-progress-bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--gold),#fff);
+}
+#tv-progress-bar.animate{ transition:width linear; }
+
+
+/* ---- Slide type: fun (why girls stay in wrestling) ---- */
+.tv-fun{ position:relative; }
+.tv-fun .tv-eyebrow{ margin-bottom:10px; }
+.tv-fun-lead{ font-size:clamp(1.6rem,3vw,2.8rem); font-weight:700; margin:0 0 6px; opacity:.95; }
+.tv-fun-big{
+  font-size:clamp(3.4rem,9vw,9.5rem); font-weight:900; letter-spacing:-.04em; line-height:.9; margin:0;
+  color:var(--gold); text-transform:uppercase; transform:rotate(-3deg);
+  text-shadow:0 8px 0 rgba(0,0,0,.35), 0 0 60px rgba(255,255,255,.12);
+  animation:funBounce 2.6s ease-in-out infinite;
+}
+.tv-fun-sub{ font-size:clamp(1.3rem,2.4vw,2.2rem); font-weight:600; margin:28px auto 0; max-width:1300px; opacity:.9; }
+.tv-fun-big2{ font-size:clamp(2.2rem,5.6vw,5.6rem); font-weight:900; letter-spacing:-.03em; line-height:1; margin:18px 0 0; color:#fff; text-transform:uppercase; text-shadow:0 6px 0 rgba(0,0,0,.35); }
+.tv-fun-cta{ display:inline-block; margin:26px auto 0; padding:14px 34px; border:4px solid var(--gold); border-radius:999px; background:rgba(0,0,0,.35); font-size:clamp(1.4rem,2.6vw,2.4rem); font-weight:800; color:#fff; }
+.tv-fun-cta b{ color:var(--gold); text-transform:uppercase; letter-spacing:.06em; }
+.tv-fun-body{ display:flex; align-items:center; gap:3vw; position:relative; z-index:2; }
+.tv-fun-photo{ flex:0 0 32%; }
+.tv-fun-photo img{ width:100%; max-height:80vh; object-fit:cover; display:block; border:8px solid var(--gold); border-radius:18px; box-shadow:0 14px 40px rgba(0,0,0,.55); transform:rotate(-2.5deg); }
+.tv-fun-text{ flex:1; min-width:0; }
+@media(max-width:900px){ .tv-fun-body{ flex-direction:column; } .tv-fun-photo{ flex:none; width:70%; } }
+.tv-fun-dot{ position:absolute; border-radius:50%; opacity:.9; animation:funFloat 6s ease-in-out infinite; }
+@keyframes funBounce{ 0%,100%{ transform:rotate(-3deg) scale(1);} 50%{ transform:rotate(-3deg) scale(1.04);} }
+@keyframes funFloat{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-22px);} }
+
+
+/* ---- Slide type: quote ---- */
+.tv-quote{ max-width:1500px; margin:0 auto; }
+.tv-quote-mark{ font-size:clamp(6rem,14vw,13rem); line-height:.6; font-weight:900; color:var(--gold); margin:0 0 6px; font-family:Georgia,serif; }
+.tv-quote-text{ font-size:clamp(1.9rem,3.5vw,3.5rem); font-weight:700; line-height:1.28; margin:0; text-shadow:0 3px 14px rgba(0,0,0,.45); }
+.tv-quote-src{ margin-top:30px; font-size:clamp(1.3rem,2.2vw,2.1rem); font-weight:900; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); }
+
+/* ---- Slide type: title (section divider) ---- */
+.tv-eyebrow{
+  text-transform:uppercase;
+  letter-spacing:.24em;
+  font-size:clamp(2rem,3.6vw,3.4rem);
+  font-weight:900;
+  color:var(--gold);
+  margin:0 0 18px;
+}
+.tv-title-heading{
+  font-size:clamp(3.6rem,9vw,8.5rem);
+  font-weight:900;
+  letter-spacing:-.03em;
+  margin:0 0 20px;
+  line-height:1.03;
+  text-shadow:0 4px 20px rgba(0,0,0,.5);
+}
+.tv-title-sub{
+  font-size:clamp(1.4rem,2.7vw,2.3rem);
+  font-weight:600;
+  max-width:1000px;
+  margin:0 auto;
+  line-height:1.5;
+  opacity:.96;
+}
+
+/* ---- Leaderboard (single category) ---- */
+.tv-lb-eyebrow{
+  text-transform:uppercase;
+  letter-spacing:.2em;
+  font-size:clamp(1.1rem,1.8vw,1.5rem);
+  font-weight:900;
+  color:var(--gold);
+  margin:0 0 8px;
+}
+.tv-lb-title{
+  font-size:clamp(2.1rem,4.4vw,4rem);
+  font-weight:900;
+  letter-spacing:-.02em;
+  margin:0 0 20px;
+}
+.tv-lb-list{
+  display:grid;
+  gap:14px;
+  max-width:1200px;
+  margin:0 auto;
+  text-align:left;
+}
+.tv-lb-row{
+  display:grid;
+  grid-template-columns:84px minmax(0,1fr) auto auto;
+  align-items:center;
+  gap:22px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:16px;
+  padding:16px 28px;
+}
+.tv-lb-row.r1{ background:rgba(232,195,122,.16); border-color:rgba(232,195,122,.45); }
+.tv-lb-row.r2{ background:rgba(215,221,227,.14); border-color:rgba(215,221,227,.4); }
+.tv-lb-row.r3{ background:rgba(215,154,106,.14); border-color:rgba(215,154,106,.4); }
+.tv-lb-rank{ font-size:clamp(1.7rem,2.7vw,2.4rem); font-weight:900; text-align:center; opacity:.85; }
+.tv-lb-name{ font-size:clamp(1.5rem,2.5vw,2.2rem); font-weight:800; letter-spacing:-.01em; }
+.tv-lb-years{ font-size:clamp(1rem,1.5vw,1.35rem); font-weight:600; opacity:.75; text-align:right; white-space:nowrap; }
+.tv-lb-value{ font-size:clamp(1.7rem,2.9vw,2.6rem); font-weight:900; color:var(--gold); text-align:right; min-width:90px; }
+
+/* ---- Leaderboard pair (two categories side by side) ---- */
+.tv-lb-pair{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:56px;
+  width:100%;
+  align-items:start;
+  margin-top:22px;
+}
+.tv-lb-pair .tv-lb-list{ margin:0; max-width:none; gap:8px; }
+.tv-lb-pair .tv-lb-row{ padding:8px 14px; grid-template-columns:52px minmax(0,1fr) auto auto; gap:10px; }
+.tv-lb-pair .tv-lb-rank{ font-size:clamp(1.2rem,1.9vw,1.7rem); }
+.tv-lb-pair .tv-lb-name{ font-size:clamp(1.05rem,1.7vw,1.55rem); }
+.tv-lb-pair .tv-lb-years{ font-size:clamp(.75rem,1.1vw,.95rem); }
+.tv-lb-pair .tv-lb-value{ font-size:clamp(1.2rem,2vw,1.8rem); }
+
+/* ---- Leaderboard grid (all categories for a group on one slide) ---- */
+.tv-lb-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px 24px;
+  width:100%;
+  align-items:start;
+  margin-top:14px;
+}
+.tv-lb-grid .tv-lb-title{ font-size:clamp(1.3rem,2.2vw,1.8rem); margin:0 0 10px; }
+.tv-lb-grid .tv-lb-list{ margin:0; max-width:none; gap:7px; }
+.tv-lb-grid .tv-lb-row{ padding:7px 11px; grid-template-columns:34px minmax(0,1fr) auto; grid-template-areas:'rank name value' 'rank years value'; column-gap:8px; row-gap:0; border-radius:10px; }
+.tv-lb-grid .tv-lb-rank{ grid-area:rank; }
+.tv-lb-grid .tv-lb-name{ grid-area:name; line-height:1.15; }
+.tv-lb-grid .tv-lb-years{ grid-area:years; text-align:left; line-height:1.15; }
+.tv-lb-grid .tv-lb-value{ grid-area:value; }
+.tv-lb-grid .tv-lb-rank{ font-size:clamp(1rem,1.55vw,1.3rem); }
+.tv-lb-grid .tv-lb-name{ font-size:clamp(.95rem,1.45vw,1.3rem); }
+.tv-lb-grid .tv-lb-years{ font-size:clamp(.66rem,.95vw,.82rem); }
+.tv-lb-grid .tv-lb-value{ font-size:clamp(1.02rem,1.6vw,1.35rem); min-width:0; }
+
+/* ---- Fastest pins slide ---- */
+.tv-pins-list{
+  column-count:2;
+  column-gap:20px;
+  max-width:1500px;
+  margin:0 auto;
+  text-align:left;
+}
+.tv-pins-row{
+  display:grid;
+  grid-template-columns:52px minmax(0,1fr) auto auto;
+  align-items:center;
+  gap:14px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:12px;
+  padding:9px 16px;
+  margin-bottom:10px;
+  break-inside:avoid;
+}
+.tv-pins-row.r1{ background:rgba(232,195,122,.16); border-color:rgba(232,195,122,.45); }
+.tv-pins-rank{ font-size:1.2rem; font-weight:900; text-align:center; opacity:.85; }
+.tv-pins-name{ font-size:clamp(1rem,1.5vw,1.3rem); font-weight:800; }
+.tv-pins-year{ font-size:.9rem; font-weight:600; opacity:.7; text-align:right; }
+.tv-pins-time{ font-size:clamp(1.15rem,1.7vw,1.5rem); font-weight:900; color:var(--gold); text-align:right; min-width:70px; }
+
+/* ---- Pillar winners slide ---- */
+.tv-pillar-groups{
+  display:grid;
+  gap:30px;
+}
+.tv-pillar-season{
+  font-size:clamp(1.35rem,2.3vw,1.95rem);
+  font-weight:900;
+  margin:0 0 14px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+.tv-pillar-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:14px;
+  max-width:1600px;
+  margin:0 auto;
+}
+.tv-pillar-entry{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:14px;
+  padding:14px 18px;
+  text-align:left;
+}
+.tv-pillar-entry .name{ font-size:clamp(1.15rem,1.8vw,1.5rem); font-weight:800; margin:0 0 4px; }
+.tv-pillar-entry .pillar{ font-size:clamp(.92rem,1.35vw,1.15rem); font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:.05em; margin:0; }
+
+/* ---- Perfect Practice Club slide ---- */
+.tv-club-chips{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+}
+.tv-club-chip{
+  font-size:clamp(1rem,1.6vw,1.35rem);
+  font-weight:800;
+  background:rgba(232,195,122,.14);
+  border:1px solid rgba(232,195,122,.4);
+  border-radius:999px;
+  padding:10px 22px;
+  color:#fff;
+}
+.tv-rb-note{ margin:26px 0 0; font-size:clamp(1.05rem,1.5vw,1.35rem); font-weight:600; opacity:.72; }
+
+/* ---- Qualifiers / Champions list (from State Board) ---- */
+.tv-qual-list{
+  column-count:2;
+  column-gap:24px;
+  max-width:1700px;
+  margin:0 auto;
+  text-align:left;
+}
+.tv-qual-row{
+  display:grid;
+  grid-template-columns:78px minmax(0,1fr) 78px auto;
+  align-items:center;
+  gap:12px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:12px;
+  padding:9px 16px;
+  margin-bottom:10px;
+  break-inside:avoid;
+}
+.tv-qual-row.champ{ background:rgba(232,195,122,.13); border-color:rgba(232,195,122,.4); grid-template-columns:78px minmax(0,1fr) 78px; }
+.tv-qual-year{ font-size:clamp(1rem,1.5vw,1.3rem); font-weight:900; opacity:.8; }
+.tv-qual-name{ font-size:clamp(1.05rem,1.55vw,1.35rem); font-weight:800; letter-spacing:-.01em; }
+.tv-qual-weight{ font-size:clamp(.85rem,1.2vw,1.05rem); font-weight:700; opacity:.75; text-align:center; }
+.tv-qual-result{ font-size:clamp(1rem,1.5vw,1.3rem); font-weight:900; color:var(--gold); text-align:right; white-space:nowrap; }
+.tv-qual-note{ margin:18px 0 0; font-size:clamp(.9rem,1.2vw,1.1rem); font-weight:600; opacity:.72; }
+
+/* ---- Qualifiers pair (two lists side by side, e.g. Regional Champions + Fargo Qualifiers) ---- */
+.tv-qual-pair{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:40px;
+  width:100%;
+  align-items:start;
+  margin-top:14px;
+}
+.tv-qual-pair-title{
+  font-size:clamp(1.3rem,2.1vw,1.75rem);
+  font-weight:900;
+  margin:0 0 14px;
+  color:var(--gold);
+}
+.tv-qual-list.single{ column-count:1; max-width:none; margin:0; }
+.tv-qual-list.single .tv-qual-row{ margin-bottom:8px; }
+
+/* ---- Team accomplishments (from State Board) ---- */
+.tv-team-accom{
+  display:grid;
+  gap:48px;
+  max-width:1400px;
+  margin:0 auto;
+}
+.tv-team-group-label{
+  font-size:clamp(1.6rem,2.7vw,2.3rem);
+  font-weight:900;
+  letter-spacing:-.01em;
+  margin:0 0 16px;
+}
+.tv-team-years{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:18px;
+}
+.tv-team-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:clamp(1.5rem,2.4vw,2.1rem);
+  font-weight:900;
+  color:var(--gold);
+  background:rgba(232,195,122,.14);
+  border:1px solid rgba(232,195,122,.45);
+  border-radius:999px;
+  padding:12px 28px;
+}
+.tv-team-note{ margin:26px 0 0; font-size:clamp(1.05rem,1.5vw,1.35rem); font-weight:600; opacity:.72; }
+
+
+/* Team Accomplishments slide: larger text (lots of room) */
+.team-slide .tv-lb-eyebrow{ font-size:clamp(1.8rem,3vw,2.8rem); margin-bottom:14px; }
+.team-slide .tv-lb-title{ font-size:clamp(3.4rem,7vw,6.5rem); margin-bottom:40px; }
+.team-slide .tv-team-accom{ gap:70px; max-width:1700px; }
+.team-slide .tv-team-group-label{ font-size:clamp(2.6rem,4.8vw,4.4rem); margin-bottom:26px; }
+.team-slide .tv-team-years{ gap:28px; }
+.team-slide .tv-team-chip{ font-size:clamp(2.6rem,4.8vw,4.4rem); padding:18px 54px; }
+.team-slide .tv-team-note{ font-size:clamp(1.6rem,2.7vw,2.4rem); margin-top:44px; }
+
+/* Fullscreen helper button */
+#tv-fs-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  z-index:70;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.35);
+  color:#fff;
+  font-weight:800;
+  font-size:1.05rem;
+  border-radius:999px;
+  padding:10px 18px;
+  cursor:pointer;
+  opacity:.55;
+}
+#tv-fs-btn:hover{ opacity:1; }
+body.is-fullscreen #tv-fs-btn{ display:none; }
+
+/* QR code, bottom-right */
+#tv-qr-box{
+  position:fixed;
+  bottom:24px;
+  right:32px;
+  z-index:50;
+  display:flex;
+  flex-direction:column-reverse;
+  align-items:center;
+  gap:6px;
+  width:150px;
+  opacity:.92;
+}
+#tv-qr-box img{
+  width:150px;
+  height:150px;
+  border-radius:14px;
+  background:#fff;
+  padding:8px;
+  display:block;
+  box-shadow:0 4px 16px rgba(0,0,0,.45);
+}
+#tv-qr-box span{
+  width:100%;
+  text-align:center;
+  white-space:nowrap;
+  font-size:1.3rem;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
+}
+
+@media(max-width:1100px){
+  .tv-lb-pair{ grid-template-columns:1fr; gap:20px; }
+  .tv-lb-grid{ grid-template-columns:1fr 1fr; gap:16px; }
+  .tv-pillar-grid{ grid-template-columns:1fr 1fr; }
+  .tv-qual-list{ column-count:1; }
+  .tv-pins-list{ column-count:1; }
+  .tv-qual-pair{ grid-template-columns:1fr; gap:24px; }
+}
+@media(max-width:700px){
+  .tv-logo img{ height:56px; }
+  .tv-logo-title{ font-size:1.15rem; }
+  .tv-logo-sub{ font-size:.72rem; }
+  .tv-pillar-grid{ grid-template-columns:1fr; }
+  .tv-lb-grid{ grid-template-columns:1fr; }
+  #tv-qr-box{ bottom:14px; right:14px; gap:0; }
+  #tv-qr-box img{ width:46px; height:46px; }
+  #tv-qr-box span{ display:none; }
+}
+/* ---- Corner countdown (every slide) ---- */
+#tv-countdown{ position:fixed; top:24px; right:32px; z-index:50; text-align:center; opacity:.95; }
+#tv-countdown, #tv-countdown *, #tv-qr-box, #tv-qr-box *, .tv-logo, .tv-logo *{ cursor:none !important; }
+#tv-countdown .cd-label{ font-size:.85rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; text-shadow:0 2px 8px rgba(0,0,0,.6); }
+#tv-countdown .cd-row{ display:flex; gap:8px; }
+#tv-countdown .cd-box{ min-width:62px; padding:8px 6px 6px; background:rgba(255,255,255,.1); border:1px solid rgba(232,195,122,.5); border-radius:12px; }
+#tv-countdown .cd-num{ font-size:1.6rem; font-weight:900; line-height:1; color:#fff; font-variant-numeric:tabular-nums; }
+#tv-countdown .cd-unit{ font-size:.62rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; opacity:.8; margin-top:3px; }
+@media(max-width:1100px){ #tv-countdown{ top:10px; right:10px; transform:scale(.7); transform-origin:top right; } }
+
+/* ===== Clean white homepage look (overrides the dark record-board styling) ===== */
+:root{ --gold:#6d1730; --ink:#18191c; --muted:#646971; --line:#e2e3e6; }
+html,body{ background:#fff !important; color:var(--ink) !important; }
+.slide-layer{ background:linear-gradient(180deg,#ffffff 0%,#faf7f8 100%) !important; }
+.slide-layer::before{ content:""; position:absolute; left:0; right:0; top:0; height:12px; background:var(--maroon); }
+#tv-qr-box{ display:none !important; }
+.tv-logo-sub, .tv-logo-title{ color:var(--maroon) !important; text-shadow:none !important; font-weight:800; }
+#tv-countdown .cd-label{ color:var(--maroon); text-shadow:none; }
+#tv-countdown .cd-box{ background:#fff; border:1px solid var(--line); box-shadow:0 6px 18px rgba(20,12,15,.08); }
+#tv-countdown .cd-num{ color:var(--maroon); }
+#tv-countdown .cd-unit{ color:var(--muted); opacity:1; }
+#tv-progress-wrap{ background:#ece7e9 !important; }
+#tv-progress-bar{ background:var(--maroon) !important; }
+.tv-fun-dot{ display:none !important; }
+.tv-eyebrow{ color:var(--maroon) !important; }
+.tv-fun-lead{ color:var(--ink); opacity:1; }
+.tv-fun-big{ color:var(--maroon) !important; text-shadow:none !important; transform:none !important; animation:none !important; }
+.tv-fun-big2{ color:var(--ink) !important; text-shadow:none !important; }
+.tv-fun-sub{ color:var(--muted); opacity:1; }
+.tv-fun-cta{ background:#fff !important; border:3px solid var(--maroon) !important; color:var(--ink) !important; box-shadow:0 10px 28px rgba(20,12,15,.10); }
+.tv-fun-cta b{ color:var(--maroon) !important; }
+.tv-fun-photo img{ border:10px solid #fff !important; box-shadow:0 18px 45px rgba(20,12,15,.22) !important; transform:rotate(-2deg); }
+.tv-quote{ background:#fff; border:1px solid var(--line); border-radius:32px; box-shadow:0 18px 45px rgba(20,12,15,.10); padding:48px 64px 44px !important; border-top:10px solid var(--maroon); }
+.tv-quote .tv-eyebrow{ font-size:clamp(1.2rem,1.9vw,1.8rem); }
+.tv-quote-mark{ color:var(--maroon-light,#a3425f) !important; }
+.tv-quote-text{ color:var(--ink) !important; text-shadow:none !important; font-weight:600; }
+.tv-quote-src{ color:var(--maroon) !important; }
+
+/* Announcement banner (shown on every slide until the date passes) */
+#tv-banner{ position:fixed; left:50%; bottom:34px; transform:translateX(-50%); z-index:40; background:var(--maroon); color:#fff; padding:14px 38px; border-radius:999px; font-size:clamp(1.2rem,2.2vw,2.1rem); font-weight:800; text-align:center; box-shadow:0 12px 30px rgba(20,12,15,.28); white-space:nowrap; }
+#tv-banner b{ letter-spacing:.08em; text-transform:uppercase; }
+@media(max-width:900px){ #tv-banner{ white-space:normal; width:90%; bottom:18px; } }
+.slide-inner{ padding-bottom:90px !important; }
+</style>
+</head>
+<body>
+
+<div class="tv-logo"><img src="assets/images/logo.png" alt=""><div class="tv-logo-text"><span class="tv-logo-sub">Holmen Women's Wrestling</span></div></div>
+
+<div id="tv-countdown" data-start="2026-11-16T15:00:00">
+  <div class="cd-label">Season Opens In</div>
+  <div class="cd-row">
+    <div class="cd-box"><div class="cd-num" data-u="d">--</div><div class="cd-unit">Days</div></div>
+    <div class="cd-box"><div class="cd-num" data-u="h">--</div><div class="cd-unit">Hrs</div></div>
+    <div class="cd-box"><div class="cd-num" data-u="m">--</div><div class="cd-unit">Min</div></div>
+    <div class="cd-box"><div class="cd-num" data-u="s">--</div><div class="cd-unit">Sec</div></div>
+  </div>
+</div>
+<div id="stage">
+  <div class="slide-layer active" id="layerA"></div>
+  <div class="slide-layer" id="layerB"></div>
+</div>
+
+<div id="tv-banner" data-until="2026-10-21T00:00:00"><b>Advisory Meeting</b> &middot; Tuesday, Oct. 20 &middot; Girls Wrestling Room</div>
+<div id="tv-progress-wrap"><div id="tv-progress-bar"></div></div>
+<div id="tv-qr-box"><img id="tv-qr-img" alt="QR code linking to full stats and records"><span>Full Stats</span></div>
+
+<script>
+// ---- Data ----
+const MEDAL = ['🥇','🥈','🥉'];
+function rankLabel(rank){ return MEDAL[rank-1] || rank; }
+function rankClass(rank){ return rank<=3 ? ('r'+rank) : ''; }
+
+const CAREER = {
+  'Wins': [
+    {r:1,name:'Alexa Szak',years:'2022-2025',v:'85'},
+    {r:2,name:'Peyton Kratochvill',years:'2024-2026',v:'82'},
+    {r:3,name:'Allison Weiss',years:'2022-2025',v:'81'},
+    {r:4,name:'Sophia Walter',years:'2024-2026',v:'74'},
+    {r:5,name:'Evelyn Vetsch',years:'2020-2023',v:'65'}
+  ],
+  'Win %': [
+    {r:1,name:'Evelyn Vetsch',years:'2020-2023',v:'72%'},
+    {r:1,name:'Nora Lee',years:'2020-2023',v:'72%'},
+    {r:3,name:'Keionna Noel',years:'2024-2025',v:'70%'},
+    {r:4,name:'Haley Dezelske',years:'2023-2024',v:'67%'},
+    {r:5,name:'Alexa Szak',years:'2022-2025',v:'66%'},
+    {r:5,name:'Anna Strasser',years:'2022-2024',v:'66%'}
+  ],
+  'Takedowns': [
+    {r:1,name:'Peyton Kratochvill',years:'2024-2026',v:'122'},
+    {r:2,name:'Allison Weiss',years:'2022-2025',v:'120'},
+    {r:3,name:'Alexa Szak',years:'2022-2025',v:'111'},
+    {r:4,name:'Evelyn Vetsch',years:'2020-2023',v:'96'},
+    {r:5,name:'Sophia Walter',years:'2024-2026',v:'77'},
+    {r:5,name:'Anna Strasser',years:'2022-2024',v:'77'}
+  ],
+  'Falls': [
+    {r:1,name:'Alexa Szak',years:'2022-2025',v:'60'},
+    {r:2,name:'Allison Weiss',years:'2022-2025',v:'53'},
+    {r:3,name:'Haley Dezelske',years:'2023-2024',v:'49'},
+    {r:4,name:'Sophia Walter',years:'2024-2026',v:'47'},
+    {r:5,name:'Peyton Kratochvill',years:'2024-2026',v:'46'},
+    {r:5,name:'Evelyn Vetsch',years:'2024-2026',v:'46'}
+  ],
+  'Tech Falls': [
+    {r:1,name:'Haley Dezelske',years:'2024-25',v:'2'},
+    {r:2,name:'Peyton Kratochvill',years:'2024-2026',v:'1'},
+    {r:2,name:'Allison Weiss',years:'2024-25',v:'1'},
+    {r:2,name:'Evelyn Vetsch',years:'2021-22',v:'1'}
+  ],
+  'Team Points': [
+    {r:1,name:'Alexa Szak',years:'2022-2025',v:'452'},
+    {r:2,name:'Allison Weiss',years:'2022-2025',v:'451.5'},
+    {r:3,name:'Sophia Walter',years:'2024-2026',v:'364'},
+    {r:4,name:'Peyton Kratochvill',years:'2024-2026',v:'360'},
+    {r:5,name:'Evelyn Vetsch',years:'2020-2023',v:'350'}
+  ],
+  'Nearfall Points': [
+    {r:1,name:'Peyton Kratochvill',years:'2024-2026',v:'131'},
+    {r:2,name:'Evelyn Vetsch',years:'2020-2023',v:'111'},
+    {r:3,name:'Allison Weiss',years:'2022-2025',v:'108'},
+    {r:4,name:'Alexa Szak',years:'2022-2025',v:'101'},
+    {r:5,name:'Haley Dezelske',years:'2023-2025',v:'65'}
+  ]
+};
+
+const SINGLE_SEASON = {
+  'Wins': [
+    {r:1,name:'Aini Anderson',years:'2025-26',v:'45'},
+    {r:2,name:'Kaytlynn Lambries',years:'2025-26',v:'44'},
+    {r:3,name:'Peyton Kratochvill',years:'2025-26',v:'40'},
+    {r:4,name:'Avalee Euler',years:'2025-26',v:'36'},
+    {r:5,name:'Evelyn Vetsch',years:'2022-23',v:'35'}
+  ],
+  'Win %': [
+    {r:1,name:'Aini Anderson',years:'2025-26',v:'94%'},
+    {r:2,name:'Evelyn Vetsch',years:'2022-23',v:'85%'},
+    {r:3,name:'Aini Anderson',years:'2024-25',v:'84.6%'},
+    {r:4,name:'Kaytlynn Lambries',years:'2024-25',v:'83.3%'},
+    {r:5,name:'Nora Lee',years:'2022-23',v:'81%'}
+  ],
+  'Takedowns': [
+    {r:1,name:'Aini Anderson',years:'2025-26',v:'83'},
+    {r:2,name:'Peyton Kratochvill',years:'2025-26',v:'69'},
+    {r:3,name:'Kaytlynn Lambries',years:'2025-26',v:'49'},
+    {r:4,name:'Kaytlynn Lambries',years:'2022-23',v:'46'},
+    {r:5,name:'Avalee Euler',years:'2025-26',v:'44'},
+    {r:5,name:'Evelyn Vetsch',years:'2022-23',v:'44'}
+  ],
+  'Falls': [
+    {r:1,name:'Kaytlynn Lambries',years:'2025-26',v:'37'},
+    {r:2,name:'Aini Anderson',years:'2025-26',v:'29'},
+    {r:4,name:'Kaytlynn Lambries',years:'2023-24',v:'27'},
+    {r:4,name:'Haley Dezelske',years:'2024-25',v:'26'},
+    {r:5,name:'Peyton Kratochvill',years:'2025-26',v:'25'}
+  ],
+  'Tech Falls': [
+    {r:1,name:'Aini Anderson',years:'2025-26',v:'3'},
+    {r:1,name:'Avalee Euler',years:'2025-26',v:'3'},
+    {r:1,name:'Aini Anderson',years:'2024-25',v:'3'},
+    {r:4,name:'Haley Dezelske',years:'2024-25',v:'2'},
+    {r:5,name:'Kaytlynn Lambries',years:'2025-26',v:'1'},
+    {r:5,name:'Peyton Kratochvill',years:'2025-26',v:'1'},
+    {r:5,name:'Allison Weiss',years:'2024-25',v:'1'}
+  ],
+  'Team Points': [
+    {r:1,name:'Kaytlynn Lambries',years:'2025-26',v:'227'},
+    {r:2,name:'Aini Anderson',years:'2025-26',v:'202'},
+    {r:3,name:'Evelyn Vetsch',years:'2022-23',v:'197'},
+    {r:4,name:'Peyton Kratochvill',years:'2025-26',v:'183'},
+    {r:5,name:'Kaytlynn Lambries',years:'2023-24',v:'180'}
+  ],
+  'Nearfall Points': [
+    {r:1,name:'Avalee Euler',years:'2025-26',v:'66'},
+    {r:2,name:'Peyton Kratochvill',years:'2025-26',v:'56'},
+    {r:3,name:'Ruby Gustafson',years:'2025-26',v:'56'},
+    {r:5,name:'Peyton Kratochvill',years:'2024-25',v:'50'},
+    {r:5,name:'Evelyn Vetsch',years:'2022-23',v:'49'}
+  ]
+};
+
+const FASTEST_PINS = [
+  {r:1,name:'Kaytlynn Lambries',year:'2026',t:'0:07'},
+  {r:2,name:'Kaytlynn Lambries',year:'2024',t:'0:08'},
+  {r:2,name:'Kaytlynn Lambries',year:'2024',t:'0:08'},
+  {r:4,name:'Kaytlynn Lambries',year:'2026',t:'0:09'},
+  {r:4,name:'Maddie Hall',year:'2024',t:'0:09'},
+  {r:6,name:'Aini Anderson',year:'2026',t:'0:10'},
+  {r:6,name:'Haley Dezelske',year:'2025',t:'0:10'},
+  {r:6,name:'Carissa Ceresa',year:'2025',t:'0:10'},
+  {r:6,name:'Keionna Noel',year:'2024',t:'0:10'},
+  {r:6,name:'Aubrey Hauser',year:'2025',t:'0:10'},
+  {r:11,name:'Haley Dezelske',year:'2024',t:'0:11'},
+  {r:12,name:'Kaytlynn Lambries',year:'2024',t:'0:12'},
+  {r:12,name:'Celia Drogseth',year:'2025',t:'0:12'},
+  {r:12,name:'Maddie Hall',year:'2024',t:'0:12'},
+  {r:12,name:'Nora Lee',year:'2023',t:'0:12'},
+  {r:16,name:'Ruby Gustafson',year:'2026',t:'0:13'},
+  {r:16,name:'Kaytlynn Lambries',year:'2026',t:'0:13'},
+  {r:16,name:'Kaytlynn Lambries',year:'2024',t:'0:13'},
+  {r:19,name:'Haley Dezelske',year:'2025',t:'0:14'},
+  {r:19,name:'Nora Lee',year:'2023',t:'0:14'}
+];
+
+const PILLAR_WINNERS = [
+  { season:'2025–2026', entries:[
+    {name:'Aini Anderson',pillar:'Ambition'},
+    {name:'Avalee Euler',pillar:'Elite Mindset'},
+    {name:'Kaytlynn Lambries',pillar:'For Her'},
+    {name:'Ellie Adam',pillar:'Fun'},
+    {name:'Kayleen Bazan',pillar:'Improvement'},
+    {name:'Peyton Kratochvill',pillar:'Leadership'}
+  ]},
+  { season:'2024–2025', entries:[
+    {name:'Natalie Markos',pillar:'Ambition'},
+    {name:'Kaytlynn Lambries',pillar:'Elite Mindset'},
+    {name:'Jozie Collins',pillar:'For Her'},
+    {name:'Avalee Euler',pillar:'Fun'},
+    {name:'Haley Dezelske',pillar:'Improvement'},
+    {name:'Alexa Szak',pillar:'Leadership'}
+  ]},
+  { season:'2023–2024', entries:[
+    {name:'Aini Anderson',pillar:'Elite Mindset'},
+    {name:'Peyton Kratochvill',pillar:'Technique'},
+    {name:'Ava Kelemen',pillar:'Leadership'},
+    {name:'Keionna Noel',pillar:'Unity'},
+    {name:'Freya Finn',pillar:'Fun'},
+    {name:'Lauren Barnett',pillar:'Anytime, Anywhere'}
+  ]},
+  { season:'2022–2023', entries:[
+    {name:'Anna Strasser',pillar:'Discipline'},
+    {name:'Alexa Szak',pillar:'Commitment'},
+    {name:'Maddie Hall',pillar:'Selflessness'},
+    {name:'Nora Lee',pillar:'Trustworthiness'},
+    {name:'Evelyn Vetsch',pillar:'Confidence'},
+    {name:'Ava Kelemen',pillar:'Work Ethic'},
+    {name:'Maddie Eggerichs',pillar:'Leadership'},
+    {name:'Adriana Vang',pillar:'Heart'},
+    {name:'Marci Jacobsson',pillar:'Scholar'},
+    {name:'Haley Dezelske',pillar:'Improvement'},
+    {name:'Addie Goodell',pillar:'Perseverance'}
+  ]},
+  { season:'2018–19 to 2021–22', entries:[
+    {name:'Jaida Harshman',pillar:'2021-22 · Heart'},
+    {name:'Lauren Barnett',pillar:'2021-22 · Trustworthiness'},
+    {name:'Evelyn Vetsch',pillar:'2020-2021 · Trustworthiness'},
+    {name:'Amber Eddy',pillar:'2020-2021 · Perseverance'},
+    {name:'Mallorie Schams',pillar:'2019-2020 · Scholar'},
+    {name:'Lynsey Anderson',pillar:'2018-19 · Trustworthiness'},
+    {name:'Gwenny Burrows',pillar:'2018-19 · Scholar'}
+  ]}
+];
+
+const PERFECT_PRACTICE = [
+  { season:'2026', names:['Sophia Walter','Celia Drogseth','Kaina Westlie','Peyton Kratochvill','Kaytlynn Lambries'] },
+  { season:'2025', names:['Sophia Walter','Haley Dezelske'] },
+  { season:'2024', names:['Alexa Szak','Allison Weiss','Anna Strasser','Haley Dezelske','Maddie Hall','Maddie Eggerichs'] },
+  { season:'2023', names:['Allison Weiss','Adriana Vang','Alexa Szak'] }
+];
+
+// ---- Postseason herstory data (from results.html — State Tournament Qualifiers & Placewinners, Regional Champions, Sectional Champions) ----
+
+const STATE_QUALIFIERS = [
+  {year:'2026',name:'Aini Anderson',weight:'100',result:'2nd'},
+  {year:'2026',name:'Kaytlynn Lambries',weight:'126',result:'2x Qualifier'},
+  {year:'2026',name:'Avalee Euler',weight:'185',result:'Qualifier'},
+  {year:'2025',name:'Haley Dezelske',weight:'114',result:'Qualifier'},
+  {year:'2025',name:'Allison Weiss',weight:'120',result:'2x Qualifier'},
+  {year:'2024',name:'Aini Anderson',weight:'100',result:'Qualifier'},
+  {year:'2024',name:'Kaytlynn Lambries',weight:'107',result:'6th'},
+  {year:'2024',name:'Allison Weiss',weight:'114',result:'Qualifier'},
+  {year:'2024',name:'Anna Strasser',weight:'126',result:'Qualifier'},
+  {year:'2024',name:'Alexa Szak',weight:'145',result:'2x Qualifier'},
+  {year:'2024',name:'Maddie Hall',weight:'165',result:'Qualifier'},
+  {year:'2024',name:'Sophia Walter',weight:'185',result:'Qualifier'},
+  {year:'2023',name:'Nora Lee',weight:'100',result:'5th'},
+  {year:'2023',name:'Evelyn Vetsch',weight:'145',result:'3rd'},
+  {year:'2023',name:'Alexa Szak',weight:'152',result:'Qualifier'},
+  {year:'2023',name:'Maddie Hall',weight:'165',result:'Qualifier'},
+  {year:'2022',name:'Evelyn Vetsch',weight:'152',result:'4th'},
+  {year:'2022',name:'Emily Szak',weight:'165',result:'5th'}
+];
+
+const FARGO_QUALIFIERS = [
+  {year:'2026',name:'Ruby Gustafson',weight:'',result:'Qualifier'},
+  {year:'2025',name:'Haley Dezelske',weight:'',result:'Qualifier'},
+  {year:'2025',name:'Sophia Walter',weight:'',result:'Qualifier'},
+  {year:'2025',name:'Aini Anderson',weight:'',result:'Qualifier'}
+];
+
+const REGIONAL_CHAMPIONS = [
+  {year:'2026',name:'Aini Anderson',weight:'100',result:'Champion'},
+  {year:'2026',name:'Peyton Kratochvill',weight:'114',result:'Champion'},
+  {year:'2026',name:'Kaytlynn Lambries',weight:'126',result:'Champion'},
+  {year:'2026',name:'Avalee Euler',weight:'185',result:'Champion'},
+  {year:'2025',name:'Kaytlynn Lambries',weight:'107',result:'Champion'},
+  {year:'2025',name:'Haley Dezelske',weight:'114',result:'Champion'},
+  {year:'2025',name:'Allison Weiss',weight:'120',result:'Champion'},
+  {year:'2025',name:'Alexa Szak',weight:'138',result:'Champion'},
+  {year:'2025',name:'Avalee Euler',weight:'165',result:'Champion'}
+];
+
+const SECTIONAL_CHAMPIONS = [
+  {year:'2026',name:'Aini Anderson',weight:'100',result:'Champion'},
+  {year:'2026',name:'Kaytlynn Lambries',weight:'126',result:'Champion'},
+  {year:'2025',name:'Haley Dezelske',weight:'114',result:'Champion'},
+  {year:'2024',name:'Aini Anderson',weight:'100',result:'Champion'},
+  {year:'2024',name:'Kaytlynn Lambries',weight:'107',result:'Champion'},
+  {year:'2024',name:'Allison Weiss',weight:'114',result:'Champion'},
+  {year:'2024',name:'Anna Strasser',weight:'126',result:'Champion'},
+  {year:'2024',name:'Alexa Szak',weight:'145',result:'Champion'},
+  {year:'2024',name:'Maddie Hall',weight:'165',result:'Champion'},
+  {year:'2023',name:'Evelyn Vetsch',weight:'145',result:'Champion'},
+  {year:'2023',name:'Alexa Szak',weight:'152',result:'Champion'},
+  {year:'2023',name:'Maddie Hall',weight:'165',result:'Champion'}
+];
+
+const TEAM_ACCOMPLISHMENTS = [
+  { label:'Team Regional Champions', years:['2025','2026'] },
+  { label:'Team Sectional Champions', years:['2025','2026'] }
+];
+
+// ---- Build slide list ----
+const SLIDES = [];
+
+// Opening title slide removed.
+
+// Leaderboard builder — every category for a group on one slide
+function pushLeaderboardGridSlide(groupName, data){
+  const cats = Object.keys(data).map(name => ({ name, list: data[name] }));
+  SLIDES.push({ type:'lb-grid', duration:13000, group:groupName, cats });
+}
+
+// Career Leaders
+pushLeaderboardGridSlide('Career Leaders', CAREER);
+
+// Single-Season Leaders
+pushLeaderboardGridSlide('Single-Season Leaders', SINGLE_SEASON);
+
+// Fastest Pins (top 20, one condensed two-column slide)
+SLIDES.push({ type:'pins', duration:10000, title:'Fastest Pins', list:FASTEST_PINS });
+
+// Pillar Award Winners
+const PILLAR_SLIDE_GROUPS = [
+  [PILLAR_WINNERS[0], PILLAR_WINNERS[1], PILLAR_WINNERS[2]],
+  [PILLAR_WINNERS[3], PILLAR_WINNERS[4]]
+];
+// Pillar slides removed from the rotation (PILLAR_SLIDE_GROUPS kept in case they return).
+
+// Perfect Practice Club
+SLIDES.push({ type:'perfect-practice', duration:9000, title:'Perfect Practice Club', groups:PERFECT_PRACTICE, note:'Awarded to wrestlers who don’t miss a practice all season.' });
+
+// Postseason Herstory
+SLIDES.push({ type:'team-accomplishments', duration:8500, eyebrow:'Postseason Herstory', title:'Team Accomplishments', groups:TEAM_ACCOMPLISHMENTS, note:'Girls team regionals and sectionals began in 2024–25.' });
+
+SLIDES.push({ type:'qual-list', duration:11000, eyebrow:'Postseason Herstory', title:'State Qualifiers & Placewinners', rows:STATE_QUALIFIERS, note:'Girls state wrestling began in 2022.' });
+
+SLIDES.push({ type:'qual-list', duration:10000, eyebrow:'Postseason Herstory', title:'Sectional Champions', rows:SECTIONAL_CHAMPIONS, note:'Girls sectionals began in 2023.', champ:true });
+
+SLIDES.push({ type:'qual-pair', duration:10000, eyebrow:'Postseason Herstory',
+  titleA:'Regional Champions', rowsA:REGIONAL_CHAMPIONS, champA:true, noteA:'Girls regionals began in 2025.',
+  titleB:'Fargo Nationals Qualifiers', rowsB:FARGO_QUALIFIERS });
+
+// Quotes presentation: replace the record-board slides
+SLIDES.length = 0;
+SLIDES.push({ type:'fun', duration:8000, eyebrow:'Why We Wrestle', lead:'The #1 reasons our girls give for staying on the team…', big:'They have fun', big2:'and make friends!', photo:'assets/images/team-fun.jpg', sub:'Great teammates. Great memories.' });
+SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"This is the best team I’ve ever been on. I’ve never felt so much support and love from any other team I’ve been on. I look forward every day knowing everyone there is willing to help me and support me. I love this team so much.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:11120, eyebrow:'In Their Words', text:"I know I lost today, but I felt like such a winner within our team. I love our team!", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"This team makes me feel like I belong, like I matter. The coaching increases my confidence more and more and pushes me to be a better person and wrestler.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:13705, eyebrow:'In Their Words', text:"Thank you for always being there for me and pushing me even when I want to quit — you’ve reinforced my mindset to truly never quit.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:11505, eyebrow:'In Their Words', text:"I hope you know how much I appreciate and care for you. Thank you for being the best coach.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"Wrestling has forever changed my life and I’m not sure what I would do without it. These are the best coaches I’ve had in 14 years of being an athlete — so genuine, loving, and caring for their athletes on and off the mat.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:12605, eyebrow:'In Their Words', text:"I know that failure is really just part of the sport, and I need to accept it and learn from those experiences.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:13265, eyebrow:'In Their Words', text:"This weekend didn’t go how I wanted, but you kept me going and I learned so much. I’m so thankful you’ve come into my life.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"I want to thank you for being such an incredible source of support and kindness to my daughters. You have had a huge impact on them. You are amazing.", source:"Parent" });
+SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"As a first-time wrestling parent, I think you are all doing an outstanding job building an amazing culture of fun, supportiveness, discipline, teamwork, and uplifting these young women and helping them feel valued. It really is a breath of fresh air.", source:"Parent" });
+SLIDES.push({ type:'quote', duration:11065, eyebrow:'In Their Words', text:"Thank you so much for all the open mats and for helping me improve over the summer.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:10295, eyebrow:'In Their Words', text:"You are a great coach! I am so happy to be wrestling again this year.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"I am so, so happy you are the wrestling coach — you're one of the best coaches I've ever had. You are the most genuine and giving person I know. I appreciate you and all you do for us.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:11395, eyebrow:'In Their Words', text:"Your only weakness is caring too much for people — but that's what we all love about you.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:10735, eyebrow:'In Their Words', text:"Thank you for welcoming me since I joined the team. I love this team so much.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:11395, eyebrow:'In Their Words', text:"I'm so glad I had this coach for my first year of wrestling — so patient and encouraging!", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:10185, eyebrow:'In Their Words', text:"I love how genuine you are and how much you love every single girl.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"I love having you as a coach and getting to see you every day. I love having you in my corner, and you push me harder every match and practice.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:11285, eyebrow:'In Their Words', text:"You make me look forward to working hard — you are such a positive person to be around.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:8975, eyebrow:'In Their Words', text:"You made me enjoy wrestling again. Thank you.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:12660, eyebrow:'In Their Words', text:"Thank you — you are the best coach I could ask for. I know you always have our backs and best interest at heart.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"Thank you for being a coach who I know will never give up on me. You've encouraged me to be myself and made me want to stay in this sport. I'm forever grateful.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:12440, eyebrow:'In Their Words', text:"You're such a great coach — thank you for always helping me during practices, pushing me, and motivating me.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:13540, eyebrow:'In Their Words', text:"Thank you for the heartfelt, encouraging note before the tournament. You are the best to have in the room, and I look up to you.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:12055, eyebrow:'In Their Words', text:"Thank you so much for pushing me. I love having you as my coach — you make me so happy for wrestling.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"You encourage and inspire me to work harder every day. Your support and strive to make everyone better is one of the reasons why I love this team and why I am growing to love wrestling. Thank you!", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:11340, eyebrow:'In Their Words', text:"You are such an encouraging and understanding presence. I'm so proud to call you friend.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:11230, eyebrow:'In Their Words', text:"You truly gave me back my love for this sport, and I will forever be grateful for you.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:13100, eyebrow:'In Their Words', text:"You brighten up my day whenever I get to talk to you. You are such a funny but genuine person that I can always talk to.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:12000, eyebrow:'In Their Words', text:"Thank you for caring about us — I love our little check-ins and that you make sure everyone is good.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:9965, eyebrow:'In Their Words', text:"You brighten the room and help everyone. You are irreplaceable.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"You make it easy to love something so complicated. Your words of encouragement and your presence are something so hard to find in a person. Thank you for being an amazing role model.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"Every time I walk in this room you put a smile on my face, even if I'm having the worst day. You inspire me to be myself, and I'm forever grateful for a coach like you.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:10845, eyebrow:'In Their Words', text:"I love how funny, kind, and supportive you are — I love having you as my coach.", source:"Wrestler" });
+SLIDES.push({ type:'quote', duration:13705, eyebrow:'In Their Words', text:"You are one of the most welcoming and fun people I've met. It's amazing to have you in the room, and you always make my day better.", source:"Wrestler" });
+
+// ---- Rendering ----
+function lbRowsHtml(list){
+  return list.map(row => `
+    <div class="tv-lb-row ${rankClass(row.r)}">
+      <div class="tv-lb-rank">${rankLabel(row.r)}</div>
+      <div class="tv-lb-name">${row.name}</div>
+      <div class="tv-lb-years">${row.years}</div>
+      <div class="tv-lb-value">${row.v}</div>
+    </div>`).join('');
+}
+
+function qualRowsHtml(rows, champ){
+  return rows.map(r => `
+    <div class="tv-qual-row ${champ?'champ':''}">
+      <div class="tv-qual-year">${r.year}</div>
+      <div class="tv-qual-name">${r.name}</div>
+      <div class="tv-qual-weight">${r.weight}</div>
+      ${champ ? '' : `<div class="tv-qual-result">${r.result}</div>`}
+    </div>`).join('');
+}
+
+function renderSlide(slide){
+  switch(slide.type){
+    case 'title':
+      return `<div class="slide-inner">
+        <div class="tv-eyebrow">${slide.eyebrow}</div>
+        <h1 class="tv-title-heading">${slide.title}</h1>
+        <p class="tv-title-sub">${slide.sub}</p>
+      </div>`;
+
+    case 'fun': {
+      const dots=[[1,16,52,'--gold'],[95,14,34,'#fff'],[2,52,30,'#fff'],[95,50,48,'--gold'],[3,82,44,'#fff'],[94,84,56,'--gold'],[12,94,26,'--gold'],[86,3,28,'--gold']];
+      return `<div class="slide-inner tv-fun">
+        ${dots.map((d,i)=>`<span class="tv-fun-dot" style="left:${d[0]}%;top:${d[1]}%;width:${d[2]}px;height:${d[2]}px;background:${d[3][0]==='-'?'var('+d[3]+')':d[3]};animation-delay:${(i*0.7).toFixed(1)}s"></span>`).join('')}
+        <div class="tv-fun-body">
+          ${slide.photo ? `<div class="tv-fun-photo"><img src="${slide.photo}" alt=""></div>` : ''}
+          <div class="tv-fun-text">
+            <div class="tv-eyebrow">${slide.eyebrow}</div>
+            <p class="tv-fun-lead">${slide.lead}</p>
+            <h1 class="tv-fun-big">${slide.big}</h1>
+            <h2 class="tv-fun-big2">${slide.big2}</h2>
+            <p class="tv-fun-sub">${slide.sub}</p>
+            ${slide.cta && (!slide.ctaUntil || new Date() < new Date(slide.ctaUntil)) ? `<div class="tv-fun-cta">${slide.cta}</div>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }
+
+    case 'quote':
+      return `<div class="slide-inner tv-quote">
+        <div class="tv-eyebrow">${slide.eyebrow}</div>
+        <div class="tv-quote-mark">&ldquo;</div>
+        <p class="tv-quote-text">${slide.text}</p>
+        <div class="tv-quote-src">&mdash; ${slide.source}</div>
+      </div>`;
+
+    case 'lb-grid':
+      return `<div class="slide-inner">
+        <div class="tv-lb-eyebrow">${slide.group}</div>
+        <div class="tv-lb-grid">
+          ${slide.cats.map(c => `
+            <div>
+              <h2 class="tv-lb-title">${c.name}</h2>
+              <div class="tv-lb-list">${lbRowsHtml(c.list)}</div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+
+    case 'pins':
+      return `<div class="slide-inner">
+        <h2 class="tv-lb-title">${slide.title}</h2>
+        <div class="tv-pins-list">
+          ${slide.list.map(row => `
+            <div class="tv-pins-row ${row.r===1?'r1':''}">
+              <div class="tv-pins-rank">${row.r}</div>
+              <div class="tv-pins-name">${row.name}</div>
+              <div class="tv-pins-year">${row.year}</div>
+              <div class="tv-pins-time">${row.t}</div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+
+    case 'pillar-winners':
+      return `<div class="slide-inner">
+        <h2 class="tv-lb-title">Pillar Award Winners</h2>
+        <div class="tv-pillar-groups">
+          ${slide.groups.map(g => `
+            <div class="tv-pillar-group">
+              <div class="tv-pillar-season">${g.season}</div>
+              <div class="tv-pillar-grid">
+                ${g.entries.map(e => `
+                  <div class="tv-pillar-entry">
+                    <p class="name">${e.name}</p>
+                    <p class="pillar">${e.pillar}</p>
+                  </div>`).join('')}
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+
+    case 'perfect-practice':
+      return `<div class="slide-inner">
+        <h2 class="tv-lb-title">${slide.title}</h2>
+        <div class="tv-pillar-groups">
+          ${slide.groups.map(g => `
+            <div class="tv-pillar-group">
+              <div class="tv-pillar-season">${g.season}</div>
+              <div class="tv-club-chips">
+                ${g.names.map(n => `<span class="tv-club-chip">${n}</span>`).join('')}
+              </div>
+            </div>`).join('')}
+        </div>
+        ${slide.note ? `<p class="tv-rb-note">${slide.note}</p>` : ''}
+      </div>`;
+
+    case 'qual-list':
+      return `<div class="slide-inner">
+        ${slide.eyebrow ? `<div class="tv-lb-eyebrow">${slide.eyebrow}</div>` : ''}
+        <h2 class="tv-lb-title">${slide.title}</h2>
+        <div class="tv-qual-list">${qualRowsHtml(slide.rows, slide.champ)}</div>
+        ${slide.note ? `<p class="tv-qual-note">${slide.note}</p>` : ''}
+      </div>`;
+
+    case 'qual-pair':
+      return `<div class="slide-inner">
+        ${slide.eyebrow ? `<div class="tv-lb-eyebrow">${slide.eyebrow}</div>` : ''}
+        <div class="tv-qual-pair">
+          <div>
+            <h2 class="tv-qual-pair-title">${slide.titleA}</h2>
+            <div class="tv-qual-list single">${qualRowsHtml(slide.rowsA, slide.champA)}</div>
+            ${slide.noteA ? `<p class="tv-qual-note">${slide.noteA}</p>` : ''}
+          </div>
+          <div>
+            <h2 class="tv-qual-pair-title">${slide.titleB}</h2>
+            <div class="tv-qual-list single">${qualRowsHtml(slide.rowsB, slide.champB)}</div>
+            ${slide.noteB ? `<p class="tv-qual-note">${slide.noteB}</p>` : ''}
+          </div>
+        </div>
+      </div>`;
+
+    case 'team-accomplishments':
+      return `<div class="slide-inner team-slide">
+        <div class="tv-lb-eyebrow">${slide.eyebrow}</div>
+        <h2 class="tv-lb-title">${slide.title}</h2>
+        <div class="tv-team-accom">
+          ${slide.groups.map(g => `
+            <div class="tv-team-group">
+              <div class="tv-team-group-label">${g.label}</div>
+              <div class="tv-team-years">${g.years.map(y => `<span class="tv-team-chip">${y}</span>`).join('')}</div>
+            </div>`).join('')}
+        </div>
+        ${slide.note ? `<p class="tv-team-note">${slide.note}</p>` : ''}
+      </div>`;
+
+    default:
+      return '';
+  }
+}
+
+let current = 0;
+let showingA = true;
+
+function runProgressBar(duration){
+  const bar = document.getElementById('tv-progress-bar');
+  bar.classList.remove('animate');
+  bar.style.transition = 'none';
+  bar.style.width = '0%';
+  void bar.offsetWidth;
+  bar.classList.add('animate');
+  bar.style.transition = `width ${duration}ms linear`;
+  bar.style.width = '100%';
+}
+
+// Shrink a slide's content to fit the screen (handles fullscreen / TV size differences)
+function fitSlide(layer){
+  const el = layer && layer.querySelector('.slide-inner');
+  if(!el) return;
+  el.style.transform = '';
+  el.style.maxHeight = 'none';
+  const availH = window.innerHeight * 0.94, availW = window.innerWidth * 0.97;
+  const h = el.scrollHeight, w = Math.max(el.scrollWidth, el.offsetWidth);
+  const s = Math.min(1, availH / h, availW / w);
+  if(s < 1){ el.style.transform = 'scale(' + s.toFixed(3) + ')'; el.style.transformOrigin = 'center center'; }
+}
+function fitAll(){ ['layerA','layerB'].forEach(id => fitSlide(document.getElementById(id))); }
+window.addEventListener('resize', fitAll);
+document.addEventListener('fullscreenchange', () => setTimeout(fitAll, 150));
+
+function showSlide(index){
+  const slide = SLIDES[index];
+  const layerA = document.getElementById('layerA');
+  const layerB = document.getElementById('layerB');
+  const incoming = showingA ? layerB : layerA;
+  const outgoing = showingA ? layerA : layerB;
+
+  incoming.innerHTML = renderSlide(slide);
+  fitSlide(incoming);
+  incoming.classList.add('active');
+  outgoing.classList.remove('active');
+  showingA = !showingA;
+
+  runProgressBar(slide.duration);
+
+  clearTimeout(window.__tvTimer);
+  window.__tvTimer = setTimeout(() => {
+    current = (current + 1) % SLIDES.length;
+    showSlide(current);
+  }, slide.duration);
+}
+
+document.addEventListener('fullscreenchange', () => {
+  document.body.classList.toggle('is-fullscreen', !!document.fullscreenElement);
+});
+
+
+// Click / tap anywhere (or remote Select) to jump to the next slide
+document.addEventListener('click', function(){ goToSlide(current + 1); });
+
+// Anti burn-in: slowly drift the static logo + QR code a few pixels every couple of minutes
+(function(){
+  var els = [document.querySelector('.tv-logo'), document.getElementById('tv-qr-box'), document.getElementById('tv-countdown')];
+  els.forEach(function(e){ if(e) e.style.transition = 'transform 4s ease-in-out'; });
+  function shift(){
+    var x = Math.round((Math.random()*2-1)*14), y = Math.round((Math.random()*2-1)*14);
+    els.forEach(function(e){ if(e) e.style.transform = 'translate(' + x + 'px,' + y + 'px)'; });
+  }
+  shift();
+  setInterval(shift, 2 * 60 * 1000);
+})();
+
+// Keep the TV awake: Screen Wake Lock (where supported) + a tiny silent looping video as a fallback
+(function(){
+  var lock=null;
+  function getLock(){
+    if(!('wakeLock' in navigator)) return;
+    navigator.wakeLock.request('screen').then(function(l){ lock=l; l.addEventListener('release',function(){ lock=null; }); }).catch(function(){});
+  }
+  getLock();
+  document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='visible' && !lock) getLock(); });
+  document.addEventListener('click', function(){ if(!lock) getLock(); playKeepAwake(); });
+  var vid=null;
+  function playKeepAwake(){ if(vid){ var p=vid.play(); if(p&&p.catch) p.catch(function(){}); } }
+  try{
+    var cv=document.createElement('canvas'); cv.width=16; cv.height=16;
+    var ctx=cv.getContext('2d'), n=0;
+    setInterval(function(){ n=(n+1)%2; ctx.fillStyle=n?'#010101':'#000'; ctx.fillRect(0,0,16,16); }, 1000);
+    if(cv.captureStream){
+      vid=document.createElement('video');
+      vid.muted=true; vid.loop=true; vid.playsInline=true; vid.setAttribute('muted',''); vid.setAttribute('playsinline','');
+      vid.srcObject=cv.captureStream(1);
+      vid.style.cssText='position:fixed;left:0;bottom:0;width:2px;height:2px;opacity:.02;pointer-events:none;z-index:-1;';
+      document.body.appendChild(vid);
+      playKeepAwake();
+    }
+  }catch(e){}
+})();
+
+
+// Season countdown (top-right corner). Change data-start on #tv-countdown to move the date; it hides itself once the season starts.
+function tickCountdown(){
+  var w=document.getElementById('tv-countdown'); if(!w) return;
+  var diff=new Date(w.getAttribute('data-start'))-new Date();
+  if(diff<=0){ w.style.display='none'; return; }
+  var sec=Math.floor(diff/1000), v={d:Math.floor(sec/86400),h:Math.floor(sec%86400/3600),m:Math.floor(sec%3600/60),s:sec%60};
+  for(var u in v){ var el=w.querySelector('[data-u="'+u+'"]'); if(el) el.textContent=(u==='d')?v[u]:String(v[u]).padStart(2,'0'); }
+}
+setInterval(tickCountdown,1000); tickCountdown();
+
+// Keep the mouse pointer hidden everywhere (re-applied on every mouse move)
+(function(){
+  var st=document.createElement('style'); st.textContent='html,body,body *,#stage,#stage *{cursor:none !important}'; document.head.appendChild(st);
+  function hide(){
+    document.documentElement.style.setProperty('cursor','none','important'); document.body.style.setProperty('cursor','none','important');
+    var all=document.querySelectorAll('*'); for(var i=0;i<all.length;i++) all[i].style.setProperty('cursor','none','important');
+  }
+  hide(); ['mousemove','mouseover','mousedown','pointermove'].forEach(function(e){ document.addEventListener(e, function(ev){ if(ev.target&&ev.target.style) ev.target.style.setProperty('cursor','none','important'); document.documentElement.style.setProperty('cursor','none','important'); }, true); });
+  setInterval(hide, 5000);
+})();
+function goToSlide(index){
+  current = (index + SLIDES.length) % SLIDES.length;
+  showSlide(current);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'f' || e.key === 'F') {
+    if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(() => {}); } else { document.exitFullscreen().catch(() => {}); }
+  } else if (e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    goToSlide(current + 1);
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    goToSlide(current - 1);
+  }
+});
+
+const qrImg = document.getElementById('tv-qr-img');
+if (qrImg) {
+  const statsUrl = location.origin + '/stats-records.html';
+  qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&data=' + encodeURIComponent(statsUrl);
+}
+
+showSlide(current);
+
+// Auto-refresh so TVs pick up new records/stats without anyone touching the display.
+setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 10 * 60 * 1000); // cache-busted so new updates always load
+</script>
+
+<script>
+(function(){ var b=document.getElementById('tv-banner'); if(!b) return; function chk(){ if(new Date()>=new Date(b.getAttribute('data-until'))) b.style.display='none'; } chk(); setInterval(chk,60000); })();
+</script>
+</body>
+</html>
