@@ -521,6 +521,22 @@ html,body{ background:#fff !important; color:var(--ink) !important; }
 #tv-banner b{ letter-spacing:.08em; text-transform:uppercase; }
 @media(max-width:900px){ #tv-banner{ white-space:normal; width:90%; bottom:18px; } }
 .slide-inner{ padding-bottom:90px !important; }
+
+/* ---- Slide type: photos ---- */
+.tv-photos{ display:flex; justify-content:center; align-items:center; gap:2.4vw; padding-top:7vh !important; }
+.tv-photos img{ display:block; width:auto; height:auto; max-height:68vh; max-width:46vw; border:10px solid #fff; border-radius:22px; box-shadow:0 18px 45px rgba(20,12,15,.22); }
+.tv-photos.one-wide img{ max-height:68vh; max-width:80vw; }
+.tv-photos.three img{ max-width:30vw; max-height:64vh; }
+
+/* ---- Quote slides with a photo beside the quote ---- */
+.tv-quote.has-photo{ display:flex; align-items:center; gap:3.2vw; max-width:1750px !important; text-align:center; padding:40px 56px 40px !important; }
+.tv-quote.has-photo.flip{ flex-direction:row-reverse; }
+.tv-quote-photo{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; }
+.tv-quote-photo img{ display:block; width:auto; height:auto; max-height:62vh; max-width:32vw; border:10px solid #fff; border-radius:22px; box-shadow:0 18px 45px rgba(20,12,15,.25); transform:rotate(-1.8deg); }
+.tv-quote.flip .tv-quote-photo img{ transform:rotate(1.8deg); }
+.tv-quote-body{ flex:1; min-width:0; }
+.tv-quote.has-photo .tv-quote-text{ font-size:clamp(1.5rem,2.7vw,2.7rem); }
+.tv-quote.has-photo .tv-quote-mark{ font-size:clamp(4rem,8vw,8rem); }
 </style>
 </head>
 <body>
@@ -854,7 +870,6 @@ SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"Wres
 SLIDES.push({ type:'quote', duration:13265, eyebrow:'In Their Words', text:"This weekend didn’t go how I wanted, but you kept me going and I learned so much. I’m so thankful you’ve come into my life.", source:"Wrestler" });
 SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"I want to thank you for being such an incredible source of support and kindness to my daughters. You have had a huge impact on them. You are amazing.", source:"Parent" });
 SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"As a first-time wrestling parent, I think you are all doing an outstanding job building an amazing culture of fun, supportiveness, discipline, teamwork, and uplifting these young women and helping them feel valued. It really is a breath of fresh air.", source:"Parent" });
-SLIDES.push({ type:'quote', duration:11065, eyebrow:'In Their Words', text:"Thank you so much for all the open mats and for helping me improve over the summer.", source:"Wrestler" });
 SLIDES.push({ type:'quote', duration:10295, eyebrow:'In Their Words', text:"You are a great coach! I am so happy to be wrestling again this year.", source:"Wrestler" });
 SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"I am so, so happy you are the wrestling coach — you're one of the best coaches I've ever had. You are the most genuine and giving person I know. I appreciate you and all you do for us.", source:"Wrestler" });
 SLIDES.push({ type:'quote', duration:11395, eyebrow:'In Their Words', text:"Your only weakness is caring too much for people — but that's what we all love about you.", source:"Wrestler" });
@@ -863,7 +878,6 @@ SLIDES.push({ type:'quote', duration:11395, eyebrow:'In Their Words', text:"I'm 
 SLIDES.push({ type:'quote', duration:10185, eyebrow:'In Their Words', text:"I love how genuine you are and how much you love every single girl.", source:"Wrestler" });
 SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"I love having you as a coach and getting to see you every day. I love having you in my corner, and you push me harder every match and practice.", source:"Wrestler" });
 SLIDES.push({ type:'quote', duration:11285, eyebrow:'In Their Words', text:"You make me look forward to working hard — you are such a positive person to be around.", source:"Wrestler" });
-SLIDES.push({ type:'quote', duration:8975, eyebrow:'In Their Words', text:"You made me enjoy wrestling again. Thank you.", source:"Wrestler" });
 SLIDES.push({ type:'quote', duration:12660, eyebrow:'In Their Words', text:"Thank you — you are the best coach I could ask for. I know you always have our backs and best interest at heart.", source:"Wrestler" });
 SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"Thank you for being a coach who I know will never give up on me. You've encouraged me to be myself and made me want to stay in this sport. I'm forever grateful.", source:"Wrestler" });
 SLIDES.push({ type:'quote', duration:12440, eyebrow:'In Their Words', text:"You're such a great coach — thank you for always helping me during practices, pushing me, and motivating me.", source:"Wrestler" });
@@ -879,6 +893,20 @@ SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"You 
 SLIDES.push({ type:'quote', duration:14000, eyebrow:'In Their Words', text:"Every time I walk in this room you put a smile on my face, even if I'm having the worst day. You inspire me to be myself, and I'm forever grateful for a coach like you.", source:"Wrestler" });
 SLIDES.push({ type:'quote', duration:10845, eyebrow:'In Their Words', text:"I love how funny, kind, and supportive you are — I love having you as my coach.", source:"Wrestler" });
 SLIDES.push({ type:'quote', duration:13705, eyebrow:'In Their Words', text:"You are one of the most welcoming and fun people I've met. It's amazing to have you in the room, and you always make my day better.", source:"Wrestler" });
+
+// Pair every quote with a team photo (alternating sides)
+const TEAM_PHOTOS = ['p01','p02','p03','p04','p05','p06','p07','p08','p09','p10','p11','p12','p13','p14','p15','p16'].map(n => 'assets/images/team-photos/' + n + '.jpg');
+(function(){
+  TEAM_PHOTOS.forEach(src => { const im = new Image(); im.src = src; }); // preload
+  let qi = 0;
+  SLIDES.forEach(s => {
+    if (s.type === 'quote') {
+      s.photo = TEAM_PHOTOS[(qi + (qi >= TEAM_PHOTOS.length ? 8 : 0)) % TEAM_PHOTOS.length];
+      s.flip = (qi % 2 === 1);
+      qi++;
+    }
+  });
+})();
 
 // ---- Rendering ----
 function lbRowsHtml(list){
@@ -929,11 +957,27 @@ function renderSlide(slide){
     }
 
     case 'quote':
+      if (slide.photo) {
+        return `<div class="slide-inner tv-quote has-photo ${slide.flip?'flip':''}">
+          <div class="tv-quote-photo"><img src="${slide.photo}" alt=""></div>
+          <div class="tv-quote-body">
+            <div class="tv-eyebrow">${slide.eyebrow}</div>
+            <div class="tv-quote-mark">&ldquo;</div>
+            <p class="tv-quote-text">${slide.text}</p>
+            <div class="tv-quote-src">&mdash; ${slide.source}</div>
+          </div>
+        </div>`;
+      }
       return `<div class="slide-inner tv-quote">
         <div class="tv-eyebrow">${slide.eyebrow}</div>
         <div class="tv-quote-mark">&ldquo;</div>
         <p class="tv-quote-text">${slide.text}</p>
         <div class="tv-quote-src">&mdash; ${slide.source}</div>
+      </div>`;
+
+    case 'photos':
+      return `<div class="slide-inner tv-photos ${slide.photos.length===1?'one-wide':''} ${slide.photos.length===3?'three':''}">
+        ${slide.photos.map(src => `<img src="${src}" alt="">`).join('')}
       </div>`;
 
     case 'lb-grid':
