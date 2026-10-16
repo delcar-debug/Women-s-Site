@@ -537,6 +537,7 @@ html,body{ background:#fff !important; color:var(--ink) !important; }
 .tv-quote-body{ flex:1; min-width:0; }
 .tv-quote.has-photo .tv-quote-text{ font-size:clamp(1.5rem,2.7vw,2.7rem); }
 .tv-quote.has-photo .tv-quote-mark{ font-size:clamp(4rem,8vw,8rem); }
+.tv-quote.has-photo.wide .tv-quote-photo img{ max-width:42vw; max-height:56vh; }
 </style>
 </head>
 <body>
@@ -895,13 +896,14 @@ SLIDES.push({ type:'quote', duration:10845, eyebrow:'In Their Words', text:"I lo
 SLIDES.push({ type:'quote', duration:13705, eyebrow:'In Their Words', text:"You are one of the most welcoming and fun people I've met. It's amazing to have you in the room, and you always make my day better.", source:"Wrestler" });
 
 // Pair every quote with a team photo (alternating sides)
-const TEAM_PHOTOS = ['p01','p02','p03','p04','p05','p06','p07','p08','p09','p10','p11','p12','p13','p14','p15','p16'].map(n => 'assets/images/team-photos/' + n + '.jpg');
+const TEAM_PHOTOS = [{'src': 'assets/images/team-photos/g01.jpg', 'wide': true}, {'src': 'assets/images/team-photos/g02.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g03.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g04.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g05.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g06.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g07.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g08.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g09.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g10.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g11.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g12.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g13.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g14.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g15.jpg', 'wide': true}, {'src': 'assets/images/team-photos/g16.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g17.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g18.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g19.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g20.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g21.jpg', 'wide': false}, {'src': 'assets/images/team-photos/g22.jpg', 'wide': true}];
 (function(){
-  TEAM_PHOTOS.forEach(src => { const im = new Image(); im.src = src; }); // preload
+  TEAM_PHOTOS.forEach(p => { const im = new Image(); im.src = p.src; }); // preload
   let qi = 0;
   SLIDES.forEach(s => {
     if (s.type === 'quote') {
-      s.photo = TEAM_PHOTOS[(qi + (qi >= TEAM_PHOTOS.length ? 8 : 0)) % TEAM_PHOTOS.length];
+      const ph = TEAM_PHOTOS[qi % TEAM_PHOTOS.length];
+      s.photo = ph.src; s.wide = ph.wide;
       s.flip = (qi % 2 === 1);
       qi++;
     }
@@ -958,7 +960,7 @@ function renderSlide(slide){
 
     case 'quote':
       if (slide.photo) {
-        return `<div class="slide-inner tv-quote has-photo ${slide.flip?'flip':''}">
+        return `<div class="slide-inner tv-quote has-photo ${slide.flip?'flip':''} ${slide.wide?'wide':''}">
           <div class="tv-quote-photo"><img src="${slide.photo}" alt=""></div>
           <div class="tv-quote-body">
             <div class="tv-eyebrow">${slide.eyebrow}</div>
