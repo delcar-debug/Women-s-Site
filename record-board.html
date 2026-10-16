@@ -1064,6 +1064,38 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
   var inSeason=(m===10&&d>=13&&d<=20);
   var on=q?q[1]==='fall':inSeason;
   var hwOn=false;
+  /* Valentine's theme: auto-applies Feb 11 – Feb 15 each year (add ?theme=valentines to preview any time, ?theme=off to disable) */
+  var vdOn=(m===2&&d>=11&&d<=15);
+  if(q? q[1]==='valentines' : vdOn){
+    var vst=document.querySelector('style');
+    var vmap=[['--maroon:#6d1730','--maroon:#8a1c4a'],['--dark:#3f0b1a','--dark:#2a0614'],['--gold:#e8c37a','--gold:#ffb3cf'],['--silver:#d7dde3','--silver:#f4dbe6'],['--bronze:#d79a6a','--bronze:#ff8fb1'],['rgba(232,195,122','rgba(255,179,207']];
+    var vt=vst.textContent; vmap.forEach(function(p){ vt=vt.split(p[0]).join(p[1]); });
+    vst.textContent=vt+`
+#stage{ background:radial-gradient(ellipse at 85% 10%,rgba(255,179,207,.22),transparent 45%),radial-gradient(ellipse at 10% 95%,rgba(255,90,140,.28),transparent 55%),linear-gradient(150deg,#1d040e 0%,#3b0a22 40%,#7a1840 75%,#2a0614 100%) !important; animation:vGlow 22s ease-in-out infinite alternate; background-size:140% 140%,140% 140%,100% 100% !important; }
+@keyframes vGlow{ from{ background-position:0% 0%,100% 100%,0 0; } to{ background-position:25% 20%,75% 80%,0 0; } }
+.slide-layer{ background:transparent !important; }
+.vheart{ position:absolute; pointer-events:none; z-index:0; }
+.vheart.big{ width:min(44vw,720px); left:-7vw; bottom:-14vh; opacity:.10; transform:rotate(-12deg); }
+.vheart.big2{ width:min(30vw,500px); right:-6vw; top:-8vh; opacity:.09; transform:rotate(14deg); }
+#heart-field{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+.hf{ position:absolute; bottom:-14vh; will-change:transform; filter:drop-shadow(0 3px 6px rgba(0,0,0,.35)); animation-name:heartRise,heartSway; animation-timing-function:linear,ease-in-out; animation-iteration-count:infinite,infinite; animation-direction:normal,alternate; }
+@keyframes heartRise{ from{ bottom:-14vh; opacity:0; } 8%{ opacity:.6; } 90%{ opacity:.6; } to{ bottom:112vh; opacity:0; } }
+@keyframes heartSway{ from{ transform:translateX(-3vw) rotate(-14deg); } to{ transform:translateX(4vw) rotate(14deg); } }
+.tv-logo img{ filter:hue-rotate(-14deg) saturate(1.5) brightness(1.2) drop-shadow(0 2px 6px rgba(0,0,0,.5)) !important; }
+`;
+    var runVd=function(){
+      var st=document.getElementById('stage'); if(!st) return;
+      var P=["<svg viewBox='0 0 100 90' xmlns='http://www.w3.org/2000/svg'><path d='M50 85 C10 55 0 35 0 22 C0 8 11 0 24 0 C36 0 45 7 50 16 C55 7 64 0 76 0 C89 0 100 8 100 22 C100 35 90 55 50 85 Z' fill='#ff8fb1'/><ellipse cx='28' cy='22' rx='11' ry='7' fill='#fff' opacity='.35' transform='rotate(-30 28 22)'/></svg>","<svg viewBox='0 0 100 90' xmlns='http://www.w3.org/2000/svg'><path d='M50 85 C10 55 0 35 0 22 C0 8 11 0 24 0 C36 0 45 7 50 16 C55 7 64 0 76 0 C89 0 100 8 100 22 C100 35 90 55 50 85 Z' fill='#ff4d85'/><ellipse cx='28' cy='22' rx='11' ry='7' fill='#fff' opacity='.35' transform='rotate(-30 28 22)'/></svg>","<svg viewBox='0 0 100 90' xmlns='http://www.w3.org/2000/svg'><path d='M50 85 C10 55 0 35 0 22 C0 8 11 0 24 0 C36 0 45 7 50 16 C55 7 64 0 76 0 C89 0 100 8 100 22 C100 35 90 55 50 85 Z' fill='#ffd1e0'/><ellipse cx='28' cy='22' rx='11' ry='7' fill='#fff' opacity='.35' transform='rotate(-30 28 22)'/></svg>"], BIG="<svg viewBox='0 0 100 90' xmlns='http://www.w3.org/2000/svg'><path d='M50 85 C10 55 0 35 0 22 C0 8 11 0 24 0 C36 0 45 7 50 16 C55 7 64 0 76 0 C89 0 100 8 100 22 C100 35 90 55 50 85 Z' fill='#ff5c93'/><ellipse cx='28' cy='22' rx='11' ry='7' fill='#fff' opacity='.35' transform='rotate(-30 28 22)'/></svg>";
+      ['big','big2'].forEach(function(c){ var x=document.createElement('div'); x.className='vheart '+c; x.innerHTML=BIG; st.insertBefore(x,st.firstChild); });
+      var f=document.createElement('div'); f.id='heart-field'; st.insertBefore(f,st.firstChild);
+      for(var i=0;i<24;i++){ var h=document.createElement('div'); h.className='hf'; h.innerHTML=P[i%P.length];
+        var size=20+Math.random()*34, rise=12+Math.random()*14, sway=3+Math.random()*3;
+        h.style.width=size+'px'; h.style.left=(Math.random()*100)+'vw';
+        h.style.animationDuration=rise+'s,'+sway+'s'; h.style.animationDelay=(-Math.random()*rise)+'s,'+(-Math.random()*sway)+'s'; f.appendChild(h); }
+    };
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',runVd); else runVd();
+    return;
+  }
   /* Brewers theme: one day only (Oct 16, 2026). Add ?theme=brewers to preview any time. */
   var brOn=(now.getFullYear()===2026&&m===10&&d===16);
   if(q? q[1]==='brewers' : brOn){
