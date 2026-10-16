@@ -1064,6 +1064,40 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
   var inSeason=(m===10&&d>=13&&d<=20);
   var on=q?q[1]==='fall':inSeason;
   var hwOn=false;
+  /* Brewers theme: one day only (Oct 16, 2026). Add ?theme=brewers to preview any time. */
+  var brOn=(now.getFullYear()===2026&&m===10&&d===16);
+  if(q? q[1]==='brewers' : brOn){
+    var bst=document.querySelector('style');
+    var bmap=[['--maroon:#6d1730','--maroon:#16356b'],['--dark:#3f0b1a','--dark:#0a1630'],['--gold:#e8c37a','--gold:#ffc52f'],['--silver:#d7dde3','--silver:#dbe4f5'],['--bronze:#d79a6a','--bronze:#c9a24a'],['rgba(232,195,122','rgba(255,197,47']];
+    var bt=bst.textContent; bmap.forEach(function(p){ bt=bt.split(p[0]).join(p[1]); });
+    bst.textContent=bt+`
+#stage{ background:radial-gradient(ellipse 28% 60% at 12% -8%,rgba(255,245,200,.30),transparent 70%),radial-gradient(ellipse 28% 60% at 88% -8%,rgba(255,245,200,.30),transparent 70%),radial-gradient(ellipse at 50% 120%,rgba(255,197,47,.22),transparent 55%),linear-gradient(180deg,#050c1e 0%,#0c2150 55%,#16356b 100%) !important; }
+.slide-layer{ background:transparent !important; }
+.bw{ position:absolute; pointer-events:none; z-index:0; }
+.bw.dia{ width:min(40vw,640px); left:-8vw; bottom:-12vh; opacity:.11; transform:rotate(8deg); }
+.bw.dia2{ width:min(26vw,420px); right:-5vw; top:10vh; opacity:.08; transform:rotate(-12deg); }
+#base-field{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+.bb{ opacity:.7; position:absolute; top:-12vh; will-change:transform; filter:drop-shadow(0 3px 6px rgba(0,0,0,.45)); animation-name:ballDrop,ballRoll; animation-timing-function:linear,linear; animation-iteration-count:infinite,infinite; }
+@keyframes ballDrop{ from{ top:-12vh; } to{ top:112vh; } }
+@keyframes ballRoll{ from{ transform:translateX(-4vw) rotate(0deg); } to{ transform:translateX(5vw) rotate(540deg); } }
+.conf{ position:absolute; top:-6vh; width:8px; height:14px; opacity:.6; animation:confFall linear infinite; }
+@keyframes confFall{ from{ top:-6vh; transform:rotate(0deg) translateX(0); } to{ top:108vh; transform:rotate(720deg) translateX(4vw); } }
+.tv-logo img{ filter:hue-rotate(228deg) saturate(1.5) brightness(1.15) drop-shadow(0 2px 6px rgba(0,0,0,.5)) !important; }
+`;
+    var runBr=function(){
+      var st=document.getElementById('stage'); if(!st) return;
+      var DIA="<svg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='#ffc52f' stroke-width='5'><path d='M150 20 L280 150 L150 280 L20 150 Z'/><path d='M150 280 L150 150 M20 150 L280 150' stroke-dasharray='10 10'/><circle cx='150' cy='150' r='14'/></svg>", BALL="<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><circle cx='100' cy='100' r='94' fill='#ffffff'/><path d='M40 20 Q70 100 40 180' fill='none' stroke='#ffc52f' stroke-width='5' stroke-dasharray='9 9'/><path d='M160 20 Q130 100 160 180' fill='none' stroke='#ffc52f' stroke-width='5' stroke-dasharray='9 9'/></svg>";
+      ['dia','dia2'].forEach(function(c){ var x=document.createElement('div'); x.className='bw '+c; x.innerHTML=DIA; st.insertBefore(x,st.firstChild); });
+      var f=document.createElement('div'); f.id='base-field'; st.insertBefore(f,st.firstChild);
+      for(var i=0;i<5;i++){ var b=document.createElement('div'); b.className='bb'; b.innerHTML=BALL; var sz=22+Math.random()*20, fall=18+Math.random()*14;
+        b.style.width=sz+'px'; b.style.left=(Math.random()*100)+'vw'; b.style.animationDuration=fall+'s,'+(6+Math.random()*6)+'s'; b.style.animationDelay=(-Math.random()*fall)+'s,'+(-Math.random()*6)+'s'; f.appendChild(b); }
+      var cols=['#ffc52f','#ffffff','#2f5fc4','#ffc52f'];
+      for(var j=0;j<12;j++){ var c=document.createElement('div'); c.className='conf'; c.style.background=cols[j%cols.length]; c.style.left=(Math.random()*100)+'vw';
+        var dd=8+Math.random()*10; c.style.animationDuration=dd+'s'; c.style.animationDelay=(-Math.random()*dd)+'s'; f.appendChild(c); }
+    };
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',runBr); else runBr();
+    return;
+  }
   var pkOn=false; /* Packer theme: set false to return to the normal/seasonal themes (or use ?theme=packers to preview) */
   if(q? q[1]==='packers' : pkOn){
     var pst=document.querySelector('style');
