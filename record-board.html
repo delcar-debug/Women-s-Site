@@ -1081,6 +1081,10 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
 @keyframes ballDrop{ from{ top:-12vh; } to{ top:112vh; } }
 @keyframes ballRoll{ from{ transform:translateX(-4vw) rotate(0deg); } to{ transform:translateX(5vw) rotate(540deg); } }
 .conf{ position:absolute; top:-6vh; width:8px; height:14px; opacity:.6; animation:confFall linear infinite; }
+.bb.bp{ opacity:.8; animation-name:ballDrop,pieceSway; }
+@keyframes pieceSway{ from{ transform:translateX(-4vw) rotate(-35deg); } to{ transform:translateX(5vw) rotate(35deg); } }
+.bb.bat{ animation-name:ballDrop,batSpin; }
+@keyframes batSpin{ from{ transform:translateX(-4vw) rotate(0deg); } to{ transform:translateX(5vw) rotate(360deg); } }
 @keyframes confFall{ from{ top:-6vh; transform:rotate(0deg) translateX(0); } to{ top:108vh; transform:rotate(720deg) translateX(4vw); } }
 .tv-logo img{ filter:hue-rotate(228deg) saturate(1.5) brightness(1.15) drop-shadow(0 2px 6px rgba(0,0,0,.5)) !important; }
 `;
@@ -1091,6 +1095,9 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
       var f=document.createElement('div'); f.id='base-field'; st.insertBefore(f,st.firstChild);
       for(var i=0;i<5;i++){ var b=document.createElement('div'); b.className='bb'; b.innerHTML=BALL; var sz=22+Math.random()*20, fall=18+Math.random()*14;
         b.style.width=sz+'px'; b.style.left=(Math.random()*100)+'vw'; b.style.animationDuration=fall+'s,'+(6+Math.random()*6)+'s'; b.style.animationDelay=(-Math.random()*fall)+'s,'+(-Math.random()*6)+'s'; f.appendChild(b); }
+      var PIECES=[['bat',"<svg viewBox='0 0 220 40' xmlns='http://www.w3.org/2000/svg'><path d='M6 17 Q6 11 14 11 L150 15 Q205 17 214 20 Q205 23 150 25 L14 29 Q6 29 6 23 Z' fill='#d9a05b' stroke='#8a5a24' stroke-width='3'/><rect x='24' y='12' width='20' height='16' fill='#16356b'/><rect x='46' y='12' width='5' height='16' fill='#ffc52f'/><circle cx='9' cy='20' r='5' fill='#b57a35'/></svg>",70,110],['glove',"<svg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'><path d='M30 150 Q10 110 22 78 L30 40 Q33 26 44 30 Q52 33 52 46 L56 20 Q58 6 70 9 Q80 12 78 26 L80 14 Q83 2 95 5 Q105 8 102 22 L104 26 Q108 14 120 18 Q130 22 126 38 L130 62 Q150 76 146 104 Q142 134 118 150 Z' fill='#8b4a1e' stroke='#4e2410' stroke-width='4'/><path d='M44 150 Q40 118 60 104 Q82 92 102 104 Q120 116 116 150 Z' fill='#a65d28' stroke='#4e2410' stroke-width='3'/><path d='M60 120 L100 120 M62 130 L98 130 M64 110 L96 110' stroke='#ffc52f' stroke-width='3' stroke-linecap='round'/></svg>",42,62]];
+      PIECES.forEach(function(p){ for(var k=0;k<4;k++){ var o=document.createElement('div'); o.className='bb bp '+p[0]; o.innerHTML=p[1]; var w=p[2]+Math.random()*(p[3]-p[2]), fl=22+Math.random()*16;
+        o.style.width=w+'px'; o.style.left=(Math.random()*100)+'vw'; o.style.animationDuration=fl+'s,'+(8+Math.random()*8)+'s'; o.style.animationDelay=(-Math.random()*fl)+'s,'+(-Math.random()*8)+'s'; f.appendChild(o); } });
       var cols=['#ffc52f','#ffffff','#2f5fc4','#ffc52f'];
       for(var j=0;j<12;j++){ var c=document.createElement('div'); c.className='conf'; c.style.background=cols[j%cols.length]; c.style.left=(Math.random()*100)+'vw';
         var dd=8+Math.random()*10; c.style.animationDuration=dd+'s'; c.style.animationDelay=(-Math.random()*dd)+'s'; f.appendChild(c); }
