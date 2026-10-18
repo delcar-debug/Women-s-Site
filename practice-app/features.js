@@ -290,3 +290,13 @@
   // Deep link: practice-app/index.html#inbox opens the Inbox page
   if(location.hash==='#inbox'){let n=0;const t=setInterval(()=>{const b=document.getElementById('navQueue');if(b&&b.offsetParent!==null){b.click();clearInterval(t)}else if(++n>40)clearInterval(t)},500)}
 })();
+
+/* TV view: journal prompts open/close on click (or Enter/Select); closed by default */
+(function(){
+  function boxes(){ return ['teamBoardJournal','teamBoardJournalEnd'].map(function(id){ return document.getElementById(id); }).filter(Boolean); }
+  function prep(){ boxes().forEach(function(b){ if(!b.hasAttribute('tabindex')){ b.setAttribute('tabindex','0'); b.setAttribute('role','button'); } }); }
+  function toggle(b){ if(b && b.closest('.tv-mode')) b.classList.toggle('open'); }
+  document.addEventListener('click', function(e){ var b=e.target.closest && e.target.closest('#teamBoardJournal,#teamBoardJournalEnd'); if(b) toggle(b); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' '){ var b=document.activeElement; if(b && (b.id==='teamBoardJournal'||b.id==='teamBoardJournalEnd')){ e.preventDefault(); toggle(b); } } });
+  prep(); setInterval(prep, 3000);
+})();

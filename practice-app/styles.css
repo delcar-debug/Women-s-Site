@@ -867,3 +867,15 @@ body.detached-tv .tv-theme-btn{background:rgba(0,0,0,.32)}
 html,body{overflow-y:auto}
 
 .summary-inline{margin:2px 0 14px}
+
+/* ---- TV view: bigger Practice Goal + click-to-open journal prompts ---- */
+#teamBoardPage.tv-mode #teamBoardGoal{font-size:clamp(1.5rem,2.3vw,2.6rem);padding:12px 22px;line-height:1.25;font-weight:800}
+#teamBoardPage.tv-mode #teamBoardGoal strong{margin-right:.4em}
+#teamBoardPage.tv-mode #teamBoardJournal,#teamBoardPage.tv-mode #teamBoardJournalEnd{cursor:pointer;font-size:clamp(1rem,1.5vw,1.6rem);padding:7px 18px;outline:none;user-select:none}
+#teamBoardPage.tv-mode #teamBoardJournal strong::before,#teamBoardPage.tv-mode #teamBoardJournalEnd strong::before{content:"\25B8  ";display:inline-block;transition:transform .15s}
+#teamBoardPage.tv-mode #teamBoardJournal.open strong::before,#teamBoardPage.tv-mode #teamBoardJournalEnd.open strong::before{transform:rotate(90deg)}
+#teamBoardPage.tv-mode #teamBoardJournal strong::after,#teamBoardPage.tv-mode #teamBoardJournalEnd strong::after{content:"  (click to open)";font-weight:600;opacity:.7;font-size:.8em}
+#teamBoardPage.tv-mode #teamBoardJournal.open strong::after,#teamBoardPage.tv-mode #teamBoardJournalEnd.open strong::after{content:"  (click to close)"}
+#teamBoardPage.tv-mode #teamBoardJournal span,#teamBoardPage.tv-mode #teamBoardJournalEnd span{display:none}
+#teamBoardPage.tv-mode #teamBoardJournal.open span,#teamBoardPage.tv-mode #teamBoardJournalEnd.open span{display:block;margin-top:10px;font-size:clamp(2rem,3.6vw,4rem);line-height:1.25;font-weight:800}
+#teamBoardPage.tv-mode #teamBoardJournal:focus-visible,#teamBoardPage.tv-mode #teamBoardJournalEnd:focus-visible{box-shadow:0 0 0 4px rgba(255,255,255,.8)}
