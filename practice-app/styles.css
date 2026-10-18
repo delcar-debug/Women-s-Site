@@ -879,3 +879,6 @@ html,body{overflow-y:auto}
 #teamBoardPage.tv-mode #teamBoardJournal span,#teamBoardPage.tv-mode #teamBoardJournalEnd span{display:none}
 #teamBoardPage.tv-mode #teamBoardJournal.open span,#teamBoardPage.tv-mode #teamBoardJournalEnd.open span{display:block;margin-top:10px;font-size:clamp(2rem,3.6vw,4rem);line-height:1.25;font-weight:800}
 #teamBoardPage.tv-mode #teamBoardJournal:focus-visible,#teamBoardPage.tv-mode #teamBoardJournalEnd:focus-visible{box-shadow:0 0 0 4px rgba(255,255,255,.8)}
+
+/* Share-practice reminder removed (attendance reminder only) */
+#coachPdfReminder{display:none !important}

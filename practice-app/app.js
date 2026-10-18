@@ -448,7 +448,7 @@ function setPdfStatus(update,key=practiceIdentityKey()){
 function renderCoachPdfReminder(){
   const box=$('coachPdfReminder');if(!box)return;
   const key=practiceIdentityKey(),status=pdfStatusForKey(key);
-  box.hidden=!!status.sentAt;
+  box.hidden=true; /* share-practice reminder removed: only the attendance reminder shows */
 }
 function autoArchiveSnapshot(existing={}){
   const totals=categoryTotals(false),planned=total(),key=practiceIdentityKey();
