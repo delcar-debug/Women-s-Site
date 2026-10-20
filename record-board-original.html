@@ -481,6 +481,7 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
 #tv-countdown .cd-unit{ font-size:.62rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; opacity:.8; margin-top:3px; }
 @media(max-width:1100px){ #tv-countdown{ top:10px; right:10px; transform:scale(.7); transform-origin:top right; } }
 </style>
+<style>#tv-luck{ position:fixed; left:50%; bottom:34px; transform:translateX(-50%); z-index:41; background:#e8c37a; color:#2a0f16; padding:12px 34px; border-radius:999px; font-size:clamp(1.1rem,2vw,1.9rem); font-weight:800; text-align:center; box-shadow:0 12px 30px rgba(0,0,0,.3); white-space:nowrap; } #tv-luck b{ text-transform:uppercase; letter-spacing:.06em; }</style>
 </head>
 <body>
 
@@ -495,6 +496,7 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
     <div class="cd-box"><div class="cd-num" data-u="s">--</div><div class="cd-unit">Sec</div></div>
   </div>
 </div>
+<div id="tv-luck" data-until="2026-10-21T00:00:00">&#9917; <b>Good luck, Boys Soccer!</b> Playoffs start <span id="tv-luck-day">tomorrow</span> at 4:00 &middot; Go Vikings! &#9917;</div>
 <div id="stage">
   <div class="slide-layer active" id="layerA"></div>
   <div class="slide-layer" id="layerB"></div>
@@ -800,6 +802,11 @@ SLIDES.push({ type:'qual-pair', duration:10000, eyebrow:'Postseason Herstory',
   titleA:'Regional Champions', rowsA:REGIONAL_CHAMPIONS, champA:true, noteA:'Girls regionals began in 2025.',
   titleB:'Fargo Nationals Qualifiers', rowsB:FARGO_QUALIFIERS });
 
+// Boys Soccer playoff good-luck slide (auto-expires Oct 21, 2026)
+if (new Date() < new Date('2026-10-21T00:00:00')) {
+  SLIDES.unshift({ type:'fun', duration:9000, eyebrow:'Playoffs Start '+(new Date()>=new Date('2026-10-20T00:00:00')?'Today':'Tomorrow')+' at 4:00', lead:'&#9917; From the girls wrestling team &#9917;', big:'Good luck,', big2:'Boys Soccer! Go Vikings!', sub:'Kickoff at 4:00. We’ve got your back. Bring it home!' });
+}
+
 // ---- Rendering ----
 function lbRowsHtml(list){
   return list.map(row => `
@@ -1103,7 +1110,7 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
 /* Seasonal fall theme: auto-applies Oct 13 – Oct 20 (fall) and Oct 27 – Nov 1 (Halloween) each year (add ?theme=fall to preview any time, ?theme=off to disable) */
 (function(){
   var q=location.search.match(/theme=(\w+)/), now=new Date(), m=now.getMonth()+1, d=now.getDate();
-  var inSeason=(m===10&&d>=13&&d<=20);
+  var inSeason=(m===10&&d>=13&&d<=26); /* extended to Oct 26 so the fall theme carries until Halloween */
   var on=q?q[1]==='fall':inSeason;
   var hwOn=false;
   /* Valentine's theme: auto-applies Feb 11 – Feb 15 each year (add ?theme=valentines to preview any time, ?theme=off to disable) */
@@ -1299,5 +1306,6 @@ setTimeout(() => { location.replace(location.pathname + '?r=' + Date.now()); }, 
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go();
 })();
 </script>
+<script>(function(){ var b=document.getElementById('tv-luck'); if(!b) return; function chk(){ var n=new Date(); if(n>=new Date(b.getAttribute('data-until'))) b.style.display='none'; var d=document.getElementById('tv-luck-day'); if(d) d.textContent=(n>=new Date('2026-10-20T00:00:00')?'today':'tomorrow'); } chk(); setInterval(chk,60000); })();</script>
 </body>
 </html>
