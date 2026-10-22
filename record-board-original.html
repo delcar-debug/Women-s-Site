@@ -482,6 +482,37 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
 @media(max-width:1100px){ #tv-countdown{ top:10px; right:10px; transform:scale(.7); transform-origin:top right; } }
 </style>
 <style>#tv-luck{ position:fixed; left:50%; bottom:34px; transform:translateX(-50%); z-index:41; background:#e8c37a; color:#2a0f16; padding:12px 34px; border-radius:999px; font-size:clamp(1.1rem,2vw,1.9rem); font-weight:800; text-align:center; box-shadow:0 12px 30px rgba(0,0,0,.3); white-space:nowrap; } #tv-luck b{ text-transform:uppercase; letter-spacing:.06em; }</style>
+<style>
+/* Volleyball good-luck takeover */
+.tv-vb{ background:radial-gradient(circle at 50% 45%, #a01a3c 0%, #7a1230 45%, #4a0a1c 100%); border:6px solid #fff; box-shadow:0 0 0 6px #7a1230, 0 20px 60px rgba(0,0,0,.5); height:88vh; max-height:88vh !important; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:28px; }
+.tv-vb-rays{ position:absolute; left:50%; top:50%; width:220vmax; height:220vmax; margin:-110vmax 0 0 -110vmax; background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.14) 0deg 10deg, rgba(255,255,255,0) 10deg 20deg); animation:vbSpin 30s linear infinite; z-index:0; }
+.tv-vb-glow{ position:absolute; inset:0; background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.18), rgba(0,0,0,0) 60%); animation:vbPulse 2.4s ease-in-out infinite; z-index:0; }
+.tv-vb-ball{ position:absolute; line-height:1; z-index:1; animation:vbBounce var(--d,2s) ease-in-out infinite; animation-delay:var(--dl,0s); filter:drop-shadow(0 12px 14px rgba(0,0,0,.45)); }
+.tv-vb-spin{ position:absolute; z-index:1; line-height:1; animation:vbRoll var(--d,6s) linear infinite; }
+.tv-vb-conf{ position:absolute; top:-8%; width:var(--w,14px); height:var(--h,26px); background:var(--c,#e8c37a); border-radius:3px; opacity:.95; z-index:1; animation:vbFall var(--d,6s) linear infinite; animation-delay:var(--dl,0s); }
+.tv-vb-text{ position:relative; z-index:3; }
+.tv-vb-top{ font-size:clamp(1.6rem,3.2vw,3.2rem); font-weight:900; letter-spacing:.22em; text-transform:uppercase; color:#fff; text-shadow:0 4px 0 rgba(0,0,0,.5); animation:vbWiggle 1.6s ease-in-out infinite; }
+.tv-vb-big{ font-size:clamp(4rem,13vw,13rem); font-weight:900; line-height:.88; letter-spacing:-.04em; text-transform:uppercase; margin:6px 0 0; color:#fff; text-shadow:0 10px 0 #4a0a1c, 0 0 70px rgba(255,255,255,.45); animation:vbBeat 1.2s ease-in-out infinite; }
+.tv-vb-big2{ font-size:clamp(3rem,10.5vw,10.5rem); font-weight:900; line-height:.9; letter-spacing:-.03em; text-transform:uppercase; margin:6px 0 0; color:#7a1230; background:#fff; padding:0 .25em; border-radius:.12em; text-shadow:none; box-shadow:0 10px 0 #4a0a1c; display:inline-block; animation:vbJump 1.8s ease-in-out infinite; }
+.tv-vb-from{ margin-top:16px; font-size:clamp(1.1rem,2vw,2rem); font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#fff; text-shadow:0 3px 0 rgba(0,0,0,.5); }
+.tv-vb-sub{ margin-top:22px; display:inline-block; padding:12px 38px; border-radius:999px; background:#fff; color:#7a1230; border:4px solid #7a1230; font-size:clamp(1.3rem,2.6vw,2.6rem); font-weight:900; text-transform:uppercase; letter-spacing:.06em; box-shadow:0 12px 30px rgba(0,0,0,.4); animation:vbWiggle 1.4s ease-in-out infinite reverse; }
+@keyframes vbSpin{ to{ transform:rotate(360deg); } }
+@keyframes vbPulse{ 0%,100%{ opacity:.5; transform:scale(.92); } 50%{ opacity:1; transform:scale(1.08); } }
+@keyframes vbBounce{ 0%,100%{ transform:translateY(0) rotate(-8deg) scale(1,1); } 45%{ transform:translateY(-34vh) rotate(180deg) scale(1,1); } 50%{ transform:translateY(-34vh) rotate(190deg); } 92%{ transform:translateY(0) rotate(340deg) scale(1,1); } 96%{ transform:translateY(0) rotate(352deg) scale(1.25,.7); } }
+@keyframes vbRoll{ 0%{ transform:translateX(-12vw) rotate(0deg); } 100%{ transform:translateX(112vw) rotate(1080deg); } }
+@keyframes vbFall{ 0%{ transform:translateY(-10vh) rotate(0deg); } 100%{ transform:translateY(105vh) rotate(720deg); } }
+@keyframes vbWiggle{ 0%,100%{ transform:rotate(-2.5deg) scale(1); } 50%{ transform:rotate(2.5deg) scale(1.06); } }
+@keyframes vbBeat{ 0%,100%{ transform:scale(1) rotate(-1.5deg); } 50%{ transform:scale(1.07) rotate(1.5deg); } }
+@keyframes vbJump{ 0%,100%{ transform:translateY(0); } 30%{ transform:translateY(-3.5vh); } 55%{ transform:translateY(0) scale(1.05,.94); } }
+.tv-vb-net{ position:absolute; left:0; right:0; bottom:0; height:26%; z-index:2; pointer-events:none; background:
+  linear-gradient(#fff,#fff) top/100% 14px no-repeat,
+  repeating-linear-gradient(90deg, rgba(255,255,255,.75) 0 3px, transparent 3px 34px),
+  repeating-linear-gradient(0deg, rgba(255,255,255,.75) 0 3px, transparent 3px 34px);
+  background-color:rgba(74,10,28,.55); border-top:6px solid #fff; animation:vbNet 2.2s ease-in-out infinite; transform-origin:top center; }
+.tv-vb-pole{ position:absolute; bottom:0; width:16px; height:34%; background:#fff; z-index:2; border-radius:8px 8px 0 0; }
+.tv-vb-court{ position:absolute; left:6%; right:6%; top:50%; height:6px; background:rgba(255,255,255,.35); z-index:0; }
+@keyframes vbNet{ 0%,100%{ transform:scaleY(1); } 50%{ transform:scaleY(1.05) skewX(.6deg); } }
+</style>
 </head>
 <body>
 
@@ -496,7 +527,7 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
     <div class="cd-box"><div class="cd-num" data-u="s">--</div><div class="cd-unit">Sec</div></div>
   </div>
 </div>
-<div id="tv-luck" data-from="2026-10-21T00:00:00" data-until="2026-10-23T00:00:00">&#127952; <b>Good luck, Volleyball, in the playoffs today!</b> &middot; Go Vikings! &#127952;</div>
+<div id="tv-luck" data-from="2026-10-21T00:00:00" data-until="2026-10-21T00:00:01">&#127952; <b>Good luck, Volleyball, in the playoffs today!</b> &middot; Go Vikings! &#127952;</div>
 <div id="stage">
   <div class="slide-layer active" id="layerA"></div>
   <div class="slide-layer" id="layerB"></div>
@@ -802,9 +833,10 @@ SLIDES.push({ type:'qual-pair', duration:10000, eyebrow:'Postseason Herstory',
   titleA:'Regional Champions', rowsA:REGIONAL_CHAMPIONS, champA:true, noteA:'Girls regionals began in 2025.',
   titleB:'Fargo Nationals Qualifiers', rowsB:FARGO_QUALIFIERS });
 
-// Volleyball playoff good-luck slide (Oct 22 - Oct 23, 2026)
-if (new Date() >= new Date('2026-10-22T00:00:00') && new Date() < new Date('2026-10-23T00:00:00')) {
-  SLIDES.unshift({ type:'fun', duration:9000, eyebrow:'Go Vikings', lead:'&#127952; From the girls wrestling team &#127952;', big:'Good luck,', big2:'Volleyball in the playoffs today!', sub:'We’ve got your back. Bring it home!' });
+// Volleyball playoff takeover: only the good-luck slide runs Oct 22-23, 2026
+if (new Date() >= new Date('2026-10-22T00:00:00') && new Date() < new Date('2026-10-24T00:00:00')) {
+  SLIDES.length = 0;
+  SLIDES.push({ type:'vball', duration:600000, sub:'in the playoffs'+(new Date()<new Date('2026-10-23T00:00:00')?' today':'')+'!', from:'From the girls wrestling team' });
 }
 
 // ---- Rendering ----
@@ -836,6 +868,27 @@ function renderSlide(slide){
         <h1 class="tv-title-heading">${slide.title}</h1>
         <p class="tv-title-sub">${slide.sub}</p>
       </div>`;
+
+    case 'vball': {
+      const R=(a,b)=>a+Math.random()*(b-a);
+      const cols=['#ffffff','#ffffff','#d0345c','#f3b5c4','#ffffff','#a01a3c'];
+      let balls='';
+      [[6,62,9],[19,70,6],[33,66,8],[50,72,5],[66,68,7],[80,64,9],[92,70,6]].forEach((b,i)=>{ balls+=`<span class="tv-vb-ball" style="left:${b[0]}%;top:${b[1]}%;font-size:${b[2]}vw;--d:${(1.7+i*0.23).toFixed(2)}s;--dl:${(i*0.31).toFixed(2)}s">&#127952;</span>`; });
+      let roll='';
+      [[8,5.5,7],[82,4,9],[86,8,6]].forEach((r,i)=>{ roll+=`<span class="tv-vb-spin" style="top:${r[0]}%;font-size:${r[1]}vw;--d:${r[2]+i}s;animation-delay:-${i*2.5}s">&#127952;</span>`; });
+      let conf='';
+      for(let i=0;i<46;i++){ conf+=`<span class="tv-vb-conf" style="left:${R(0,100).toFixed(1)}%;--w:${R(9,18).toFixed(0)}px;--h:${R(16,34).toFixed(0)}px;--c:${cols[i%cols.length]};--d:${R(4,8).toFixed(1)}s;--dl:-${R(0,8).toFixed(1)}s"></span>`; }
+      return `<div class="slide-inner tv-vb">
+        <div class="tv-vb-rays"></div><div class="tv-vb-glow"></div>
+        <div class="tv-vb-court"></div>${conf}${roll}${balls}<div class="tv-vb-net"></div><div class="tv-vb-pole" style="left:2.5%"></div><div class="tv-vb-pole" style="right:2.5%"></div>
+        <div class="tv-vb-text">
+          <div class="tv-vb-top">&#127952; Go Vikings! &#127952;</div>
+          <h1 class="tv-vb-big">Good Luck</h1>
+          <h2 class="tv-vb-big2">Volleyball</h2>
+          <div class="tv-vb-sub">${slide.sub}</div><div class="tv-vb-from">${slide.from}</div>
+        </div>
+      </div>`;
+    }
 
     case 'fun': {
       const dots=[[1,16,52,'--gold'],[95,14,34,'#fff'],[2,52,30,'#fff'],[95,50,48,'--gold'],[3,82,44,'#fff'],[94,84,56,'--gold'],[12,94,26,'--gold'],[86,3,28,'--gold']];
