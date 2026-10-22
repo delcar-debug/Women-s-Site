@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elevating Our Program | Holmen Women's Wrestling</title>
+<style>
+:root{ --maroon:#6d1730; --dark:#3f0b1a; --ink:#19191d; --gold:#e8c37a; --soft:#f7f1f3; }
+*{ box-sizing:border-box; }
+html,body{ margin:0; height:100%; overflow:hidden; background:#fff; color:var(--ink); font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif; }
+.logo{ position:fixed; top:2.2vh; left:2vw; display:flex; align-items:center; gap:1vw; z-index:20; }
+.logo img{ height:9vh; width:auto; }
+.logo span{ font-weight:800; font-size:1.7vh; letter-spacing:.14em; text-transform:uppercase; color:var(--maroon); }
+.slide{ position:absolute; inset:0; display:none; flex-direction:column; justify-content:center; padding:13vh 7vw 9vh; background:#fff; animation:fade .5s ease; }
+.slide.active{ display:flex; }
+@keyframes fade{ from{ opacity:0; transform:translateY(1.5vh); } to{ opacity:1; transform:none; } }
+.slide::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:1.2vw; background:var(--maroon); }
+.eyebrow{ font-size:2vh; font-weight:800; letter-spacing:.22em; text-transform:uppercase; color:var(--maroon); margin-bottom:1.6vh; }
+h1{ font-size:7.4vh; line-height:1.02; margin:0 0 3vh; font-weight:900; letter-spacing:-.025em; color:var(--maroon); }
+.title-slide{ align-items:center; text-align:center; }
+.title-slide h1{ font-size:11vh; }
+.title-slide .sub{ font-size:3.6vh; font-weight:600; color:#4a4a52; margin:0; }
+.title-slide .url{ margin-top:5vh; display:inline-block; padding:1.6vh 3vw; border:.5vh solid var(--maroon); border-radius:999px; font-size:3vh; font-weight:800; color:var(--maroon); }
+.title-slide .logo-big{ height:24vh; margin-bottom:3vh; }
+.grid{ display:grid; gap:2.2vh 2.4vw; }
+.grid.two{ grid-template-columns:1fr 1fr; }
+.card{ background:var(--soft); border-left:.9vh solid var(--maroon); border-radius:1.6vh; padding:2.4vh 2vw; font-size:3vh; line-height:1.3; font-weight:600; }
+.card b{ display:block; color:var(--maroon); font-size:3.3vh; margin-bottom:.6vh; font-weight:900; }
+.card small{ display:block; font-size:2.3vh; font-weight:500; color:#55555d; margin-top:.6vh; }
+.card.big{ grid-column:1 / -1; }
+.url-bar{ margin-top:3vh; font-size:3vh; font-weight:800; color:var(--maroon); }
+.dots{ position:fixed; bottom:2.6vh; left:50%; transform:translateX(-50%); display:flex; gap:1vw; z-index:20; }
+.dots i{ width:1.4vh; height:1.4vh; border-radius:50%; background:#d8c8cd; }
+.dots i.on{ background:var(--maroon); transform:scale(1.35); }
+.hint{ position:fixed; bottom:2vh; right:2vw; font-size:1.6vh; color:#999; z-index:20; }
+@media (max-aspect-ratio:1/1){
+  .slide{ padding:15vh 7vw 8vh; justify-content:flex-start; overflow:auto; }
+  h1{ font-size:5.4vw; margin-bottom:2vh; }
+  .title-slide{ justify-content:center; }
+  .title-slide h1{ font-size:8vw; }
+  .title-slide .sub{ font-size:3.4vw; }
+  .title-slide .url{ font-size:3.4vw; }
+  .eyebrow{ font-size:2.6vw; }
+  .grid.two{ grid-template-columns:1fr; }
+  .card{ font-size:3.2vw; padding:2vh 4vw; }
+  .card b{ font-size:3.6vw; }
+  .url-bar{ font-size:3.4vw; }
+  .logo span{ font-size:2.2vw; }
+  .logo img{ height:8vh; }
+}
+</style>
+</head>
+<body>
+
+<div class="logo"><img src="assets/images/logo.png" alt=""><span>Holmen Women's Wrestling</span></div>
+
+<!-- 1. Title -->
+<section class="slide title-slide active">
+  <img class="logo-big" src="assets/images/logo.png" alt="">
+  <div class="eyebrow">Parent &amp; Wrestler Meeting</div>
+  <h1>Elevating Our Program</h1>
+  <p class="sub">What's new, what's improved, and what's next</p>
+  <div class="url">holmenwomenswrestling.com</div>
+</section>
+
+<!-- 2. Website & practice plans -->
+<section class="slide">
+  <div class="eyebrow">Elevating Our Program</div>
+  <h1>Our Website &amp; Practice Plans</h1>
+  <div class="grid">
+    <div class="card big"><b>Practice plans for everyone</b>Wrestlers can see the plan anytime, and it's on the TVs in the room when we're on our side.</div>
+    <div class="card big"><b>Families can see them too</b>Full transparency, so there are never any questions or concerns about whether we're doing what's best for the girls.</div>
+  </div>
+  <div class="url-bar">holmenwomenswrestling.com</div>
+</section>
+
+<!-- 3. Team culture & gear -->
+<section class="slide">
+  <div class="eyebrow">Elevating Our Program</div>
+  <h1>Mindset &amp; Team Identity</h1>
+  <div class="grid two">
+    <div class="card"><b>Structured mindset program</b>A high-level, structured program with Katherine Shai.</div>
+    <div class="card"><b>New warm-up tops</b>Replacing the old ones, and we're enforcing folding them when taking them off.</div>
+    <div class="card"><b>Retiring the maroon singlets</b>A fresh look for the team.</div>
+    <div class="card"><b>Locker signs &amp; bag tags</b>Nicer signs and tags for every wrestler.</div>
+    <div class="card big"><b>Higher quality journals</b>Better journals for goals, reflection, and growth.</div>
+  </div>
+</section>
+
+<!-- 4. Recovery & recognition -->
+<section class="slide">
+  <div class="eyebrow">Elevating Our Program</div>
+  <h1>Recovery &amp; Recognition</h1>
+  <div class="grid two">
+    <div class="card big"><b>Expanded med kit with recovery equipment</b>Massage gun, trigger point tools, and foam roller, ready to use at meets.</div>
+    <div class="card"><b>Hallway record board</b>Up and running!</div>
+    <div class="card"><b>Team sectionals championship board</b>Up on the wall!</div>
+  </div>
+</section>
+
+<!-- 5. Training -->
+<section class="slide">
+  <div class="eyebrow">In the Wrestling Room</div>
+  <h1>Warm Ups &amp; Technique</h1>
+  <div class="grid two">
+    <div class="card"><b>Warm ups</b>Improved with variety, skill building, athletic building, and injury prevention.</div>
+    <div class="card"><b>Technique</b>More work on not getting turned and pinned, plus a new half defense.</div>
+  </div>
+  <div class="url-bar">holmenwomenswrestling.com</div>
+</section>
+
+<div class="dots" id="dots"></div>
+<div class="hint">Click or use arrow keys</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide')), dots=document.getElementById('dots'), cur=0;
+  slides.forEach(function(){ dots.appendChild(document.createElement('i')); });
+  function show(i){
+    cur=(i+slides.length)%slides.length;
+    slides.forEach(function(s,k){ s.classList.toggle('active',k===cur); });
+    [].forEach.call(dots.children,function(d,k){ d.classList.toggle('on',k===cur); });
+  }
+  document.addEventListener('click',function(){ show(cur+1); });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'||e.key==='Enter'){ e.preventDefault(); show(cur+1); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'||e.key==='Backspace'){ e.preventDefault(); show(cur-1); }
+    else if(e.key==='f'||e.key==='F'){ if(document.fullscreenElement){ document.exitFullscreen(); } else { document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen(); } }
+  });
+  show(0);
+})();
+</script>
+</body>
+</html>

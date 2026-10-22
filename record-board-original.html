@@ -522,6 +522,9 @@ html.vb-on body .tv-logo img{ filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)) !impo
 .tv-vb.fb .tv-vb-big{ text-shadow:0 10px 0 #0a3318, 0 0 70px rgba(255,255,255,.45); }
 .tv-vb.fb .tv-vb-big2{ color:#1a6b30; box-shadow:0 10px 0 #0a3318; }
 .tv-vb.fb .tv-vb-sub{ color:#1a6b30; border-color:#1a6b30; }
+.tv-vb.two .tv-vb-big2{ font-size:clamp(2rem,5vw,5.4rem); }
+.tv-vb.two .tv-vb-sub{ font-size:clamp(1.1rem,2.1vw,2.1rem); line-height:1.25; border-radius:3vh; max-width:88%; }
+.tv-vb.two .tv-vb-sub span{ display:block; }
 .tv-vb.fb .tv-vb-net, .tv-vb.fb .tv-vb-pole{ display:none !important; }
 </style>
 </head>
@@ -854,7 +857,7 @@ if (new Date() >= new Date('2026-10-22T00:00:00') && new Date() < new Date('2026
 else if (new Date() >= new Date('2026-10-23T05:00:00') && new Date() < new Date('2026-10-23T23:59:00')) {
   document.documentElement.classList.add('vb-on');
   SLIDES.length = 0;
-  SLIDES.push({ type:'vball', cls:'fb', emoji:'&#127944;', name:'Football', cols:['#ffffff','#ffffff','#ffd23f','#b9f0c1','#ffffff','#7ee08a'], duration:600000, sub:'in the playoffs tonight!', from:'From the girls wrestling team' });
+  SLIDES.push({ type:'vball', cls:'fb two', emoji:'&#127944;', emoji2:'&#127939;&#8205;&#9792;&#65039;', name:'Football &amp; Cross Country', cols:['#ffffff','#ffffff','#ffd23f','#b9f0c1','#ffffff','#7ee08a'], duration:600000, sub:'<span>Football playoffs tonight</span><span>Cross Country sectionals Saturday</span>', from:'From the girls wrestling team' });
 }
 
 // ---- Rendering ----
@@ -890,18 +893,18 @@ function renderSlide(slide){
     case 'vball': {
       const R=(a,b)=>a+Math.random()*(b-a);
       const cols=slide.cols||['#ffffff','#ffffff','#d0345c','#f3b5c4','#ffffff','#a01a3c'];
-      const emo=slide.emoji||'&#127952;';
+      const emo=slide.emoji||'&#127952;'; const emo2=slide.emoji2||emo;
       let balls='';
-      [[6,62,9],[19,70,6],[33,66,8],[50,72,5],[66,68,7],[80,64,9],[92,70,6]].forEach((b,i)=>{ balls+=`<span class="tv-vb-ball" style="left:${b[0]}%;top:${b[1]}%;font-size:${b[2]}vw;--d:${(3.6+i*0.4).toFixed(2)}s;--dl:${(i*0.6).toFixed(2)}s">${emo}</span>`; });
+      [[6,62,9],[19,70,6],[33,66,8],[50,72,5],[66,68,7],[80,64,9],[92,70,6]].forEach((b,i)=>{ balls+=`<span class="tv-vb-ball" style="left:${b[0]}%;top:${b[1]}%;font-size:${b[2]}vw;--d:${(3.6+i*0.4).toFixed(2)}s;--dl:${(i*0.6).toFixed(2)}s">${i%2?emo2:emo}</span>`; });
       let roll='';
-      [[8,5.5,7],[82,4,9],[86,8,6]].forEach((r,i)=>{ roll+=`<span class="tv-vb-spin" style="top:${r[0]}%;font-size:${r[1]}vw;--d:${(r[2]+i)*2.2}s;animation-delay:-${i*5}s">${emo}</span>`; });
+      [[8,5.5,7],[82,4,9],[86,8,6]].forEach((r,i)=>{ roll+=`<span class="tv-vb-spin" style="top:${r[0]}%;font-size:${r[1]}vw;--d:${(r[2]+i)*2.2}s;animation-delay:-${i*5}s">${i%2?emo2:emo}</span>`; });
       let conf='';
       for(let i=0;i<46;i++){ conf+=`<span class="tv-vb-conf" style="left:${R(0,100).toFixed(1)}%;--w:${R(9,18).toFixed(0)}px;--h:${R(16,34).toFixed(0)}px;--c:${cols[i%cols.length]};--d:${R(10,18).toFixed(1)}s;--dl:-${R(0,18).toFixed(1)}s"></span>`; }
       return `<div class="slide-inner tv-vb ${slide.cls||''}">
         <div class="tv-vb-rays"></div><div class="tv-vb-glow"></div>
         <div class="tv-vb-court"></div>${conf}${roll}${balls}<div class="tv-vb-net"></div><div class="tv-vb-pole" style="left:2.5%"></div><div class="tv-vb-pole" style="right:2.5%"></div>
         <div class="tv-vb-text">
-          <div class="tv-vb-top">${emo} Go Vikings! ${emo}</div>
+          <div class="tv-vb-top">${emo} Go Vikings! ${emo2}</div>
           <h1 class="tv-vb-big">Good Luck</h1>
           <h2 class="tv-vb-big2">${slide.name||'Volleyball'}</h2>
           <div class="tv-vb-sub">${slide.sub}</div><div class="tv-vb-from">${slide.from}</div>
