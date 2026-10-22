@@ -484,7 +484,8 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
 <style>#tv-luck{ position:fixed; left:50%; bottom:34px; transform:translateX(-50%); z-index:41; background:#e8c37a; color:#2a0f16; padding:12px 34px; border-radius:999px; font-size:clamp(1.1rem,2vw,1.9rem); font-weight:800; text-align:center; box-shadow:0 12px 30px rgba(0,0,0,.3); white-space:nowrap; } #tv-luck b{ text-transform:uppercase; letter-spacing:.06em; }</style>
 <style>
 /* Volleyball good-luck takeover */
-.tv-vb{ background:radial-gradient(circle at 50% 45%, #a01a3c 0%, #7a1230 45%, #4a0a1c 100%); border:6px solid #fff; box-shadow:0 0 0 6px #7a1230, 0 20px 60px rgba(0,0,0,.5); height:88vh; max-height:88vh !important; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:28px; }
+.tv-vb{ position:absolute !important; inset:0; width:100% !important; height:100% !important; max-height:none !important; margin:0 !important; padding:0 !important; background:radial-gradient(circle at 50% 45%, #a01a3c 0%, #7a1230 45%, #4a0a1c 100%); overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:0; }
+.tv-vb::after{ content:''; position:absolute; inset:14px; border:6px solid #fff; border-radius:22px; z-index:4; pointer-events:none; }
 .tv-vb-rays{ position:absolute; left:50%; top:50%; width:220vmax; height:220vmax; margin:-110vmax 0 0 -110vmax; background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.14) 0deg 10deg, rgba(255,255,255,0) 10deg 20deg); animation:vbSpin 30s linear infinite; z-index:0; }
 .tv-vb-glow{ position:absolute; inset:0; background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.18), rgba(0,0,0,0) 60%); animation:vbPulse 2.4s ease-in-out infinite; z-index:0; }
 .tv-vb-ball{ position:absolute; line-height:1; z-index:1; animation:vbBounce var(--d,2s) ease-in-out infinite; animation-delay:var(--dl,0s); filter:drop-shadow(0 12px 14px rgba(0,0,0,.45)); }
@@ -504,7 +505,7 @@ body.is-fullscreen #tv-fs-btn{ display:none; }
 @keyframes vbWiggle{ 0%,100%{ transform:rotate(-2.5deg) scale(1); } 50%{ transform:rotate(2.5deg) scale(1.06); } }
 @keyframes vbBeat{ 0%,100%{ transform:scale(1) rotate(-1.5deg); } 50%{ transform:scale(1.07) rotate(1.5deg); } }
 @keyframes vbJump{ 0%,100%{ transform:translateY(0); } 30%{ transform:translateY(-3.5vh); } 55%{ transform:translateY(0) scale(1.05,.94); } }
-.tv-vb-net{ position:absolute; left:0; right:0; bottom:0; height:26%; z-index:2; pointer-events:none; background:
+.tv-vb-net{ position:absolute; left:0; right:0; bottom:0; height:24%; z-index:2; pointer-events:none; background:
   linear-gradient(#fff,#fff) top/100% 14px no-repeat,
   repeating-linear-gradient(90deg, rgba(255,255,255,.75) 0 3px, transparent 3px 34px),
   repeating-linear-gradient(0deg, rgba(255,255,255,.75) 0 3px, transparent 3px 34px);
@@ -1028,7 +1029,7 @@ function runProgressBar(duration){
 // Shrink a slide's content to fit the screen (handles fullscreen / TV size differences)
 function fitSlide(layer){
   const el = layer && layer.querySelector('.slide-inner');
-  if(!el) return;
+  if(!el || el.classList.contains('tv-vb')) return;
   el.style.transform = '';
   el.style.maxHeight = 'none';
   const availH = window.innerHeight * 0.94, availW = window.innerWidth * 0.97;
