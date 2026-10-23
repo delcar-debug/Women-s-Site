@@ -157,7 +157,7 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 <div class="result-card"><h3>Postseason Results</h3><p class="result-note">Girls individual state began in the 2021–22 season.</p><p class="result-note" style="margin-top:4px">Girls sectionals began in the 2022–23 season.</p><p class="result-note" style="margin-top:4px">Girls regionals began in the 2024–25 season.</p></div>
 </div>
 <div class="panel" id="s2019">
-<div class="result-card"><h3>Events</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2019">Badger State Invitational</span> — 2nd place</li><li><span class="tourney-trigger" data-tourney="bistate-2019">Bi-State Women's Showcase</span></li><li><span class="tourney-trigger" data-tourney="fnf-2019">Friday Night Fights</span></li><li>Wisconsin High School Girls Championship</li></ul></div>
+<div class="result-card"><h3>Events</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2019">Badger State Invitational</span> — 2nd place</li><li><span class="tourney-trigger" data-tourney="bistate-2019">Bi-State Women's Showcase</span></li><li><span class="tourney-trigger" data-tourney="fnf-2019">Friday Night Fights</span></li><li><span class="tourney-trigger" data-tourney="wihsgc-2019">Wisconsin High School Girls Championship</span></li></ul></div>
 <div class="result-card"><h3>Postseason Results</h3><p class="result-note">Girls individual state began in the 2021–22 season.</p><p class="result-note" style="margin-top:4px">Girls sectionals began in the 2022–23 season.</p><p class="result-note" style="margin-top:4px">Girls regionals began in the 2024–25 season.</p></div>
 </div>
 <div class="panel" id="s2018">
@@ -173,7 +173,7 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 <div class="result-card"><h3>2021–2022</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="bistate-2022">Bi-State Classic Women's Showcase</span></li><li><span class="tourney-trigger" data-tourney="badger-2022">Badger State Invitational</span>: 2nd place</li><li><span class="tourney-trigger" data-tourney="centralgirls-2022">Central Girls Wrestling Invitational</span>: 3rd place</li><li><span class="tourney-trigger" data-tourney="waunakee-2022">Waunakee Warrior Invite</span>: 1st place 🏆</li><li><span class="tourney-trigger" data-tourney="decorah-2022">Decorah Girls Tournament</span></li><li><span class="tourney-trigger" data-tourney="wihsgc-2022">Wisconsin High School Girls Championship</span>: 1st place 🏆</li><li><span class="tourney-trigger" data-tourney="state-2022">WIAA Individual State</span></li><li><span class="tourney-trigger" data-tourney="mvccoulee-2022">MVC/Coulee Tournament</span></li><li><span class="tourney-trigger" data-dual="get-mm-2022-extras">vs. GET-MM</span></li><li><span class="tourney-trigger" data-dual="aquinas-2022-extras">vs. Aquinas</span></li></ul></div>
 <div class="result-card"><h3>2020–2021</h3><ul class="result-list"><li><span class="tourney-trigger" data-dual="holmenquad-2021">Holmen Quad</span></li><li><span class="tourney-trigger" data-dual="get-mm-2021-extras">vs. GET-MM</span></li></ul></div>
 <div class="result-card"><h3>2019–2020</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2020">Badger State Invitational</span>: 2nd place</li><li><span class="tourney-trigger" data-tourney="wihsgc-2020">Wisconsin High School Girls Championship</span>: 2nd place</li><li><span class="tourney-trigger" data-tourney="waunakee-2020">Waunakee Warrior Invite</span>: 1st Place 🏆</li><li><span class="tourney-trigger" data-tourney="bistate-2020">Bi-State Women's Showcase</span></li><li><span class="tourney-trigger" data-tourney="fnf-2020">Friday Night Fights</span></li><li><span class="tourney-trigger" data-dual="sparta-2020">vs. Sparta</span></li></ul></div>
-<div class="result-card"><h3>2018–2019</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2019">Badger State Invitational</span>: 2nd place</li><li><span class="tourney-trigger" data-tourney="bistate-2019">Bi-State Women's Showcase</span></li><li><span class="tourney-trigger" data-tourney="fnf-2019">Friday Night Fights</span></li><li>Wisconsin High School Girls Championship</li></ul></div>
+<div class="result-card"><h3>2018–2019</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2019">Badger State Invitational</span>: 2nd place</li><li><span class="tourney-trigger" data-tourney="bistate-2019">Bi-State Women's Showcase</span></li><li><span class="tourney-trigger" data-tourney="fnf-2019">Friday Night Fights</span></li><li><span class="tourney-trigger" data-tourney="wihsgc-2019">Wisconsin High School Girls Championship</span></li></ul></div>
 <div class="result-card"><h3>2017–2018</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2018">Badger State Invitational</span>: 24th place</li><li>Wisconsin High School Girls Championship</li></ul></div>
 <h2 class="results-subtitle" style="margin-top:8px">Dual Results by Season</h2>
 <div class="record-badge" style="margin-bottom:14px;font-size:.95rem">Overall Dual Record (2022–2026): 26–13</div>
@@ -492,6 +492,89 @@ const TOURNEY_DATA = {
       {name:'Amelia LaFleur', bouts:[
         'Won by sudden victory over Jaida Harshman (Gale-Ett.-Tremp./Melrose-Mind.), 10-8',
         'Lost by fall to Skylar Wieczorek (Gale-Ett.-Tremp./Melrose-Mind.), 1:10'
+      ]}
+    ]
+  },
+  'wihsgc-2019': {
+    title: 'Wisconsin High School Girls Championship',
+    sub: '2018–19 Season — 01/19/2019 — Holmen match results (no team scores)',
+    wrestlers: [
+      {name:'Jasmine Gabbard', weight:'106', place:'8th', bouts:[
+        'Champ. Round 1 — Bye',
+        'Quarterfinal — Lost by fall to Julia Cox (Barron), 1:49',
+        'Cons. Round 2 — Won by fall over Aaliyah Llanos (Fond du Lac), 2:11',
+        'Cons. Semi — Lost by decision to Kassandra Mueller (Holmen), 5-1',
+        '7th Place Match — Lost by fall to Ashleigh Olson (Winnebago Lutheran), 2:48'
+      ]},
+      {name:'Kassandra Mueller', weight:'106', place:'6th', bouts:[
+        'Champ. Round 1 — Lost by decision to Rose Ryan (Middleton), 9-2',
+        'Cons. Round 1 — Bye',
+        'Cons. Round 2 — Won by decision over Ellie Grunwald (Medford Area), 6-2',
+        'Cons. Semi — Won by decision over Jasmine Gabbard (Holmen), 5-1',
+        '5th Place Match — Lost by decision to Rose Ryan (Middleton), 4-0'
+      ]},
+      {name:'Hope Steinhoff', weight:'113', place:'7th', bouts:[
+        'Quarterfinal — Lost by fall to Hailey Albrecht (Waterford), 1:49',
+        'Cons. Round 1 — Lost by fall to Skylar Wieczorek (GET Mel-Min), 3:58',
+        '7th Place Match — Bye'
+      ]},
+      {name:'Camryn Lemke', weight:'113', place:'6th', bouts:[
+        'Quarterfinal — Lost by fall to Jaida Harshman (GET Mel-Min), 1:20',
+        'Cons. Round 1 — Bye',
+        'Cons. Semi — Lost by fall to Hailey Albrecht (Waterford), 1:30',
+        '5th Place Match — Lost by fall to Skylar Wieczorek (GET Mel-Min), 0:26'
+      ]},
+      {name:'Amelia LaFleur', weight:'120', place:'6th', bouts:[
+        'Quarterfinal — Lost by fall to Gina Augustian (Kewaunee), 1:27',
+        'Cons. Round 1 — Won by decision over Tea Koehler (Appleton North), 9-6',
+        'Cons. Semi — Lost by fall to Samantha Guzman (Random Lake), 1:20',
+        '5th Place Match — Lost by fall to Ella Trimboli (Whitnall/Greendale), 3:16'
+      ]},
+      {name:'Amber Eddy', weight:'132', place:'6th', bouts:[
+        'Round 1 — Lost by fall to Aevri Ciha (Cambridge), 1:33',
+        'Round 2 — Lost by fall to Tashia Ulmann (Appleton North), 2:33',
+        'Round 3 — Lost by fall to Paige Peterson (Wabeno), 0:49',
+        'Round 4 — Lost by fall to Anna Strand (Xavier), 0:59',
+        'Round 5 — Lost by fall to Delaney Duclon (Waukesha West), 5:56'
+      ]},
+      {name:'Camden Lindsey', weight:'138', place:'2nd', bouts:[
+        'Round 1 — Lost by decision to Megan Zittlow (Holmen), 10-5',
+        'Round 2 — Won by fall over Margaret Shaugnesey (Whitnall/Greendale), 0:26',
+        'Round 3 — Won by fall over Abigail Bramwell (Holmen), 4:44',
+        'Round 4 — Won by fall over Alice Mazzalori (Merrill), 3:43',
+        'Round 5 — Won by forfeit over Tess Jisa (Wisconsin Dells)'
+      ]},
+      {name:'Megan Zittlow', weight:'138', place:'1st', bouts:[
+        'Round 1 — Won by decision over Camden Lindsey (Holmen), 10-5',
+        'Round 2 — Won by fall over Abigail Bramwell (Holmen), 1:10',
+        'Round 3 — Won by fall over Alice Mazzalori (Merrill), 1:24',
+        'Round 4 — Won by forfeit over Tess Jisa (Wisconsin Dells)',
+        'Round 5 — Won by fall over Margaret Shaugnesey (Whitnall/Greendale), 2:54'
+      ]},
+      {name:'Abigail Bramwell', weight:'138', place:'5th', bouts:[
+        'Round 1 — Won by forfeit over Tess Jisa (Wisconsin Dells)',
+        'Round 2 — Lost by fall to Megan Zittlow (Holmen), 1:10',
+        'Round 3 — Lost by fall to Camden Lindsey (Holmen), 4:44',
+        'Round 4 — Lost by decision to Margaret Shaugnesey (Whitnall/Greendale), 7-4',
+        'Round 5 — Lost by decision to Alice Mazzalori (Merrill), 9-2'
+      ]},
+      {name:'Mykalia Olson', weight:'152', place:'5th', bouts:[
+        'Quarterfinal — Lost by fall to Tabitha Breitrick (Clintonville/Marion), 1:32',
+        'Cons. Round 1 — Won by fall over Gwenny Burrows (Holmen), 2:49',
+        'Cons. Semi — Lost by fall to Marta Jasperson (Hudson), 2:53',
+        '5th Place Match — Won by fall over Jocelyn Van Rixel (Marathon), 0:20'
+      ]},
+      {name:'Gwenny Burrows', weight:'152', place:'7th', bouts:[
+        'Quarterfinal — Lost by fall to Makenzie Peterson (Phillips), 0:19',
+        'Cons. Round 1 — Lost by fall to Mykalia Olson (Holmen), 2:49',
+        '7th Place Match — Bye'
+      ]},
+      {name:'Mara Friesen', weight:'170', place:'5th', bouts:[
+        'Round 1 — Lost by fall to Emily Daniluk (New Richmond), 3:16',
+        'Round 2 — Lost by fall to Katelyn Lewis (Peshtigo), 1:11',
+        'Round 3 — Lost by fall to Dakota Doucette (Kimberly), 0:22',
+        'Round 4 — Won by medical forfeit over Caitlyn Kimball (Oshkosh West)',
+        'Round 5 — Lost by fall to Cassandra Rodriguez (Kimberly), 3:23'
       ]}
     ]
   },
@@ -2795,99 +2878,99 @@ const TOURNEY_DATA = {
     sub: '2022–23 Season — 01/21/2023 — Not an official scored tournament',
     teams: [],
     wrestlers: [
-      {name:'Adriana Vang', weight:'100', pts:0, bouts:[
+      {name:'Adriana Vang', weight:'100', bouts:[
         'Champ. Round 1 — Bye',
         'Champ. Round 2 — Lost by fall to Aaliyah Zamora (Osseo-Fairchild/Augusta/Fall Creek), 0:56',
         'Cons. Round 2 — Lost by fall to Audrey Hanson (Grafton), 2:11'
       ]},
-      {name:'Gabbie Hopkins', weight:'100', pts:3, bouts:[
+      {name:'Gabbie Hopkins', weight:'100', bouts:[
         'Champ. Round 1 — Bye',
         'Champ. Round 2 — Lost by fall to Raven Ringhand (Oregon), 2:00',
         'Cons. Round 2 — Won by fall over Adalynn Frye (Whitewater), 1:10',
         'Cons. Round 3 — Lost by fall to Lexi Hanson (Parkview/Albany), 0:53'
       ]},
-      {name:'Nora Lee', weight:'100', place:'2nd', pts:28, bouts:[
+      {name:'Nora Lee', weight:'100', place:'2nd', bouts:[
         'Champ. Round 1 — Won by fall over Madalynne Gosda (Mauston), 0:14',
         'Champ. Round 2 — Won by fall over Isabella Averheart (Kimberly), 0:36',
         'Quarterfinal — Won by fall over Joelle Reay (Burlington Youth Wrestling), 2:40',
         'Semifinal — Won by fall over Raven Ringhand (Oregon), 0:55',
         '1st Place Match — Lost by fall to Iszybelle Sonnentag (Cadott), 1:45'
       ]},
-      {name:'Bella Xiong', weight:'107', pts:6, bouts:[
+      {name:'Bella Xiong', weight:'107', bouts:[
         'Champ. Round 1 — Bye',
         'Champ. Round 2 — Lost by fall to Taylor Whiting (Oconto Falls), 3:02',
         'Cons. Round 2 — Won by fall over Myah Ellsworth (Kimberly), 0:23',
         'Cons. Round 3 — Won by fall over Hallie Wondra (Shawano Community), 0:46',
         'Consolation 1st — Won by decision over Glenna Novotny (Mauston), 4-3'
       ]},
-      {name:'Haley Dezelske', weight:'114', pts:4, bouts:[
+      {name:'Haley Dezelske', weight:'114', bouts:[
         'Champ. Round 1 — Lost by fall to Ashley Danielson (Wausau West), 0:36',
         'Cons. Round 1 — Bye',
         'Cons. Round 2 — Won by fall over Dani Starkey (D.C. Everest), 1:18',
         'Cons. Round 3 — Lost by fall to Addisen Olson (Peshtigo), 1:27'
       ]},
-      {name:'Adalyn Goodell', weight:'114', pts:4, bouts:[
+      {name:'Adalyn Goodell', weight:'114', bouts:[
         'Champ. Round 1 — Lost by fall to Jazleen Fong-Baake (Peshtigo), 0:48',
         'Cons. Round 1 — Bye',
         'Cons. Round 2 — Won by fall over Ashlynn Scheidermayer (Burlington Youth Wrestling), 3:50',
         'Cons. Round 3 — Lost by fall to Darci Jelinek (North Crawford/Seneca), 1:41'
       ]},
-      {name:'Anna Strasser', weight:'120', place:'8th', pts:9, bouts:[
+      {name:'Anna Strasser', weight:'120', place:'8th', bouts:[
         'Champ. Round 1 — Won by fall over Annabell Thill (Bay Port), 1:10',
         'Champ. Round 2 — Won by fall over Claire Widder (Shiocton), 1:03',
         'Quarterfinal — Lost by fall to Onna Hermann (Shawano Community), 3:52',
         'Cons. Round 3 — Lost by major decision to Makenna Hanke (Lomira), 11-0'
       ]},
-      {name:'Allison Weiss', weight:'120', pts:5, bouts:[
+      {name:'Allison Weiss', weight:'120', bouts:[
         'Champ. Round 1 — Bye',
         'Champ. Round 2 — Lost by fall to Natalie Klavetter (Hudson), 1:39',
         'Cons. Round 2 — Won by major decision over Makenna Scott (Shiocton), 13-0',
         'Cons. Round 3 — Won by decision over Anna Behling (Bay Port), 10-7',
         'Consolation 1st — Won by fall over Gwen Walker (Kickapoo/La Farge/Youth In.), 4:00'
       ]},
-      {name:'Ava Kelemen', weight:'126', place:'6th', pts:14, bouts:[
+      {name:'Ava Kelemen', weight:'126', place:'6th', bouts:[
         'Champ. Round 1 — Won by fall over Evelyn Schwoerer (Columbus), 3:03',
         'Champ. Round 2 — Won by fall over Leah Nelson (Eau Claire North), 1:55',
         'Quarterfinal — Lost by fall to Leah Kapla (Pulaski), 5:08',
         'Cons. Round 3 — Won by fall over Nadia Fuentes (Janesville Craig), 1:46',
         '5th Place Match — Lost by fall to Emily McCarthy (Kimberly), 1:58'
       ]},
-      {name:'Natalie Johnson', weight:'126', pts:0, bouts:[
+      {name:'Natalie Johnson', weight:'126', bouts:[
         'Champ. Round 1 — Bye',
         'Champ. Round 2 — Lost by fall to Elle Gauerke (Athens), 1:26',
         'Cons. Round 2 — Lost by decision to Faith Thurman (Oconto Falls), 9-4'
       ]},
-      {name:'Jozie Collins', weight:'126', pts:5, bouts:[
+      {name:'Jozie Collins', weight:'126', bouts:[
         'Champ. Round 1 — Lost by decision to Addie Rutzen (Wausau West), 5-2',
         'Cons. Round 1 — Bye',
         'Cons. Round 2 — Bye',
         'Cons. Round 3 — Bye',
         'Consolation 1st — Won by fall over Evelyn Schwoerer (Columbus), 3:28'
       ]},
-      {name:'River Klingbeil', weight:'145', pts:0, bouts:[
+      {name:'River Klingbeil', weight:'145', bouts:[
         'Champ. Round 1 — Bye',
         'Champ. Round 2 — Lost by fall to Karlee Nack (Columbus), 0:35',
         'Cons. Round 2 — Lost by fall to Anya Mueller (Wausau West), 1:49'
       ]},
-      {name:'Maddie Hall', weight:'145', pts:0, bouts:[
+      {name:'Maddie Hall', weight:'145', bouts:[
         'Champ. Round 1 — Bye',
         'Champ. Round 2 — Lost by fall to Alison Busler (Watertown), 1:18',
         'Cons. Round 2 — Lost by decision to Courtney Schenk (Shawano Community), 5-4'
       ]},
-      {name:'Evelyn Vetsch', weight:'145', place:'3rd', pts:21, bouts:[
+      {name:'Evelyn Vetsch', weight:'145', place:'3rd', bouts:[
         'Champ. Round 1 — Bye',
         'Champ. Round 2 — Won by fall over Ryanna Magliaro (Kimberly), 3:04',
         'Quarterfinal — Won by fall over Parker Zahn (Suring/Gillett), 2:58',
         'Semifinal — Lost by fall to Hailie Krueger (New London), 5:03',
         '3rd Place Match — Won by fall over Alison Busler (Watertown), 3:19'
       ]},
-      {name:'Alexa Szak', weight:'152', place:'4th', pts:15, bouts:[
+      {name:'Alexa Szak', weight:'152', place:'4th', bouts:[
         'Champ. Round 1 — Won by fall over Aleksa Salter (Lake Geneva Badger), 0:44',
         'Quarterfinal — Won by fall over Teagan Simpson (Oregon), 1:00',
         'Semifinal — Lost by decision to Maev Michalak (Germantown), 9-5',
         '3rd Place Match — Lost in sudden victory - 1 to Kara Kuge (Lomira), 3-1'
       ]},
-      {name:'Lexi Maier', weight:'165', pts:0, bouts:[
+      {name:'Lexi Maier', weight:'165', bouts:[
         'Champ. Round 1 — Lost by fall to Madi Zube (Viroqua), 1:07',
         'Cons. Round 1 — Bye',
         'Cons. Round 2 — Lost by fall to Tiani Lemieux (Sturgeon Bay/Sevastapol), 0:35'
