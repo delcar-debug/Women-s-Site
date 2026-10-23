@@ -1098,7 +1098,7 @@
     .mc-signup label span { color: #6d1730; }
     .mc-signup input[type="text"], .mc-signup input[type="email"] { display: block; width: 100%; margin-top: 6px; border: 1px solid #d9d9de; border-radius: 10px; padding: 11px 12px; font: inherit; font-size: .95rem; }
     .mc-signup input:focus { outline: 2px solid #6d1730; outline-offset: -1px; }
-    .mc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: end; }
     .mc-signup button { width: 100%; margin-top: 4px; border: 0; cursor: pointer; }
     .mc-note { margin: 10px 0 0; font-size: .75rem; color: #676b73 !important; text-align: center; }
     @media (max-width: 560px) { .mc-row { grid-template-columns: 1fr; } }
@@ -1675,7 +1675,7 @@
           <label for="mce-EMAIL">Email Address <span aria-hidden="true">*</span><input type="email" name="EMAIL" id="mce-EMAIL" required autocomplete="email"></label>
           <div class="mc-row">
             <label for="mce-MMERGE7">Connection to Us (Fan, Parent, Alumni, Enemy, etc.)<input type="text" name="MMERGE7" id="mce-MMERGE7"></label>
-            <label for="mce-MMERGE8">Graduation Year (If Holmen Alumni)<input type="text" name="MMERGE8" id="mce-MMERGE8" inputmode="numeric"></label>
+            <label for="mce-MMERGE8">Graduation Year<br>(If Holmen Alumni)<input type="text" name="MMERGE8" id="mce-MMERGE8" inputmode="numeric"></label>
           </div>
           <div aria-hidden="true" style="position:absolute;left:-5000px;"><input type="text" name="b_c685233e09b4b2728420cd69e_56c2fe4ede" tabindex="-1" value=""></div>
           <button type="submit" name="subscribe" id="mc-embedded-subscribe" class="button">Subscribe</button>
