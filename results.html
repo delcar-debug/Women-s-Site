@@ -161,7 +161,7 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 <div class="result-card"><h3>Postseason Results</h3><p class="result-note">Girls individual state began in the 2021–22 season.</p><p class="result-note" style="margin-top:4px">Girls sectionals began in the 2022–23 season.</p><p class="result-note" style="margin-top:4px">Girls regionals began in the 2024–25 season.</p></div>
 </div>
 <div class="panel" id="s2018">
-<div class="result-card"><h3>Events</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2018">Badger State Invitational</span> — 24th place</li><li>Wisconsin High School Girls Championship</li></ul></div>
+<div class="result-card"><h3>Events</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2018">Badger State Invitational</span> — 24th place</li><li>Wisconsin High School Girls Championship</li><li><span class="tourney-trigger" data-tourney="wwca-2018">Wisconsin Challenge Series</span></li></ul></div>
 <div class="result-card"><h3>Postseason Results</h3><p class="result-note">Girls individual state began in the 2021–22 season.</p><p class="result-note" style="margin-top:4px">Girls sectionals began in the 2022–23 season.</p><p class="result-note" style="margin-top:4px">Girls regionals began in the 2024–25 season.</p></div>
 </div>
 <div class="panel" id="allmeets">
@@ -174,7 +174,7 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 <div class="result-card"><h3>2020–2021</h3><ul class="result-list"><li><span class="tourney-trigger" data-dual="holmenquad-2021">Holmen Quad</span></li><li><span class="tourney-trigger" data-dual="get-mm-2021-extras">vs. GET-MM</span></li></ul></div>
 <div class="result-card"><h3>2019–2020</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2020">Badger State Invitational</span>: 2nd place</li><li><span class="tourney-trigger" data-tourney="wihsgc-2020">Wisconsin High School Girls Championship</span>: 2nd place</li><li><span class="tourney-trigger" data-tourney="waunakee-2020">Waunakee Warrior Invite</span>: 1st Place 🏆</li><li><span class="tourney-trigger" data-tourney="bistate-2020">Bi-State Women's Showcase</span></li><li><span class="tourney-trigger" data-tourney="fnf-2020">Friday Night Fights</span></li><li><span class="tourney-trigger" data-dual="sparta-2020">vs. Sparta</span></li></ul></div>
 <div class="result-card"><h3>2018–2019</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2019">Badger State Invitational</span>: 2nd place</li><li><span class="tourney-trigger" data-tourney="bistate-2019">Bi-State Women's Showcase</span></li><li><span class="tourney-trigger" data-tourney="fnf-2019">Friday Night Fights</span></li><li><span class="tourney-trigger" data-tourney="wihsgc-2019">Wisconsin High School Girls Championship</span></li></ul></div>
-<div class="result-card"><h3>2017–2018</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2018">Badger State Invitational</span>: 24th place</li><li>Wisconsin High School Girls Championship</li></ul></div>
+<div class="result-card"><h3>2017–2018</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2018">Badger State Invitational</span>: 24th place</li><li>Wisconsin High School Girls Championship</li><li><span class="tourney-trigger" data-tourney="wwca-2018">Wisconsin Challenge Series</span></li></ul></div>
 <h2 class="results-subtitle" style="margin-top:8px">Dual Results by Season</h2>
 <div class="record-badge" style="margin-bottom:14px;font-size:.95rem">Overall Dual Record (2022–2026): 26–13</div>
 <div class="result-card"><h3>2025–2026</h3><ul class="result-list"><li><span class="tourney-trigger" data-dual="klfyi-2025-jv">Holmen JV 35 – <strong>Kickapoo La Farge Youth Initiative 36</strong></span> (JV, not in overall record)</li><li><span class="tourney-trigger" data-dual="tomahawk-2026"><strong>Holmen 42</strong> – Tomahawk 21</span></li><li><span class="tourney-trigger" data-dual="badger-2026"><strong>Holmen 42</strong> – Badger 28</span></li><li><span class="tourney-trigger" data-dual="neenah-2026"><strong>Holmen 39</strong> – Neenah 29</span></li><li><span class="tourney-trigger" data-dual="bayport-2026">Holmen 30 – <strong>Bayport 42</strong></span></li><li><span class="tourney-trigger" data-dual="scf-2026"><strong>Holmen 36</strong> – Saint Croix Falls 30</span></li><li><span class="tourney-trigger" data-dual="stillwater-2026"><strong>Holmen 40</strong> – Stillwater, MN 28</span></li><li><span class="tourney-trigger" data-dual="unity-2026"><strong>Holmen 48</strong> – Unity 11</span></li><li><span class="tourney-trigger" data-dual="tomah-2026"><strong>Holmen 57</strong> – Tomah 6</span></li></ul><div class="record-badge">Dual Record: 7–1</div></div>
@@ -575,6 +575,35 @@ const TOURNEY_DATA = {
         'Round 3 — Lost by fall to Dakota Doucette (Kimberly), 0:22',
         'Round 4 — Won by medical forfeit over Caitlyn Kimball (Oshkosh West)',
         'Round 5 — Lost by fall to Cassandra Rodriguez (Kimberly), 3:23'
+      ]}
+    ]
+  },
+  'wwca-2018': {
+    title: 'Wisconsin Challenge Series',
+    sub: '2017–18 Season — 01/20/2018 — Holmen match results (no team scores)',
+    wrestlers: [
+      {name:'Claire Eade', weight:'126', place:'3rd', bouts:[
+        'Round 1 — Lost by fall to Allysa Spierings (Waupaca), 0:56',
+        'Round 2 — Lost by fall to Megan Struble (Seymour), 2:36',
+        'Round 3 — Bye'
+      ]},
+      {name:'Lynsey Anderson', weight:'132', place:'3rd', bouts:[
+        'Round 2 — Lost by fall to Yasbeth Lagunas (Catholic Central), 3:12',
+        'Round 3 — Lost by fall to Alex Myszka (Lakeland), 1:10',
+        'Round 4 — Won by medical forfeit over Delaney Duclon (Waukesha West)',
+        'Round 5 — Won by fall over Rileigh Biertzer (Campbellsport), 0:23'
+      ]},
+      {name:'Morgan Pellowski', weight:'145', place:'4th', bouts:[
+        'Round 1 — Won by fall over Mary Heald (Johnson Creek), 0:18',
+        'Round 2 — Lost by fall to Mackenzie Peterson (Phillips), 3:08',
+        'Round 3 — Lost by injury default to McKinnley Verlhulst (Barron), 0:08',
+        'Round 5 — Lost by medical forfeit to Jocelyn Van Rixel (Marathon)'
+      ]},
+      {name:'Amber Callway', weight:'152', place:'5th', bouts:[
+        'Round 1 — Lost by decision to Joliet Mata (Stevens Point), 12-9',
+        'Round 2 — Lost by decision to Karina Munoz (Beloit Memorial), 10-4',
+        'Round 3 — Lost by fall to Marta Jasperson (Hudson), 1:10',
+        'Round 4 — Lost by fall to Alessia De Feudis (Westfield), 1:24'
       ]}
     ]
   },
@@ -1155,7 +1184,7 @@ const TOURNEY_DATA = {
   },
   'badger-2018': {
     title: 'Badger State Invitational',
-    sub: '2017–18 Season — Team scores and Holmen match results',
+    sub: '2017–18 Season — 12/23/2017 — Team scores and Holmen match results',
     teamNote: 'Team scores for places 10–12 were not available from the source results.',
     teams: [
       {r:1,name:'Milwaukee Ronald Reagan',score:'48.0'},
