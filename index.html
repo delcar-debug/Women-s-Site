@@ -1092,6 +1092,17 @@
       align-items: center;
     }
 
+
+    .mc-signup { margin: 24px auto 0; max-width: 560px; text-align: left; background: #fff; color: #19191d; border-radius: 18px; padding: 22px; box-shadow: 0 14px 34px rgba(0,0,0,.22); }
+    .mc-signup label { display: block; font-weight: 800; font-size: .85rem; margin-bottom: 12px; }
+    .mc-signup label span { color: #6d1730; }
+    .mc-signup input[type="text"], .mc-signup input[type="email"] { display: block; width: 100%; margin-top: 6px; border: 1px solid #d9d9de; border-radius: 10px; padding: 11px 12px; font: inherit; font-size: .95rem; }
+    .mc-signup input:focus { outline: 2px solid #6d1730; outline-offset: -1px; }
+    .mc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mc-signup button { width: 100%; margin-top: 4px; border: 0; cursor: pointer; }
+    .mc-note { margin: 10px 0 0; font-size: .75rem; color: #676b73 !important; text-align: center; }
+    @media (max-width: 560px) { .mc-row { grid-template-columns: 1fr; } }
+
     .newsletter-form {
       display: flex;
       gap: 10px;
@@ -1656,7 +1667,20 @@
         <div class="eyebrow">Stay connected</div>
         <h2 style="font-size:clamp(1.8rem,3.6vw,3.2rem);letter-spacing:-.055em;margin:12px 0 16px">Team updates delivered directly to you.</h2>
         <p style="color:#f2dfe5;line-height:1.65">Sign up for our monthly newsletter to get results, announcements, upcoming events, and important program news straight to your inbox.</p>
-        <a class="button secondary" style="margin-top:24px" href="https://4a37a7bc.sibforms.com/v2/serve/MUIFABgEvVb9piiP1odz6zoX7bvQ-f6c592SvpUztUt23OHxtEJGu5ViV_o2RLc5EE0dkRUv9xOSHV37N-LJeV9NpItjcW3fsMSDYzAnaqK8jHUPXnw8orCltf9DKAuQmCagY8XXfqnB4PRMumjZWaw6SQ6chVuDTJYB1DUY8fePtPy7pzeFBzlEQfQKBJChwCBxqGLKqWPGa8bdWw==" target="_blank" rel="noopener">Subscribe</a>
+        <form class="mc-signup" action="https://holmenwomenswrestling.us18.list-manage.com/subscribe/post?u=c685233e09b4b2728420cd69e&amp;id=56c2fe4ede&amp;f_id=00d3ace6f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate="novalidate">
+          <div class="mc-row">
+            <label for="mce-FNAME">First Name <span aria-hidden="true">*</span><input type="text" name="FNAME" id="mce-FNAME" required autocomplete="given-name"></label>
+            <label for="mce-LNAME">Last Name <span aria-hidden="true">*</span><input type="text" name="LNAME" id="mce-LNAME" required autocomplete="family-name"></label>
+          </div>
+          <label for="mce-EMAIL">Email Address <span aria-hidden="true">*</span><input type="email" name="EMAIL" id="mce-EMAIL" required autocomplete="email"></label>
+          <div class="mc-row">
+            <label for="mce-MMERGE7">Connection to the Program<input type="text" name="MMERGE7" id="mce-MMERGE7" placeholder="Parent, wrestler, alumni, fan…"></label>
+            <label for="mce-MMERGE8">Graduation Year (if alumni)<input type="text" name="MMERGE8" id="mce-MMERGE8" inputmode="numeric"></label>
+          </div>
+          <div aria-hidden="true" style="position:absolute;left:-5000px;"><input type="text" name="b_c685233e09b4b2728420cd69e_56c2fe4ede" tabindex="-1" value=""></div>
+          <button type="submit" name="subscribe" id="mc-embedded-subscribe" class="button">Subscribe</button>
+          <p class="mc-note">* required. Your confirmation opens in a new tab.</p>
+        </form>
         <div style="margin-top:14px"><a href="newsletter-archive.html" style="color:#f2dfe5;font-weight:700;">View Past Newsletters →</a></div>
       </div>
     </section>
@@ -1700,7 +1724,7 @@
         <div id="coach-login">
           <h4>Contact</h4>
           <a href="contact.html">Send a Message</a>
-          <a href="https://4a37a7bc.sibforms.com/v2/serve/MUIFABgEvVb9piiP1odz6zoX7bvQ-f6c592SvpUztUt23OHxtEJGu5ViV_o2RLc5EE0dkRUv9xOSHV37N-LJeV9NpItjcW3fsMSDYzAnaqK8jHUPXnw8orCltf9DKAuQmCagY8XXfqnB4PRMumjZWaw6SQ6chVuDTJYB1DUY8fePtPy7pzeFBzlEQfQKBJChwCBxqGLKqWPGa8bdWw==" target="_blank" rel="noopener">Subscribe to Newsletter</a>
+          <a href="#newsletter">Subscribe to Newsletter</a>
           <a href="https://www.instagram.com/holmen.womens.wrestling/" target="_blank" rel="noopener">Instagram</a>
           <a href="https://www.facebook.com/groups/1502174103389461" target="_blank" rel="noopener">Facebook</a>
           <a href="https://www.tiktok.com/@holmen_womens_wrestling?lang=en" target="_blank" rel="noopener">TikTok</a>
