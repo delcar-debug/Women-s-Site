@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Thank You | Holmen Women's Wrestling</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="assets/images/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/images/icon-180.png">
+<meta name="theme-color" content="#6d1730">
+<style>
+:root{--maroon:#6d1730;--dark:#3f0b1a;--ink:#19191d;--muted:#676b73;--border:#e1e2e5}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:linear-gradient(135deg,var(--maroon),var(--dark));position:relative;overflow-x:hidden}
+.mark{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;pointer-events:none;overflow:hidden}
+.mark img{width:min(760px,80%);opacity:.1;transform:translateY(40%)}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:28px 16px;position:relative;z-index:1}
+.card{background:#fff;border-radius:22px;padding:42px 34px 36px;max-width:560px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.35);animation:rise .6s ease}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.card img.logo{height:120px;width:auto;margin-bottom:10px}
+.eyebrow{text-transform:uppercase;letter-spacing:.2em;font-size:.76rem;font-weight:900;color:var(--maroon)}
+h1{font-size:clamp(2.1rem,6vw,3rem);letter-spacing:-.04em;line-height:1.05;margin:8px 0 14px;color:var(--maroon);font-weight:900}
+p{line-height:1.6;color:#4a4a52;font-size:1.02rem;margin:0 0 14px}
+.steps{background:#f7f1f3;border-left:5px solid var(--maroon);border-radius:12px;padding:14px 18px;text-align:left;margin:20px 0 24px;font-size:.95rem;line-height:1.55;color:var(--ink)}
+.steps b{color:var(--maroon)}
+.btn{display:inline-block;margin-top:10px;background:var(--maroon);color:#fff;text-decoration:none;font-weight:850;border-radius:999px;padding:12px 26px;font-size:.95rem}
+.btn:hover{background:var(--dark)}
+.sig{margin-top:22px;font-size:.88rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="mark"><img src="assets/images/logo.png" alt=""></div>
+<main>
+  <div class="card">
+    <img class="logo" src="assets/images/logo.png" alt="Holmen Women's Wrestling">
+    <div class="eyebrow">You're on the list</div>
+    <h1>Thank you for subscribing!</h1>
+    <p>We're excited to share team news, results, and updates with you.</p>
+    <a class="btn" href="index.html">Back to the Team Site</a>
+    <div class="sig">For Her &mdash; Holmen Women's Wrestling</div>
+  </div>
+</main>
+</body>
+</html>
