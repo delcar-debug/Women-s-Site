@@ -157,7 +157,7 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 <div class="result-card"><h3>Postseason Results</h3><p class="result-note">Girls individual state began in the 2021–22 season.</p><p class="result-note" style="margin-top:4px">Girls sectionals began in the 2022–23 season.</p><p class="result-note" style="margin-top:4px">Girls regionals began in the 2024–25 season.</p></div>
 </div>
 <div class="panel" id="s2019">
-<div class="result-card"><h3>Events</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2019">Badger State Invitational</span> — 2nd place</li><li>Bi-State Classic Women's Showcase</li><li>Melrose-Mindoro/G-E-T Friday Night Fights</li><li>Wisconsin High School Girls Championship</li></ul></div>
+<div class="result-card"><h3>Events</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2019">Badger State Invitational</span> — 2nd place</li><li><span class="tourney-trigger" data-tourney="bistate-2019">Bi-State Women's Showcase</span></li><li><span class="tourney-trigger" data-tourney="fnf-2019">Friday Night Fights</span></li><li>Wisconsin High School Girls Championship</li></ul></div>
 <div class="result-card"><h3>Postseason Results</h3><p class="result-note">Girls individual state began in the 2021–22 season.</p><p class="result-note" style="margin-top:4px">Girls sectionals began in the 2022–23 season.</p><p class="result-note" style="margin-top:4px">Girls regionals began in the 2024–25 season.</p></div>
 </div>
 <div class="panel" id="s2018">
@@ -173,7 +173,7 @@ h1{font-size:clamp(2.5rem,6vw,4.6rem);letter-spacing:-.06em;margin:8px 0}
 <div class="result-card"><h3>2021–2022</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="bistate-2022">Bi-State Classic Women's Showcase</span></li><li><span class="tourney-trigger" data-tourney="badger-2022">Badger State Invitational</span>: 2nd place</li><li><span class="tourney-trigger" data-tourney="centralgirls-2022">Central Girls Wrestling Invitational</span>: 3rd place</li><li><span class="tourney-trigger" data-tourney="waunakee-2022">Waunakee Warrior Invite</span>: 1st place 🏆</li><li><span class="tourney-trigger" data-tourney="decorah-2022">Decorah Girls Tournament</span></li><li><span class="tourney-trigger" data-tourney="wihsgc-2022">Wisconsin High School Girls Championship</span>: 1st place 🏆</li><li><span class="tourney-trigger" data-tourney="state-2022">WIAA Individual State</span></li><li><span class="tourney-trigger" data-tourney="mvccoulee-2022">MVC/Coulee Tournament</span></li><li><span class="tourney-trigger" data-dual="get-mm-2022-extras">vs. GET-MM</span></li><li><span class="tourney-trigger" data-dual="aquinas-2022-extras">vs. Aquinas</span></li></ul></div>
 <div class="result-card"><h3>2020–2021</h3><ul class="result-list"><li><span class="tourney-trigger" data-dual="holmenquad-2021">Holmen Quad</span></li><li><span class="tourney-trigger" data-dual="get-mm-2021-extras">vs. GET-MM</span></li></ul></div>
 <div class="result-card"><h3>2019–2020</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2020">Badger State Invitational</span>: 2nd place</li><li><span class="tourney-trigger" data-tourney="wihsgc-2020">Wisconsin High School Girls Championship</span>: 2nd place</li><li><span class="tourney-trigger" data-tourney="waunakee-2020">Waunakee Warrior Invite</span>: 1st Place 🏆</li><li><span class="tourney-trigger" data-tourney="bistate-2020">Bi-State Women's Showcase</span></li><li><span class="tourney-trigger" data-tourney="fnf-2020">Friday Night Fights</span></li><li><span class="tourney-trigger" data-dual="sparta-2020">vs. Sparta</span></li></ul></div>
-<div class="result-card"><h3>2018–2019</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2019">Badger State Invitational</span>: 2nd place</li><li>Bi-State Classic Women's Showcase</li><li>Melrose-Mindoro/G-E-T Friday Night Fights</li><li>Wisconsin High School Girls Championship</li></ul></div>
+<div class="result-card"><h3>2018–2019</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2019">Badger State Invitational</span>: 2nd place</li><li><span class="tourney-trigger" data-tourney="bistate-2019">Bi-State Women's Showcase</span></li><li><span class="tourney-trigger" data-tourney="fnf-2019">Friday Night Fights</span></li><li>Wisconsin High School Girls Championship</li></ul></div>
 <div class="result-card"><h3>2017–2018</h3><ul class="result-list"><li><span class="tourney-trigger" data-tourney="badger-2018">Badger State Invitational</span>: 24th place</li><li>Wisconsin High School Girls Championship</li></ul></div>
 <h2 class="results-subtitle" style="margin-top:8px">Dual Results by Season</h2>
 <div class="record-badge" style="margin-bottom:14px;font-size:.95rem">Overall Dual Record (2022–2026): 26–13</div>
@@ -304,51 +304,32 @@ const TOURNEY_DATA = {
     title: 'Friday Night Fights',
     sub: '2019–20 Season — 12/20/2019 — Holmen match results (no team scores)',
     wrestlers: [
-      {name:'Jaida Harshman', weight:'102-114', pts:0, bouts:[
-        'Round 1 — Double forfeit vs. Lulia Maiocchi (Holmen)',
-        'Round 2 — Double forfeit vs. Jasmine Gabbard (Holmen)'
+      {name:'Jasmine Gabbard', weight:'102-114', bouts:[
+        'Round 1 — Won by fall over Vanessa Gavilan (Sparta), 0:43'
       ]},
-      {name:'Jasmine Gabbard', weight:'102-114', place:'4th', pts:6, bouts:[
-        'Round 1 — Won by fall over Vanessa Gavilan (Sparta), 0:43',
-        'Round 2 — Double forfeit vs. Jaida Harshman (Holmen)'
-      ]},
-      {name:'Lulia Maiocchi', weight:'102-114', place:'4th', pts:4, bouts:[
-        'Round 1 — Double forfeit vs. Jaida Harshman (Holmen)',
+      {name:'Lulia Maiocchi', weight:'102-114', bouts:[
         'Round 2 — Lost by fall to Vanessa Gavilan (Sparta), 3:18'
       ]},
-      {name:'Kassandra Mueller', weight:'117-124', place:'1st', pts:18, bouts:[
+      {name:'Kassandra Mueller', weight:'117-124', bouts:[
         'Round 1 — Won by fall over Skylar Wieczorek (Gale-Ett.-Tremp/Melrose-Mind), 4:04',
-        'Round 2 — Double forfeit vs. Hope Steinhoff (Holmen)',
         'Round 3 — Won by fall over Jazmin Wagner (Gale-Ett.-Tremp/Melrose-Mind), 0:51'
       ]},
-      {name:'Hope Steinhoff', weight:'117-124', place:'4th', pts:4, bouts:[
+      {name:'Hope Steinhoff', weight:'117-124', bouts:[
         'Round 1 — Lost by fall to Jazmin Wagner (Gale-Ett.-Tremp/Melrose-Mind), 3:54',
-        'Round 2 — Double forfeit vs. Kassandra Mueller (Holmen)',
         'Round 3 — Lost by fall to Skylar Wieczorek (Gale-Ett.-Tremp/Melrose-Mind), 0:52'
       ]},
-      {name:'Emily Szak', weight:'125-137', place:'2nd', pts:12, bouts:[
-        'Round 1 — Won by fall over Harley Whitacre (Gale-Ett.-Tremp/Melrose-Mind), 2:22',
-        'Round 2 — Double forfeit vs. Amelia LaFleur (Holmen)',
-        'Round 3 — Double forfeit vs. Evelyn Vetsch (Holmen)'
+      {name:'Emily Szak', weight:'125-137', bouts:[
+        'Round 1 — Won by fall over Harley Whitacre (Gale-Ett.-Tremp/Melrose-Mind), 2:22'
       ]},
-      {name:'Evelyn Vetsch', weight:'125-137', place:'3rd', pts:7, bouts:[
-        'Round 1 — Double forfeit vs. Amelia LaFleur (Holmen)',
-        'Round 2 — Won by decision over Harley Whitacre (Gale-Ett.-Tremp/Melrose-Mind), 8-2',
-        'Round 3 — Double forfeit vs. Emily Szak (Holmen)'
+      {name:'Evelyn Vetsch', weight:'125-137', bouts:[
+        'Round 2 — Won by decision over Harley Whitacre (Gale-Ett.-Tremp/Melrose-Mind), 8-2'
       ]},
-      {name:'Amelia LaFleur', weight:'125-137', place:'4th', pts:4, bouts:[
-        'Round 1 — Double forfeit vs. Evelyn Vetsch (Holmen)',
-        'Round 2 — Double forfeit vs. Emily Szak (Holmen)',
-        'Round 3 — Double forfeit vs. Harley Whitacre (Gale-Ett.-Tremp/Melrose-Mind)'
-      ]},
-      {name:'Gwenny Burrows', weight:'144-154', place:'1st', pts:14, bouts:[
+      {name:'Gwenny Burrows', weight:'144-154', bouts:[
         'Round 1 — Bye',
-        'Round 2 — Double forfeit vs. Abigail Bramwell (Holmen)',
         'Round 3 — Won by decision over Breanna Wier (Osseo-Fair/Altoon/Aug/Fall.Crk), 4-2'
       ]},
-      {name:'Abigail Bramwell', weight:'144-154', place:'3rd', pts:7, bouts:[
+      {name:'Abigail Bramwell', weight:'144-154', bouts:[
         'Round 1 — Lost by fall to Breanna Wier (Osseo-Fair/Altoon/Aug/Fall.Crk), 3:23',
-        'Round 2 — Double forfeit vs. Gwenny Burrows (Holmen)',
         'Round 3 — Bye'
       ]}
     ]
@@ -357,56 +338,160 @@ const TOURNEY_DATA = {
     title: "Bi-State Women's Showcase",
     sub: '2019–20 Season — 12/18/2019 — Holmen match results (no team scores)',
     wrestlers: [
-      {name:'Maddie Korish', place:'3rd', pts:0, bouts:[
+      {name:'Maddie Korish', bouts:[
         'Lost by fall to Psalm Woody (La Crosse Logan/Central), 3:33',
         'Lost by fall to Joette Kassa (West Allis Central), 0:58'
       ]},
-      {name:'Erin Bringe', place:'3rd', pts:0, bouts:[
+      {name:'Erin Bringe', bouts:[
         'Lost by fall to Madi Horn (Stillwater), 0:45',
         'Lost by fall to Madison Winjum (Caledonia-Houston), 1:37'
       ]},
-      {name:'Gwenny Burrows', place:'2nd', pts:0, bouts:[
+      {name:'Gwenny Burrows', bouts:[
         'Lost by fall to Emilee Swanson (Kickapoo/La Farge/Youth Init.), 1:20',
         'Won by decision over Madison Winjum (Caledonia-Houston), 3-2'
       ]},
-      {name:'Evelyn Vetsch', place:'2nd', pts:2, bouts:[
+      {name:'Evelyn Vetsch', bouts:[
         'Won by fall over Harley Whitacre (Gale-Ett.-Tremp./Melrose-Mind.), 1:42',
         'Lost by fall to Jazmin Wagner (Gale-Ett.-Tremp./Melrose-Mind.), 2:38'
       ]},
-      {name:'Amelia LaFleur', place:'3rd', pts:0, bouts:[
+      {name:'Amelia LaFleur', bouts:[
         'Lost by fall to Jasmine Aldrich (Nekoosa/Assumption/Port Edwards), 1:05',
         'Lost by fall to Jazmin Wagner (Gale-Ett.-Tremp./Melrose-Mind.), 1:27'
       ]},
-      {name:'Abigail Bramwell', place:'3rd', pts:0, bouts:[
+      {name:'Abigail Bramwell', bouts:[
         'Lost by major decision to Psalm Woody (La Crosse Logan/Central), 9-1',
         'Lost by fall to Joette Kassa (West Allis Central), 0:56'
       ]},
-      {name:'Emily Szak', place:'2nd', pts:2, bouts:[
+      {name:'Emily Szak', bouts:[
         'Won by fall over Jasmine Aldrich (Nekoosa/Assumption/Port Edwards), 0:29',
         'Lost by major decision to Psalm Woody (La Crosse Logan/Central), 13-1'
       ]},
-      {name:'Kassandra Mueller', place:'2nd', pts:0, bouts:[
+      {name:'Kassandra Mueller', bouts:[
         'Won by decision over Lola Langlois-O\'Brien (West Allis Central), 7-0',
         'Lost by decision to Ashley Danielson (Wausau West), 8-4'
       ]},
-      {name:'Nora Lee', place:'1st', pts:2, bouts:[
+      {name:'Nora Lee', bouts:[
         'Won by fall over Vanessa Gavilan (Sparta), 0:52'
       ]},
-      {name:'Hope Steinhoff', place:'2nd', pts:2, bouts:[
+      {name:'Hope Steinhoff', bouts:[
         'Lost by decision to Skylar Wieczorek (Gale-Ett.-Tremp./Melrose-Mind.), 5-4',
         'Won by fall over Harley Whitacre (Gale-Ett.-Tremp./Melrose-Mind.), 1:23'
       ]},
-      {name:'Jasmine Gabbard', place:'1st', pts:2, bouts:[
+      {name:'Jasmine Gabbard', bouts:[
         'Won by decision over Aubryanna Furka (West Allis Central), 10-9',
         'Won by fall over Hanna Hininiger (Mauston), 3:50'
       ]},
-      {name:'Camden Lindsey', place:'2nd', pts:0, bouts:[
+      {name:'Camden Lindsey', bouts:[
         'Won by decision over Madison Winjum (Caledonia-Houston), 7-2',
         'Lost by tech fall to Amor Tuttle (Stillwater), 15-0'
       ]},
-      {name:'Camryn Lemke', place:'3rd', pts:0, bouts:[
+      {name:'Camryn Lemke', bouts:[
         'Lost by fall to Lola Langlois-O\'Brien (West Allis Central), 0:40',
         'Lost by fall to Skylar Wieczorek (Gale-Ett.-Tremp./Melrose-Mind.), 2:58'
+      ]}
+    ]
+  },
+  'fnf-2019': {
+    title: 'Friday Night Fights',
+    sub: '2018–19 Season — 12/14/2018 — No team scores',
+    wrestlers: [
+      {name:'Hope Steinhoff', weight:'120-124', bouts:[
+        'Round 1 — Lost by fall to Alex Weinberger (La Crosse Area), 0:42',
+        'Round 2 — Lost by fall to Joshua Stuebs (Onalaska / Luther), 0:13',
+        'Round 3 — Lost by fall to Seamus O\'Brien (Aquinas), 0:41'
+      ]},
+      {name:'Camden Lindsey', weight:'136-140', bouts:[
+        'Round 1 — Lost by fall to Brian Higuet (Black River Falls), 1:18',
+        'Round 2 — Lost by major decision to Nick Kulig (Whitehall), 17-6',
+        'Round 3 — Lost by fall to Jack Rogers (Onalaska / Luther), 0:40'
+      ]},
+      {name:'Kayla Zabel', weight:'106-108', bouts:[
+        'Round 1 — Bye',
+        'Round 2 — Bye',
+        'Round 3 — Lost by fall to Jaida Harshman (Gale-Ett.-Tremp/Melrose-Mind), 2:18'
+      ]},
+      {name:'Amelia LaFleur', weight:'111-120', bouts:[
+        'Round 1 — Won by decision over Jesse Lyga (Whitehall), 10-8',
+        'Round 2 — Bye'
+      ]},
+      {name:'Kassandra Mueller', weight:'111-120', bouts:[
+        'Round 1 — Bye',
+        'Round 2 — Won by fall over Jesse Lyga (Whitehall), 2:39'
+      ]},
+      {name:'Abigail Bramwell', weight:'137-144', bouts:[
+        'Round 1 — Lost by decision to Amber Eddy (Holmen), 7-5',
+        'Round 2 — Won by forfeit over Megan Zittlow (Holmen)',
+        'Round 3 — Lost by fall to Chariell Butler (La Crosse Area), 0:25'
+      ]},
+      {name:'Megan Zittlow', weight:'137-144', bouts:[
+        'Round 1 — Won by fall over Chariell Butler (La Crosse Area), 1:00',
+        'Round 2 — Lost by forfeit to Abigail Bramwell (Holmen)'
+      ]},
+      {name:'Amber Eddy', weight:'137-144', bouts:[
+        'Round 1 — Won by decision over Abigail Bramwell (Holmen), 7-5',
+        'Round 2 — Lost by fall to Chariell Butler (La Crosse Area), 0:39'
+      ]},
+      {name:'Gwenny Burrows', weight:'151-152', bouts:[
+        'Round 1 — Bye',
+        'Round 2 — Lost by decision to Mykalia Olson (Holmen), 18-14',
+        'Round 3 — Bye'
+      ]},
+      {name:'Mykalia Olson', weight:'151-152', bouts:[
+        'Round 1 — Bye',
+        'Round 2 — Won by decision over Gwenny Burrows (Holmen), 18-14',
+        'Round 3 — Bye'
+      ]},
+      {name:'Mara Friesen', weight:'174-182', bouts:[
+        'Round 1 — Bye',
+        'Round 2 — Lost by fall to Asia Rave (Black River Falls), 2:56',
+        'Round 3 — Bye'
+      ]}
+    ]
+  },
+  'bistate-2019': {
+    title: "Bi-State Women's Showcase",
+    sub: '2018–19 Season — 12/29/2018 — Holmen match results (no team scores)',
+    wrestlers: [
+      {name:'Jasmine Gabbard', bouts:[
+        'Lost by fall to Skylar Wieczorek (Gale-Ett.-Tremp./Melrose-Mind.), 0:56',
+        'Lost by fall to Jaida Harshman (Gale-Ett.-Tremp./Melrose-Mind.), 3:23'
+      ]},
+      {name:'Hope Steinhoff', bouts:[
+        'Lost by fall to Lola Langlois-O\'Brien (West Allis Central), 4:40',
+        'Lost by fall to Jasmine Hall (Verona Area), 0:37'
+      ]},
+      {name:'Claire Eade', bouts:[
+        'Lost by fall to Hope Trevino (Wausau West), 4:34',
+        'Lost by fall to Joette Kassa (West Allis Central), 5:21'
+      ]},
+      {name:'Lynsey Anderson', bouts:[
+        'Lost by major decision to Jasmine Hall (Verona Area), 14-1',
+        'Lost by tech fall to Hope Trevino (Wausau West), 15-0'
+      ]},
+      {name:'Camden Lindsey', bouts:[
+        'Won by major decision over Emily Mueller (Wausau West), 9-1'
+      ]},
+      {name:'Amber Eddy', bouts:[
+        'Lost by fall to Hope Baumgart (New Lisbon), 3:41'
+      ]},
+      {name:'Maddie Korish', bouts:[
+        'Lost by fall to Hope Baumgart (New Lisbon), 3:23',
+        'Lost by fall to Maya Traustch (Prairie du Chien), 2:41'
+      ]},
+      {name:'Abigail Bramwell', bouts:[
+        'Lost by fall to Maya Traustch (Prairie du Chien), 3:52'
+      ]},
+      {name:'Mykalia Olson', bouts:[
+        'Won by fall over Sheyanne Ronnfeldt (Prairie du Chien), 0:36',
+        'Won by fall over Emilee Swanson (Kickapoo/La Farge/Youth Init.), 0:44'
+      ]},
+      {name:'Gwenny Burrows', bouts:[
+        'Lost by fall to Madi Horn (Stillwater), 1:55',
+        'Lost by fall to Emily Mueller (Wausau West), 2:23'
+      ]},
+      {name:'Amelia LaFleur', bouts:[
+        'Won by sudden victory over Jaida Harshman (Gale-Ett.-Tremp./Melrose-Mind.), 10-8',
+        'Lost by fall to Skylar Wieczorek (Gale-Ett.-Tremp./Melrose-Mind.), 1:10'
       ]}
     ]
   },
@@ -1028,7 +1113,7 @@ const TOURNEY_DATA = {
   },
   'badger-2019': {
     title: 'Badger State Invitational',
-    sub: '2018–19 Season — Team scores and Holmen match results',
+    sub: '2018–19 Season — 12/22/2018 — Team scores and Holmen match results',
     teams: [
       {r:1,name:'Milwaukee Ronald Reagan',score:'71.0'},
       {r:2,name:'Holmen',score:'54.0',holmen:true},
@@ -1945,7 +2030,7 @@ const TOURNEY_DATA = {
     sub: '2023–24 Season — 12/15/2023 — Not an official scored tournament',
     teams: [],
     wrestlers: [
-      {name:'Gabbie Hopkins', weight:'120', pts:0, bouts:[
+      {name:'Gabbie Hopkins', weight:'120', bouts:[
         'Round 1 — Lost by fall to Emma Pickering (Tomah), 0:24',
         'Round 2 — Won by fall over Trinity Anderson (Tomah), 0:33',
         '126 lbs — Won by fall over Janessa Vollmer (Mondovi/Eleva-Strum), 2:15'
@@ -7612,7 +7697,7 @@ function openTourneyModal(id){
   const wrestlerCards = data.wrestlers.map(w => `
     <div class="tourney-wrestler">
       <div class="tourney-wrestler-head">
-        <div><strong>${w.name}</strong> <span class="wt">${w.weight}</span></div>
+        <div><strong>${w.name}</strong> <span class="wt">${w.weight || ''}</span></div>
         ${(w.place || w.pts !== undefined) ? `<div class="tourney-place">${w.place ? w.place + ' place' : ''}${w.place && w.pts !== undefined ? ' · ' : ''}${w.pts !== undefined ? w.pts + ' team pts' : ''}</div>` : ''}
       </div>
       <ul class="tourney-bouts">${w.bouts.map(b => `<li>${b}</li>`).join('')}</ul>
