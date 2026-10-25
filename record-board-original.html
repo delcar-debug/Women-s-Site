@@ -848,19 +848,6 @@ SLIDES.push({ type:'qual-pair', duration:10000, eyebrow:'Postseason Herstory',
   titleA:'Regional Champions', rowsA:REGIONAL_CHAMPIONS, champA:true, noteA:'Girls regionals began in 2025.',
   titleB:'Fargo Nationals Qualifiers', rowsB:FARGO_QUALIFIERS });
 
-// Volleyball playoff takeover: only the good-luck slide runs until 10:00pm Oct 22, 2026
-if (new Date() >= new Date('2026-10-22T00:00:00') && new Date() < new Date('2026-10-22T22:00:00')) {
-  document.documentElement.classList.add('vb-on');
-  SLIDES.length = 0;
-  SLIDES.push({ type:'vball', duration:600000, sub:'at regionals tonight!', from:'From the girls wrestling team' });
-}
-// Football playoff takeover: 5:00am - 11:59pm Fri Oct 23, 2026
-else if (new Date() >= new Date('2026-10-23T05:00:00') && new Date() < new Date('2026-10-23T23:59:00')) {
-  document.documentElement.classList.add('vb-on');
-  SLIDES.length = 0;
-  SLIDES.push({ type:'vball', cls:'fb two three', emoji:'&#127944;', emoji2:'&#127939;&#8205;&#9792;&#65039;', emojis:['&#127944;','&#127939;&#8205;&#9792;&#65039;','&#127952;'], name:'Football, Cross Country &amp; Volleyball', cols:['#ffffff','#ffffff','#ffd23f','#b9f0c1','#ffffff','#7ee08a'], duration:600000, sub:'<span>Football playoffs tonight</span><span>Cross Country sectionals Saturday</span><span>Volleyball regional finals Saturday</span>', from:'From the girls wrestling team' });
-}
-
 // ---- Rendering ----
 function lbRowsHtml(list){
   return list.map(row => `
