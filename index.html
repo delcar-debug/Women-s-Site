@@ -1233,7 +1233,7 @@
           </div>
         </div>
         <a href="#join">Join</a>
-        <a href="https://sportsworld.chipply.com/holmenwomenswr26-27/?action=viewall" target="_blank" rel="noopener">Store</a>
+        <a data-store-link href="https://sportsworld.chipply.com/holmenwomenswr26-27/?action=viewall" target="_blank" rel="noopener">Store</a>
         <a href="#newsletter">Friends</a>
         <div class="site-search">
           <button class="site-search-btn" id="siteSearchBtn" type="button" aria-label="Search the site" aria-haspopup="true">🔍</button>
@@ -1269,7 +1269,7 @@
         <a href="grow-your-team.html">Women's Wrestling Resources</a>
       </div>
       <a href="#join">Join</a>
-      <a href="https://sportsworld.chipply.com/holmenwomenswr26-27/?action=viewall" target="_blank" rel="noopener">Store</a>
+      <a data-store-link href="https://sportsworld.chipply.com/holmenwomenswr26-27/?action=viewall" target="_blank" rel="noopener">Store</a>
       <a href="#newsletter">Friends</a>
       <div class="mobile-nav-buttons">
         <a class="button" href="team-hub.html">Team Hub</a>
@@ -1293,7 +1293,7 @@
               <a class="button" href="#join">🙋‍♀️ Join the Team</a>
               <a class="button secondary" href="#quotes">🔍 Explore the Program</a>
               <a class="button secondary" href="https://holmenwrestling.com/youth-registration/" target="_blank" rel="noopener">🤼 Youth Registration</a>
-              <a class="button secondary" href="https://sportsworld.chipply.com/holmenwomenswr26-27/?action=viewall" target="_blank" rel="noopener">🛍️ Team Store</a>
+              <a data-store-link class="button secondary" href="https://sportsworld.chipply.com/holmenwomenswr26-27/?action=viewall" target="_blank" rel="noopener">🛍️ Team Store</a>
             </div>
 
             <div class="season-countdown" id="season-countdown" data-season-start="2026-11-16T15:00:00">
@@ -2022,6 +2022,12 @@
     { title: "Badger State Invitational", url: "results.html#s2019", desc: "2018–2019 Event — 2nd place", keywords: "results 2018–2019 season badger state invitational" },
     { title: "Badger State Invitational", url: "results.html#s2018", desc: "2017–2018 Event — 24th place", keywords: "results 2017–2018 season badger state invitational" }
   ];
+
+  /* Team Store: automatically removed from the site on Nov 2, 2026 */
+  if (new Date() >= new Date('2026-11-02T00:00:00')) {
+    SITE_INDEX = SITE_INDEX.filter(function (item) { return item.title !== 'Team Store'; });
+    document.querySelectorAll('[data-store-link]').forEach(function (el) { el.remove(); });
+  }
 
   function setupSiteSearch(inputId, resultsId, panel) {
     var input = document.getElementById(inputId);
