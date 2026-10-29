@@ -528,6 +528,29 @@ html.vb-on body .tv-logo img{ filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)) !impo
 .tv-vb.two .tv-vb-sub span{ display:block; }
 .tv-vb.fb .tv-vb-net, .tv-vb.fb .tv-vb-pole{ display:none !important; }
 </style>
+<style>
+/* Come Try Girls Wrestling takeover */
+.tv-vb.try .tv-vb-net, .tv-vb.try .tv-vb-pole, .tv-vb.try .tv-vb-court{ display:none !important; }
+.tv-vb.try .tv-vb-top{ font-size:clamp(1.3rem,2.6vw,2.6rem); letter-spacing:.14em; }
+.tv-vb.try .tv-vb-big{ font-size:clamp(4rem,12vw,12rem); }
+.tv-vb.try .tv-vb-big2{ font-size:clamp(2.6rem,7.6vw,7.8rem); }
+.tv-vb.try .tv-vb-sub{ font-size:clamp(1.6rem,3.6vw,3.6rem); }
+.tv-vb.try .tv-vb-from{ font-size:clamp(1.1rem,2.1vw,2.1rem); }
+.tv-try{ background:#2a0612; }
+.tv-try-bg{ position:absolute; inset:-3%; background-size:cover; z-index:0; animation:tryZoom 14s ease-in-out infinite alternate; }
+.tv-try-shade{ position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(60,6,22,.35) 0%, rgba(60,6,22,.15) 30%, rgba(40,4,14,.82) 72%, rgba(30,3,10,.92) 100%); }
+.tv-try-text{ position:absolute; left:0; right:0; bottom:7%; z-index:3; text-align:center; padding:0 5%; }
+.tv-try-eyebrow{ display:inline-block; padding:8px 26px; border-radius:999px; background:#fff; color:#7a1230; font-weight:900; letter-spacing:.14em; text-transform:uppercase; font-size:clamp(1.1rem,2.2vw,2.2rem); box-shadow:0 8px 20px rgba(0,0,0,.35); animation:vbWiggle 4s ease-in-out infinite; }
+.tv-try-h1{ margin:14px 0 8px; font-size:clamp(3.4rem,10vw,10.5rem); line-height:.92; letter-spacing:-.035em; text-transform:uppercase; font-weight:900; color:#fff; text-shadow:0 8px 0 rgba(74,10,28,.85), 0 0 60px rgba(0,0,0,.5); animation:vbBeat 4s ease-in-out infinite; }
+.tv-try-pill{ display:inline-block; margin-top:10px; padding:10px 40px; border-radius:999px; background:#e8c37a; color:#3a0a18; font-weight:900; text-transform:uppercase; letter-spacing:.06em; font-size:clamp(1.5rem,3.4vw,3.4rem); box-shadow:0 12px 30px rgba(0,0,0,.45); }
+.tv-try-foot{ margin-top:14px; color:#fff; font-weight:800; letter-spacing:.14em; text-transform:uppercase; font-size:clamp(1rem,1.9vw,1.9rem); text-shadow:0 3px 0 rgba(0,0,0,.5); }
+.tv-try.framed .tv-try-bg{ filter:blur(26px) saturate(1.1); inset:-8%; animation:none; }
+.tv-try.framed .tv-try-shade{ background:linear-gradient(180deg, rgba(60,6,22,.45) 0%, rgba(40,4,14,.7) 60%, rgba(30,3,10,.92) 100%); }
+.tv-try-frame{ position:absolute; z-index:2; top:14%; left:50%; transform:translateX(-50%) rotate(-1.2deg); height:44vh; max-width:88vw; aspect-ratio:3/2; padding:10px; background:#fff; border-radius:16px; box-shadow:0 18px 50px rgba(0,0,0,.55); animation:frameSway 7s ease-in-out infinite alternate; }
+.tv-try-frame img{ width:100%; height:100%; object-fit:cover; border-radius:8px; display:block; }
+@keyframes frameSway{ from{ transform:translateX(-50%) rotate(-1.4deg); } to{ transform:translateX(-50%) rotate(1.4deg); } }
+@keyframes tryZoom{ from{ transform:scale(1) translate(0,0); } to{ transform:scale(1.09) translate(-1.2%,-1%); } }
+</style>
 </head>
 <body>
 
@@ -848,6 +871,16 @@ SLIDES.push({ type:'qual-pair', duration:10000, eyebrow:'Postseason Herstory',
   titleA:'Regional Champions', rowsA:REGIONAL_CHAMPIONS, champA:true, noteA:'Girls regionals began in 2025.',
   titleB:'Fargo Nationals Qualifiers', rowsB:FARGO_QUALIFIERS });
 
+// Come Try Girls Wrestling takeover: runs from Oct 28 until the event starts, Mon Nov 2, 2026 at 5:00pm, then the normal board returns
+if (new Date() >= new Date('2026-10-28T00:00:00') && new Date() < new Date('2026-11-02T17:00:00')) {
+  document.documentElement.classList.add('vb-on');
+  SLIDES.length = 0;
+  SLIDES.push({ type:'vball', cls:'try', emoji:'&#129340;&#8205;&#9792;&#65039;', emoji2:'&#129340;&#8205;&#9792;&#65039;', emojis:['&#129340;&#8205;&#9792;&#65039;','&#128170;','&#127941;'], top:'No experience needed &middot; Bring a friend', big:'Come Try', name:'Girls Wrestling', sub:'Monday, Nov 2 &middot; 5:00 PM', from:'Holmen Women&rsquo;s Wrestling', duration:12000 });
+  SLIDES.push({ type:'tryphoto', photo:'assets/images/team-photo.jpg', pos:'50% 40%', eyebrow:'Holmen Women&rsquo;s Wrestling', title:'Come Try<br>Girls Wrestling', when:'Monday, Nov 2 &middot; 5:00 PM', foot:'No experience needed', duration:12000 });
+  SLIDES.push({ type:'tryphoto', photo:'assets/images/albums/decorah-jan-2025-cover.jpg', pos:'50% 35%', frame:true, eyebrow:'Join the team', title:'Bring a Friend!', when:'Monday, Nov 2 &middot; 5:00 PM', foot:'Girls only wrestle girls', duration:12000 });
+  SLIDES.push({ type:'tryphoto', photo:'assets/images/albums/random-pictures-2022-23-cover.jpg', pos:'50% 45%', eyebrow:'Open to all kids &amp; high schoolers', title:'Give Wrestling<br>a Try', when:'Monday, Nov 2 &middot; 5:00 PM', foot:'Fun &middot; Friends &middot; Confidence', duration:12000 });
+}
+
 // ---- Rendering ----
 function lbRowsHtml(list){
   return list.map(row => `
@@ -892,10 +925,24 @@ function renderSlide(slide){
         <div class="tv-vb-rays"></div><div class="tv-vb-glow"></div>
         <div class="tv-vb-court"></div>${conf}${roll}${balls}<div class="tv-vb-net"></div><div class="tv-vb-pole" style="left:2.5%"></div><div class="tv-vb-pole" style="right:2.5%"></div>
         <div class="tv-vb-text">
-          <div class="tv-vb-top">${emo} Go Vikings! ${emo2}</div>
-          <h1 class="tv-vb-big">Good Luck</h1>
+          <div class="tv-vb-top">${slide.top||(emo+' Go Vikings! '+emo2)}</div>
+          <h1 class="tv-vb-big">${slide.big||'Good Luck'}</h1>
           <h2 class="tv-vb-big2">${slide.name||'Volleyball'}</h2>
           <div class="tv-vb-sub">${slide.sub}</div><div class="tv-vb-from">${slide.from}</div>
+        </div>
+      </div>`;
+    }
+
+    case 'tryphoto': {
+      return `<div class="slide-inner tv-vb tv-try ${slide.frame?'framed':''}">
+        <div class="tv-try-bg" style="background-image:url('${slide.photo}');background-position:${slide.pos||'center'}"></div>
+        <div class="tv-try-shade"></div>
+        ${slide.frame ? `<div class="tv-try-frame"><img src="${slide.photo}" alt=""></div>` : ''}
+        <div class="tv-try-text">
+          <div class="tv-try-eyebrow">${slide.eyebrow}</div>
+          <h1 class="tv-try-h1">${slide.title}</h1>
+          <div class="tv-try-pill">${slide.when}</div>
+          <div class="tv-try-foot">${slide.foot||''}</div>
         </div>
       </div>`;
     }
