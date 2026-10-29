@@ -546,6 +546,11 @@ html.vb-on body .tv-logo img{ filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)) !impo
 .tv-try.bw .tv-try-foot{ color:#FFC52F; }
 .tv-try.bw .tv-try-frame{ background:#FFC52F; }
 .tv-bw-badge{ position:absolute; z-index:6; right:3.2%; top:5%; transform:rotate(5deg); padding:10px 28px; border-radius:26px; text-align:center; line-height:1.15; background:#FFC52F; color:#12284B; border:4px solid #fff; font-weight:900; letter-spacing:.08em; text-transform:uppercase; font-size:clamp(.9rem,1.8vw,1.8rem); box-shadow:0 10px 24px rgba(0,0,0,.45); animation:vbWiggle 3.4s ease-in-out infinite; }
+/* Full-screen poster slide (e.g., sign-up flyer): hide logo, QR box and frame so nothing covers it */
+.tv-poster{ background:#fff !important; }
+.tv-poster::after{ display:none !important; }
+.tv-poster img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
+html.poster-on .tv-logo, html.poster-on #tv-qr-box, html.poster-on #tv-countdown{ display:none !important; }
 /* smaller framed photo + Brewers decorations (slides 2 and 4) */
 .tv-try.tight .tv-try-h1{ font-size:clamp(2.4rem,6vw,6.4rem); }
 .tv-try.tight .tv-try-frame{ top:9%; height:33vh; }
@@ -897,8 +902,15 @@ SLIDES.push({ type:'qual-pair', duration:10000, eyebrow:'Postseason Herstory',
   titleA:'Regional Champions', rowsA:REGIONAL_CHAMPIONS, champA:true, noteA:'Girls regionals began in 2025.',
   titleB:'Fargo Nationals Qualifiers', rowsB:FARGO_QUALIFIERS });
 
-// Come Try Girls Wrestling takeover: runs from Oct 28 until the event starts, Mon Nov 2, 2026 at 5:00pm, then the normal board returns
-if (new Date() >= new Date('2026-10-28T00:00:00') && new Date() < new Date('2026-11-02T17:00:00')) {
+// HVWC youth sign-up flyer: Mon Nov 2, 2026, 4:00pm - 6:00pm (full screen)
+if (new Date() >= new Date('2026-11-02T16:00:00') && new Date() < new Date('2026-11-02T18:00:00')) {
+  document.documentElement.classList.add('vb-on');
+  document.documentElement.classList.add('poster-on');
+  SLIDES.length = 0;
+  SLIDES.push({ type:'poster', photo:'assets/images/hvwc-signup-2026-27.png', duration:600000 });
+}
+// Come Try Girls Wrestling takeover: runs from Oct 28 until 4:00pm Mon Nov 2, 2026 (the sign-up flyer takes over 4-6pm), then the normal board returns
+else if (new Date() >= new Date('2026-10-28T00:00:00') && new Date() < new Date('2026-11-02T16:00:00')) {
   document.documentElement.classList.add('vb-on');
   SLIDES.length = 0;
   SLIDES.push({ type:'vball', cls:'try bw', badge:'Go Brewers,<br>World Series Champions! &#9918;', cols:['#ffffff','#FFC52F','#2a5aa3','#FFC52F','#ffffff','#9bb8e3'], emoji:'&#9918;', emoji2:'&#9918;', emojis:['&#9918;','&#129340;&#8205;&#9792;&#65039;','&#9918;','&#128170;'], top:'No experience needed &middot; Bring a friend', big:'Come Try', name:'Girls Wrestling', sub:'Monday, Nov 2 &middot; 5:00 PM', from:'Holmen Women&rsquo;s Wrestling', duration:12000 });
@@ -958,6 +970,10 @@ function renderSlide(slide){
           <div class="tv-vb-sub">${slide.sub}</div><div class="tv-vb-from">${slide.from}</div>
         </div>
       </div>`;
+    }
+
+    case 'poster': {
+      return `<div class="slide-inner tv-vb tv-poster"><img src="${slide.photo}" alt=""></div>`;
     }
 
     case 'tryphoto': {
