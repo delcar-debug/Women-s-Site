@@ -529,6 +529,29 @@ html.vb-on body .tv-logo img{ filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)) !impo
 .tv-vb.fb .tv-vb-net, .tv-vb.fb .tv-vb-pole{ display:none !important; }
 </style>
 <style>
+/* Brewers / World Series theme (navy + gold, baseball motifs; no team logos) */
+.tv-vb.bw{ background:radial-gradient(circle at 50% 45%, #2a5aa3 0%, #12284B 50%, #091830 100%); }
+.tv-vb.bw::after{ border-color:#FFC52F; }
+.tv-vb.bw .tv-vb-rays{ background:repeating-conic-gradient(from 0deg, rgba(255,197,47,.16) 0deg 10deg, rgba(255,197,47,0) 10deg 20deg); }
+.tv-vb.bw .tv-vb-big{ text-shadow:0 10px 0 #091830, 0 0 70px rgba(255,197,47,.45); }
+.tv-vb.bw .tv-vb-big2{ background:#FFC52F; color:#12284B; box-shadow:0 10px 0 #091830; }
+.tv-vb.bw .tv-vb-sub{ color:#12284B; border-color:#FFC52F; }
+.tv-vb.bw .tv-vb-from{ color:#FFC52F; }
+.tv-try.bw{ background:#091830; }
+.tv-try.bw .tv-try-shade{ background:linear-gradient(180deg, rgba(9,24,48,.45) 0%, rgba(9,24,48,.15) 30%, rgba(9,24,48,.84) 72%, rgba(5,14,30,.94) 100%); }
+.tv-try.bw.framed .tv-try-shade{ background:linear-gradient(180deg, rgba(9,24,48,.5) 0%, rgba(9,24,48,.7) 60%, rgba(5,14,30,.94) 100%); }
+.tv-try.bw .tv-try-eyebrow{ background:#FFC52F; color:#12284B; }
+.tv-try.bw .tv-try-h1{ text-shadow:0 8px 0 rgba(9,24,48,.9), 0 0 60px rgba(0,0,0,.5); }
+.tv-try.bw .tv-try-pill{ background:#fff; color:#12284B; border:4px solid #FFC52F; }
+.tv-try.bw .tv-try-foot{ color:#FFC52F; }
+.tv-try.bw .tv-try-frame{ background:#FFC52F; }
+.tv-bw-badge{ position:absolute; z-index:6; right:3.2%; top:5%; transform:rotate(5deg); padding:10px 28px; border-radius:26px; text-align:center; line-height:1.15; background:#FFC52F; color:#12284B; border:4px solid #fff; font-weight:900; letter-spacing:.08em; text-transform:uppercase; font-size:clamp(.9rem,1.8vw,1.8rem); box-shadow:0 10px 24px rgba(0,0,0,.45); animation:vbWiggle 3.4s ease-in-out infinite; }
+/* smaller framed photo + Brewers decorations (slides 2 and 4) */
+.tv-try.tight .tv-try-h1{ font-size:clamp(2.4rem,6vw,6.4rem); }
+.tv-try.tight .tv-try-frame{ top:9%; height:33vh; }
+.tv-try.tight .tv-try-text{ bottom:5%; }
+.tv-try.snug .tv-try-frame{ top:9%; height:33vh; }
+.tv-try.bw .tv-vb-rays{ background:repeating-conic-gradient(from 0deg, rgba(255,197,47,.13) 0deg 10deg, rgba(255,197,47,0) 10deg 20deg); z-index:0; }
 /* Takeover slides: hide seasonal decorations (Halloween bats/ghosts/pumpkins/fog/moon/webs, fall leaves, etc.) */
 html.vb-on .hw, html.vb-on #fog, html.vb-on #fly-field, html.vb-on #leaf-field, html.vb-on #heart-field, html.vb-on #base-field, html.vb-on #ball-field{ display:none !important; }
 /* Come Try Girls Wrestling takeover */
@@ -878,10 +901,10 @@ SLIDES.push({ type:'qual-pair', duration:10000, eyebrow:'Postseason Herstory',
 if (new Date() >= new Date('2026-10-28T00:00:00') && new Date() < new Date('2026-11-02T17:00:00')) {
   document.documentElement.classList.add('vb-on');
   SLIDES.length = 0;
-  SLIDES.push({ type:'vball', cls:'try', emoji:'&#129340;&#8205;&#9792;&#65039;', emoji2:'&#129340;&#8205;&#9792;&#65039;', emojis:['&#129340;&#8205;&#9792;&#65039;','&#128170;','&#127941;'], top:'No experience needed &middot; Bring a friend', big:'Come Try', name:'Girls Wrestling', sub:'Monday, Nov 2 &middot; 5:00 PM', from:'Holmen Women&rsquo;s Wrestling', duration:12000 });
-  SLIDES.push({ type:'tryphoto', photo:'assets/images/team-photo.jpg', pos:'50% 40%', eyebrow:'Holmen Women&rsquo;s Wrestling', title:'Come Try<br>Girls Wrestling', when:'Monday, Nov 2 &middot; 5:00 PM', foot:'No experience needed', duration:12000 });
-  SLIDES.push({ type:'tryphoto', photo:'assets/images/albums/decorah-jan-2025-cover.jpg', pos:'50% 35%', frame:true, eyebrow:'Join the team', title:'Bring a Friend!', when:'Monday, Nov 2 &middot; 5:00 PM', foot:'Try girls wrestling &middot; Girls only wrestle girls', duration:12000 });
-  SLIDES.push({ type:'tryphoto', photo:'assets/images/albums/random-pictures-2022-23-cover.jpg', pos:'50% 45%', eyebrow:'Open to all kids &amp; high schoolers', title:'Give Wrestling<br>a Try', when:'Monday, Nov 2 &middot; 5:00 PM', foot:'Fun &middot; Friends &middot; Confidence', duration:12000 });
+  SLIDES.push({ type:'vball', cls:'try bw', badge:'Go Brewers,<br>World Series Champions! &#9918;', cols:['#ffffff','#FFC52F','#2a5aa3','#FFC52F','#ffffff','#9bb8e3'], emoji:'&#9918;', emoji2:'&#9918;', emojis:['&#9918;','&#129340;&#8205;&#9792;&#65039;','&#9918;','&#128170;'], top:'No experience needed &middot; Bring a friend', big:'Come Try', name:'Girls Wrestling', sub:'Monday, Nov 2 &middot; 5:00 PM', from:'Holmen Women&rsquo;s Wrestling', duration:12000 });
+  SLIDES.push({ type:'tryphoto', cls:'bw tight', deco:true, frame:true, badge:'Go Brewers,<br>World Series Champions! &#9918;', photo:'assets/images/team-photo.jpg', pos:'50% 40%', eyebrow:'Holmen Women&rsquo;s Wrestling', title:'Come Try<br>Girls Wrestling', when:'Monday, Nov 2 &middot; 5:00 PM', foot:'No experience needed', duration:12000 });
+  SLIDES.push({ type:'tryphoto', cls:'bw snug', deco:true, badge:'Go Brewers,<br>World Series Champions! &#9918;', photo:'assets/images/albums/decorah-jan-2025-cover.jpg', pos:'50% 35%', frame:true, eyebrow:'Join the team', title:'Bring a Friend!', when:'Monday, Nov 2 &middot; 5:00 PM', foot:'Try girls wrestling &middot; Girls only wrestle girls', duration:12000 });
+  SLIDES.push({ type:'tryphoto', cls:'bw tight', deco:true, frame:true, badge:'Go Brewers,<br>World Series Champions! &#9918;', photo:'assets/images/albums/random-pictures-2022-23-cover.jpg', pos:'50% 45%', eyebrow:'Open to all kids &amp; high schoolers', title:'Give Wrestling<br>a Try', when:'Monday, Nov 2 &middot; 5:00 PM', foot:'Fun &middot; Friends &middot; Confidence', duration:12000 });
 }
 
 // ---- Rendering ----
@@ -927,6 +950,7 @@ function renderSlide(slide){
       return `<div class="slide-inner tv-vb ${slide.cls||''}">
         <div class="tv-vb-rays"></div><div class="tv-vb-glow"></div>
         <div class="tv-vb-court"></div>${conf}${roll}${balls}<div class="tv-vb-net"></div><div class="tv-vb-pole" style="left:2.5%"></div><div class="tv-vb-pole" style="right:2.5%"></div>
+        ${slide.badge ? `<div class="tv-bw-badge">${slide.badge}</div>` : ''}
         <div class="tv-vb-text">
           <div class="tv-vb-top">${slide.top||(emo+' Go Vikings! '+emo2)}</div>
           <h1 class="tv-vb-big">${slide.big||'Good Luck'}</h1>
@@ -937,10 +961,21 @@ function renderSlide(slide){
     }
 
     case 'tryphoto': {
-      return `<div class="slide-inner tv-vb tv-try ${slide.frame?'framed':''}">
+      let deco='';
+      if(slide.deco){
+        const R=(a,b)=>a+Math.random()*(b-a);
+        const cc=['#ffffff','#FFC52F','#2a5aa3','#FFC52F','#ffffff','#9bb8e3'];
+        const EM=['&#9918;','&#127942;','&#9918;','&#127942;'];
+        deco+='<div class="tv-vb-rays"></div>';
+        for(let i=0;i<40;i++){ deco+=`<span class="tv-vb-conf" style="left:${R(0,100).toFixed(1)}%;--w:${R(9,18).toFixed(0)}px;--h:${R(16,34).toFixed(0)}px;--c:${cc[i%cc.length]};--d:${R(10,18).toFixed(1)}s;--dl:-${R(0,18).toFixed(1)}s"></span>`; }
+        [[3,64,7],[89,68,8],[11,82,5],[84,84,6],[2,30,5],[93,34,5]].forEach((b,i)=>{ deco+=`<span class="tv-vb-ball" style="left:${b[0]}%;top:${b[1]}%;font-size:${b[2]}vw;--d:${(3.6+i*0.4).toFixed(2)}s;--dl:${(i*0.6).toFixed(2)}s">${EM[i%EM.length]}</span>`; });
+      }
+      return `<div class="slide-inner tv-vb tv-try ${slide.cls||''} ${slide.frame?'framed':''}">
         <div class="tv-try-bg" style="background-image:url('${slide.photo}');background-position:${slide.pos||'center'}"></div>
         <div class="tv-try-shade"></div>
+        ${deco}
         ${slide.frame ? `<div class="tv-try-frame"><img src="${slide.photo}" alt=""></div>` : ''}
+        ${slide.badge ? `<div class="tv-bw-badge">${slide.badge}</div>` : ''}
         <div class="tv-try-text">
           <div class="tv-try-eyebrow">${slide.eyebrow}</div>
           <h1 class="tv-try-h1">${slide.title}</h1>
