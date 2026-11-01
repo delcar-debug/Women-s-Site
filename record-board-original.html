@@ -902,21 +902,23 @@ SLIDES.push({ type:'qual-pair', duration:10000, eyebrow:'Postseason Herstory',
   titleA:'Regional Champions', rowsA:REGIONAL_CHAMPIONS, champA:true, noteA:'Girls regionals began in 2025.',
   titleB:'Fargo Nationals Qualifiers', rowsB:FARGO_QUALIFIERS });
 
-// HVWC youth sign-up flyer: Mon Nov 2, 2026, 4:00pm - 6:00pm (full screen)
-if (new Date() >= new Date('2026-11-02T16:00:00') && new Date() < new Date('2026-11-02T18:00:00')) {
+// HVWC youth sign-up flyer: Mon Nov 2, 2026, 4:30pm - 7:00pm (full screen)
+if (new Date() >= new Date('2026-11-02T16:30:00') && new Date() < new Date('2026-11-02T19:00:00')) {
   document.documentElement.classList.add('vb-on');
   document.documentElement.classList.add('poster-on');
   SLIDES.length = 0;
   SLIDES.push({ type:'poster', photo:'assets/images/hvwc-signup-2026-27.png', duration:600000 });
 }
 // Come Try Girls Wrestling takeover: runs from Oct 28 until 4:00pm Mon Nov 2, 2026 (the sign-up flyer takes over 4-6pm), then the normal board returns
-else if (new Date() >= new Date('2026-10-28T00:00:00') && new Date() < new Date('2026-11-02T16:00:00')) {
+else if (new Date() >= new Date('2026-10-28T00:00:00') && new Date() < new Date('2026-11-02T16:30:00')) {
+  // On the day of the event (Mon Nov 2) the slides say "Today"; before that they show the date
+  var tryWhen = (new Date() >= new Date('2026-11-02T00:00:00')) ? 'Today &middot; 5:00 PM' : 'Monday, Nov 2 &middot; 5:00 PM';
   document.documentElement.classList.add('vb-on');
   SLIDES.length = 0;
-  SLIDES.push({ type:'vball', cls:'try bw', badge:'Go Brewers,<br>World Series Champions! &#9918;', cols:['#ffffff','#FFC52F','#2a5aa3','#FFC52F','#ffffff','#9bb8e3'], emoji:'&#9918;', emoji2:'&#9918;', emojis:['&#9918;','&#129340;&#8205;&#9792;&#65039;','&#9918;','&#128170;'], top:'No experience needed &middot; Bring a friend', big:'Come Try', name:'Girls Wrestling', sub:'Monday, Nov 2 &middot; 5:00 PM', from:'Holmen Women&rsquo;s Wrestling', duration:12000 });
-  SLIDES.push({ type:'tryphoto', cls:'bw tight', deco:true, frame:true, badge:'Go Brewers,<br>World Series Champions! &#9918;', photo:'assets/images/team-photo.jpg', pos:'50% 40%', eyebrow:'Holmen Women&rsquo;s Wrestling', title:'Come Try<br>Girls Wrestling', when:'Monday, Nov 2 &middot; 5:00 PM', foot:'No experience needed', duration:12000 });
-  SLIDES.push({ type:'tryphoto', cls:'bw snug', deco:true, badge:'Go Brewers,<br>World Series Champions! &#9918;', photo:'assets/images/albums/decorah-jan-2025-cover.jpg', pos:'50% 35%', frame:true, eyebrow:'Join the team', title:'Bring a Friend!', when:'Monday, Nov 2 &middot; 5:00 PM', foot:'Try girls wrestling &middot; Girls only wrestle girls', duration:12000 });
-  SLIDES.push({ type:'tryphoto', cls:'bw tight', deco:true, frame:true, badge:'Go Brewers,<br>World Series Champions! &#9918;', photo:'assets/images/albums/random-pictures-2022-23-cover.jpg', pos:'50% 45%', eyebrow:'Open to all kids &amp; high schoolers', title:'Give Wrestling<br>a Try', when:'Monday, Nov 2 &middot; 5:00 PM', foot:'Fun &middot; Friends &middot; Confidence', duration:12000 });
+  SLIDES.push({ type:'vball', cls:'try bw', badge:'Go Brewers,<br>World Series Champions! &#9918;', cols:['#ffffff','#FFC52F','#2a5aa3','#FFC52F','#ffffff','#9bb8e3'], emoji:'&#9918;', emoji2:'&#9918;', emojis:['&#9918;','&#129340;&#8205;&#9792;&#65039;','&#9918;','&#128170;'], top:'No experience needed &middot; Bring a friend', big:'Come Try', name:'Girls Wrestling', sub:tryWhen, from:'Holmen Women&rsquo;s Wrestling', duration:12000 });
+  SLIDES.push({ type:'tryphoto', cls:'bw tight', deco:true, frame:true, badge:'Go Brewers,<br>World Series Champions! &#9918;', photo:'assets/images/team-photo.jpg', pos:'50% 40%', eyebrow:'Holmen Women&rsquo;s Wrestling', title:'Come Try<br>Girls Wrestling', when:tryWhen, foot:'No experience needed', duration:12000 });
+  SLIDES.push({ type:'tryphoto', cls:'bw snug', deco:true, badge:'Go Brewers,<br>World Series Champions! &#9918;', photo:'assets/images/albums/decorah-jan-2025-cover.jpg', pos:'50% 35%', frame:true, eyebrow:'Join the team', title:'Bring a Friend!', when:tryWhen, foot:'Try girls wrestling &middot; Girls only wrestle girls', duration:12000 });
+  SLIDES.push({ type:'tryphoto', cls:'bw tight', deco:true, frame:true, badge:'Go Brewers,<br>World Series Champions! &#9918;', photo:'assets/images/albums/random-pictures-2022-23-cover.jpg', pos:'50% 45%', eyebrow:'Open to all kids &amp; high schoolers', title:'Give Wrestling<br>a Try', when:tryWhen, foot:'Fun &middot; Friends &middot; Confidence', duration:12000 });
 }
 
 // ---- Rendering ----
