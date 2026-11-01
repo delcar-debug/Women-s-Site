@@ -912,7 +912,7 @@ if (new Date() >= new Date('2026-11-02T16:30:00') && new Date() < new Date('2026
 // Come Try Girls Wrestling takeover: runs from Oct 28 until 4:00pm Mon Nov 2, 2026 (the sign-up flyer takes over 4-6pm), then the normal board returns
 else if (new Date() >= new Date('2026-10-28T00:00:00') && new Date() < new Date('2026-11-02T16:30:00')) {
   // On the day of the event (Mon Nov 2) the slides say "Today"; before that they show the date
-  var tryWhen = (new Date() >= new Date('2026-11-02T00:00:00')) ? 'Today &middot; 5:00 PM' : 'Monday, Nov 2 &middot; 5:00 PM';
+  var tryWhen = 'Today &middot; 5:00 PM';
   document.documentElement.classList.add('vb-on');
   SLIDES.length = 0;
   SLIDES.push({ type:'vball', cls:'try bw', badge:'Go Brewers,<br>World Series Champions! &#9918;', cols:['#ffffff','#FFC52F','#2a5aa3','#FFC52F','#ffffff','#9bb8e3'], emoji:'&#9918;', emoji2:'&#9918;', emojis:['&#9918;','&#129340;&#8205;&#9792;&#65039;','&#9918;','&#128170;'], top:'No experience needed &middot; Bring a friend', big:'Come Try', name:'Girls Wrestling', sub:tryWhen, from:'Holmen Women&rsquo;s Wrestling', duration:12000 });
