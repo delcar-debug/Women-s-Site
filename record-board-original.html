@@ -546,6 +546,17 @@ html.vb-on body .tv-logo img{ filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)) !impo
 .tv-try.bw .tv-try-foot{ color:#FFC52F; }
 .tv-try.bw .tv-try-frame{ background:#FFC52F; }
 .tv-bw-badge{ position:absolute; z-index:6; right:3.2%; top:5%; transform:rotate(5deg); padding:10px 28px; border-radius:26px; text-align:center; line-height:1.15; background:#FFC52F; color:#12284B; border:4px solid #fff; font-weight:900; letter-spacing:.08em; text-transform:uppercase; font-size:clamp(.9rem,1.8vw,1.8rem); box-shadow:0 10px 24px rgba(0,0,0,.45); animation:vbWiggle 3.4s ease-in-out infinite; }
+/* Cross country state congrats slides */
+.tv-xc{ color:#fff; text-align:center; font-family:inherit; }
+.tv-xc img.xc-logo{ position:absolute; top:3%; left:3%; height:11vh; width:auto; filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
+.tv-xc .xc-eyebrow{ font-size:clamp(1.2rem,2.2vw,2.4rem); font-weight:900; letter-spacing:.22em; text-transform:uppercase; color:#f0c75e; text-shadow:0 3px 0 rgba(0,0,0,.45); }
+.tv-xc .xc-big{ font-size:clamp(3rem,9vw,9.5rem); font-weight:900; line-height:1; margin:1.2vh 0; text-shadow:0 8px 0 rgba(0,0,0,.45); }
+.tv-xc .xc-name{ font-size:clamp(2rem,5.2vw,5.6rem); font-weight:900; line-height:1.05; text-transform:uppercase; text-shadow:0 5px 0 rgba(0,0,0,.45); }
+.tv-xc .xc-sub{ padding:0 5vw; font-size:clamp(1.3rem,2.6vw,2.8rem); font-weight:800; margin-top:1.6vh; text-shadow:0 3px 0 rgba(0,0,0,.4); }
+.tv-xc .xc-from{ margin-top:3vh; font-size:clamp(1.1rem,2vw,2rem); font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#f0c75e; text-shadow:0 3px 0 rgba(0,0,0,.5); }
+.tv-xc .xc-pair{ display:flex; gap:5vw; margin-top:3vh; justify-content:center; }
+.tv-xc .xc-pair div{ background:rgba(255,255,255,.12); border:3px solid rgba(240,199,94,.7); border-radius:18px; padding:2vh 3vw; font-size:clamp(1.3rem,2.4vw,2.6rem); font-weight:800; }
+.tv-xc .xc-pair b{ display:block; font-size:clamp(1.8rem,3.6vw,4rem); color:#f0c75e; text-transform:uppercase; }
 /* Full-screen poster slide (e.g., sign-up flyer): hide logo, QR box and frame so nothing covers it */
 .tv-poster{ background:#fff !important; }
 .tv-poster::after{ display:none !important; }
@@ -902,6 +913,17 @@ SLIDES.push({ type:'qual-pair', duration:10000, eyebrow:'Postseason Herstory',
   titleA:'Regional Champions', rowsA:REGIONAL_CHAMPIONS, champA:true, noteA:'Girls regionals began in 2025.',
   titleB:'Fargo Nationals Qualifiers', rowsB:FARGO_QUALIFIERS });
 
+// Cross Country State Meet congrats: Tue Nov 3 - Thu Nov 5, 2026 (full screen), then the normal board returns
+if (new Date() >= new Date('2026-11-03T00:00:00') && new Date() < new Date('2026-11-06T00:00:00')) {
+  document.documentElement.classList.add('vb-on');
+  document.documentElement.classList.add('poster-on');
+  SLIDES.length = 0;
+  var xcFrom = 'Congrats from Holmen Women&rsquo;s Wrestling';
+  SLIDES.push({ type:'poster', photo:'assets/images/xc-state-2026.jpg', duration:15000 });
+  SLIDES.push({ type:'xc', eyebrow:'Holmen Cross Country &middot; State Meet', big:'Congratulations!', name:'Boys Team &mdash; 9th Place', sub:'Highest state team finish in Holmen history (boys or girls)', from:xcFrom, duration:10000 });
+  SLIDES.push({ type:'xc', eyebrow:'Holmen&rsquo;s two fastest State Meet performances', big:'Great Races!', name:'', sub:'', pair:[['Matthew Hoff','37th &middot; 16:23.2'],['Carter Sinn','38th &middot; 16:24.7']], from:xcFrom, duration:10000 });
+}
+
 // HVWC youth sign-up flyer: Mon Nov 2, 2026, 4:30pm - 7:00pm (full screen)
 if (new Date() >= new Date('2026-11-02T16:30:00') && new Date() < new Date('2026-11-02T19:00:00')) {
   document.documentElement.classList.add('vb-on');
@@ -971,6 +993,17 @@ function renderSlide(slide){
           <h2 class="tv-vb-big2">${slide.name||'Volleyball'}</h2>
           <div class="tv-vb-sub">${slide.sub}</div><div class="tv-vb-from">${slide.from}</div>
         </div>
+      </div>`;
+    }
+
+    case 'xc': {
+      const pair = slide.pair ? `<div class="xc-pair">${slide.pair.map(x=>`<div><b>${x[0]}</b>${x[1]}</div>`).join('')}</div>` : '';
+      return `<div class="slide-inner tv-vb tv-xc"><img class="xc-logo" src="assets/images/logo.png" alt="">
+        <div class="xc-eyebrow">${slide.eyebrow||''}</div>
+        <div class="xc-big">${slide.big||''}</div>
+        <div class="xc-name">${slide.name||''}</div>
+        <div class="xc-sub">${slide.sub||''}</div>${pair}
+        <div class="xc-from">${slide.from||''}</div>
       </div>`;
     }
 
