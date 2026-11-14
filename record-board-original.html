@@ -913,6 +913,12 @@ SLIDES.push({ type:'qual-pair', duration:10000, eyebrow:'Postseason Herstory',
   titleA:'Regional Champions', rowsA:REGIONAL_CHAMPIONS, champA:true, noteA:'Girls regionals began in 2025.',
   titleB:'Fargo Nationals Qualifiers', rowsB:FARGO_QUALIFIERS });
 
+// First day of practice: Mon Nov 16, 2026 (all day), then the normal board returns
+if (new Date() >= new Date('2026-11-16T00:00:00') && new Date() < new Date('2026-11-17T00:00:00')) {
+  document.documentElement.classList.add('vb-on');
+  SLIDES.length = 0;
+  SLIDES.push({ type:'tryphoto', cls:'tight', frame:true, photo:'assets/images/team-photo.jpg', pos:'50% 40%', eyebrow:'Holmen Women&rsquo;s Wrestling', title:'Happy First Day<br>of Season!', when:'Practice starts today', foot:'For Her &middot; Fun', duration:600000 });
+}
 // HVWC youth sign-up flyer: Mon Nov 2, 2026, 4:30pm - 7:00pm (full screen)
 if (new Date() >= new Date('2026-11-02T16:30:00') && new Date() < new Date('2026-11-02T19:00:00')) {
   document.documentElement.classList.add('vb-on');
