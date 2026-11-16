@@ -312,9 +312,10 @@ async function pushLiveToCloud(){
   } catch (e) { console.warn('Cloud live sync failed', e); }
 }
 
+let lastLocalPlanEdit = 0;
 function schedulePlanPush(){
   clearTimeout(planPushTimer);
-  planPushTimer = setTimeout(pushPlanToCloud, 800);
+  planPushTimer = setTimeout(() => { planPushTimer = null; pushPlanToCloud(); }, 800);
 }
 
 function scheduleLivePush(){
@@ -370,6 +371,7 @@ function startPlannerSync(){
   const originalSave = window.save;
   window.save = function(...args){
     const result = originalSave.apply(this, args);
+    lastLocalPlanEdit = Date.now();
     schedulePlanPush();
     return result;
   };
@@ -383,10 +385,16 @@ function startPlannerSync(){
   pullFromCloud().then(() => {
     onSnapshot(PLAN_DOC, (snap) => {
       if (suppressPlanSnapshot) { suppressPlanSnapshot = false; return; }
+      // Ignore echoes of our own writes and any cloud copy that arrives while a
+      // local change (like dragging blocks into a new order) is still being saved;
+      // otherwise an older cloud copy snaps the blocks back to their old order.
+      if (snap.metadata && snap.metadata.hasPendingWrites) return;
+      if (planPushTimer || (Date.now() - lastLocalPlanEdit) < 5000) return;
       if (!snap.exists()) return;
       const data = snap.data();
       if (!data || !data.data) return;
       if (isEditingPlanner()) return;
+      if (localStorage.getItem('wpp-v2') === JSON.stringify(data.data)) return;
       localStorage.setItem('wpp-v2', JSON.stringify(data.data));
       window.load();
       window.render();
