@@ -882,3 +882,9 @@ html,body{overflow-y:auto}
 
 /* Share-practice reminder removed (attendance reminder only) */
 #coachPdfReminder{display:none !important}
+
+.attendance-bulk{margin:0 0 12px;border:1px solid rgba(128,128,128,.35);border-radius:12px;padding:8px 12px}
+.attendance-bulk summary{cursor:pointer;font-weight:700}
+.attendance-bulk textarea{width:100%;box-sizing:border-box;margin-top:8px;font:inherit;padding:8px;border-radius:8px}
+.attendance-bulk-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.attendance-bulk-row span{font-size:.9rem;opacity:.8}

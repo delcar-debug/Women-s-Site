@@ -1238,6 +1238,11 @@
         <input id="attendanceNewName" maxlength="60" placeholder="Add athlete name" type="text">
         <button class="secondary" id="attendanceAddBtn" type="button">Add</button>
       </div>
+      <details class="attendance-bulk" id="attendanceBulk">
+        <summary>Add many at once</summary>
+        <textarea id="attendanceBulkNames" rows="6" placeholder="Paste or type names, one per line (commas also work)"></textarea>
+        <div class="attendance-bulk-row"><span id="attendanceBulkMsg"></span><button class="secondary" id="attendanceBulkBtn" type="button">Add all</button></div>
+      </details>
       <div class="attendance-list" id="attendanceList"></div>
       <div class="brand-modal-actions">
         <button class="secondary" id="attendanceCancelBtn" type="button">Cancel</button>
@@ -1324,6 +1329,35 @@
       draftStatuses[id] = 'present';
       input.value = '';
       renderList();
+    });
+    q('attendanceBulkBtn').addEventListener('click', () => {
+      const ta = q('attendanceBulkNames');
+      const names = (ta.value || '').split(/[\n,;]+/).map(n => n.replace(/\s+/g, ' ').trim()).filter(Boolean);
+      const roster = loadRoster();
+      let added = 0, skipped = 0, restored = 0;
+      const seen = new Set();
+      names.forEach(name => {
+        const key = name.toLowerCase();
+        if (seen.has(key)) { skipped++; return; }
+        seen.add(key);
+        const existing = roster.find(a => (a.name || '').trim().toLowerCase() === key);
+        if (existing) {
+          if (existing.active === false) { existing.active = true; draftStatuses[existing.id] = 'present'; restored++; }
+          else skipped++;
+          return;
+        }
+        const id = 'ath-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7) + added;
+        roster.push({ id, name, active: true, addedAt: new Date().toISOString() });
+        draftStatuses[id] = 'present';
+        added++;
+      });
+      if (added || restored) saveRoster(roster);
+      ta.value = '';
+      q('attendanceBulkMsg').textContent = `Added ${added}` + (restored ? `, restored ${restored}` : '') + (skipped ? `, skipped ${skipped} duplicate${skipped === 1 ? '' : 's'}` : '');
+      renderList();
+      renderSummary();
+      renderDataCard();
+      renderWeeklyAttendance();
     });
     q('attendanceNewName').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); q('attendanceAddBtn').click(); } });
 
