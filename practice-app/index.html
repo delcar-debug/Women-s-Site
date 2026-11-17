@@ -294,12 +294,77 @@ let planPushTimer = null;
 let livePushTimer = null;
 let lastLivePush = 0;
 
+
+/* ----- Save status indicator + reliability helpers ----- */
+let syncInFlight = 0, syncFailed = false, syncRetryTimer = null;
+function syncBadge(){
+  let b = document.getElementById('syncStatusBadge');
+  if (!b) {
+    b = document.createElement('div');
+    b.id = 'syncStatusBadge';
+    b.style.cssText = 'position:fixed;left:12px;bottom:12px;z-index:99999;padding:6px 12px;border-radius:999px;font:700 12px system-ui,sans-serif;box-shadow:0 2px 10px rgba(0,0,0,.25);cursor:pointer;opacity:.92';
+    b.title = 'Click to retry saving';
+    b.addEventListener('click', () => { flushAllPushes(true); });
+    document.body.appendChild(b);
+  }
+  return b;
+}
+function setSyncStatus(){
+  const b = syncBadge();
+  if (syncFailed) { b.textContent = '⚠ Not saved to cloud — tap to retry'; b.style.background = '#b3261e'; b.style.color = '#fff'; }
+  else if (syncInFlight > 0 || planPushTimer || Object.values(keyPushTimers).some(Boolean)) { b.textContent = 'Saving…'; b.style.background = '#fff3cd'; b.style.color = '#664d03'; }
+  else { b.textContent = '✓ All changes saved'; b.style.background = '#d1e7dd'; b.style.color = '#0f5132'; }
+}
+function syncStarted(){ syncInFlight++; setSyncStatus(); }
+function syncDone(ok){
+  syncInFlight = Math.max(0, syncInFlight - 1);
+  if (ok) { syncFailed = false; } else {
+    syncFailed = true;
+    clearTimeout(syncRetryTimer);
+    syncRetryTimer = setTimeout(() => flushAllPushes(true), 6000);
+  }
+  setSyncStatus();
+}
+let applyingRemote = false;
+const lastKeyEdit = {};
+function applyRemoteKey(key, value){
+  applyingRemote = true;
+  try { localStorage.setItem(key, value); } finally { applyingRemote = false; }
+}
+// Ignore cloud copies that are echoes of our own writes, arrive while a local
+// change is still saving, or match what we already have.
+function shouldIgnoreRemote(key, snap){
+  if (snap.metadata && snap.metadata.hasPendingWrites) return true;
+  if (keyPushTimers[key] || (Date.now() - (lastKeyEdit[key] || 0)) < 5000) return true;
+  try {
+    const d = snap.data() && snap.data().data;
+    if (localStorage.getItem(key) === JSON.stringify(d === undefined ? null : d)) return true;
+  } catch (e) {}
+  return false;
+}
+function flushAllPushes(force){
+  if (planPushTimer || force) { clearTimeout(planPushTimer); planPushTimer = null; if (localStorage.getItem('wpp-v2')) pushPlanToCloud(); }
+  Object.keys(SYNCED_KEYS).forEach(k => {
+    if (keyPushTimers[k] || force) { clearTimeout(keyPushTimers[k]); keyPushTimers[k] = null; pushKeyToCloud(k); }
+  });
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushAllPushes(false); });
+window.addEventListener('pagehide', () => flushAllPushes(false));
+window.addEventListener('online', () => flushAllPushes(true));
+window.addEventListener('beforeunload', (e) => {
+  if (planPushTimer || Object.values(keyPushTimers).some(Boolean) || syncInFlight > 0) { flushAllPushes(false); e.preventDefault(); e.returnValue = ''; }
+});
+
 async function pushPlanToCloud(){
   try {
     const raw = localStorage.getItem('wpp-v2');
     if (!raw) return;
     suppressPlanSnapshot = true;
-    await setDoc(PLAN_DOC, { data: JSON.parse(raw), updatedAt: serverTimestamp() });
+    syncStarted();
+    try {
+      await setDoc(PLAN_DOC, { data: JSON.parse(raw), updatedAt: serverTimestamp() });
+      syncDone(true);
+    } catch (e2) { suppressPlanSnapshot = false; syncDone(false); throw e2; }
   } catch (e) { console.warn('Cloud plan sync failed', e); }
 }
 
@@ -442,23 +507,26 @@ const keyPushTimers = {};
 const keySuppressFlags = {};
 
 function scheduleKeyPush(key){
+  lastKeyEdit[key] = Date.now();
   clearTimeout(keyPushTimers[key]);
-  keyPushTimers[key] = setTimeout(() => pushKeyToCloud(key), 800);
+  keyPushTimers[key] = setTimeout(() => { keyPushTimers[key] = null; pushKeyToCloud(key); }, 500);
+  setSyncStatus();
 }
 
 async function pushKeyToCloud(key){
+  syncStarted();
   try {
     const raw = localStorage.getItem(key);
-    keySuppressFlags[key] = true;
     await setDoc(SYNCED_KEYS[key], { data: raw ? JSON.parse(raw) : null, updatedAt: serverTimestamp() });
-  } catch (e) { console.warn('Cloud sync failed for', key, e); }
+    syncDone(true);
+  } catch (e) { console.warn('Cloud sync failed for', key, e); syncDone(false); }
 }
 
 function installStorageInterception(){
   const originalSetItem = Storage.prototype.setItem;
   Storage.prototype.setItem = function(key, value){
     originalSetItem.call(this, key, value);
-    if (this === window.localStorage && SYNCED_KEYS[key]) {
+    if (this === window.localStorage && SYNCED_KEYS[key] && !applyingRemote) {
       scheduleKeyPush(key);
     }
   };
@@ -468,7 +536,7 @@ async function pullKeyFromCloud(key){
   try {
     const snap = await getDoc(SYNCED_KEYS[key]);
     if (snap.exists() && snap.data() && snap.data().data !== undefined && snap.data().data !== null) {
-      localStorage.setItem(key, JSON.stringify(snap.data().data));
+      applyRemoteKey(key, JSON.stringify(snap.data().data));
     } else {
       await pushKeyToCloud(key);
     }
@@ -511,51 +579,51 @@ async function startExtraPlannerSync(){
   }
 
   onSnapshot(SYNCED_KEYS['wpp-practice-library'], (snap) => {
-    if (keySuppressFlags['wpp-practice-library']) { keySuppressFlags['wpp-practice-library'] = false; return; }
+    if (shouldIgnoreRemote('wpp-practice-library', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    localStorage.setItem('wpp-practice-library', JSON.stringify(snap.data().data || []));
+    applyRemoteKey('wpp-practice-library', JSON.stringify(snap.data().data || []));
     applyArchiveRefresh();
   });
 
   onSnapshot(SYNCED_KEYS['wpp-drill-library'], (snap) => {
-    if (keySuppressFlags['wpp-drill-library']) { keySuppressFlags['wpp-drill-library'] = false; return; }
+    if (shouldIgnoreRemote('wpp-drill-library', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    localStorage.setItem('wpp-drill-library', JSON.stringify(snap.data().data || []));
+    applyRemoteKey('wpp-drill-library', JSON.stringify(snap.data().data || []));
     applyDrillQueueRefresh();
   });
 
   onSnapshot(SYNCED_KEYS['wpp-practice-queue'], (snap) => {
-    if (keySuppressFlags['wpp-practice-queue']) { keySuppressFlags['wpp-practice-queue'] = false; return; }
+    if (shouldIgnoreRemote('wpp-practice-queue', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    localStorage.setItem('wpp-practice-queue', JSON.stringify(snap.data().data || []));
+    applyRemoteKey('wpp-practice-queue', JSON.stringify(snap.data().data || []));
     applyDrillQueueRefresh();
   });
 
   onSnapshot(SYNCED_KEYS['wpp-whiteboard'], (snap) => {
-    if (keySuppressFlags['wpp-whiteboard']) { keySuppressFlags['wpp-whiteboard'] = false; return; }
+    if (shouldIgnoreRemote('wpp-whiteboard', snap)) return;
     if (!snap.exists() || !snap.data() || !snap.data().data) return;
     // The whiteboard's editor reads localStorage once when that page is first
     // built, with no global refresh hook — so this keeps the stored data
     // current for next load, but won't redraw an already-open editor live.
-    localStorage.setItem('wpp-whiteboard', JSON.stringify(snap.data().data));
+    applyRemoteKey('wpp-whiteboard', JSON.stringify(snap.data().data));
   });
 
   onSnapshot(SYNCED_KEYS['wpp-roster'], (snap) => {
-    if (keySuppressFlags['wpp-roster']) { keySuppressFlags['wpp-roster'] = false; return; }
+    if (shouldIgnoreRemote('wpp-roster', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    localStorage.setItem('wpp-roster', JSON.stringify(snap.data().data || []));
+    applyRemoteKey('wpp-roster', JSON.stringify(snap.data().data || []));
     applyAttendanceRefresh();
   });
 
   onSnapshot(SYNCED_KEYS['wpp-attendance'], (snap) => {
-    if (keySuppressFlags['wpp-attendance']) { keySuppressFlags['wpp-attendance'] = false; return; }
+    if (shouldIgnoreRemote('wpp-attendance', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    localStorage.setItem('wpp-attendance', JSON.stringify(snap.data().data || {}));
+    applyRemoteKey('wpp-attendance', JSON.stringify(snap.data().data || {}));
     applyAttendanceRefresh();
   });
 }
