@@ -295,6 +295,37 @@ let livePushTimer = null;
 let lastLivePush = 0;
 
 
+
+/* ----- Never lose local edits on login/refresh -----
+   "Base" = the last value known to match the cloud. If the local copy differs from
+   the base, it holds edits that were never uploaded (e.g. made before sign-in or
+   while offline), so a startup pull must keep/merge them instead of overwriting. */
+function getBase(key){ try { const m = JSON.parse(localStorage.getItem('wpp-sync-base') || '{}'); return m[key]; } catch (e) { return undefined; } }
+function setBase(key, val){
+  try {
+    const m = JSON.parse(localStorage.getItem('wpp-sync-base') || '{}');
+    m[key] = val;
+    Storage.prototype.setItem.call(window.localStorage, 'wpp-sync-base', JSON.stringify(m));
+  } catch (e) {}
+}
+function backupLocal(key, val){
+  try { if (val != null) Storage.prototype.setItem.call(window.localStorage, 'wpp-backup-' + key, JSON.stringify({ savedAt: new Date().toISOString(), value: val })); } catch (e) {}
+}
+function mergeValues(localStr, cloudVal){
+  // Returns merged JS value: union by id for lists, per-date for attendance, local wins on conflict.
+  let local; try { local = JSON.parse(localStr); } catch (e) { return cloudVal; }
+  if (Array.isArray(local) && Array.isArray(cloudVal)) {
+    const out = local.slice();
+    const ids = new Set(local.map(x => x && x.id).filter(Boolean));
+    cloudVal.forEach(x => { if (!x || !x.id || !ids.has(x.id)) { if (!x || !x.id || true) out.push(x); } });
+    return out;
+  }
+  if (local && cloudVal && typeof local === 'object' && typeof cloudVal === 'object' && !Array.isArray(local) && !Array.isArray(cloudVal)) {
+    return { ...cloudVal, ...local };
+  }
+  return local;
+}
+
 /* ----- Save status indicator + reliability helpers ----- */
 let syncInFlight = 0, syncFailed = false, syncRetryTimer = null;
 function syncBadge(){
@@ -311,9 +342,11 @@ function syncBadge(){
 }
 function setSyncStatus(){
   const b = syncBadge();
+  b.style.display = '';
   if (syncFailed) { b.textContent = '⚠ Not saved to cloud — tap to retry'; b.style.background = '#b3261e'; b.style.color = '#fff'; }
   else if (syncInFlight > 0 || planPushTimer || Object.values(keyPushTimers).some(Boolean)) { b.textContent = 'Saving…'; b.style.background = '#fff3cd'; b.style.color = '#664d03'; }
-  else { b.textContent = '✓ All changes saved'; b.style.background = '#d1e7dd'; b.style.color = '#0f5132'; }
+  else { b.textContent = '✓ Saved'; b.style.background = '#d1e7dd'; b.style.color = '#0f5132'; clearTimeout(window.__syncHideTimer); window.__syncHideTimer = setTimeout(() => { if (!syncFailed && syncInFlight === 0) b.style.display = 'none'; }, 1800); return; }
+  clearTimeout(window.__syncHideTimer);
 }
 function syncStarted(){ syncInFlight++; setSyncStatus(); }
 function syncDone(ok){
@@ -336,6 +369,7 @@ function applyRemoteKey(key, value){
 function shouldIgnoreRemote(key, snap){
   if (snap.metadata && snap.metadata.hasPendingWrites) return true;
   if (keyPushTimers[key] || (Date.now() - (lastKeyEdit[key] || 0)) < 5000) return true;
+  { const base = getBase(key); const cur = localStorage.getItem(key); if (base !== undefined && cur !== null && cur !== base) return true; }
   try {
     const d = snap.data() && snap.data().data;
     if (localStorage.getItem(key) === JSON.stringify(d === undefined ? null : d)) return true;
@@ -363,6 +397,7 @@ async function pushPlanToCloud(){
     syncStarted();
     try {
       await setDoc(PLAN_DOC, { data: JSON.parse(raw), updatedAt: serverTimestamp() });
+      setBase('wpp-v2', raw);
       syncDone(true);
     } catch (e2) { suppressPlanSnapshot = false; syncDone(false); throw e2; }
   } catch (e) { console.warn('Cloud plan sync failed', e); }
@@ -378,7 +413,11 @@ async function pushLiveToCloud(){
 }
 
 let lastLocalPlanEdit = 0;
+let initialSyncDone = false;   // no edits are uploaded until the first cloud pull finishes, so a stale/empty copy can never overwrite the cloud
+const heldPushes = new Set();
+
 function schedulePlanPush(){
+  if (!initialSyncDone) { heldPushes.add('wpp-v2'); return; }
   clearTimeout(planPushTimer);
   planPushTimer = setTimeout(() => { planPushTimer = null; pushPlanToCloud(); }, 800);
 }
@@ -413,8 +452,17 @@ async function pullFromCloud(){
   // resolves, applying an older cloud copy now would stomp on that edit.
   // Skip it; their edit becomes the new source of truth once it saves.
   const editingNow = isEditingPlanner();
+  let keptLocalPlan = false;
   if (planData && !editingNow) {
-    localStorage.setItem('wpp-v2', JSON.stringify(planData));
+    const cloudStr = JSON.stringify(planData);
+    const localPlan = localStorage.getItem('wpp-v2');
+    const basePlan = getBase('wpp-v2');
+    if (localPlan !== null && localPlan !== cloudStr) {
+      backupLocal('wpp-v2', localPlan);
+      if (basePlan !== undefined && localPlan !== basePlan) keptLocalPlan = true; // unsynced local edits win
+    }
+    if (!keptLocalPlan) { localStorage.setItem('wpp-v2', cloudStr); setBase('wpp-v2', cloudStr); }
+    else { pushPlanToCloud(); }
   }
 
   try {
@@ -455,12 +503,14 @@ function startPlannerSync(){
       // otherwise an older cloud copy snaps the blocks back to their old order.
       if (snap.metadata && snap.metadata.hasPendingWrites) return;
       if (planPushTimer || (Date.now() - lastLocalPlanEdit) < 5000) return;
+      { const bp = getBase('wpp-v2'), lp = localStorage.getItem('wpp-v2'); if (bp !== undefined && lp !== null && lp !== bp) return; }
       if (!snap.exists()) return;
       const data = snap.data();
       if (!data || !data.data) return;
       if (isEditingPlanner()) return;
       if (localStorage.getItem('wpp-v2') === JSON.stringify(data.data)) return;
       localStorage.setItem('wpp-v2', JSON.stringify(data.data));
+      setBase('wpp-v2', JSON.stringify(data.data));
       window.load();
       window.render();
     });
@@ -508,6 +558,7 @@ const keySuppressFlags = {};
 
 function scheduleKeyPush(key){
   lastKeyEdit[key] = Date.now();
+  if (!initialSyncDone) { heldPushes.add(key); return; }
   clearTimeout(keyPushTimers[key]);
   keyPushTimers[key] = setTimeout(() => { keyPushTimers[key] = null; pushKeyToCloud(key); }, 500);
   setSyncStatus();
@@ -518,6 +569,7 @@ async function pushKeyToCloud(key){
   try {
     const raw = localStorage.getItem(key);
     await setDoc(SYNCED_KEYS[key], { data: raw ? JSON.parse(raw) : null, updatedAt: serverTimestamp() });
+    setBase(key, raw);
     syncDone(true);
   } catch (e) { console.warn('Cloud sync failed for', key, e); syncDone(false); }
 }
@@ -535,8 +587,24 @@ function installStorageInterception(){
 async function pullKeyFromCloud(key){
   try {
     const snap = await getDoc(SYNCED_KEYS[key]);
+    const local = localStorage.getItem(key);
+    const base = getBase(key);
     if (snap.exists() && snap.data() && snap.data().data !== undefined && snap.data().data !== null) {
-      applyRemoteKey(key, JSON.stringify(snap.data().data));
+      const cloudVal = snap.data().data;
+      const cloudStr = JSON.stringify(cloudVal);
+      if (local !== null && local !== cloudStr) {
+        if (base !== undefined && local !== base) {
+          // Local has edits that never reached the cloud: keep them (merged), then upload.
+          backupLocal(key, local);
+          const merged = key === 'wpp-whiteboard' ? JSON.parse(local) : mergeValues(local, cloudVal);
+          applyRemoteKey(key, JSON.stringify(merged));
+          await pushKeyToCloud(key);
+          return;
+        }
+        backupLocal(key, local);
+      }
+      applyRemoteKey(key, cloudStr);
+      setBase(key, cloudStr);
     } else {
       await pushKeyToCloud(key);
     }
@@ -572,6 +640,12 @@ async function startExtraPlannerSync(){
   await pullKeyFromCloud('wpp-whiteboard');
   await pullKeyFromCloud('wpp-roster');
   await pullKeyFromCloud('wpp-attendance');
+  initialSyncDone = true;
+  heldPushes.forEach(k => {
+    if (k === 'wpp-v2') { const cur = localStorage.getItem('wpp-v2'); if (cur !== null && cur !== getBase('wpp-v2')) schedulePlanPush(); }
+    else { const cur = localStorage.getItem(k); if (cur !== getBase(k)) scheduleKeyPush(k); }
+  });
+  heldPushes.clear();
   if (!isEditingPlanner()) {
     applyArchiveRefresh();
     applyDrillQueueRefresh();
@@ -582,7 +656,7 @@ async function startExtraPlannerSync(){
     if (shouldIgnoreRemote('wpp-practice-library', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    applyRemoteKey('wpp-practice-library', JSON.stringify(snap.data().data || []));
+    applyRemoteKey('wpp-practice-library', JSON.stringify(snap.data().data || [])); setBase('wpp-practice-library', JSON.stringify(snap.data().data || []));
     applyArchiveRefresh();
   });
 
@@ -590,7 +664,7 @@ async function startExtraPlannerSync(){
     if (shouldIgnoreRemote('wpp-drill-library', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    applyRemoteKey('wpp-drill-library', JSON.stringify(snap.data().data || []));
+    applyRemoteKey('wpp-drill-library', JSON.stringify(snap.data().data || [])); setBase('wpp-drill-library', JSON.stringify(snap.data().data || []));
     applyDrillQueueRefresh();
   });
 
@@ -598,7 +672,7 @@ async function startExtraPlannerSync(){
     if (shouldIgnoreRemote('wpp-practice-queue', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    applyRemoteKey('wpp-practice-queue', JSON.stringify(snap.data().data || []));
+    applyRemoteKey('wpp-practice-queue', JSON.stringify(snap.data().data || [])); setBase('wpp-practice-queue', JSON.stringify(snap.data().data || []));
     applyDrillQueueRefresh();
   });
 
@@ -608,14 +682,14 @@ async function startExtraPlannerSync(){
     // The whiteboard's editor reads localStorage once when that page is first
     // built, with no global refresh hook — so this keeps the stored data
     // current for next load, but won't redraw an already-open editor live.
-    applyRemoteKey('wpp-whiteboard', JSON.stringify(snap.data().data));
+    applyRemoteKey('wpp-whiteboard', JSON.stringify(snap.data().data)); setBase('wpp-whiteboard', JSON.stringify(snap.data().data));
   });
 
   onSnapshot(SYNCED_KEYS['wpp-roster'], (snap) => {
     if (shouldIgnoreRemote('wpp-roster', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    applyRemoteKey('wpp-roster', JSON.stringify(snap.data().data || []));
+    applyRemoteKey('wpp-roster', JSON.stringify(snap.data().data || [])); setBase('wpp-roster', JSON.stringify(snap.data().data || []));
     applyAttendanceRefresh();
   });
 
@@ -623,7 +697,7 @@ async function startExtraPlannerSync(){
     if (shouldIgnoreRemote('wpp-attendance', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    applyRemoteKey('wpp-attendance', JSON.stringify(snap.data().data || {}));
+    applyRemoteKey('wpp-attendance', JSON.stringify(snap.data().data || {})); setBase('wpp-attendance', JSON.stringify(snap.data().data || {}));
     applyAttendanceRefresh();
   });
 }
