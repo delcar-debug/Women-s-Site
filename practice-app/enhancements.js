@@ -973,6 +973,15 @@
   function loadAttendance() {
     try { const raw = JSON.parse(localStorage.getItem(ATTENDANCE_KEY) || '{}'); return (raw && typeof raw === 'object' && !Array.isArray(raw)) ? raw : {}; } catch { return {}; }
   }
+  // Attendance that counts toward stats/data: only dates that still have a practice in the archive.
+  // Attendance taken for practices that were deleted (or never archived) is ignored.
+  function loadArchivedAttendance() {
+    const all = loadAttendance();
+    const archived = new Set(((typeof state !== 'undefined' && state && state.archives) || []).map(a => a && a.date).filter(Boolean));
+    const out = {};
+    Object.keys(all).forEach(d => { if (archived.has(d)) out[d] = all[d]; });
+    return out;
+  }
   const saveAttendance = obj => localStorage.setItem(ATTENDANCE_KEY, JSON.stringify(obj));
 
   function todayStr() {
@@ -1070,7 +1079,7 @@
 
     function computeAttendanceStats() {
       const roster = loadRoster().filter(a => a.active !== false);
-      const attendance = loadAttendance();
+      const attendance = loadArchivedAttendance();
       const dates = Object.keys(attendance).sort();
       const perAthlete = roster.map(a => {
         let present = 0, absent = 0;
@@ -1154,7 +1163,7 @@
     function computeWeeklyAttendance() {
       const roster = loadRoster().filter(a => a.active !== false);
       const rosterById = Object.fromEntries(roster.map(a => [a.id, a.name]));
-      const attendance = loadAttendance();
+      const attendance = loadArchivedAttendance();
       const dates = Object.keys(attendance).sort();
       const weeks = {};
       dates.forEach(date => {
