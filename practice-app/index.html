@@ -333,7 +333,7 @@ function syncBadge(){
   if (!b) {
     b = document.createElement('div');
     b.id = 'syncStatusBadge';
-    b.style.cssText = 'position:fixed;left:12px;bottom:12px;z-index:99999;padding:6px 12px;border-radius:999px;font:700 12px system-ui,sans-serif;box-shadow:0 2px 10px rgba(0,0,0,.25);cursor:pointer;opacity:.92';
+    b.style.cssText = 'display:none;position:fixed;left:12px;bottom:12px;z-index:99999;padding:6px 12px;border-radius:999px;font:700 12px system-ui,sans-serif;box-shadow:0 2px 10px rgba(0,0,0,.25);cursor:pointer;opacity:.92';
     b.title = 'Click to retry saving';
     b.addEventListener('click', () => { flushAllPushes(true); });
     document.body.appendChild(b);
@@ -342,11 +342,14 @@ function syncBadge(){
 }
 function setSyncStatus(){
   const b = syncBadge();
-  b.style.display = '';
-  if (syncFailed) { b.textContent = '⚠ Not saved to cloud — tap to retry'; b.style.background = '#b3261e'; b.style.color = '#fff'; }
-  else if (syncInFlight > 0 || planPushTimer || Object.values(keyPushTimers).some(Boolean)) { b.textContent = 'Saving…'; b.style.background = '#fff3cd'; b.style.color = '#664d03'; }
-  else { b.textContent = '✓ Saved'; b.style.background = '#d1e7dd'; b.style.color = '#0f5132'; clearTimeout(window.__syncHideTimer); window.__syncHideTimer = setTimeout(() => { if (!syncFailed && syncInFlight === 0) b.style.display = 'none'; }, 1800); return; }
-  clearTimeout(window.__syncHideTimer);
+  clearTimeout(window.__syncShowTimer);
+  const pending = syncInFlight > 0 || planPushTimer || Object.values(keyPushTimers).some(Boolean);
+  if (syncFailed) { b.style.display = ''; b.textContent = '⚠ Not saved to cloud — tap to retry'; b.style.background = '#b3261e'; b.style.color = '#fff'; }
+  else if (pending) {
+    // Only show "Saving…" if it's taking noticeably long; quick saves stay invisible.
+    window.__syncShowTimer = setTimeout(() => { if (!syncFailed && (syncInFlight > 0 || planPushTimer || Object.values(keyPushTimers).some(Boolean))) { b.style.display = ''; b.textContent = 'Saving…'; b.style.background = '#fff3cd'; b.style.color = '#664d03'; } }, 1500);
+  }
+  else { b.style.display = 'none'; }
 }
 function syncStarted(){ syncInFlight++; setSyncStatus(); }
 function syncDone(ok){
@@ -377,22 +380,20 @@ function shouldIgnoreRemote(key, snap){
   return false;
 }
 function flushAllPushes(force){
-  if (planPushTimer || force) { clearTimeout(planPushTimer); planPushTimer = null; if (localStorage.getItem('wpp-v2')) pushPlanToCloud(); }
+  if (planPushTimer || force) { clearTimeout(planPushTimer); planPushTimer = null; if (localStorage.getItem('wpp-v2')) pushPlanToCloud(!!force); }
   Object.keys(SYNCED_KEYS).forEach(k => {
-    if (keyPushTimers[k] || force) { clearTimeout(keyPushTimers[k]); keyPushTimers[k] = null; pushKeyToCloud(k); }
+    if (keyPushTimers[k] || force) { clearTimeout(keyPushTimers[k]); keyPushTimers[k] = null; pushKeyToCloud(k, !!force); }
   });
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushAllPushes(false); });
 window.addEventListener('pagehide', () => flushAllPushes(false));
 window.addEventListener('online', () => flushAllPushes(true));
-window.addEventListener('beforeunload', (e) => {
-  if (planPushTimer || Object.values(keyPushTimers).some(Boolean) || syncInFlight > 0) { flushAllPushes(false); e.preventDefault(); e.returnValue = ''; }
-});
 
-async function pushPlanToCloud(){
+async function pushPlanToCloud(force){
   try {
     const raw = localStorage.getItem('wpp-v2');
     if (!raw) return;
+    if (!force && raw === getBase('wpp-v2')) return;
     suppressPlanSnapshot = true;
     syncStarted();
     try {
@@ -564,7 +565,8 @@ function scheduleKeyPush(key){
   setSyncStatus();
 }
 
-async function pushKeyToCloud(key){
+async function pushKeyToCloud(key, force){
+  { const cur = localStorage.getItem(key); if (!force && cur === getBase(key)) return; }
   syncStarted();
   try {
     const raw = localStorage.getItem(key);
