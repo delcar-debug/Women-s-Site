@@ -29,6 +29,7 @@ const CATEGORIES=[
   {id:'mindset',label:'Mindset'},
   {id:'game',label:'Game'},
   {id:'logistics',label:'Logistics'},
+  {id:'break',label:'Drink / Break'},
   {id:'other',label:'Other'}
 ];
 const categoryInfo=id=>CATEGORIES.find(c=>c.id===id)||CATEGORIES[CATEGORIES.length-1];
@@ -733,7 +734,7 @@ function renderActivePracticeData(){
   $('dataActiveDate').textContent=el.practiceDate?.value?formatPracticeDate(el.practiceDate.value):'No date';$('dataActivePlannedTotal').textContent=`${pt} min`;
   renderBreakdownPair(planned,'dataActivePlannedOverall','dataActivePlannedTechnique','Add blocks to the active practice.');
 }
-const CATEGORY_CHART_COLORS={warmup:'#8a4b08',neutral:'#14558a',top:'#8f2431',bottom:'#705c00',live:'#5e34a3',lifting:'#17663a',conditioning:'#8a3f0a',mindset:'#333b46',game:'#17665c',logistics:'#536172',other:'#6c4c2c'};
+const CATEGORY_CHART_COLORS={warmup:'#8a4b08',neutral:'#14558a',top:'#8f2431',bottom:'#705c00',live:'#5e34a3',lifting:'#17663a',conditioning:'#8a3f0a',mindset:'#333b46',game:'#17665c',logistics:'#536172',break:'#2b7a9b',other:'#6c4c2c'};
 function archiveMinutesTotal(a){return Number(a.plannedMinutes??a.totalMinutes??(a.blocks||[]).reduce((s,b)=>s+(Number(b.minutes)||0),0))||0}
 function archiveCategoryTotals(a){return a.categoryTotals&&typeof a.categoryTotals==='object'?a.categoryTotals:blockTotals(a.blocks,false)}
 function weekBucketKey(dateStr){
@@ -895,7 +896,7 @@ function generateTrendInsights(){
   const grandTotals=Object.fromEntries(CATEGORIES.map(c=>[c.id,0]));
   archives.forEach(a=>{const c=archiveCategoryTotals(a);CATEGORIES.forEach(cat=>grandTotals[cat.id]+=Number(c[cat.id]||0))});
   const grandTotal=Object.values(grandTotals).reduce((a,b)=>a+b,0);
-  const unused=CATEGORIES.filter(c=>!['other','logistics'].includes(c.id)&&grandTotals[c.id]===0);
+  const unused=CATEGORIES.filter(c=>!['other','logistics','break'].includes(c.id)&&grandTotals[c.id]===0);
   if(unused.length&&unused.length<=3)insights.push({tone:'info',text:`No time logged yet in ${unused.map(c=>c.label).join(', ')} this season.`});
   if(grandTotal>0){
     const top=CATEGORIES.map(c=>({label:c.label,mins:grandTotals[c.id]})).sort((a,b)=>b.mins-a.mins)[0];
