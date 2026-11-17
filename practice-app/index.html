@@ -210,7 +210,7 @@ body.pp-authed .pp-login{display:none}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAC48XQb09XVyqCmmxRtX3Pox1BPVruf70",
@@ -223,7 +223,19 @@ const firebaseConfig = {
 
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
-const db = getFirestore(fbApp);
+// Writes are kept in the browser's own database until the cloud confirms them, so closing the
+// tab, losing Wi-Fi, or a slow school network can no longer lose a save. Long-polling is used
+// automatically on networks that block the normal connection.
+let db;
+try {
+  db = initializeFirestore(fbApp, {
+    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+    experimentalAutoDetectLongPolling: true
+  });
+} catch (e) {
+  console.warn('Persistent cache unavailable, using basic connection', e);
+  db = initializeFirestore(fbApp, { experimentalAutoDetectLongPolling: true });
+}
 const COACH_EMAIL = 'coach@holmenwrestling.app';
 const COACH_PASSCODE = 'champs';
 // The shared cloud-sync account's actual password (separate from the passcode people type). Change both together in the Firebase console if you ever rotate it.
@@ -326,6 +338,29 @@ function mergeValues(localStr, cloudVal){
   return local;
 }
 
+
+/* ----- Sync log (for troubleshooting): open the app with ?diag=1 to see it ----- */
+function logSync(msg){
+  try {
+    const arr = JSON.parse(localStorage.getItem('wpp-sync-log') || '[]');
+    arr.push(new Date().toLocaleString() + '  ' + msg);
+    Storage.prototype.setItem.call(window.localStorage, 'wpp-sync-log', JSON.stringify(arr.slice(-60)));
+  } catch (e) {}
+}
+window.addEventListener('error', ev => logSync('JS error: ' + (ev.message || '')));
+window.addEventListener('unhandledrejection', ev => logSync('Promise error: ' + ((ev.reason && (ev.reason.code || ev.reason.message)) || ev.reason)));
+if (new URLSearchParams(location.search).get('diag') === '1') {
+  window.addEventListener('load', () => {
+    const d = document.createElement('pre');
+    d.style.cssText = 'position:fixed;inset:8px;z-index:999999;background:#111;color:#9f9;font:11px/1.4 monospace;padding:12px;overflow:auto;white-space:pre-wrap;border-radius:8px';
+    const render = () => { let log = []; try { log = JSON.parse(localStorage.getItem('wpp-sync-log') || '[]'); } catch (e) {}
+      d.textContent = 'SYNC LOG (tap to close; newest last)\n\n' + log.join('\n'); };
+    render(); setInterval(render, 2000);
+    d.addEventListener('click', () => d.remove());
+    document.body.appendChild(d);
+  });
+}
+
 /* ----- Save status indicator + reliability helpers ----- */
 let syncInFlight = 0, syncFailed = false, syncRetryTimer = null;
 function syncBadge(){
@@ -371,6 +406,7 @@ function applyRemoteKey(key, value){
 // change is still saving, or match what we already have.
 function shouldIgnoreRemote(key, snap){
   if (snap.metadata && snap.metadata.hasPendingWrites) return true;
+  if (snap.metadata && snap.metadata.fromCache) return true;
   if (keyPushTimers[key] || (Date.now() - (lastKeyEdit[key] || 0)) < 5000) return true;
   { const base = getBase(key); const cur = localStorage.getItem(key); if (base !== undefined && cur !== null && cur !== base) return true; }
   try {
@@ -399,8 +435,9 @@ async function pushPlanToCloud(force){
     try {
       await setDoc(PLAN_DOC, { data: JSON.parse(raw), updatedAt: serverTimestamp() });
       setBase('wpp-v2', raw);
+      logSync('PUSH plan OK (' + raw.length + ' chars)');
       syncDone(true);
-    } catch (e2) { suppressPlanSnapshot = false; syncDone(false); throw e2; }
+    } catch (e2) { suppressPlanSnapshot = false; logSync('PUSH plan FAILED: ' + (e2.code || e2.message)); syncDone(false); throw e2; }
   } catch (e) { console.warn('Cloud plan sync failed', e); }
 }
 
@@ -446,7 +483,7 @@ async function pullFromCloud(){
     } else {
       await pushPlanToCloud();
     }
-  } catch (e) { console.warn('Could not load practice plan from cloud', e); }
+  } catch (e) { logSync('PULL plan FAILED: ' + (e.code || e.message)); console.warn('Could not load practice plan from cloud', e); }
 
   // This fetch takes a moment, and the app is interactive the whole time —
   // if the coach already started editing (e.g. changing the date) before it
@@ -459,6 +496,7 @@ async function pullFromCloud(){
     const localPlan = localStorage.getItem('wpp-v2');
     const basePlan = getBase('wpp-v2');
     if (localPlan !== null && localPlan !== cloudStr) {
+      logSync('PULL plan: local differs from cloud (base ' + (basePlan === undefined ? 'unknown' : (localPlan === basePlan ? 'matches local' : 'differs')) + ')');
       backupLocal('wpp-v2', localPlan);
       if (basePlan !== undefined && localPlan !== basePlan) keptLocalPlan = true; // unsynced local edits win
     }
@@ -503,6 +541,7 @@ function startPlannerSync(){
       // local change (like dragging blocks into a new order) is still being saved;
       // otherwise an older cloud copy snaps the blocks back to their old order.
       if (snap.metadata && snap.metadata.hasPendingWrites) return;
+      if (snap.metadata && snap.metadata.fromCache) return;
       if (planPushTimer || (Date.now() - lastLocalPlanEdit) < 5000) return;
       { const bp = getBase('wpp-v2'), lp = localStorage.getItem('wpp-v2'); if (bp !== undefined && lp !== null && lp !== bp) return; }
       if (!snap.exists()) return;
@@ -572,8 +611,9 @@ async function pushKeyToCloud(key, force){
     const raw = localStorage.getItem(key);
     await setDoc(SYNCED_KEYS[key], { data: raw ? JSON.parse(raw) : null, updatedAt: serverTimestamp() });
     setBase(key, raw);
+    logSync('PUSH ' + key + ' OK (' + (raw ? raw.length : 0) + ' chars)');
     syncDone(true);
-  } catch (e) { console.warn('Cloud sync failed for', key, e); syncDone(false); }
+  } catch (e) { console.warn('Cloud sync failed for', key, e); logSync('PUSH ' + key + ' FAILED: ' + (e.code || e.message)); syncDone(false); }
 }
 
 function installStorageInterception(){
@@ -597,12 +637,14 @@ async function pullKeyFromCloud(key){
       if (local !== null && local !== cloudStr) {
         if (base !== undefined && local !== base) {
           // Local has edits that never reached the cloud: keep them (merged), then upload.
+          logSync('PULL ' + key + ': kept unsynced local edits');
           backupLocal(key, local);
           const merged = key === 'wpp-whiteboard' ? JSON.parse(local) : mergeValues(local, cloudVal);
           applyRemoteKey(key, JSON.stringify(merged));
           await pushKeyToCloud(key);
           return;
         }
+        logSync('PULL ' + key + ': local replaced by cloud copy (local backed up)');
         backupLocal(key, local);
       }
       applyRemoteKey(key, cloudStr);
@@ -610,7 +652,7 @@ async function pullKeyFromCloud(key){
     } else {
       await pushKeyToCloud(key);
     }
-  } catch (e) { console.warn('Could not load', key, 'from cloud', e); }
+  } catch (e) { logSync('PULL ' + key + ' FAILED: ' + (e.code || e.message)); console.warn('Could not load', key, 'from cloud', e); }
 }
 
 function applyArchiveRefresh(){
