@@ -1363,8 +1363,8 @@ mq.addEventListener('change',apply);
 }
 if(document.readyState==='complete'){initCoachPanels()}else{window.addEventListener('load',initCoachPanels)}
 if(el.overallCoachNotes)el.overallCoachNotes.addEventListener('input',()=>{state.overallCoachNotes=el.overallCoachNotes.value;save()});load();if(el.overallCoachNotes)el.overallCoachNotes.value=state.overallCoachNotes||'';render();renderLibrary();checkUnratedPractices();resetInterval();restoreLiveState();ensurePracticeTicker();bootSpotify();applyTvTheme(loadTvTheme());const tvParam=new URLSearchParams(location.search).get('tv');if(['1','team-board'].includes(tvParam)){document.body.classList.add('detached-tv');showAppPage('team');el.teamBoardPage.classList.add('tv-mode');document.title='Holmen Women’s Wrestling — TV View';refreshTeamBoardFromStorage();}else if(tvParam==='plan'){document.body.classList.add('detached-tv');showAppPage('team');el.teamBoardPage.classList.add('plan-mode');document.title='Holmen Women’s Wrestling — Practice Plan';refreshTeamBoardFromStorage();}document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.practiceActive)saveLiveState()});
-document.querySelectorAll('#practiceRatingRow .rating-btn').forEach(b=>b.onclick=()=>{state.practiceRating=b.dataset.rating;renderRatingButtons();save()});
-document.querySelectorAll('#teamCultureRatingRow .rating-btn').forEach(b=>b.onclick=()=>{state.teamCultureRating=b.dataset.rating;renderCultureButtons();save()});
+document.querySelectorAll('#practiceRatingRow .rating-btn').forEach(b=>b.onclick=()=>{state.practiceRating=state.practiceRating===b.dataset.rating?'':b.dataset.rating;renderRatingButtons();save()});
+document.querySelectorAll('#teamCultureRatingRow .rating-btn').forEach(b=>b.onclick=()=>{state.teamCultureRating=state.teamCultureRating===b.dataset.rating?'':b.dataset.rating;renderCultureButtons();save()});
 if(el.practiceType)el.practiceType.onchange=()=>{renderPracticeTypeHints();save()};
 renderRatingButtons();
 renderCultureButtons();
