@@ -891,3 +891,5 @@ html,body{overflow-y:auto}
 #modalBlockDetails::placeholder{color:#8a8a8a;opacity:1}
 
 .category-break{background:#e3f2f8;color:#1f6f8f}
+
+.manual-save-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}.manual-save-row button{flex:0 0 auto}#manualSaveBtn{font-weight:800}
