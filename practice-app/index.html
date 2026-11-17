@@ -634,12 +634,8 @@ function applyAttendanceRefresh(){
 async function startExtraPlannerSync(){
   installStorageInterception();
 
-  await pullKeyFromCloud('wpp-practice-library');
-  await pullKeyFromCloud('wpp-drill-library');
-  await pullKeyFromCloud('wpp-practice-queue');
-  await pullKeyFromCloud('wpp-whiteboard');
-  await pullKeyFromCloud('wpp-roster');
-  await pullKeyFromCloud('wpp-attendance');
+  // Pull everything at the same time, and never wait more than 6 seconds, so saving is never held up by a slow connection.
+  await Promise.all(Object.keys(SYNCED_KEYS).map(k => Promise.race([pullKeyFromCloud(k), new Promise(r => setTimeout(r, 6000))])));
   initialSyncDone = true;
   heldPushes.forEach(k => {
     if (k === 'wpp-v2') { const cur = localStorage.getItem('wpp-v2'); if (cur !== null && cur !== getBase('wpp-v2')) schedulePlanPush(); }
