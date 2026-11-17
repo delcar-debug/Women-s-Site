@@ -893,3 +893,12 @@ html,body{overflow-y:auto}
 .category-break{background:#e3f2f8;color:#1f6f8f}
 
 .manual-save-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}.manual-save-row button{flex:0 0 auto}#manualSaveBtn{font-weight:800}
+
+.practice-tabs{display:flex;gap:8px;align-items:stretch;overflow-x:auto;padding:4px 2px 10px;margin:0 0 6px;-webkit-overflow-scrolling:touch}
+.ptab{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px 12px 4px 4px;border:1px solid #d4d6da;background:#f4f5f7;color:#33363d;font:inherit;font-weight:700;cursor:pointer;white-space:nowrap}
+.ptab.active{background:#6d1730;border-color:#6d1730;color:#fff}
+.ptab.disabled{opacity:.45;cursor:not-allowed}
+.ptab-count{font-size:.72rem;font-weight:600;opacity:.75}
+.ptab-x{font-size:1.1rem;line-height:1;padding:0 4px;border-radius:6px;opacity:.7}
+.ptab-x:hover{opacity:1;background:rgba(0,0,0,.15)}
+.ptab-add{flex:0 0 auto;padding:8px 14px;border-radius:12px;border:1px dashed #6d1730;background:transparent;color:#6d1730;font:inherit;font-weight:800;cursor:pointer;white-space:nowrap}

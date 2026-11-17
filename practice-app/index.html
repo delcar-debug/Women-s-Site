@@ -206,7 +206,7 @@ body.pp-authed .pp-login{display:none}
 </div>
 </div>
 <div data-app-version="3.0" style="position:fixed;right:6px;bottom:4px;font-size:9px;color:#98a2b3;pointer-events:none;z-index:1">v3.0</div>
-<script defer="True" src="app.js?v=20260804-v76"></script><script defer="True" src="features.js?v=20260804-v76"></script><script defer="True" src="spotify-controller.js?v=20260804-v76"></script><script defer="True" src="shortcuts-controller.js?v=20260804-v76"></script><script defer src="enhancements.js?v=20260804-v76"></script>
+<script defer="True" src="app.js?v=20260804-v76"></script><script defer="True" src="features.js?v=20260804-v76"></script><script defer="True" src="spotify-controller.js?v=20260804-v76"></script><script defer="True" src="shortcuts-controller.js?v=20260804-v76"></script><script defer src="enhancements.js?v=20260804-v76"></script><script defer src="practice-tabs.js?v=20261117-tabs1"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -592,7 +592,8 @@ const SYNCED_KEYS = {
   'wpp-practice-queue': doc(db, 'practicePlanner', 'practiceQueue'),
   'wpp-whiteboard': doc(db, 'practicePlanner', 'whiteboard'),
   'wpp-roster': doc(db, 'practicePlanner', 'attendanceRoster'),
-  'wpp-attendance': doc(db, 'practicePlanner', 'attendanceRecords')
+  'wpp-attendance': doc(db, 'practicePlanner', 'attendanceRecords'),
+  'wpp-drafts': doc(db, 'practicePlanner', 'practiceDrafts')
 };
 
 const keyPushTimers = {};
@@ -690,6 +691,7 @@ async function startExtraPlannerSync(){
     else { const cur = localStorage.getItem(k); if (cur !== getBase(k)) scheduleKeyPush(k); }
   });
   heldPushes.clear();
+  if (typeof window.initPracticeTabs === 'function') window.initPracticeTabs();
   if (!isEditingPlanner()) {
     applyArchiveRefresh();
     applyDrillQueueRefresh();
@@ -743,6 +745,14 @@ async function startExtraPlannerSync(){
     if (isEditingPlanner()) return;
     applyRemoteKey('wpp-attendance', JSON.stringify(snap.data().data || {})); setBase('wpp-attendance', JSON.stringify(snap.data().data || {}));
     applyAttendanceRefresh();
+  });
+
+  onSnapshot(SYNCED_KEYS['wpp-drafts'], (snap) => {
+    if (shouldIgnoreRemote('wpp-drafts', snap)) return;
+    if (!snap.exists() || !snap.data() || !snap.data().data) return;
+    if (isEditingPlanner()) return;
+    applyRemoteKey('wpp-drafts', JSON.stringify(snap.data().data)); setBase('wpp-drafts', JSON.stringify(snap.data().data));
+    if (typeof window.renderPracticeTabs === 'function') window.renderPracticeTabs();
   });
 }
 
