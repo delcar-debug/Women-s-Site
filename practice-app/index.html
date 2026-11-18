@@ -396,6 +396,20 @@ function syncDone(ok){
   }
   setSyncStatus();
 }
+/* ----- Edit timestamps: the NEWER copy always wins -----
+   Each device remembers when it last really edited each item, and every cloud copy
+   carries the time of the edit that produced it. At startup / on live updates we
+   only take the cloud copy if it is newer than ours, and we only upload ours if it
+   is newer than the cloud's, so an old copy can never overwrite newer work. */
+function getEditTs(key){ try { return (JSON.parse(localStorage.getItem('wpp-edit-ts') || '{}')[key]) || 0; } catch (e) { return 0; } }
+function setEditTs(key, ts){
+  try {
+    const m = JSON.parse(localStorage.getItem('wpp-edit-ts') || '{}');
+    m[key] = ts;
+    Storage.prototype.setItem.call(window.localStorage, 'wpp-edit-ts', JSON.stringify(m));
+  } catch (e) {}
+}
+const pulledOK = {};   // per item: true once its first cloud download has finished
 let applyingRemote = false;
 const lastKeyEdit = {};
 function applyRemoteKey(key, value){
@@ -407,12 +421,9 @@ function applyRemoteKey(key, value){
 function shouldIgnoreRemote(key, snap){
   if (snap.metadata && snap.metadata.hasPendingWrites) return true;
   if (snap.metadata && snap.metadata.fromCache) return true;
-  if (keyPushTimers[key] || (Date.now() - (lastKeyEdit[key] || 0)) < 5000) return true;
-  { const base = getBase(key); const cur = localStorage.getItem(key); if (base !== undefined && cur !== null && cur !== base) return true; }
-  try {
-    const d = snap.data() && snap.data().data;
-    if (localStorage.getItem(key) === JSON.stringify(d === undefined ? null : d)) return true;
-  } catch (e) {}
+  if (keyPushTimers[key]) return true;
+  const ct = (snap.data() && snap.data().clientTs) || 0;
+  if (ct <= getEditTs(key)) return true;      // not newer than what we have
   return false;
 }
 function flushAllPushes(force){
@@ -423,7 +434,11 @@ function flushAllPushes(force){
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushAllPushes(false); });
 window.addEventListener('pagehide', () => flushAllPushes(false));
-window.addEventListener('online', () => flushAllPushes(true));
+window.addEventListener('online', () => {
+  Object.keys(SYNCED_KEYS).filter(k => !pulledOK[k]).forEach(k => pullKeyFromCloud(k));
+  if (!pulledOK['wpp-v2'] && typeof pullFromCloud === 'function') pullFromCloud();
+  flushAllPushes(true);
+});
 
 async function pushPlanToCloud(force){
   try {
@@ -433,7 +448,7 @@ async function pushPlanToCloud(force){
     suppressPlanSnapshot = true;
     syncStarted();
     try {
-      await setDoc(PLAN_DOC, { data: JSON.parse(raw), updatedAt: serverTimestamp() });
+      await setDoc(PLAN_DOC, { data: JSON.parse(raw), updatedAt: serverTimestamp(), clientTs: getEditTs('wpp-v2') || Date.now() });
       setBase('wpp-v2', raw);
       logSync('PUSH plan OK (' + raw.length + ' chars)');
       syncDone(true);
@@ -457,7 +472,7 @@ let initialSyncDone = false;   // no edits are uploaded until the first cloud pu
 const heldPushes = new Set();
 
 function schedulePlanPush(){
-  if (!initialSyncDone) { heldPushes.add('wpp-v2'); return; }
+  if (!pulledOK['wpp-v2']) { heldPushes.add('wpp-v2'); return; }
   clearTimeout(planPushTimer);
   planPushTimer = setTimeout(() => { planPushTimer = null; pushPlanToCloud(); }, 800);
 }
@@ -477,12 +492,15 @@ function isEditingPlanner(){
 }
 
 async function pullFromCloud(){
-  let planData = null;
+  let planData = null, planCloudTs = 0, planOK = false;
   try {
     const planSnap = await getDoc(PLAN_DOC);
     if (planSnap.exists() && planSnap.data() && planSnap.data().data) {
       planData = planSnap.data().data;
+      planCloudTs = planSnap.data().clientTs || 0;
+      planOK = true;
     } else {
+      pulledOK['wpp-v2'] = true;
       await pushPlanToCloud();
     }
   } catch (e) { logSync('PULL plan FAILED: ' + (e.code || e.message)); console.warn('Could not load practice plan from cloud', e); }
@@ -492,19 +510,21 @@ async function pullFromCloud(){
   // resolves, applying an older cloud copy now would stomp on that edit.
   // Skip it; their edit becomes the new source of truth once it saves.
   const editingNow = isEditingPlanner();
-  let keptLocalPlan = false;
   if (planData && !editingNow) {
     const cloudStr = JSON.stringify(planData);
+    const cloudTs = planCloudTs;
     const localPlan = localStorage.getItem('wpp-v2');
-    const basePlan = getBase('wpp-v2');
-    if (localPlan !== null && localPlan !== cloudStr) {
-      logSync('PULL plan: local differs from cloud (base ' + (basePlan === undefined ? 'unknown' : (localPlan === basePlan ? 'matches local' : 'differs')) + ')');
-      backupLocal('wpp-v2', localPlan);
-      if (basePlan !== undefined && localPlan !== basePlan) keptLocalPlan = true; // unsynced local edits win
+    const localTs = getEditTs('wpp-v2');
+    if (localPlan !== null && localPlan !== cloudStr && localTs > cloudTs) {
+      logSync('PULL plan: local copy is newer, keeping it and uploading');
+      pulledOK['wpp-v2'] = true;
+      pushPlanToCloud(true);
+    } else {
+      if (localPlan !== null && localPlan !== cloudStr) { logSync('PULL plan: cloud copy is newer, local backed up'); backupLocal('wpp-v2', localPlan); }
+      localStorage.setItem('wpp-v2', cloudStr); setBase('wpp-v2', cloudStr); setEditTs('wpp-v2', cloudTs);
     }
-    if (!keptLocalPlan) { localStorage.setItem('wpp-v2', cloudStr); setBase('wpp-v2', cloudStr); }
-    else { pushPlanToCloud(); }
   }
+  if (planOK) pulledOK['wpp-v2'] = true;
 
   try {
     const liveSnap = await getDoc(LIVE_DOC);
@@ -524,8 +544,10 @@ async function pullFromCloud(){
 function startPlannerSync(){
   const originalSave = window.save;
   window.save = function(...args){
+    const before = localStorage.getItem('wpp-v2');
     const result = originalSave.apply(this, args);
     lastLocalPlanEdit = Date.now();
+    if (pulledOK['wpp-v2'] && localStorage.getItem('wpp-v2') !== before) setEditTs('wpp-v2', Date.now());
     schedulePlanPush();
     return result;
   };
@@ -538,21 +560,22 @@ function startPlannerSync(){
 
   pullFromCloud().then(() => {
     onSnapshot(PLAN_DOC, (snap) => {
-      if (suppressPlanSnapshot) { suppressPlanSnapshot = false; return; }
+      suppressPlanSnapshot = false;
       // Ignore echoes of our own writes and any cloud copy that arrives while a
       // local change (like dragging blocks into a new order) is still being saved;
       // otherwise an older cloud copy snaps the blocks back to their old order.
       if (snap.metadata && snap.metadata.hasPendingWrites) return;
       if (snap.metadata && snap.metadata.fromCache) return;
-      if (planPushTimer || (Date.now() - lastLocalPlanEdit) < 5000) return;
-      { const bp = getBase('wpp-v2'), lp = localStorage.getItem('wpp-v2'); if (bp !== undefined && lp !== null && lp !== bp) return; }
+      if (planPushTimer) return;
       if (!snap.exists()) return;
       const data = snap.data();
       if (!data || !data.data) return;
+      if ((data.clientTs || 0) <= getEditTs('wpp-v2')) return;   // not newer than ours
       if (isEditingPlanner()) return;
-      if (localStorage.getItem('wpp-v2') === JSON.stringify(data.data)) return;
+      if (localStorage.getItem('wpp-v2') === JSON.stringify(data.data)) { setEditTs('wpp-v2', data.clientTs || 0); return; }
       localStorage.setItem('wpp-v2', JSON.stringify(data.data));
       setBase('wpp-v2', JSON.stringify(data.data));
+      setEditTs('wpp-v2', data.clientTs || 0);
       window.load();
       window.render();
     });
@@ -600,7 +623,7 @@ const keySuppressFlags = {};
 
 function scheduleKeyPush(key){
   lastKeyEdit[key] = Date.now();
-  if (!initialSyncDone) { heldPushes.add(key); return; }
+  if (!pulledOK[key]) { heldPushes.add(key); return; }
   clearTimeout(keyPushTimers[key]);
   keyPushTimers[key] = setTimeout(() => { keyPushTimers[key] = null; pushKeyToCloud(key); }, 500);
   setSyncStatus();
@@ -611,7 +634,7 @@ async function pushKeyToCloud(key, force){
   syncStarted();
   try {
     const raw = localStorage.getItem(key);
-    await setDoc(SYNCED_KEYS[key], { data: raw ? JSON.parse(raw) : null, updatedAt: serverTimestamp() });
+    await setDoc(SYNCED_KEYS[key], { data: raw ? JSON.parse(raw) : null, updatedAt: serverTimestamp(), clientTs: getEditTs(key) || Date.now() });
     setBase(key, raw);
     logSync('PUSH ' + key + ' OK (' + (raw ? raw.length : 0) + ' chars)');
     syncDone(true);
@@ -623,8 +646,11 @@ async function pushKeyToCloud(key, force){
 function installStorageInterception(){
   const originalSetItem = Storage.prototype.setItem;
   Storage.prototype.setItem = function(key, value){
+    const isSynced = (this === window.localStorage && SYNCED_KEYS[key] && !applyingRemote);
+    const before = isSynced ? this.getItem(key) : null;
     originalSetItem.call(this, key, value);
-    if (this === window.localStorage && SYNCED_KEYS[key] && !applyingRemote) {
+    if (isSynced) {
+      if (pulledOK[key] && before !== String(value)) setEditTs(key, Date.now());
       scheduleKeyPush(key);
     }
   };
@@ -634,26 +660,27 @@ async function pullKeyFromCloud(key){
   try {
     const snap = await getDoc(SYNCED_KEYS[key]);
     const local = localStorage.getItem(key);
-    const base = getBase(key);
     if (snap.exists() && snap.data() && snap.data().data !== undefined && snap.data().data !== null) {
       const cloudVal = snap.data().data;
+      const cloudTs = snap.data().clientTs || 0;
       const cloudStr = JSON.stringify(cloudVal);
+      if (local !== null && local !== cloudStr && getEditTs(key) > cloudTs) {
+        // Our copy was edited more recently than the cloud's: keep it and upload it.
+        logSync('PULL ' + key + ': local copy is newer, keeping it and uploading');
+        pulledOK[key] = true;
+        await pushKeyToCloud(key, true);
+        return;
+      }
       if (local !== null && local !== cloudStr) {
-        if (base !== undefined && local !== base) {
-          // Local has edits that never reached the cloud: keep them (merged), then upload.
-          logSync('PULL ' + key + ': kept unsynced local edits');
-          backupLocal(key, local);
-          const merged = key === 'wpp-whiteboard' ? JSON.parse(local) : mergeValues(local, cloudVal);
-          applyRemoteKey(key, JSON.stringify(merged));
-          await pushKeyToCloud(key);
-          return;
-        }
-        logSync('PULL ' + key + ': local replaced by cloud copy (local backed up)');
+        logSync('PULL ' + key + ': cloud copy is newer, local backed up');
         backupLocal(key, local);
       }
       applyRemoteKey(key, cloudStr);
       setBase(key, cloudStr);
+      setEditTs(key, cloudTs);
+      pulledOK[key] = true;
     } else {
+      pulledOK[key] = true;
       await pushKeyToCloud(key);
     }
   } catch (e) { logSync('PULL ' + key + ' FAILED: ' + (e.code || e.message)); console.warn('Could not load', key, 'from cloud', e); }
@@ -685,10 +712,6 @@ async function startExtraPlannerSync(){
   // Pull everything at the same time, and never wait more than 6 seconds, so saving is never held up by a slow connection.
   await Promise.all(Object.keys(SYNCED_KEYS).map(k => Promise.race([pullKeyFromCloud(k), new Promise(r => setTimeout(r, 6000))])));
   initialSyncDone = true;
-  heldPushes.forEach(k => {
-    if (k === 'wpp-v2') { const cur = localStorage.getItem('wpp-v2'); if (cur !== null && cur !== getBase('wpp-v2')) schedulePlanPush(); }
-    else { const cur = localStorage.getItem(k); if (cur !== getBase(k)) scheduleKeyPush(k); }
-  });
   heldPushes.clear();
   if (!isEditingPlanner()) {
     applyArchiveRefresh();
@@ -700,7 +723,7 @@ async function startExtraPlannerSync(){
     if (shouldIgnoreRemote('wpp-practice-library', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    applyRemoteKey('wpp-practice-library', JSON.stringify(snap.data().data || [])); setBase('wpp-practice-library', JSON.stringify(snap.data().data || []));
+    applyRemoteKey('wpp-practice-library', JSON.stringify(snap.data().data || [])); setBase('wpp-practice-library', JSON.stringify(snap.data().data || [])); setEditTs('wpp-practice-library', (snap.data() && snap.data().clientTs) || 0);
     applyArchiveRefresh();
   });
 
@@ -708,7 +731,7 @@ async function startExtraPlannerSync(){
     if (shouldIgnoreRemote('wpp-drill-library', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    applyRemoteKey('wpp-drill-library', JSON.stringify(snap.data().data || [])); setBase('wpp-drill-library', JSON.stringify(snap.data().data || []));
+    applyRemoteKey('wpp-drill-library', JSON.stringify(snap.data().data || [])); setBase('wpp-drill-library', JSON.stringify(snap.data().data || [])); setEditTs('wpp-drill-library', (snap.data() && snap.data().clientTs) || 0);
     applyDrillQueueRefresh();
   });
 
@@ -716,7 +739,7 @@ async function startExtraPlannerSync(){
     if (shouldIgnoreRemote('wpp-practice-queue', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    applyRemoteKey('wpp-practice-queue', JSON.stringify(snap.data().data || [])); setBase('wpp-practice-queue', JSON.stringify(snap.data().data || []));
+    applyRemoteKey('wpp-practice-queue', JSON.stringify(snap.data().data || [])); setBase('wpp-practice-queue', JSON.stringify(snap.data().data || [])); setEditTs('wpp-practice-queue', (snap.data() && snap.data().clientTs) || 0);
     applyDrillQueueRefresh();
   });
 
@@ -726,14 +749,14 @@ async function startExtraPlannerSync(){
     // The whiteboard's editor reads localStorage once when that page is first
     // built, with no global refresh hook — so this keeps the stored data
     // current for next load, but won't redraw an already-open editor live.
-    applyRemoteKey('wpp-whiteboard', JSON.stringify(snap.data().data)); setBase('wpp-whiteboard', JSON.stringify(snap.data().data));
+    applyRemoteKey('wpp-whiteboard', JSON.stringify(snap.data().data)); setBase('wpp-whiteboard', JSON.stringify(snap.data().data)); setEditTs('wpp-whiteboard', (snap.data() && snap.data().clientTs) || 0);
   });
 
   onSnapshot(SYNCED_KEYS['wpp-roster'], (snap) => {
     if (shouldIgnoreRemote('wpp-roster', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    applyRemoteKey('wpp-roster', JSON.stringify(snap.data().data || [])); setBase('wpp-roster', JSON.stringify(snap.data().data || []));
+    applyRemoteKey('wpp-roster', JSON.stringify(snap.data().data || [])); setBase('wpp-roster', JSON.stringify(snap.data().data || [])); setEditTs('wpp-roster', (snap.data() && snap.data().clientTs) || 0);
     applyAttendanceRefresh();
   });
 
@@ -741,7 +764,7 @@ async function startExtraPlannerSync(){
     if (shouldIgnoreRemote('wpp-attendance', snap)) return;
     if (!snap.exists() || !snap.data()) return;
     if (isEditingPlanner()) return;
-    applyRemoteKey('wpp-attendance', JSON.stringify(snap.data().data || {})); setBase('wpp-attendance', JSON.stringify(snap.data().data || {}));
+    applyRemoteKey('wpp-attendance', JSON.stringify(snap.data().data || {})); setBase('wpp-attendance', JSON.stringify(snap.data().data || {})); setEditTs('wpp-attendance', (snap.data() && snap.data().clientTs) || 0);
     applyAttendanceRefresh();
   });
 }

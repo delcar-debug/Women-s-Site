@@ -1621,13 +1621,14 @@
 
   function process() {
     const next = dateEl.value || '';
+    const done = () => { window.__dateEditing = false; if (typeof scheduleAutoArchive === 'function') scheduleAutoArchive(); };
     const prev = prevDate;
     timer = null;
-    if (!next || !prev || next === prev) { prevDate = next || prev; restoreKey(false); return; }
+    if (!next || !prev || next === prev) { prevDate = next || prev; restoreKey(false); done(); return; }
     if (!/^20\d\d-\d\d-\d\d$/.test(next)) return;
-    if (state.practiceActive) { prevDate = next; restoreKey(false); return; }
-    const msg = 'Switch to ' + label(next) + '?\n\nOK: save the ' + label(prev) + ' plan to the Archive and open the ' + label(next) + ' plan (a new blank one if that day has none).\nCancel: keep this plan and just change its date to ' + label(next) + '.';
-    if (!confirm(msg)) { prevDate = next; restoreKey(true); return; }
+    if (state.practiceActive) { prevDate = next; restoreKey(false); done(); return; }
+    const msg = 'Switch to ' + label(next) + '?\n\nOK: save the ' + label(prev) + ' plan to the Archive and open the ' + label(next) + ' plan (a new blank one if that day has none).\nCancel: keep this plan and just change its date to ' + label(next) + '.' + (state.archives.some(x => x.date === next) ? ' (This replaces the plan already saved for ' + label(next) + '.)' : '');
+    if (!confirm(msg)) { prevDate = next; restoreKey(true); done(); return; }
     try {
       // 1) Save the plan you were on to the Archive under its own date.
       dateEl.value = prev;
@@ -1641,17 +1642,19 @@
       prevDate = next;
       render();
       if (typeof renderLibrary === 'function') renderLibrary();
+      done();
       toast((state.blocks.length ? 'Opened ' : 'Started a new plan for ') + label(next) + '. ' + label(prev) + ' is saved in the Archive.');
     } catch (e) {
       console.warn('Date switch failed', e);
-      dateEl.value = next; prevDate = next;
+      dateEl.value = next; prevDate = next; done();
     }
   }
 
   dateEl.addEventListener('focus', () => {
     prevDate = dateEl.value || prevDate;
+    window.__dateEditing = true;
     if (!state.practiceActive && state.autoArchiveKey && !savedKey) { savedKey = state.autoArchiveKey; state.autoArchiveKey = null; }
   });
-  dateEl.addEventListener('blur', () => { if (!timer && (dateEl.value || '') === prevDate) restoreKey(false); });
+  dateEl.addEventListener('blur', () => { if (!timer && (dateEl.value || '') === prevDate) { restoreKey(false); window.__dateEditing = false; if (typeof scheduleAutoArchive === 'function') scheduleAutoArchive(); } });
   dateEl.addEventListener('change', () => { clearTimeout(timer); timer = setTimeout(process, 1200); });
 })();

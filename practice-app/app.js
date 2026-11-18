@@ -50,7 +50,7 @@ function scheduledSecondsRemaining(){if(!state.practiceActive||!state.blocks.len
 function renderActualTiming(){if(!el.actualDurationDisplay)return;const start=state.actualStartAt,end=state.actualEndAt;el.actualStartDisplay.textContent=timeLabel(start);el.actualEndDisplay.textContent=timeLabel(end);el.actualDurationDisplay.textContent=start?`${actualMinutesFor(start,end)} min`:'0 min';el.sessionStatus.textContent=state.sessionTimingActive?'Practice running':end?'Practice ended':'Not started';$('actualStartBtn').disabled=state.sessionTimingActive;$('actualEndBtn').disabled=!state.sessionTimingActive;const desired=desiredEndTimestamp(start||Date.now());if(!desired){el.endVarianceDisplay.textContent='—';el.endVarianceHelp.textContent='Set the desired end time in Practice Builder.';return}let diff,label;if(end){diff=Math.round((end-desired)/60000);label=diff===0?'On time':diff>0?`+${diff} min`:`${diff} min`;el.endVarianceHelp.textContent=diff===0?'Practice ended at the desired time.':`Practice ended ${Math.abs(diff)} min ${diff>0?'late':'early'}.`}else if(start){const projected=Date.now()+scheduledSecondsRemaining()*1000;diff=Math.round((projected-desired)/60000);label=diff===0?'On pace':diff>0?`+${diff} min`:`${diff} min`;el.endVarianceHelp.textContent=diff===0?'Projected to finish on time.':`Projected to finish ${Math.abs(diff)} min ${diff>0?'late':'early'}.`}else{diff=0;label='—';el.endVarianceHelp.textContent=`Desired end: ${timeLabel(desired)}`;}el.endVarianceDisplay.textContent=label;el.endVarianceDisplay.className=diff>0?'variance-late':diff<0?'variance-early':'variance-even'}
 function beginActualPractice(){if(!state.blocks.length)return alert('Add at least one practice block.');const now=Date.now();state.actualStartAt=now;state.actualEndAt=null;state.actualPracticeDate=localDateValue(now);state.sessionTimingActive=true;if(!el.practiceDate.value)el.practiceDate.value=state.actualPracticeDate;state.currentIndex=0;state.currentBlockId=state.blocks[0].id;state.secondsLeft=state.blocks[0].minutes*60;state.running=true;state.practiceActive=true;ensurePracticeTicker();renderTimer();renderActualTiming();saveLiveState();save()}
 function finishActualPractice(){if(!state.sessionTimingActive)return;state.actualEndAt=Date.now();state.sessionTimingActive=false;state.running=false;renderTimer();renderActualTiming();saveLiveState();save()}
-function save(){localStorage.setItem('wpp-v2',JSON.stringify({blocks:state.blocks,date:el.practiceDate.value,start:el.startTime.value,length:el.practiceLength.value,goal:el.practiceGoal.value,journal:(document.getElementById('practiceJournal')||{}).value||'',journalEnd:(document.getElementById('practiceJournalEnd')||{}).value||'',type:el.practiceType?.value||'',rating:state.practiceRating||'',cultureRating:state.teamCultureRating||'',work:el.workSeconds.value,rest:el.restSeconds.value,rounds:el.intervalRounds.value,coachEmails:state.coachEmails,overallCoachNotes:state.overallCoachNotes}));broadcastTeamBoard();if(state.autoArchiveKey)upsertAutoArchive({silent:true})}function load(){
+function save(){localStorage.setItem('wpp-v2',JSON.stringify({blocks:state.blocks,date:el.practiceDate.value,start:el.startTime.value,length:el.practiceLength.value,goal:el.practiceGoal.value,journal:(document.getElementById('practiceJournal')||{}).value||'',journalEnd:(document.getElementById('practiceJournalEnd')||{}).value||'',type:el.practiceType?.value||'',rating:state.practiceRating||'',cultureRating:state.teamCultureRating||'',work:el.workSeconds.value,rest:el.restSeconds.value,rounds:el.intervalRounds.value,coachEmails:state.coachEmails,overallCoachNotes:state.overallCoachNotes}));broadcastTeamBoard();scheduleAutoArchive()}function load(){
   // Load each saved area independently so a damaged draft can never hide the archive.
   try{
     const archiveRaw=localStorage.getItem('wpp-practice-library')||localStorage.getItem('wpp-archives')||'[]';
@@ -455,6 +455,18 @@ function autoArchiveSnapshot(existing={}){
   const totals=categoryTotals(false),planned=total(),key=practiceIdentityKey();
   return {...existing,id:existing.id||('auto-'+key.replace(/[^a-z0-9_-]/gi,'-')),autoArchiveKey:key,archiveStatus:'in_progress',autoArchived:true,archivedAt:existing.archivedAt||new Date().toISOString(),updatedAt:new Date().toISOString(),date:el.practiceDate.value||'',plannedDate:el.practiceDate.value||'',start:el.startTime.value||'15:30',length:Number(el.practiceLength.value)||planned,goal:(el.practiceGoal.value||'').trim(),journal:((document.getElementById('practiceJournal')||{}).value||'').trim(),journalEnd:((document.getElementById('practiceJournalEnd')||{}).value||'').trim(),label:(el.practiceLabel?.value||'').trim(),practiceType:el.practiceType?.value||'',practiceRating:state.practiceRating||'',teamCultureRating:state.teamCultureRating||'',overallCoachNotes:state.overallCoachNotes||'',blocks:state.blocks.map(b=>({name:b.name,minutes:Number(b.minutes)||1,details:b.details||'',notesHidden:!!b.notesHidden,reps:b.reps||'',circuit:Array.isArray(b.circuit)?b.circuit:[],category:categoryInfo(b.category).id,coachNotes:b.coachNotes||'',libraryDrillId:b.libraryDrillId||''})),categoryTotals:totals,plannedMinutes:planned,totalMinutes:planned,pdfSentAt:pdfStatusForKey(key).sentAt||existing.pdfSentAt||null};
 }
+let _autoArchTimer=null;
+// Keeps the Archive copy of the plan you're building up to date (saved ~1.5s after your last change).
+// Paused while the date box is being edited so half-typed dates never create stray archive entries.
+function scheduleAutoArchive(){
+  clearTimeout(_autoArchTimer);
+  _autoArchTimer=setTimeout(()=>{
+    if(window.__dateEditing)return;
+    if(!state.blocks.length||!/^20\d\d-\d\d-\d\d$/.test((el.practiceDate&&el.practiceDate.value)||''))return;
+    upsertAutoArchive({silent:true});
+    if(typeof renderLibrary==='function')renderLibrary();
+  },1500);
+}
 function upsertAutoArchive({silent=false}={}){
   if(!state.blocks.length)return null;
   const key=practiceIdentityKey();state.autoArchiveKey=key;
@@ -462,6 +474,7 @@ function upsertAutoArchive({silent=false}={}){
   if(index<0&&el.practiceDate.value)index=state.archives.findIndex(a=>a.date===el.practiceDate.value);
   const existing=index>=0?state.archives[index]:{};
   const snap=autoArchiveSnapshot(existing);
+  if(index>=0){const strip=o=>{const c={...o};delete c.updatedAt;return JSON.stringify(c)};if(strip(snap)===strip(existing))return existing}
   if(index>=0)state.archives[index]=snap;else state.archives.unshift(snap);
   localStorage.setItem('wpp-practice-library',JSON.stringify(state.archives));
   if(!silent)renderLibrary();
