@@ -54,7 +54,7 @@ body.pp-authed .pp-login{display:none}
 </div>
 <div class="next-notes-list" id="nextPracticeNotesBuilderList"></div>
 </section>
-<div class="builder-section-head"><h3>Practice Blocks</h3></div><button class="primary add-block-large" id="addBtn" type="button">+ Add Practice Block</button><div class="manual-save-row"><button class="secondary" id="manualSaveBtn" type="button">💾 Save Plan</button><button class="secondary" id="manualRestoreBtn" type="button">↩ Restore last saved plan</button><span id="manualSaveMsg"></span></div>
+<div class="builder-section-head"><h3>Practice Blocks</h3></div><button class="primary add-block-large" id="addBtn" type="button">+ Add Practice Block</button>
 <button class="secondary last-practice-btn" id="duplicateLastBtn" type="button">Duplicate Last Practice</button>
 <div class="practice-list" id="practiceList"></div></section>
 <aside class="card"><div class="actions"><button class="primary" id="startBtn">Open Coach Mode</button><button class="danger" id="clearBtn">Clear</button></div><div class="share-actions"><button class="primary share-practice-btn" id="sharePracticeBtn" type="button">📤 Share Practice</button><button id="downloadPdfBtn" type="button" hidden aria-hidden="true"></button><button id="manageEmailsBtn" type="button" hidden aria-hidden="true"></button><button id="sharePdfBtn" type="button" hidden aria-hidden="true"></button><div class="email-list-summary" id="emailListSummary" hidden aria-hidden="true"></div></div><div class="summary-inline"><h2>Summary</h2><div class="summary">
@@ -769,46 +769,5 @@ async function startExtraPlannerSync(){
   });
 }
 
-/* ----- Manual Save / Restore buttons in the plan builder ----- */
-const MANUAL_SAVE_KEY = 'wpp-manual-save';
-function manualMsg(text, ok){
-  const m = document.getElementById('manualSaveMsg');
-  if (!m) return;
-  m.textContent = text;
-  m.style.color = ok ? '#0f5132' : '#b3261e';
-  m.style.fontWeight = '700';
-}
-async function manualSaveAll(){
-  try { if (typeof window.save === 'function') window.save(); } catch (e) {}
-  // 1) Private copy on this device that cloud sync never touches (used by Restore).
-  try {
-    const snap = { savedAt: new Date().toISOString(), plan: localStorage.getItem('wpp-v2'), library: localStorage.getItem('wpp-practice-library'), attendance: localStorage.getItem('wpp-attendance'), roster: localStorage.getItem('wpp-roster') };
-    Storage.prototype.setItem.call(window.localStorage, MANUAL_SAVE_KEY, JSON.stringify(snap));
-  } catch (e) { manualMsg('⚠ Could not save on this device', false); return; }
-  // 2) Push everything to the cloud right now.
-  manualMsg('Saving…', true);
-  const results = [await pushPlanToCloud(true)];
-  for (const k of Object.keys(SYNCED_KEYS)) results.push(await pushKeyToCloud(k, true));
-  const ok = results.every(r => r !== false);
-  const t = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-  manualMsg(ok ? '✓ Saved ' + t : '⚠ Saved on this device only (cloud failed) — try again', ok);
-}
-function manualRestore(){
-  let snap = null;
-  try { snap = JSON.parse(localStorage.getItem(MANUAL_SAVE_KEY) || 'null'); } catch (e) {}
-  if (!snap || !snap.plan) { manualMsg('No saved plan to restore yet', false); return; }
-  if (!confirm('Restore the plan you last saved (' + new Date(snap.savedAt).toLocaleString() + ')? This replaces the plan on screen.')) return;
-  localStorage.setItem('wpp-v2', snap.plan);
-  if (snap.library) localStorage.setItem('wpp-practice-library', snap.library);
-  if (snap.attendance) localStorage.setItem('wpp-attendance', snap.attendance);
-  if (snap.roster) localStorage.setItem('wpp-roster', snap.roster);
-  try { window.load(); window.render(); if (window.state && snap.library) { window.state.archives = JSON.parse(snap.library); if (window.renderLibrary) window.renderLibrary(); } } catch (e) {}
-  manualMsg('✓ Restored', true);
-  manualSaveAll();
-}
-document.addEventListener('click', (ev) => {
-  if (ev.target.closest && ev.target.closest('#manualSaveBtn')) manualSaveAll();
-  else if (ev.target.closest && ev.target.closest('#manualRestoreBtn')) manualRestore();
-});
 </script>
 </body></html>
