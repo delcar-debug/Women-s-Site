@@ -1561,3 +1561,97 @@
   list.unshift(template);
   localStorage.setItem(KEY, JSON.stringify(list));
 })();
+
+/* Switch practice days by changing the date:
+   changing the date saves the plan you were on to the Archive, then opens the plan
+   already saved for the new date (or a fresh blank plan if that day has none). */
+(() => {
+  const dateEl = document.getElementById('practiceDate');
+  if (!dateEl) return;
+  let prevDate = dateEl.value || '';
+  let timer = null;
+  let savedKey = null;   // auto-archive key held aside while the date is being edited
+
+  const label = d => {
+    const x = new Date(d + 'T12:00:00');
+    return Number.isNaN(x.getTime()) ? d : x.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+  };
+  function toast(msg) {
+    let t = document.getElementById('dateSwitchToast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'dateSwitchToast';
+      t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:99999;background:#222;color:#fff;padding:10px 16px;border-radius:999px;font:700 14px system-ui,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.35);max-width:90vw;text-align:center';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg; t.style.display = 'block';
+    clearTimeout(t._h); t._h = setTimeout(() => { t.style.display = 'none'; }, 4500);
+  }
+  function fillFromArchive(a) {
+    state.blocks = (a.blocks || []).map(b => ({ ...b, id: b.id || crypto.randomUUID(), completionStatus: b.completionStatus || 'not_completed', actualMinutes: Number.isFinite(Number(b.actualMinutes)) ? Number(b.actualMinutes) : (Number(b.minutes) || 1) }));
+    state.overallCoachNotes = a.overallCoachNotes || '';
+    el.startTime.value = a.start || '15:30';
+    el.practiceLength.value = a.length || a.plannedMinutes || a.totalMinutes || 90;
+    el.practiceGoal.value = a.goal || '';
+    const j = document.getElementById('practiceJournal'); if (j) j.value = a.journal || '';
+    const je = document.getElementById('practiceJournalEnd'); if (je) je.value = a.journalEnd || '';
+    if (el.practiceType) el.practiceType.value = a.practiceType || '';
+    if (el.practiceLabel) el.practiceLabel.value = a.label || '';
+    if (el.overallCoachNotes) el.overallCoachNotes.value = state.overallCoachNotes;
+    state.practiceRating = a.practiceRating || '';
+    state.teamCultureRating = a.teamCultureRating || '';
+  }
+  function blankPlan() {
+    state.blocks = []; state.overallCoachNotes = '';
+    el.practiceGoal.value = '';
+    const j = document.getElementById('practiceJournal'); if (j) j.value = '';
+    const je = document.getElementById('practiceJournalEnd'); if (je) je.value = '';
+    if (el.practiceType) el.practiceType.value = '';
+    if (el.practiceLabel) el.practiceLabel.value = '';
+    if (el.overallCoachNotes) el.overallCoachNotes.value = '';
+    state.practiceRating = ''; state.teamCultureRating = '';
+  }
+
+  function restoreKey(sync) {
+    if (savedKey) {
+      state.autoArchiveKey = savedKey; savedKey = null;
+      if (sync) { try { upsertAutoArchive({ silent: true }); } catch (e) {} }
+    }
+  }
+
+  function process() {
+    const next = dateEl.value || '';
+    const prev = prevDate;
+    timer = null;
+    if (!next || !prev || next === prev) { prevDate = next || prev; restoreKey(false); return; }
+    if (!/^20\d\d-\d\d-\d\d$/.test(next)) return;
+    if (state.practiceActive) { prevDate = next; restoreKey(false); return; }
+    const msg = 'Switch to ' + label(next) + '?\n\nOK: save the ' + label(prev) + ' plan to the Archive and open the ' + label(next) + ' plan (a new blank one if that day has none).\nCancel: keep this plan and just change its date to ' + label(next) + '.';
+    if (!confirm(msg)) { prevDate = next; restoreKey(true); return; }
+    try {
+      // 1) Save the plan you were on to the Archive under its own date.
+      dateEl.value = prev;
+      if (state.blocks.length) upsertAutoArchive({ silent: true });
+      // 2) Open the plan for the new date, or a blank one.
+      const existing = state.archives.find(a => a.date === next);
+      savedKey = null; state.autoArchiveKey = null;
+      try { state.actualPracticeDate = null; state.actualStartAt = null; state.actualEndAt = null; } catch (e) {}
+      if (existing) fillFromArchive(existing); else blankPlan();
+      dateEl.value = next;
+      prevDate = next;
+      render();
+      if (typeof renderLibrary === 'function') renderLibrary();
+      toast((state.blocks.length ? 'Opened ' : 'Started a new plan for ') + label(next) + '. ' + label(prev) + ' is saved in the Archive.');
+    } catch (e) {
+      console.warn('Date switch failed', e);
+      dateEl.value = next; prevDate = next;
+    }
+  }
+
+  dateEl.addEventListener('focus', () => {
+    prevDate = dateEl.value || prevDate;
+    if (!state.practiceActive && state.autoArchiveKey && !savedKey) { savedKey = state.autoArchiveKey; state.autoArchiveKey = null; }
+  });
+  dateEl.addEventListener('blur', () => { if (!timer && (dateEl.value || '') === prevDate) restoreKey(false); });
+  dateEl.addEventListener('change', () => { clearTimeout(timer); timer = setTimeout(process, 1200); });
+})();
