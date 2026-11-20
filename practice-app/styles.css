@@ -893,3 +893,6 @@ html,body{overflow-y:auto}
 .category-break{background:#e3f2f8;color:#1f6f8f}
 
 .manual-save-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}.manual-save-row button{flex:0 0 auto}#manualSaveBtn{font-weight:800}
+
+.block-actions{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+@media(max-width:600px){.block-actions{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
