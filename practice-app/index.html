@@ -263,6 +263,10 @@ ppLoginForm.addEventListener('submit', (e) => {
 // coach passcode, so it signs in silently instead of showing the login form.
 // If this browser already unlocked Coach Hub this session, also sign in silently.
 const isTvView = ['1', 'team-board', 'plan'].includes(new URLSearchParams(location.search).get('tv'));
+/* ONE-WAY SYNC. The coach's computer is the master copy: it uploads to the cloud as a backup
+   and the TV view, and it NEVER takes data back from the cloud (except to restore a brand-new,
+   empty browser). The TV view only reads. So two copies can never overwrite each other. */
+const isOwner = !isTvView;
 if (isTvView) {
   ppLoginScreen.style.display = 'none';
 }
@@ -419,6 +423,7 @@ function applyRemoteKey(key, value){
 // Ignore cloud copies that are echoes of our own writes, arrive while a local
 // change is still saving, or match what we already have.
 function shouldIgnoreRemote(key, snap){
+  if (isOwner) return true;
   if (snap.metadata && snap.metadata.hasPendingWrites) return true;
   if (snap.metadata && snap.metadata.fromCache) return true;
   if (keyPushTimers[key]) return true;
@@ -441,6 +446,7 @@ window.addEventListener('online', () => {
 });
 
 async function pushPlanToCloud(force){
+  if (!isOwner) return true;
   try {
     const raw = localStorage.getItem('wpp-v2');
     if (!raw) return;
@@ -492,6 +498,14 @@ function isEditingPlanner(){
 }
 
 async function pullFromCloud(){
+  if (isOwner && localStorage.getItem('wpp-v2')) {
+    // This computer already has its own data: it is the master. Keep it, back it up, never overwrite it.
+    pulledOK['wpp-v2'] = true;
+    logSync('Master copy on this computer kept (cloud copy not applied)');
+    try { window.load(); window.render(); window.restoreLiveState(); window.ensurePracticeTicker(); } catch (e) {}
+    pushPlanToCloud();
+    return;
+  }
   let planData = null, planCloudTs = 0, planOK = false;
   try {
     const planSnap = await getDoc(PLAN_DOC);
@@ -560,6 +574,7 @@ function startPlannerSync(){
 
   pullFromCloud().then(() => {
     onSnapshot(PLAN_DOC, (snap) => {
+      if (isOwner) return;
       suppressPlanSnapshot = false;
       // Ignore echoes of our own writes and any cloud copy that arrives while a
       // local change (like dragging blocks into a new order) is still being saved;
@@ -580,6 +595,7 @@ function startPlannerSync(){
       window.render();
     });
     onSnapshot(LIVE_DOC, (snap) => {
+      if (isOwner) return;
       if (suppressLiveSnapshot) { suppressLiveSnapshot = false; return; }
       if (!snap.exists()) return;
       const st = window.state;
@@ -630,6 +646,7 @@ function scheduleKeyPush(key){
 }
 
 async function pushKeyToCloud(key, force){
+  if (!isOwner) return true;
   { const cur = localStorage.getItem(key); if (!force && cur === getBase(key)) return; }
   syncStarted();
   try {
@@ -657,6 +674,15 @@ function installStorageInterception(){
 }
 
 async function pullKeyFromCloud(key){
+  if (isOwner) {
+    const have = localStorage.getItem(key);
+    if (have !== null && have !== '' && have !== '[]' && have !== '{}' && have !== 'null') {
+      pulledOK[key] = true;
+      logSync('Master copy kept for ' + key);
+      pushKeyToCloud(key);
+      return;
+    }
+  }
   try {
     const snap = await getDoc(SYNCED_KEYS[key]);
     const local = localStorage.getItem(key);
@@ -769,5 +795,20 @@ async function startExtraPlannerSync(){
   });
 }
 
+
+/* ----- Cloud history: a dated snapshot of everything, for emergencies (owner only) ----- */
+async function writeSnapshot(){
+  if (!isOwner || !pulledOK['wpp-v2']) return;
+  try {
+    const d = new Date();
+    const id = 'snap-' + d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const data = { at: d.toISOString(), plan: localStorage.getItem('wpp-v2') || '' };
+    Object.keys(SYNCED_KEYS).forEach(k => { data[k.replace('wpp-', '')] = localStorage.getItem(k) || ''; });
+    await setDoc(doc(db, 'practicePlanner', id), data);
+    logSync('Backup snapshot saved: ' + id);
+  } catch (e) { logSync('Snapshot failed: ' + (e.code || e.message)); }
+}
+setTimeout(writeSnapshot, 20000);
+setInterval(writeSnapshot, 30 * 60 * 1000);
 </script>
 </body></html>

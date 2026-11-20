@@ -1658,3 +1658,51 @@
   dateEl.addEventListener('blur', () => { if (!timer && (dateEl.value || '') === prevDate) { restoreKey(false); window.__dateEditing = false; if (typeof scheduleAutoArchive === 'function') scheduleAutoArchive(); } });
   dateEl.addEventListener('change', () => { clearTimeout(timer); timer = setTimeout(process, 1200); });
 })();
+
+/* Recovery panel: open the app with ?recover=1 to see practices still held in this browser's backups
+   (the app keeps a copy of anything it replaced) and put any that are missing back into the Archive. */
+(() => {
+  if (new URLSearchParams(location.search).get('recover') !== '1') return;
+  window.addEventListener('load', () => setTimeout(() => {
+    const found = [];
+    Object.keys(localStorage).filter(k => k.startsWith('wpp-backup-')).forEach(k => {
+      try {
+        const b = JSON.parse(localStorage.getItem(k));
+        const v = typeof b.value === 'string' ? JSON.parse(b.value) : b.value;
+        if (k === 'wpp-backup-wpp-practice-library' && Array.isArray(v)) v.forEach(a => found.push({ kind: 'archive', from: b.savedAt, a }));
+        if (k === 'wpp-backup-wpp-v2' && v && v.blocks && v.blocks.length) found.push({ kind: 'plan', from: b.savedAt, a: v });
+      } catch (e) {}
+    });
+    const box = document.createElement('div');
+    box.style.cssText = 'position:fixed;inset:10px;z-index:999999;background:#fff;color:#111;border:3px solid #6d1730;border-radius:12px;padding:16px;overflow:auto;font:14px system-ui,sans-serif';
+    const have = d => (state.archives || []).some(x => x.date === d);
+    let html = '<h2 style="margin:0 0 8px">Recover practices from this device</h2><p>These copies are held in this browser. Tap <b>Restore</b> to add one back to the Archive. Nothing is changed until you tap.</p>';
+    if (!found.length) html += '<p><b>No backups found on this device.</b></p>';
+    found.forEach((f, i) => {
+      const a = f.a;
+      const when = f.from ? new Date(f.from).toLocaleString() : '';
+      html += '<div style="border:1px solid #ccc;border-radius:8px;padding:8px;margin:8px 0"><b>' + (a.date || 'no date') + '</b> · ' + (a.blocks || []).length + ' blocks · ' + (f.kind === 'plan' ? 'builder plan' : 'archive entry') + ' · backed up ' + when +
+        (have(a.date) ? ' · <i>(Archive already has this date, restoring replaces it)</i>' : '') + '<br><span style="color:#555">' + (a.goal || '') + '</span><br><button data-i="' + i + '" style="margin-top:6px;padding:6px 12px">Restore</button></div>';
+    });
+    html += '<button id="recoverClose" style="padding:8px 14px">Close</button>';
+    box.innerHTML = html;
+    document.body.appendChild(box);
+    box.addEventListener('click', ev => {
+      if (ev.target.id === 'recoverClose') { box.remove(); return; }
+      const i = ev.target.dataset && ev.target.dataset.i;
+      if (i === undefined) return;
+      const f = found[+i]; const a = JSON.parse(JSON.stringify(f.a));
+      if (!a.date) { alert('This copy has no date, so it cannot be restored.'); return; }
+      if (f.kind === 'plan') {
+        a.id = 'recovered-' + Date.now(); a.archivedAt = new Date().toISOString(); a.plannedDate = a.date;
+        a.blocks = (a.blocks || []).map(b => ({ ...b, id: b.id || crypto.randomUUID() }));
+      }
+      a.updatedAt = new Date().toISOString();
+      const idx = state.archives.findIndex(x => x.date === a.date);
+      if (idx >= 0) state.archives[idx] = a; else state.archives.unshift(a);
+      localStorage.setItem('wpp-practice-library', JSON.stringify(state.archives));
+      if (typeof renderLibrary === 'function') renderLibrary();
+      ev.target.textContent = 'Restored ✓'; ev.target.disabled = true;
+    });
+  }, 4000));
+})();

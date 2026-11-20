@@ -491,7 +491,7 @@ function upsertAutoArchive({silent=false}={}){
   if(index<0&&el.practiceDate.value)index=state.archives.findIndex(a=>a.date===el.practiceDate.value);
   const existing=index>=0?state.archives[index]:{};
   const snap=autoArchiveSnapshot(existing);
-  if(index>=0){const strip=o=>{const c={...o};delete c.updatedAt;return JSON.stringify(c)};if(strip(snap)===strip(existing))return existing}
+  if(index>=0){const stable=v=>Array.isArray(v)?v.map(stable):(v&&typeof v==='object'?Object.keys(v).sort().reduce((r,k)=>{if(v[k]!==undefined)r[k]=stable(v[k]);return r},{}):v);const strip=o=>{const c={...o};delete c.updatedAt;return JSON.stringify(stable(c))};if(strip(snap)===strip(existing))return existing}
   if(index>=0)state.archives[index]=snap;else state.archives.unshift(snap);
   localStorage.setItem('wpp-practice-library',JSON.stringify(state.archives));
   if(!silent)renderLibrary();
