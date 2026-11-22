@@ -1273,6 +1273,8 @@
       <h2>Take Attendance</h2>
       <label class="field">Practice date<input id="attendanceDate" type="date"></label>
       <label class="attendance-optional"><input id="attendanceOptional" type="checkbox"> <span>Optional practice – don't take attendance</span></label>
+      <details class="attendance-bulk attendance-addpanel" id="attendanceAddPanel">
+      <summary>Add athletes</summary>
       <div class="attendance-add-row">
         <input id="attendanceNewName" maxlength="60" placeholder="Add athlete name" type="text">
         <button class="secondary" id="attendanceAddBtn" type="button">Add</button>
@@ -1281,6 +1283,7 @@
         <summary>Add many at once</summary>
         <textarea id="attendanceBulkNames" rows="6" placeholder="Paste or type names, one per line (commas also work)"></textarea>
         <div class="attendance-bulk-row"><span id="attendanceBulkMsg"></span><button class="secondary" id="attendanceBulkBtn" type="button">Add all</button></div>
+      </details>
       </details>
       <div class="attendance-list" id="attendanceList"></div>
       <div class="brand-modal-actions">
