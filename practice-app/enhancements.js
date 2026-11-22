@@ -979,7 +979,29 @@
     const all = loadAttendance();
     const archived = new Set(((typeof state !== 'undefined' && state && state.archives) || []).map(a => a && a.date).filter(Boolean));
     const out = {};
-    Object.keys(all).forEach(d => { if (archived.has(d)) out[d] = all[d]; });
+    Object.keys(all).forEach(d => { if (archived.has(d) && !(all[d] && all[d].__optional)) out[d] = all[d]; });
+    return out;
+  }
+  // Streaks: practices in a row attended, ending at the most recent practice where attendance was taken.
+  // Optional practices (no attendance taken) are skipped, so they never break or add to a streak.
+  function computeStreaks(att, athleteIds) {
+    const dates = Object.keys(att).sort();
+    const out = {};
+    athleteIds.forEach(id => {
+      let best = 0, run = 0;
+      dates.forEach(d => {
+        const rec = att[d] ? att[d][id] : undefined;
+        if (rec === 'present') { run++; if (run > best) best = run; }
+        else if (rec === 'absent') run = 0;
+      });
+      let current = 0;
+      for (let i = dates.length - 1; i >= 0; i--) {
+        const rec = att[dates[i]] ? att[dates[i]][id] : undefined;
+        if (rec === 'present') current++;
+        else if (rec === 'absent') break;
+      }
+      out[id] = { current, best };
+    });
     return out;
   }
   const saveAttendance = obj => localStorage.setItem(ATTENDANCE_KEY, JSON.stringify(obj));
@@ -1081,6 +1103,7 @@
       const roster = loadRoster().filter(a => a.active !== false);
       const attendance = loadArchivedAttendance();
       const dates = Object.keys(attendance).sort();
+      const streaks = computeStreaks(attendance, roster.map(a => a.id));
       const perAthlete = roster.map(a => {
         let present = 0, absent = 0;
         dates.forEach(d => {
@@ -1088,7 +1111,7 @@
           if (rec === 'present') present++; else if (rec === 'absent') absent++;
         });
         const total = present + absent;
-        return { id: a.id, name: a.name, present, absent, total, percent: total ? Math.round((present / total) * 100) : null };
+        return { id: a.id, name: a.name, present, absent, total, percent: total ? Math.round((present / total) * 100) : null, streak: streaks[a.id].current, bestStreak: streaks[a.id].best };
       });
       const withRecords = perAthlete.filter(a => a.total > 0);
       const teamAttendancePercent = withRecords.length ? Math.round(withRecords.reduce((s, a) => s + a.percent, 0) / withRecords.length) : null;
@@ -1139,7 +1162,7 @@
       if (tableWrap) {
         const rows = s.perAthlete.slice().sort((a, b) => (b.percent ?? -1) - (a.percent ?? -1) || (a.name || '').localeCompare(b.name || ''));
         tableWrap.innerHTML = rows.length
-          ? `<table class="attendance-table"><thead><tr><th>Athlete</th><th>Present</th><th>Absent</th><th>Percent</th></tr></thead><tbody>${rows.map(a => `<tr><td>${esc(a.name)}</td><td>${a.present}</td><td>${a.absent}</td><td>${a.percent === null ? '—' : a.percent + '%'}</td></tr>`).join('')}</tbody></table>`
+          ? `<table class="attendance-table"><thead><tr><th>Athlete</th><th>Present</th><th>Absent</th><th>Percent</th><th>🔥 Streak</th><th>Best</th></tr></thead><tbody>${rows.map(a => `<tr><td>${esc(a.name)}</td><td>${a.present}</td><td>${a.absent}</td><td>${a.percent === null ? '—' : a.percent + '%'}</td><td>${a.streak}</td><td>${a.bestStreak}</td></tr>`).join('')}</tbody></table>`
           : '<div class="attendance-empty">No athletes on the roster yet.</div>';
       }
     }
@@ -1225,7 +1248,13 @@
       const date = currentPracticeDate();
       const taken = isAttendanceDoneForDate(date);
       wrap.innerHTML = `<div class="attendance-stat-row"><span>Athletes on roster</span><strong>${roster.length}</strong></div>
-        <div class="attendance-stat-row"><span>${esc(formatDate(date))}</span><strong>${taken ? 'Attendance taken' : 'Not taken yet'}</strong></div>`;
+        <div class="attendance-stat-row"><span>${esc(formatDate(date))}</span><strong>${taken ? (((loadAttendance()[date] || {}).__optional) ? 'Optional – no attendance' : 'Attendance taken') : 'Not taken yet'}</strong></div>` + (() => {
+        const st = computeStreaks(loadArchivedAttendance(), roster.map(a => a.id));
+        const top = roster.map(a => ({ n: a.name, c: st[a.id].current })).filter(x => x.c > 0).sort((a, b) => b.c - a.c);
+        if (!top.length) return '';
+        const lead = top.filter(x => x.c === top[0].c).map(x => x.n).join(', ');
+        return `<div class="attendance-stat-row"><span>🔥 Longest streak</span><strong>${esc(lead)} (${top[0].c})</strong></div>`;
+      })();
     }
     renderSummary();
     renderAlert();
@@ -1243,6 +1272,7 @@
     backdrop.innerHTML = `<section aria-label="Take Attendance" aria-modal="true" class="block-modal attendance-modal" role="dialog">
       <h2>Take Attendance</h2>
       <label class="field">Practice date<input id="attendanceDate" type="date"></label>
+      <label class="attendance-optional"><input id="attendanceOptional" type="checkbox"> <span>Optional practice – don't take attendance</span></label>
       <div class="attendance-add-row">
         <input id="attendanceNewName" maxlength="60" placeholder="Add athlete name" type="text">
         <button class="secondary" id="attendanceAddBtn" type="button">Add</button>
@@ -1276,10 +1306,19 @@
       const roster = loadRoster().filter(a => a.active !== false).sort((a, b) => (a.name || '').localeCompare(b.name || ''));
       const wrap = q('attendanceList');
       if (!wrap) return;
+      const optBox = q('attendanceOptional'); if (optBox) optBox.checked = !!draftStatuses.__optional;
+      if (draftStatuses.__optional) {
+        wrap.innerHTML = '<div class="attendance-empty">Optional practice: no attendance will be taken, and this day will not count toward attendance percentages or streaks.</div>';
+        return;
+      }
+      const dateNow = q('attendanceDate').value || todayStr();
+      const overlay = { ...loadArchivedAttendance(), [dateNow]: { ...draftStatuses } };
+      const liveStreaks = computeStreaks(overlay, roster.map(a => a.id));
       wrap.innerHTML = roster.length ? roster.map(a => {
         const status = draftStatuses[a.id] || '';
+        const stk = liveStreaks[a.id] ? liveStreaks[a.id].current : 0;
         return `<div class="attendance-row" data-id="${esc(a.id)}">
-          <span class="attendance-name">${esc(a.name)}</span>
+          <span class="attendance-name">${esc(a.name)}${stk > 0 ? ` <span class="attendance-streak" title="Practices in a row">🔥 ${stk}</span>` : ''}</span>
           <div class="attendance-toggle">
             <button class="attendance-btn present-btn${status === 'present' ? ' active' : ''}" data-id="${esc(a.id)}" data-status="present" type="button">Present</button>
             <button class="attendance-btn absent-btn${status === 'absent' ? ' active' : ''}" data-id="${esc(a.id)}" data-status="absent" type="button">Absent</button>
@@ -1369,6 +1408,11 @@
       renderWeeklyAttendance();
     });
     q('attendanceNewName').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); q('attendanceAddBtn').click(); } });
+
+    q('attendanceOptional').addEventListener('change', () => {
+      if (q('attendanceOptional').checked) draftStatuses.__optional = true; else delete draftStatuses.__optional;
+      renderList();
+    });
 
     q('attendanceSaveBtn').addEventListener('click', () => {
       const date = q('attendanceDate').value || todayStr();
