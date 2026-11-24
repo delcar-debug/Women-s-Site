@@ -1697,6 +1697,50 @@
     }
   }
 
+  /* "Start new practice": saves the current plan to the Archive under ITS date, then opens a blank plan
+     on the next free date, so edits can never spill into the previous practice's archive. */
+  function startNewPractice() {
+    if (state.practiceActive) { alert('A practice is running in Coach Mode. Finish or stop it before starting a new one.'); return; }
+    clearTimeout(timer); timer = null; savedKey = null;
+    const prev = dateEl.value || '';
+    try {
+      if (state.blocks.length && /^20\d\d-\d\d-\d\d$/.test(prev)) { upsertAutoArchive({ silent: true }); }
+    } catch (e) { console.warn('Archive before new practice failed', e); alert('Could not save the current plan to the Archive, so nothing was changed.'); return; }
+    // Next date: day after the plan you were on (or today, if that plan is in the past) that has no saved practice yet.
+    const pad = n => String(n).padStart(2, '0');
+    const ymd = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+    const today = new Date(); today.setHours(12, 0, 0, 0);
+    let d = /^20\d\d-\d\d-\d\d$/.test(prev) ? new Date(prev + 'T12:00:00') : new Date(today.getTime() - 86400000);
+    if (d < today) d = new Date(today.getTime() - 86400000);
+    let next = '';
+    for (let i = 0; i < 30; i++) {
+      d = new Date(d.getTime() + 86400000);
+      const c = ymd(d);
+      if (!state.archives.some(a => a.date === c)) { next = c; break; }
+    }
+    state.autoArchiveKey = null;
+    try { state.actualPracticeDate = null; state.actualStartAt = null; state.actualEndAt = null; } catch (e) {}
+    blankPlan();
+    dateEl.value = next;
+    prevDate = next;
+    render();
+    try { if (typeof save === 'function') save(); } catch (e) {}
+    if (typeof renderLibrary === 'function') renderLibrary();
+    toast((prev && state.archives.some(a => a.date === prev) ? label(prev) + ' is saved in the Archive. ' : '') + 'New blank practice for ' + label(next) + '. Change the date first if that is wrong.');
+    try { dateEl.scrollIntoView({ block: 'center', behavior: 'smooth' }); dateEl.focus(); } catch (e) {}
+  }
+  (() => {
+    const field = dateEl.closest('.field');
+    if (!field || document.getElementById('startNewPracticeBtn')) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.id = 'startNewPracticeBtn';
+    btn.className = 'start-new-practice';
+    btn.textContent = '+ Start new practice';
+    btn.addEventListener('click', startNewPractice);
+    field.insertAdjacentElement('afterend', btn);
+  })();
+
   dateEl.addEventListener('focus', () => {
     prevDate = dateEl.value || prevDate;
     window.__dateEditing = true;
