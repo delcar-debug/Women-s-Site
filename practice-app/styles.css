@@ -899,6 +899,11 @@ html,body{overflow-y:auto}
 
 .attendance-optional{display:flex;align-items:center;gap:8px;margin:8px 0;font-weight:700}.attendance-streak{font-size:.8rem;font-weight:800;color:#b45309;background:#fef3c7;border-radius:999px;padding:1px 8px;margin-left:6px;white-space:nowrap}
 
-/* Start new practice button (next to the practice date) */
-.start-new-practice{align-self:end;margin-bottom:2px;padding:10px 16px;border:0;border-radius:10px;background:#6d1730;color:#fff;font-weight:800;font-size:.95rem;cursor:pointer;white-space:nowrap}
+/* Start new practice button: small, in the Build Practice heading */
+.build-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.start-new-practice{margin:0;padding:5px 10px;border:0;border-radius:8px;background:#6d1730;color:#fff;font-weight:700;font-size:.8rem;cursor:pointer;white-space:nowrap}
 .start-new-practice:hover{background:#561226}
+/* Date, start time and length always share one line */
+.settings{grid-template-columns:repeat(3,minmax(0,1fr))}
+.settings .field:first-child{grid-column:auto}
+.settings .field input[type=date],.settings .field input[type=time],.settings .field input[type=number]{min-width:0;width:100%;box-sizing:border-box}

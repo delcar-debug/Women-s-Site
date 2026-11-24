@@ -1730,15 +1730,17 @@
     try { dateEl.scrollIntoView({ block: 'center', behavior: 'smooth' }); dateEl.focus(); } catch (e) {}
   }
   (() => {
-    const field = dateEl.closest('.field');
-    if (!field || document.getElementById('startNewPracticeBtn')) return;
+    const sec = dateEl.closest('section');
+    const head = sec && sec.querySelector('h2');
+    if (!head || document.getElementById('startNewPracticeBtn')) return;
+    head.classList.add('build-head');
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.id = 'startNewPracticeBtn';
     btn.className = 'start-new-practice';
     btn.textContent = '+ Start new practice';
     btn.addEventListener('click', startNewPractice);
-    field.insertAdjacentElement('afterend', btn);
+    head.appendChild(btn);
   })();
 
   dateEl.addEventListener('focus', () => {
