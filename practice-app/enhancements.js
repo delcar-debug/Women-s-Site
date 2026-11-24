@@ -1797,3 +1797,52 @@
     });
   }, 4000));
 })();
+
+/* Quick time calculator: press C (when not typing in a field) to open it.
+   Enter seconds per go and number of goes to get the total minutes. Esc or C closes it. */
+(() => {
+  let box = null;
+  function build() {
+    box = document.createElement('div');
+    box.id = 'secCalc';
+    box.hidden = true;
+    box.style.cssText = 'position:fixed;right:18px;bottom:18px;z-index:99998;width:260px;background:#fff;color:#111;border:2px solid #6d1730;border-radius:14px;padding:14px;box-shadow:0 8px 28px rgba(0,0,0,.3);font:14px system-ui,sans-serif';
+    box.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong style="color:#6d1730">Time calculator</strong>' +
+      '<button type="button" id="secCalcClose" style="border:0;background:none;font-size:20px;cursor:pointer;line-height:1" aria-label="Close">×</button></div>' +
+      '<label style="display:block;font-weight:700;margin-bottom:2px">Seconds per go</label>' +
+      '<input id="secCalcSec" type="number" min="0" step="any" inputmode="decimal" style="width:100%;box-sizing:border-box;padding:8px;margin-bottom:8px;border:1px solid #bbb;border-radius:8px;font-size:16px">' +
+      '<label style="display:block;font-weight:700;margin-bottom:2px">Number of goes</label>' +
+      '<input id="secCalcGoes" type="number" min="0" step="any" inputmode="decimal" style="width:100%;box-sizing:border-box;padding:8px;margin-bottom:10px;border:1px solid #bbb;border-radius:8px;font-size:16px">' +
+      '<div id="secCalcOut" style="font-size:22px;font-weight:800;color:#6d1730">—</div>' +
+      '<div id="secCalcSub" style="color:#555;margin-top:2px"></div>';
+    document.body.appendChild(box);
+    const calc = () => {
+      const s = parseFloat(box.querySelector('#secCalcSec').value);
+      const g = parseFloat(box.querySelector('#secCalcGoes').value);
+      const out = box.querySelector('#secCalcOut'), sub = box.querySelector('#secCalcSub');
+      if (!(s >= 0) || !(g >= 0)) { out.textContent = '—'; sub.textContent = ''; return; }
+      const total = s * g, min = total / 60;
+      out.textContent = (Math.round(min * 100) / 100) + ' min';
+      const m = Math.floor(total / 60), r = Math.round(total - m * 60);
+      sub.textContent = total + ' sec total (' + m + ':' + String(r).padStart(2, '0') + ')';
+    };
+    box.addEventListener('input', calc);
+    box.querySelector('#secCalcClose').addEventListener('click', () => { box.hidden = true; });
+  }
+  function toggle() {
+    if (!box) build();
+    box.hidden = !box.hidden;
+    if (!box.hidden) { const i = box.querySelector('#secCalcSec'); i.focus(); i.select(); }
+  }
+  document.addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const inCalc = box && box.contains(e.target);
+    if (e.key === 'Escape' && box && !box.hidden) { box.hidden = true; return; }
+    if (e.key !== 'c' && e.key !== 'C') return;
+    const t = e.target, tag = (t.tagName || '').toLowerCase();
+    if (inCalc || tag === 'input' || tag === 'textarea' || tag === 'select' || t.isContentEditable) return;
+    e.preventDefault();
+    toggle();
+  });
+})();
