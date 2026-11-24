@@ -1700,7 +1700,10 @@
   /* "Start new practice": saves the current plan to the Archive under ITS date, then opens a blank plan
      on the next free date, so edits can never spill into the previous practice's archive. */
   function startNewPractice() {
-    if (state.practiceActive) { alert('A practice is running in Coach Mode. Finish or stop it before starting a new one.'); return; }
+    if (state.practiceActive) {
+      if (!confirm('Coach Mode still has a practice running (the timer session is open).\n\nOK: end that session (your plan, ratings and notes are kept) and start a new practice.\nCancel: leave it as is.')) return;
+      try { endPractice(); } catch (e) { console.warn('endPractice failed', e); state.practiceActive = false; }
+    }
     clearTimeout(timer); timer = null; savedKey = null;
     const prev = dateEl.value || '';
     try {
